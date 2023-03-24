@@ -117,6 +117,18 @@
         <!-- configuration of the plugins for the different goals -->
         <plugins>
 
+            <!-- deploy plugin: deploy war to tomcat -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://89.40.142.15:8080/manager/text</url>
+                    <server>maven-tomcat-war-deployment-server</server>
+                    <path>/bitsei-${project.version}</path>
+                </configuration>
+            </plugin>
+
             <!-- compiler plugin: source and target code -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
