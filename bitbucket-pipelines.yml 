@@ -1,0 +1,20 @@
+image: maven:3.9.0
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build and test
+          max-time: 20
+          caches:
+            - maven
+          script:
+            - cd bitsei-webapp && mvn -s .ci/settings.xml clean verify
+          artifacts:
+            - target/**
+      - step:
+          name: Deploy to Artifactory
+          max-time: 20
+          caches:
+            - maven
+          script:
+            - cd bitsei-webapp && mvn -s .ci/settings.xml tomcat7:redeploy
