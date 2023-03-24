@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>it.unipd.dei.bitsei</groupId>
+    <artifactId>bitsei</artifactId>
+    <version>1.0</version>
+
+    <packaging>war</packaging>
+
+    <!-- Project description elements -->
+    <name>Business Integrated System for Electronic Invoicing</name>
+    <description>Management system that allows companies and professionals to keep track of their customers' activities and generate proper documentation, including XML invoices that comply with Italian regulations. </description>
+
+    <url>https://bitbucket.org/upd-dei-stud-prj/bitsei</url>
+    <inceptionYear>2023</inceptionYear>
+
+    <developers>
+        <developer>
+            <id>fs</id>
+            <name>Farzad Shami</name>
+            <email>farzad.shami@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>fz</id>
+            <name>Fabio Zanini</name>
+            <email>fabio.zanini@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>fs</id>
+            <name>Farzad Shami</name>
+            <email>farzad.shami@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>mca</id>
+            <name>Mirco Cazzaro</name>
+            <email>mirco.cazzaro@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>nbc</id>
+            <name>Nicola Boscolo Cegion</name>
+            <email>nicola.boscolocegion.1@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>mm</id>
+            <name>Marco Martinelli</name>
+            <email>marco.martinelli.4@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>mch</id>
+            <name>Marchiori Christian</name>
+            <email>christian.marchiori@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>lb</id>
+            <name>Leonardo Berti</name>
+            <email>leonardo.berti.1@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>ac</id>
+            <name>Andrea Costa</name>
+            <email>andrea.costa.15@studenti.unipd.it</email>
+        </developer>
+
+        <developer>
+            <id>aky</id>
+            <name>Aashishkumar kumar Yadav</name>
+            <email>aashishkumaranil.yadav@studenti.unipd.it</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>Department of Information Engineering (DEI), University of Padua, Italy</name>
+        <url>http://www.dei.unipd.it/en/</url>
+    </organization>
+
+    <properties>
+        <log4j.version>2.20.0</log4j.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!-- Build settings -->
+
+    <!-- Configuration of the default build lifecycle -->
+    <build>
+        <defaultGoal>compile</defaultGoal>
+
+        <!-- source code folder -->
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+
+        <!-- compiled code folder -->
+        <directory>${basedir}/target</directory>
+
+        <!-- name of the generated package -->
+        <finalName>${project.artifactId}-${project.version}</finalName>
+
+        <!-- configuration of the plugins for the different goals -->
+        <plugins>
+
+            <!-- compiler plugin: source and target code -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- javadoc plugin: output in the javadoc folder -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <reportOutputDirectory>${basedir}/javadoc</reportOutputDirectory>
+                    <author>true</author>
+                    <nosince>false</nosince>
+                    <show>protected</show>
+                    <source>${java.version}</source>
+                    <doctitle>${project.name} ${project.version} - Web Applications Course</doctitle>
+                    <windowtitle>${project.artifactId} ${project.version}</windowtitle>
+                    <bottom>Copyright &#169; ${project.inceptionYear}
+                        <![CDATA[<a href="https://www.unipd.it/en/" target="_blank">University of Padua</a>, Italy. All rights reserved.]]>
+                        <![CDATA[<i>Web Applications</i> is a course of the <a href="https://degrees.dei.unipd.it/master-degrees/computer-engineering/" target="_blank">Master Degree in Computer Engineering</a> of the <a href="https://www.dei.unipd.it/en/" target="_blank">Department of Information Engineering</a>.]]>
+                        <![CDATA[<i>Web Applications</i> is part of the teaching activities of the <a href="http://iiia.dei.unipd.it/" target="_blank">Intelligent Interactive Information Access (IIIA) Hub</a>.]]>
+                    </bottom>
+                    <detectJavaApiLink>true</detectJavaApiLink>
+                    <detectLinks>true</detectLinks>
+                    <validateLinks>true</validateLinks>
+                </configuration>
+            </plugin>
+
+            <!-- packager plugin: create a WAR file to be deployed -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>10.1.7</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
