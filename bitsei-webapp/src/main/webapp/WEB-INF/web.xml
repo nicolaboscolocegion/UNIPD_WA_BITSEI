@@ -4,11 +4,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
-  <resource-ref>
-    <description>Connection pool to the database</description>
-    <res-ref-name>jdbc/bitsei</res-ref-name>
-    <res-type>javax.sql.DataSource</res-type>
-    <res-auth>Container</res-auth>
-  </resource-ref>
+    <display-name>BITSEI Rest Api</display-name>
+    <description>Business Integrated System for Electronic Invoicing.</description>
+
+    <servlet>
+        <servlet-name>RestManagerServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RestManagerServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <resource-ref>
+        <description>Connection pool to the database</description>
+        <res-ref-name>jdbc/bitsei</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 
 </web-app>
