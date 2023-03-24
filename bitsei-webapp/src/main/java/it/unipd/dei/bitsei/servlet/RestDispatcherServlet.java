@@ -82,7 +82,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
 
         // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("user") + 8);
+        path = path.substring(path.lastIndexOf("user") + 4);
 
         // the request URI is: /user
         // if method GET, list users
