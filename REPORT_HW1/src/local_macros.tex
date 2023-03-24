@@ -1,0 +1,77 @@
+\usepackage[margin=20mm]{geometry}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{advdate}
+\usepackage{cmbright}
+\usepackage{array}
+\usepackage{makecell}
+
+
+\definecolor{UnipdRed}{RGB}{155, 0, 20}
+
+\usepackage{sectsty}
+%\setcounter{secnumdepth}{0}
+\allsectionsfont{\sffamily\color{UnipdRed}}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength\headheight{80.0pt}
+\addtolength{\textheight}{-80.0pt}
+\chead{\includegraphics[width=0.5\columnwidth]{logos/logo-unipd800.pdf}\hspace{0.25\columnwidth} \includegraphics[width=0.2\columnwidth]{logos/DEI.pdf}}
+\cfoot{}
+
+%\renewcommand{\maketitle}{
+%\maketitle
+%\thispagestyle{fancy}
+
+%\pagebreak
+%\pagestyle{plain}
+%\setlength\headheight{20.0pt}
+%\addtolength{\textheight}{-20.0pt}
+%}
+
+\makeatletter         
+\renewcommand\maketitle{
+{\raggedright 
+\begin{center}
+
+{   
+    \Large\bfseries\sffamily 
+    \@title}\\[4ex] 
+    \Large
+    \textbf{Master Degree in Computer Engineering\\
+    Master Degree in Cybersecurity\\
+    Master Degree in ICT for Internet and Multimedia\\}
+    \large
+    \vspace{\baselineskip}
+    \deadline{28 April}
+    \vspace{30mm}
+    \input{groupdata}
+    \end{center}}
+    \thispagestyle{fancy}
+    %\thispagestyle{empty}
+    \pagebreak
+    \pagestyle{plain}
+    \setlength\headheight{25.0pt}
+    \addtolength{\textheight}{-25.0pt}
+}
+\makeatother
+
+
+\newcommand{\hw}{Homework 1 – Server-side Design and Development}
+
+
+\title{
+Web Applications A.Y. \AdvanceDate[-365]\the\year{}-\AdvanceDate[365]\the\year{}\\
+\vspace*{0.5\baselineskip}
+\hw}
+
+\newcommand{\deadline}[1]{Deadline: #1, \the\year{}}
+
+
+
