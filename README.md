@@ -1,6 +1,5 @@
 ## 
 <h2> BITSEI <img src="https://media.giphy.com/media/mGcNjsfWAjY5AEZNw6/giphy.gif" width="50"></h2>
-</em></p>
 
 ---
 BITSEI (Business Integrated System for Electronic Invoicing)
@@ -27,9 +26,9 @@ nothing to say init :)
 
 ---
 
-### Contributors <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">
+### Contributors
 
 ---
 - name surname - badge number
 
-<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova</a><img src="https://media.giphy.com/media/fYSnHlufseco8Fh93Z/giphy.gif" width="30">
+<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
