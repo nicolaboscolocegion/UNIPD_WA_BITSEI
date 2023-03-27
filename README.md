@@ -32,5 +32,6 @@ nothing to say init :)
 - name surname - badge number
 - Nicola Boscolo Cegion - 2074285
 - Mirco Cazzaro - 2076745
+- Fabio Zanini - 2088628
 
 <p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
