@@ -33,5 +33,6 @@ nothing to say init :)
 - Nicola Boscolo Cegion - 2074285
 - Mirco Cazzaro - 2076745
 - Fabio Zanini - 2088628
+- Christian Marchiori - 2078343
 
 <p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
