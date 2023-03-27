@@ -103,7 +103,7 @@ CREATE TABLE bitsei_schema."Invoice" (
                                          invoice_id integer NOT NULL,
                                          customer_id integer NOT NULL,
                                          status smallint DEFAULT 0 NOT NULL,
-                                         warning_name character(255),
+                                         warning_number character(255),
                                          warning_date date,
                                          warning_pdf_file character(255),
                                          invoice_number character(255),
@@ -112,8 +112,7 @@ CREATE TABLE bitsei_schema."Invoice" (
                                          invoice_xml_file character(255),
                                          total double precision,
                                          discount double precision,
-                                         has_pension_fund_refund boolean DEFAULT false,
-                                         pension_fund_refund double precision,
+                                         pension_fund_refund double precision NOT NULL,
                                          has_stamp boolean DEFAULT false
 );
 
@@ -130,7 +129,6 @@ CREATE TABLE bitsei_schema."Invoice_Product" (
                                                  product_id integer NOT NULL,
                                                  quantity integer NOT NULL,
                                                  unit_price double precision NOT NULL,
-                                                 has_related_costs boolean DEFAULT false NOT NULL,
                                                  related_price double precision,
                                                  related_price_description character(255)
 );
