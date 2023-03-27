@@ -109,10 +109,10 @@ CREATE TABLE bitsei_schema."Invoice" (
                                          invoice_number character(255),
                                          invoice_date date,
                                          invoice_pdf_file character(255),
-                                         invoice_xml_file character(255),
-                                         total double precision,
-                                         discount double precision,
-                                         pension_fund_refund double precision NOT NULL,
+                                         invoice_xml_file character(255),  -- relative file path, extension must be xml
+                                         total double precision,   -- must be positive
+                                         discount double precision,  -- must be positive
+                                         pension_fund_refund double precision NOT NULL, -- must be within 0 and 4 (%)
                                          has_stamp boolean DEFAULT false
 );
 
