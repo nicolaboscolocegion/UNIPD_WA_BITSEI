@@ -34,5 +34,6 @@ nothing to say init :)
 - Mirco Cazzaro - 2076745
 - Fabio Zanini - 2088628
 - Christian Marchiori - 2078343
+- Farzad Shami - 2090160
 
 <p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
