@@ -130,7 +130,7 @@ CREATE TABLE bitsei_schema."Invoice_Product" (
                                                  quantity integer NOT NULL,
                                                  unit_price double precision NOT NULL,
                                                  related_price double precision,
-                                                 related_price_description character(255)
+                                                 related_price_description character(1024)
 );
 
 
@@ -180,7 +180,7 @@ CREATE TABLE bitsei_schema."Product" (
                                          default_price integer NOT NULL,
                                          logo character(255),
                                          measurement_unit character(5) NOT NULL,
-                                         description character(255)
+                                         description character(1024)
 );
 
 
