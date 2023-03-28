@@ -29,7 +29,7 @@ nothing to say init :)
 ### Contributors
 
 ---
-- name surname - badge number
+- Aashishkumar Anil Yadav - 2041274
 - Nicola Boscolo Cegion - 2074285
 - Mirco Cazzaro - 2076745
 - Fabio Zanini - 2088628
