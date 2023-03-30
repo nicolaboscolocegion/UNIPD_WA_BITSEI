@@ -65,7 +65,9 @@ CREATE TABLE bitsei_schema."Company" (
                                          city character(255),
                                          province character(2),
                                          postal_code character(5),
-                                         unique_code character(6)
+                                         unique_code character(6),
+                                         has_telegram_notifications boolean DEFAULT false,
+                                         has_mail_notifications boolean DEFAULT false
 );
 
 
@@ -162,7 +164,9 @@ CREATE TABLE bitsei_schema."Owner" (
                                        firstname character(50),
                                        lastname character(50),
                                        username character varying NOT NULL,
-                                       password character varying NOT NULL
+                                       password character varying NOT NULL,
+                                       email character(255) NOT NULL,
+                                       telegram_chat_id character(32)
 );
 
 
