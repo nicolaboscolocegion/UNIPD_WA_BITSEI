@@ -15,9 +15,11 @@
  */
 
 
- package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao;
 
 import org.apache.logging.log4j.message.StringFormattedMessage;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,14 +38,14 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     /**
 	 * The SQL statement to be executed
 	 */
-    private static final String STATEMENT = "SELECT name, FROM bitsei_schema.Owner WHERE password='pass' AND user='usr'";
+    private static final String STATEMENT = "SELECT username, FROM bitsei_schema.Owner WHERE password='pass' AND user='usr'";
 
     /**
      * username of the user
      */
     private final String usr;
     /**
-     * password in clear of the user
+     * hash password
      */
     private final String pass;
 
@@ -57,7 +59,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     public UserAuthDAO(final Connection con, final String username, final String password){
         super(con);
         this.usr=username;
-        this.pass=password; 
+        this.pass= BCrypt.withDefaults().hashToString(12, password.toCharArray());; 
     }
 
     /**
