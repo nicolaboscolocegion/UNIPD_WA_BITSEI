@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
+import it.unipd.dei.bitsei.dao.UserAuthDAO;
 import it.unipd.dei.bitsei.resources.Message;
 
 import java.io.IOException;
@@ -60,21 +61,27 @@ public class login extends AbstractDatabaseServlet{
         try {
 
 			// retrieves the username paramiters
-
-			//TODO take username from post
-            //username =
             
+			//TODO take username from post
+            username = req.getParameter("username");
+            password = req.getParameter("password");
+
             //TODO take encPassword from post
             //encPassword =
 
 			// creates a new object for accessing the database and searching the employees
 			
+            auteincate = new UserAuthDAO(getConnection(), username, password).access().getOutputParam();
+
+
         } catch (SQLException ex) {
 			m = new Message("Cannot search for user: unexpected error while accessing the database.", "E200",
 					ex.getMessage());
 
 			LOGGER.error("Cannot search for employees: unexpected error while accessing the database.", ex);
 		}
+
+        
 
         //send the token and the message if the user is autenticated
     }
