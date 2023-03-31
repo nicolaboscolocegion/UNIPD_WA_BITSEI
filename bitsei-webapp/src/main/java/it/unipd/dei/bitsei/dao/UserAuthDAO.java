@@ -23,25 +23,76 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Searches the user from username and password, will return true if the user have right username and passoerd
+ *
+ * @author Nicola Boscolo
+ * @version 1.00
+ * @since 1.00
+ */
 public class UserAuthDAO extends AbstractDAO<Boolean> {
 
+    /**
+	 * The SQL statement to be executed
+	 */
     private static final String STATEMENT = "SELECT name, FROM bitsei_schema.Owner WHERE password='pass' AND user='usr'";
 
-    private final String username;
-    private final String password;
+    /**
+     * username of the user
+     */
+    private final String usr;
+    /**
+     * password in clear of the user
+     */
+    private final String pass;
 
+    /**
+	 * Creates a new object for searching the user
+	 *
+	 * @param con    the connection to the database.
+	 * @param username username of the user
+     * @param password the password of the user in clear
+	 */
     public UserAuthDAO(final Connection con, final String username, final String password){
         super(con);
-        this.username=username;
-        this.password=password; 
+        this.usr=username;
+        this.pass=password; 
     }
 
+    /**
+     * search the user outputParam will be true if the user is authenticated
+     */
     @Override
-    protected void doAccess() throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'doAccess'");
+    protected void doAccess() throws SQLException {
+
+        PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+        final String tablename;
+
+        try {
+			pstmt = con.prepareStatement(STATEMENT);
+
+			pstmt.setString(1, usr);
+            pstmt.setString(2, pass);
+
+			rs = pstmt.executeQuery();
+            tablename = rs.getString("user");
+
+		} finally {
+			if (rs != null) {
+                rs.close();
+			}
+
+			if (pstmt != null) {
+				pstmt.close();
+			}
+		}
+
+        if(tablename==usr){
+            this.outputParam=true;
+        }
+
     }
 }
