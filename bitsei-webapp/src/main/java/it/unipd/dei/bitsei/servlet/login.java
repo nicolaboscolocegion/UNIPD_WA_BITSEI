@@ -23,6 +23,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import it.unipd.dei.bitsei.dao.UserAuthDAO;
+import it.unipd.dei.bitsei.resources.Actions;
+import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 
 import java.io.IOException;
@@ -50,40 +52,92 @@ public class Login extends AbstractDatabaseServlet{
 	 */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         
-        String username; //username of the user
-        String encPassword; //encripthed password
-        String password; //clear password of the user
+        LogContext.setIPAddress(req.getRemoteAddr());
+		LogContext.setAction(Actions.LOGIN);
 
-        Message m; //post message
+        /**
+         * username of the user
+         */
+        String username; 
+        /**
+         * password in clear of the username, this will changend when doing the frontend
+         */
+        String password; 
 
-        boolean auteincate =false; //autentication flag
+        /**
+         * Response 
+         */
+        Message m; 
+
+        boolean autenticate =false; //autentication flag
 
         try {
 
-			// retrieves the username paramiters
+			// retrieves the user paramiters
             
-			//TODO take username from post
             username = req.getParameter("username");
             password = req.getParameter("password");
 
-            //TODO take encPassword from post
-            //encPassword =
 
 			// creates a new object for accessing the database and searching the employees
 			
-            auteincate = new UserAuthDAO(getConnection(), username, password).access().getOutputParam();
+            autenticate = new UserAuthDAO(getConnection(), username, password).access().getOutputParam();
 
 
         } catch (SQLException ex) {
 			m = new Message("Cannot search for user: unexpected error while accessing the database.", "E200",
 					ex.getMessage());
 
-			LOGGER.error("Cannot search for employees: unexpected error while accessing the database.", ex);
+			LOGGER.error("Cannot search for user: unexpected error while accessing the database.", ex);
 		}
 
         
+        try {
+			// set the MIME media type of the response
+			res.setContentType("text/html; charset=utf-8");
+
+			// get a stream to write the response
+			PrintWriter out = res.getWriter();
+
+			// write the HTML page
+			out.printf("<!DOCTYPE html>%n");
+
+			out.printf("<html lang=\"en\">%n");
+			out.printf("<head>%n");
+			out.printf("<meta charset=\"utf-8\">%n");
+			out.printf("<title>Auth</title>%n");
+			out.printf("</head>%n");
+
+            out.printf("<body>%n");
+
+            if(autenticate){
+                out.printf("<h1>Autenticate</h1>%n");
+                out.printf("<hr>%n");
+            }else{
+                out.printf("<h1>NOT Autenticate</h1>%n");
+                out.printf("<hr>%n");
+            }
+
+
+			out.printf("</body>%n");
+
+			out.printf("</html>%n");
+
+			// flush the output stream buffer
+			out.flush();
+
+			// close the output stream
+			out.close();
+		} catch (IOException ex) {
+			LOGGER.error(new StringFormattedMessage("Unable to send response when Autenticate"), ex);
+			throw ex;
+		} finally {
+			LogContext.removeIPAddress();
+			LogContext.removeAction();
+			LogContext.removeUser();
+		}
+	}
 
         //send the token and the message if the user is autenticated
-    }
 }
 

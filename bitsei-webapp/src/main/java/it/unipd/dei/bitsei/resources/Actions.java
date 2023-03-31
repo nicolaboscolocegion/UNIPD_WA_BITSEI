@@ -12,6 +12,12 @@ public final class Actions {
     public static final String LIST_USER = "LIST_USER";
 
     /**
+     * login of the user
+     */
+     public static final String LOGIN = "LOGIN";
+
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {
