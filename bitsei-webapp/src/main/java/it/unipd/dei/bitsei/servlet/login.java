@@ -38,7 +38,7 @@ import java.util.List;
  * @version 1.00
  * @since 1.00
  */
-public class login extends AbstractDatabaseServlet{
+public class Login extends AbstractDatabaseServlet{
 
     /**
 	 * Controll the autetication of the user
