@@ -11,6 +11,7 @@ public final class Actions {
      */
     public static final String LIST_USER = "LIST_USER";
 
+
     /**
      * login of the user
      */

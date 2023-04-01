@@ -155,7 +155,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                     break;
             }
+        } else if (path.equals("/reset-password")){
+            if (method.equals("POST")){
+                new RestPasswordRR(req, res, getConnection()).serve();
+            }
+        } else if (path.equals("/change-password")){
+            if (method.equals("POST")){
+                new ChangePasswordRR(req, res, getConnection()).serve();
+            }
         }
+
 
         return true;
 
