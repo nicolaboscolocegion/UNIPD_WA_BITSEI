@@ -47,7 +47,11 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                users.add(new User(rs.getString("name"), rs.getString("surname")));
+                users.add(new User(
+                        rs.getString("name"),
+                        rs.getString("surname"),
+                        null)
+                );
             }
 
             LOGGER.info("User(s) successfully listed.");
