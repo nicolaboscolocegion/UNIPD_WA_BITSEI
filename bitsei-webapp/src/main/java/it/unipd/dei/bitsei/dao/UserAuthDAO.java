@@ -38,7 +38,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     /**
 	 * The SQL statement to be executed
 	 */
-    private static final String STATEMENT = "SELECT password  FROM bitsei_schema.\"Owner\" WHERE username='user'";
+    private static final String STATEMENT = "SELECT password  FROM bitsei_schema.\"Owner\" WHERE username=?";
 
     /**
      * username of the user
@@ -60,6 +60,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
         super(con);
         this.usr=username;
         this.pass= password; 
+        this.outputParam=false;
     }
 
     /**
@@ -73,15 +74,25 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
 
         final String hashPassword;
 
+        LOGGER.info("username: " + usr + " password: " + pass);
+
         try {
 			pstmt = con.prepareStatement(STATEMENT);
+            
+            LOGGER.info(pstmt.toString());
+			
+            
+            pstmt.setString(1, usr);
 
-			pstmt.setString(0, usr);
+            
+            LOGGER.info(pstmt.toString());
             
 
+            
 			rs = pstmt.executeQuery();
+            rs.next();
             hashPassword = rs.getString("password");
-
+            rs.next();
 		} finally {
 			if (rs != null) {
                 rs.close();

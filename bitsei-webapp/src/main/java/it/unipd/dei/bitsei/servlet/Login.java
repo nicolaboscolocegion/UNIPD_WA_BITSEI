@@ -52,8 +52,9 @@
 	  */
 	 public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		 
-		 LogContext.setIPAddress(req.getRemoteAddr());
-		 LogContext.setAction(Actions.LOGIN);
+		LogContext.setIPAddress(req.getRemoteAddr());
+		LogContext.setResource(req.getRequestURI());
+		LogContext.setAction("LOGIN");
  
 		 /**
 		  * username of the user
