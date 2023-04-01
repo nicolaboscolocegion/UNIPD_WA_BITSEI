@@ -40,7 +40,7 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
 
         // the results of the search
         final List<User> users = new ArrayList<User>();
-        
+
         try {
             pstmt = con.prepareStatement(STATEMENT);
 
