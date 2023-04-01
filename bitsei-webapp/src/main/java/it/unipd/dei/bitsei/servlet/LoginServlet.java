@@ -40,7 +40,7 @@
   * @version 1.00
   * @since 1.00
   */
- public class Login extends AbstractDatabaseServlet{
+ public class LoginServlet extends AbstractDatabaseServlet{
  
 	 /**
 	  * Controll the autetication of the user

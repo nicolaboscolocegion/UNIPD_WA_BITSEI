@@ -13,7 +13,7 @@
     </servlet>
 
     <servlet>
-        <servlet-name>Login</servlet-name>
+        <servlet-name>LoginServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.Login</servlet-class>
     </servlet>
 
