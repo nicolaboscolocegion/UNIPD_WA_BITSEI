@@ -45,7 +45,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
      */
     private final String usr;
     /**
-     * hash password
+     * hashed
      */
     private final String pass;
 
@@ -59,7 +59,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     public UserAuthDAO(final Connection con, final String username, final String password){
         super(con);
         this.usr=username;
-        this.pass= BCrypt.withDefaults().hashToString(12, password.toCharArray());; 
+        this.pass= BCrypt.withDefaults().hashToString(12, password.toCharArray()); 
     }
 
     /**
