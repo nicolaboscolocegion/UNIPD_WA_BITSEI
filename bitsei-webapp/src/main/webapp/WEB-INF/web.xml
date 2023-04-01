@@ -12,9 +12,19 @@
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.Login</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/loggged</url-pattern>
     </servlet-mapping>
 
     <resource-ref>
