@@ -38,7 +38,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     /**
 	 * The SQL statement to be executed
 	 */
-    private static final String STATEMENT = "SELECT password  FROM bitsei_schema.\"Owner\" WHERE username=?";
+    private static final String STATEMENT = "SELECT password FROM bitsei_schema.\"Owner\" WHERE username=?";
 
     /**
      * username of the user
