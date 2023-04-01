@@ -38,7 +38,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     /**
 	 * The SQL statement to be executed
 	 */
-    private static final String STATEMENT = "SELECT username FROM \"bitsei_schema.Owner\" WHERE \"bitsei_schema.Owner.password\"='pass' AND \"bitsei_schema.Owner.user\"='usr'";
+    private static final String STATEMENT = "SELECT password  FROM bitsei_schema.\"Owner\" WHERE username='user'";
 
     /**
      * username of the user
@@ -59,7 +59,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     public UserAuthDAO(final Connection con, final String username, final String password){
         super(con);
         this.usr=username;
-        this.pass= BCrypt.withDefaults().hashToString(12, password.toCharArray()); 
+        this.pass= password; 
     }
 
     /**
@@ -71,16 +71,16 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
         PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
-        final String tablename;
+        final String hashPassword;
 
         try {
 			pstmt = con.prepareStatement(STATEMENT);
 
-			pstmt.setString(1, usr);
-            pstmt.setString(2, pass);
+			pstmt.setString(0, usr);
+            
 
 			rs = pstmt.executeQuery();
-            tablename = rs.getString("user");
+            hashPassword = rs.getString("password");
 
 		} finally {
 			if (rs != null) {
@@ -92,7 +92,8 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
 			}
 		}
 
-        if(tablename==usr){
+        BCrypt.Result result = BCrypt.verifyer().verify(pass.toCharArray(), hashPassword);
+        if(result.verified){
             this.outputParam=true;
         }
 
