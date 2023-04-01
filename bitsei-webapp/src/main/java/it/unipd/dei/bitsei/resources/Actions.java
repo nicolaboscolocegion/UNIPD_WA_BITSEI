@@ -11,7 +11,19 @@ public final class Actions {
      */
     public static final String LIST_USER = "LIST_USER";
 
+
     /**
+     * The rest password
+     */
+    public static final String REST_PASSWORD = "REST_PASSWORD";
+
+    /**
+     * The change password
+     */
+    public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
+
+    /**
+
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {
