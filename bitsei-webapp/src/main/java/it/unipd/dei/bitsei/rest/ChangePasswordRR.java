@@ -1,6 +1,7 @@
 package it.unipd.dei.bitsei.rest;
 
 import it.unipd.dei.bitsei.dao.GetUserIDFromTokenDAO;
+import it.unipd.dei.bitsei.dao.UpdateUserDAO;
 import it.unipd.dei.bitsei.resources.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,17 +17,15 @@ public class ChangePasswordRR extends AbstractRR {
 
     @Override
     protected void doServe() throws IOException {
-        User user = null;
         Message m = null;
         int user_id = -1;
 
         try {
             final ChangePassword data = ChangePassword.fromJSON(req.getInputStream());
             user_id = new GetUserIDFromTokenDAO(con, data.getReset_token()).access().getOutputParam();
-            // TODO: Check the user id existence
-            // TODO: Hash the password and create user modified object
-            // TODO: Create Modify User DAO
-            user = new ModifyUserDAO(con, data).access().getOutputParam();
+            String password = data.getPassword();
+            User user = new User(null, null, password);
+            User userc = new UpdateUserDAO(con, user_id, user).access().getOutputParam();
 
             if (user != null) {
                 LOGGER.info("User successfully found.");

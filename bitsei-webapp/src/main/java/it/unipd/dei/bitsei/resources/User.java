@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.*;
 import java.io.*;
 
 /**
- * Represents the data about an user.
+ * Represents the data about a user.
  */
 public class User extends AbstractResource {
 
@@ -19,16 +19,17 @@ public class User extends AbstractResource {
      */
     private final String surname;
 
-
+    private final String password;
     /**
      * Creates a new user
      *
      * @param name    the name number of the user
      * @param surname the surname of the user.
      */
-    public User(final String name, final String surname) {
+    public User(final String name, final String surname, final String password){
         this.name = name;
         this.surname = surname;
+        this.password = password;
     }
 
     /**
@@ -49,6 +50,9 @@ public class User extends AbstractResource {
         return surname;
     }
 
+    public final String getPassword() {
+        return password;
+    }
 
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {
@@ -114,6 +118,6 @@ public class User extends AbstractResource {
             throw e;
         }
 
-        return new User(jName, jSurname);
+        return new User(jName, jSurname, null);
     }
 }
