@@ -73,11 +73,11 @@ public class ChangePassword extends AbstractResource {
 
             // while we are not on the start of an element or the element is not
             // a token element, advance to the next element (if any)
-            while (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"data".equals(jp.getCurrentName())) {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No User object found in the stream.");
+                    LOGGER.error("No Data object found in the stream.");
                     throw new EOFException("Unable to parse JSON: no User object found.");
                 }
             }
@@ -86,14 +86,14 @@ public class ChangePassword extends AbstractResource {
 
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
-                        case "reset_token":
+                        case "reset_token" -> {
                             jp.nextToken();
                             jReset_token = jp.getText();
-                            break;
-                        case "password":
+                        }
+                        case "password" -> {
                             jp.nextToken();
                             jPassword = jp.getText();
-                            break;
+                        }
                     }
                 }
             }
