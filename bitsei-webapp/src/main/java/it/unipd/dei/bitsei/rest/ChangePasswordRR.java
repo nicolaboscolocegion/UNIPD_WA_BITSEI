@@ -1,8 +1,6 @@
 package it.unipd.dei.bitsei.rest;
 
 import it.unipd.dei.bitsei.dao.GetPasswordRestDAO;
-import it.unipd.dei.bitsei.dao.GetUserIDFromTokenDAO;
-import it.unipd.dei.bitsei.dao.PasswordRestDAO;
 import it.unipd.dei.bitsei.dao.UpdateUserDAO;
 import it.unipd.dei.bitsei.resources.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +31,7 @@ public class ChangePasswordRR extends AbstractRR {
             }
 
             String password = data.getPassword();
-            User user = new User(null, null, password);
+            User user = new User(password);
             new UpdateUserDAO(con, passwordRest.getUserID(), user).access().getOutputParam();
 
             if (user != null) {
