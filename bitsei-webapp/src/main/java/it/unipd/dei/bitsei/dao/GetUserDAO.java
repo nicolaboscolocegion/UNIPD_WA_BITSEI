@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GetUserDAO extends AbstractDAO<User>{
+public class GetUserDAO extends AbstractDAO<User> {
 
     /**
      * The SQL statement to be executed
@@ -42,10 +42,14 @@ public class GetUserDAO extends AbstractDAO<User>{
 
             rs = pstmt.executeQuery();
 
-            if (rs.next()){
+            if (rs.next()) {
                 user = new User(
-                        rs.getString("name"),
-                        rs.getString("surname")
+                        rs.getInt("owner_id"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("telegram_chat_id")
                 );
             }
 

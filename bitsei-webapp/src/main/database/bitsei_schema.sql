@@ -198,7 +198,7 @@ ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
 CREATE TABLE bitsei_schema."Password_Reset_Token" (
                                        owner_id integer NOT NULL,
                                        token VARCHAR(128) NOT NULL UNIQUE,
-                                       token_expiry DATE NOT NULL,
+                                       token_expiry TIMESTAMP NOT NULL,
                                        PRIMARY KEY (owner_id, token)
 );
 
