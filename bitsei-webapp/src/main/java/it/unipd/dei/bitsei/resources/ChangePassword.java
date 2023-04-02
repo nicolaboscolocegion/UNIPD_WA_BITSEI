@@ -23,8 +23,8 @@ public class ChangePassword extends AbstractResource {
     /**
      * Creates a new user
      *
-     * @param name    the name number of the user
-     * @param surname the surname of the user.
+     * @param password    the name number of the user
+     * @param reset_token the surname of the user.
      */
     public ChangePassword(final String password, final String reset_token) {
         this.password = password;
