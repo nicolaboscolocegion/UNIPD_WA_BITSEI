@@ -14,7 +14,7 @@
 
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.Login</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.LoginServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -23,7 +23,7 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>Login</servlet-name>
+        <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/loggged</url-pattern>
     </servlet-mapping>
 
