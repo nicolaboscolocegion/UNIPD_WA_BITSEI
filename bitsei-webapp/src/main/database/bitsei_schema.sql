@@ -190,8 +190,19 @@ CREATE TABLE bitsei_schema."Product" (
 
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
 
+--
+-- TOC entry 223 (class 1259 OID 16785)
+-- Name: Password_Reset_Token; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
+--
 
+CREATE TABLE bitsei_schema."Password_Reset_Token" (
+                                       owner_id integer NOT NULL,
+                                       token VARCHAR(128) NOT NULL UNIQUE,
+                                       token_expiry DATE NOT NULL,
+                                       PRIMARY KEY (owner_id, token)
+);
 
+ALTER TABLE bitsei_schema."Password_Reset_Token" OWNER TO bitsei_user;
 
 
 --

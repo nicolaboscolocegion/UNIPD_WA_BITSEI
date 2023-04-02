@@ -1,7 +1,9 @@
 package it.unipd.dei.bitsei.rest;
 
 import it.unipd.dei.bitsei.dao.GetUserDAO;
+import it.unipd.dei.bitsei.dao.PasswordRestDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.utils.HashGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -18,6 +20,7 @@ public class RestPasswordRR extends AbstractRR {
     protected void doServe() throws IOException {
         User user = null;
         Message m = null;
+        PasswordRest password_rest = null;
 
         try {
             final StringValue email = StringValue.fromJSON(req.getInputStream(), "email");
@@ -25,8 +28,18 @@ public class RestPasswordRR extends AbstractRR {
 
             if (user != null) {
                 LOGGER.info("User successfully found.");
+                String hashed_string = HashGenerator.generateHash();
+                password_rest = new PasswordRestDAO(con, user.getID(), hashed_string).access().getOutputParam();
 
-                // TODO: Generate a hash and send it to the user's email to reset password using it.
+                if (password_rest == null) {
+                    LOGGER.error("Fatal error while getting user.");
+
+                    m = new Message("Cannot get user: unexpected error.", "E5A1", null);
+                    res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    m.toJSON(res.getOutputStream());
+                }
+                // TODO: Send email to user with the link to reset password.
+                // SendEmail(user.email, password_rest.getReset_token());
 
                 m = new Message("Successfully done.", null, null);
                 res.setStatus(HttpServletResponse.SC_OK);
