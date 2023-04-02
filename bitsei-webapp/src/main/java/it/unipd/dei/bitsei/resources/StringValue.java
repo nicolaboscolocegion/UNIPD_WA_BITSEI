@@ -45,7 +45,7 @@ public class StringValue extends AbstractResource {
 
             // while we are not on the start of an element or the element is not
             // a token element, advance to the next element (if any)
-            while (jp.getCurrentToken() != JsonToken.FIELD_NAME) {
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !field_name.equals(jp.getCurrentName())) {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
@@ -54,12 +54,13 @@ public class StringValue extends AbstractResource {
                 }
             }
 
-            while (jp.nextToken() != JsonToken.END_OBJECT) {
-                if (jp.getCurrentToken() == JsonToken.FIELD_NAME & jp.getCurrentToken().asString().equals(field_name)) {
+            if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
+                if (jp.getCurrentName().equals(field_name)) {
+                    jp.nextToken();
                     jValue = jp.getText();
-                    break;
                 }
             }
+
         } catch (IOException e) {
             LOGGER.error("Unable to parse an User object from JSON.", e);
             throw e;

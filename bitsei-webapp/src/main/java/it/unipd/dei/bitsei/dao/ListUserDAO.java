@@ -21,7 +21,7 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT name, surname FROM public.\"Users\"";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Owner\"";
 
     /**
      * Creates a new object for listing all the users.
@@ -47,10 +47,15 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                users.add(new User(
-                        rs.getString("name"),
-                        rs.getString("surname"),
-                        null)
+                users.add(
+                        new User(
+                                rs.getInt("owner_id"),
+                                rs.getString("firstname"),
+                                rs.getString("lastname"),
+                                rs.getString("username"),
+                                rs.getString("email"),
+                                rs.getString("telegram_chat_id")
+                        )
                 );
             }
 
