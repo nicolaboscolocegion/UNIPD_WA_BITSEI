@@ -1,30 +1,29 @@
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.User;
-
+import it.unipd.dei.bitsei.resources.PasswordRest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GetUserDAO extends AbstractDAO<User>{
+public class GetPasswordRestDAO extends AbstractDAO<PasswordRest>{
 
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Owner\" WHERE email = ?";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Password_Reset_Token\" WHERE token = ? and token_expiry > now()";
 
-    private final String email;
+    private final String token;
 
     /**
      * Creates a new object for getting one user.
      *
      * @param con   the connection to the database.
-     * @param email the email of the user
+     * @param token the token of the user
      */
-    public GetUserDAO(final Connection con, String email) {
+    public GetPasswordRestDAO(final Connection con, String token) {
         super(con);
-        this.email = email;
+        this.token = token;
     }
 
     @Override
@@ -34,22 +33,23 @@ public class GetUserDAO extends AbstractDAO<User>{
         ResultSet rs = null;
 
         // the result of the search
-        User user = null;
+        PasswordRest passwordRest = null;
 
         try {
             pstmt = con.prepareStatement(STATEMENT);
-            pstmt.setString(1, email);
+            pstmt.setString(1, token);
 
             rs = pstmt.executeQuery();
 
             if (rs.next()){
-                user = new User(
-                        rs.getString("name"),
-                        rs.getString("surname")
+                passwordRest = new PasswordRest(
+                        rs.getString("token"),
+                        rs.getDate("expiry_date"),
+                        rs.getInt("owner_id")
                 );
             }
 
-            LOGGER.info("User successfully fetched.");
+            LOGGER.info("Password Rest successfully fetched.");
         } finally {
             if (rs != null) {
                 rs.close();
@@ -61,6 +61,6 @@ public class GetUserDAO extends AbstractDAO<User>{
 
         }
 
-        outputParam = user;
+        outputParam = passwordRest;
     }
 }

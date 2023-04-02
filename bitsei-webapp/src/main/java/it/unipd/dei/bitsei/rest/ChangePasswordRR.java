@@ -1,6 +1,8 @@
 package it.unipd.dei.bitsei.rest;
 
+import it.unipd.dei.bitsei.dao.GetPasswordRestDAO;
 import it.unipd.dei.bitsei.dao.GetUserIDFromTokenDAO;
+import it.unipd.dei.bitsei.dao.PasswordRestDAO;
 import it.unipd.dei.bitsei.dao.UpdateUserDAO;
 import it.unipd.dei.bitsei.resources.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,14 +20,21 @@ public class ChangePasswordRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
         Message m = null;
-        int user_id = -1;
 
         try {
             final ChangePassword data = ChangePassword.fromJSON(req.getInputStream());
-            user_id = new GetUserIDFromTokenDAO(con, data.getReset_token()).access().getOutputParam();
+            PasswordRest passwordRest = new GetPasswordRestDAO(con, data.getReset_token()).access().getOutputParam();
+            if (passwordRest == null){
+                LOGGER.error("Fatal error while getting user.");
+
+                m = new Message("Cannot get user: unexpected error.", "E5A1", null);
+                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                m.toJSON(res.getOutputStream());
+            }
+
             String password = data.getPassword();
             User user = new User(null, null, password);
-            User userc = new UpdateUserDAO(con, user_id, user).access().getOutputParam();
+            new UpdateUserDAO(con, passwordRest.getUserID(), user).access().getOutputParam();
 
             if (user != null) {
                 LOGGER.info("User successfully found.");
