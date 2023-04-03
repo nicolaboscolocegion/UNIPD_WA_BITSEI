@@ -37,6 +37,16 @@
         <url-pattern>/customerdelete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateCustomerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <url-pattern>/customerupdate</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>

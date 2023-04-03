@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.CreateCustomerDAO;
 import it.unipd.dei.bitsei.dao.DeleteCustomerDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
@@ -12,8 +11,6 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
-import static it.unipd.dei.bitsei.utils.RegexValidation.fieldRegexValidation;
 
 /**
  * Creates a new customer into the database.

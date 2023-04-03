@@ -12,7 +12,7 @@ public class Customer {
     /**
      * The business name of the customer company
      */
-    private final int customerID;
+    private final Integer customerID;
 
     /**
      * The business name of the customer company
@@ -70,11 +70,8 @@ public class Customer {
     private final Integer companyID;
 
 
-
-
-
     /**
-     * Creates a new customer
+     * Constructor used to create a new customer
      *
      * @param businessName
      *            the legal name of the customer company.
@@ -82,6 +79,22 @@ public class Customer {
      *            the VAT number associated to the customer company
      * @param taxCode
      *            the tax code associated to the customer company (can be the same of the vat number if the company is an autonomous juridical person).
+     * @param address
+     *            the address associated to the juridical person.
+     * @param city
+     *            the city associated to the juridical person.
+     * @param province
+     *            the province associated to the juridical person.
+     * @param postalCode
+     *            the postal code associated to the juridical person.
+     * @param emailAddress
+     *            the email address of the customer where notifications and documentation will be submitted.
+     * @param pec
+     *            the juridical contact email.
+     * @param uniqueCode
+     *            the unique code associated to the Italian Income Agency invoice submitter provider.
+     * @param companyID
+     *            the companyID that is setting the customer.
      */
     public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
         this.customerID = -1;
@@ -103,6 +116,58 @@ public class Customer {
         }
     }
 
+    /**
+     * Constructor used to create a new customer
+     *
+     * @param businessName
+     *            the legal name of the customer company.
+     * @param vatNumber
+     *            the VAT number associated to the customer company
+     * @param taxCode
+     *            the tax code associated to the customer company (can be the same of the vat number if the company is an autonomous juridical person).
+     * @param address
+     *            the address associated to the juridical person.
+     * @param city
+     *            the city associated to the juridical person.
+     * @param province
+     *            the province associated to the juridical person.
+     * @param postalCode
+     *            the postal code associated to the juridical person.
+     * @param emailAddress
+     *            the email address of the customer where notifications and documentation will be submitted.
+     * @param pec
+     *            the juridical contact email.
+     * @param uniqueCode
+     *            the unique code associated to the Italian Income Agency invoice submitter provider.
+     * @param companyID
+     *            the companyID that is setting the customer.
+     */
+    public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID, final int customerID) {
+        this.businessName = businessName;
+        this.vatNumber = vatNumber;
+        this.taxCode = taxCode;
+        this.address = address;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.emailAddress = emailAddress;
+        this.pec = pec;
+        this.uniqueCode = uniqueCode;
+        if (companyID != -1) {
+            this.companyID = companyID;
+        }
+        else {
+            this.companyID = null;
+        }
+        this.customerID = customerID;
+    }
+
+    /**
+     * Constructor used to delete an existing customer
+     *
+     * @param customerID
+     *            the customerID (primary key).
+     */
     public Customer(int customerID) {
         this.customerID = customerID;
         this.businessName = null;
