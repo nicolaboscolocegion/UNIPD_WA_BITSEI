@@ -22,6 +22,11 @@ public final class Actions {
     public static final String FILTER_INVOICES_BY_TOTAL = "FILTER_INVOICES_BY_TOTAL";
 
     /**
+     * The chart of amount of invoices ordered by date
+     */
+    public static final String INVOICES_BY_DATE = "INVOICES_BY_DATE";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {

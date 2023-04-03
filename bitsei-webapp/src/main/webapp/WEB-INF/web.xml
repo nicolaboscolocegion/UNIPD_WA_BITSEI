@@ -22,6 +22,11 @@
         <servlet-class>it.unipd.dei.bitsei.servlet.FilterInvoiceByTotalServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>InvoicesByDateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.InvoicesByDateServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
@@ -35,6 +40,11 @@
     <servlet-mapping>
         <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
         <url-pattern>/filter-invoices-by-total</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>InvoicesByDateServlet</servlet-name>
+        <url-pattern>/invoices-by-date</url-pattern>
     </servlet-mapping>
 
     <resource-ref>
