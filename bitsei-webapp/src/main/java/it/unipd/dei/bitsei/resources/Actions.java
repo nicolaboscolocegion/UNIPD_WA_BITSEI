@@ -17,6 +17,11 @@ public final class Actions {
     public static final String FILTER_INVOICES_BY_PERIOD = "FILTER_INVOICES_BY_PERIOD";
 
     /**
+     * The filter of invoices by their total
+     */
+    public static final String FILTER_INVOICES_BY_TOTAL = "FILTER_INVOICES_BY_TOTAL";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {
