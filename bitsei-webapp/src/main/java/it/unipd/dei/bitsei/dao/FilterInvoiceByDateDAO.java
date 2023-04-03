@@ -34,7 +34,7 @@ import java.sql.Date;
  * @version 1.00
  * @since 1.00
  */
-public class FilterInvoiceByDateDAO extends AbstractDAO<Boolean> {
+public class FilterInvoiceByDateDAO extends AbstractDAO<List<Invoice>> {
 
     /**
      * The SQL statement to be executed
@@ -101,7 +101,7 @@ public class FilterInvoiceByDateDAO extends AbstractDAO<Boolean> {
                         rs.getInt("invoice_id"),
                         rs.getInt("customer_id"),
                         rs.getInt("status"),
-                        rs.getInt("warning_date"),
+                        rs.getInt("warning_number"),
                         rs.getDate("warning_date"),
                         rs.getString("warning_pdf_file"),
                         rs.getString("invoice_number"),
@@ -115,7 +115,7 @@ public class FilterInvoiceByDateDAO extends AbstractDAO<Boolean> {
                 );
             }
 
-            LOGGER.info("Invoices from %d to %d succesfully listed", startDate.toString(), endDate.toString());
+            LOGGER.info("Invoices from %s to %s succesfully listed", startDate.toString(), endDate.toString());
         } finally {
             if (rs != null) {
                 rs.close();

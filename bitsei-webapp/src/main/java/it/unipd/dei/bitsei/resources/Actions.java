@@ -12,6 +12,11 @@ public final class Actions {
     public static final String LIST_USER = "LIST_USER";
 
     /**
+     * The filter of invoices by their period of time
+     */
+    public static final String FILTER_INVOICES_BY_PERIOD = "FILTER_INVOICES_BY_PERIOD";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {

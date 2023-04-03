@@ -144,6 +144,15 @@ public class Invoice {
     }
 
     /**
+     * Returns the warning number of the invoice.
+     *
+     * @return the warning number of the invoice
+     */
+    public final int getWarning_number() {
+        return warning_number;
+    }
+
+    /**
      * Returns the warning date of the invoice.
      *
      * @return the warning date of the invoice
