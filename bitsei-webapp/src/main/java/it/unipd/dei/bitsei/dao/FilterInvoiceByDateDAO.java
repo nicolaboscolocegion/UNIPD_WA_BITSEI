@@ -64,21 +64,6 @@ public class FilterInvoiceByDateDAO extends AbstractDAO<List<Invoice>> {
     }
 
     /**
-     * Creates a new object for searching the invoices from startDate to now
-     *
-     * @param con           the connection to the database.
-     * @param startDate     the date from which to start the filtering
-     */
-    /*
-    public FilterInvoiceByDateDAO(final Connection con, final Date startDate){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date tmp = new Date();
-        Date endDate = formatter.format(tmp);
-        InvoiceFilteringDAO(con, startDate, endDate);
-    }
-     */
-
-    /**
      * search the invoices in the period of time specified
      */
     @Override

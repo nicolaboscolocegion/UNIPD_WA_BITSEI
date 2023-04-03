@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * Searches invoices by their period of time.
@@ -37,6 +38,7 @@ import java.sql.Date;
  * @author Marco Martinelli
  * @version 1.00
  * @since 1.00
+ *
  */
 public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 
@@ -53,10 +55,12 @@ public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 		LogContext.setIPAddress(req.getRemoteAddr());
 		LogContext.setAction(Actions.FILTER_INVOICES_BY_PERIOD);
 
-
+		final Date BASE_DATE = new Date(70, 01, 01);
+		LocalDate currentDate = LocalDate.now();
+		final Date CURRENT_DATE = Date.valueOf(currentDate);
 		// request parameter
-		Date startDate = new Date(1900, 01, 01);
-		Date endDate = new Date(1900, 01, 01);
+		Date startDate = BASE_DATE;
+		Date endDate = BASE_DATE;
 
 		// model
 		List<Invoice> el = null;
@@ -65,13 +69,23 @@ public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 		try {
 
 			// retrieves the request parameter
-			startDate = Date.valueOf(req.getParameter("startDate"));
-			endDate = Date.valueOf(req.getParameter("endDate"));
+			try {
+				startDate = Date.valueOf(req.getParameter("startDate"));
+			} catch (IllegalArgumentException ex) {
+				startDate = BASE_DATE;
+			}
+
+			try {
+				endDate = Date.valueOf(req.getParameter("endDate"));
+			} catch(IllegalArgumentException ex){
+				endDate = CURRENT_DATE;
+			}
 
 			// creates a new object for accessing the database and searching the employees
 			el = new FilterInvoiceByDateDAO(getConnection(), startDate, endDate).access().getOutputParam();
 
-			m = new Message("Invoices successfully searched.");
+			String tmp_string = "Invoices succesfully searched. Start Date: " + startDate.toString() + " End Date: " + endDate.toString() + ".";
+			m = new Message(tmp_string);
 
 			LOGGER.info("Invoices successfully searched by startDate %s and endDate %s.", startDate.toString(), endDate.toString());
 
@@ -116,14 +130,16 @@ public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 			} else {
 				out.printf("<p>%s</p>%n", m.getMessage());
 
+				/* THIS PART UNCOMMENTED SHOWS EVERY SINGLE DETAIL ABOUT AN INVOICE
 				out.printf("<table>%n");
 				out.printf("<tr>%n");
-				out.printf("<td>Invoice id</td><td>Customer id</td><td>Status</td><td>Warning date</td><td>Warning pdf file</td><td>Invoice number</td><td>Invoice date</td><td>Invoice pdf file</td><td>Invoice xml file</td><td>Total</td><td>Discount</td><td>Pension fund refund</td><td>Has stamp</td><td></td><%n");
+				out.printf("<td>Invoice id</td><td>Customer id</td><td>Status</td><td>Warning date</td><td>Warning pdf file</td><td>Invoice number</td><td>Invoice date</td><td>Invoice pdf file</td><td>Invoice xml file</td><td>Total</td><td>Discount</td><td>Pension fund refund</td><td>Has stamp</td><%n");
 				out.printf("</tr>%n");
+
 
 				for (Invoice e : el) {
 					out.printf("<tr>%n");
-					out.printf("<td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%f</td><td>%f</td><td>%f</td><td>%s</td>%n",
+					out.printf("<td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%s</td>%n",
 							e.getInvoice_id(),
 							e.getCustomer_id(),
 							e.getStatus(),
@@ -139,6 +155,30 @@ public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 							e.getPension_fund_refund(),
 							e.hasStamp()
 							);
+					out.printf("</tr>%n");
+				}
+				*/
+
+				out.printf("<table>%n");
+				out.printf("<tr>%n");
+				out.printf("<td>Invoice id</td><td>Customer id</td><td>Status</td><td>Invoice number</td><td>Invoice date</td><td>Total</td><td>Discount</td><td>Pension fund refund</td>%n");
+				out.printf("</tr>%n");
+
+
+				for (Invoice e : el) {
+					out.printf("<tr>%n");
+					out.printf("<td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td>",
+							e.getInvoice_id(),
+							e.getCustomer_id(),
+							e.getStatus(),
+							e.getInvoice_number(),
+							e.getInvoice_date(),
+							e.getTotal(),
+							e.getDiscount(),
+							e.getPension_fund_refund()
+
+
+					);
 					out.printf("</tr>%n");
 				}
 				out.printf("</table>%n");
