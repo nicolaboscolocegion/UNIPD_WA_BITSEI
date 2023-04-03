@@ -18,7 +18,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code) VALUES (?, ?, ?)";
+    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code, address, city, province, postal_code, email, pec, unique_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      /**
@@ -55,6 +55,13 @@ public final class CreateCustomerDAO extends AbstractDAO {
             pstmt.setString(1, customer.getBusinessName());
             pstmt.setString(2, customer.getVatNumber());
             pstmt.setString(3, customer.getTaxCode());
+            pstmt.setString(4, customer.getAddress());
+            pstmt.setString(5, customer.getCity());
+            pstmt.setString(6, customer.getProvince());
+            pstmt.setString(7, customer.getPostalCode());
+            pstmt.setString(8, customer.getEmailAddress());
+            pstmt.setString(9, customer.getPec());
+            pstmt.setString(10, customer.getUniqueCode());
 
             pstmt.execute();
 

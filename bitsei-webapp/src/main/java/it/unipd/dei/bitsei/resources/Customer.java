@@ -25,6 +25,45 @@ public class Customer {
     private final String taxCode;
 
     /**
+     * The address of the customer company
+     */
+    private final String address;
+
+    /**
+     * The city of the customer company
+     */
+    private final String city;
+
+    /**
+     * The province of the customer company
+     */
+    private final String province;
+
+    /**
+     * The province of the customer company
+     */
+    private final String postalCode;
+
+    /**
+     * The province of the customer company
+     */
+    private final String emailAddress;
+
+    /**
+     * The province of the customer company
+     */
+    private final String pec;
+
+    /**
+     * The province of the customer company
+     */
+    private final String uniqueCode;
+
+
+
+
+
+    /**
      * Creates a new customer
      *
      * @param businessName
@@ -34,11 +73,17 @@ public class Customer {
      * @param taxCode
      *            the tax code associated to the customer company (can be the same of the vat number if the company is an autonomous juridical person).
      */
-    public Customer(final String businessName, final String vatNumber, final String taxCode) {
+    public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode) {
         this.businessName = businessName;
         this.vatNumber = vatNumber;
         this.taxCode = taxCode;
-
+        this.address = address;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.emailAddress = emailAddress;
+        this.pec = pec;
+        this.uniqueCode = uniqueCode;
     }
 
     /**
@@ -46,7 +91,7 @@ public class Customer {
      *
      * @return the business name of the customer company.
      */
-    public final String getBusinessName() {
+    public String getBusinessName() {
         return businessName;
     }
 
@@ -55,7 +100,7 @@ public class Customer {
      *
      * @return the vat number of the customer company.
      */
-    public final String getVatNumber() {
+    public String getVatNumber() {
         return vatNumber;
     }
 
@@ -64,8 +109,70 @@ public class Customer {
      *
      * @return the tax code of the customer company.
      */
-    public final String getTaxCode() {
+    public String getTaxCode() {
         return taxCode;
     }
 
+    /**
+     * Returns the address of the customer company.
+     *
+     * @return the address of the customer company.
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Returns the address of the customer company.
+     *
+     * @return the address of the customer company.
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Returns the business name of the customer company.
+     *
+     * @return the business name of the customer company.
+     */
+    public String getProvince() {
+        return province;
+    }
+
+    /**
+     * Returns the business name of the customer company.
+     *
+     * @return the business name of the customer company.
+     */
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    /**
+     * Returns the email address of the customer company.
+     *
+     * @return the email address of the customer company.
+     */
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    /**
+     * Returns the pec address of the customer company.
+     *
+     * @return the pec address of the customer company.
+     */
+    public String getPec() {
+        return pec;
+    }
+
+    /**
+     * Returns the unique code of the customer company.
+     *
+     * @return the unique code of the customer company.
+     */
+    public String getUniqueCode() {
+        return uniqueCode;
+    }
 }
