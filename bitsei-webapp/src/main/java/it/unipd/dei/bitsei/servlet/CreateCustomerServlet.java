@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
+import static it.unipd.dei.bitsei.utils.RegexValidation.fieldRegexValidation;
+
 /**
  * Creates a new customer into the database.
  *
@@ -37,29 +39,43 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
      * @throws IOException
      *             if any error occurs in the client/server communication.
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse res)
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
         LogContext.setIPAddress(req.getRemoteAddr());
 
-        // TODO: request parameters
-
         // model
-        Customer e = null;
+        Customer c = null;
         Message m = null;
 
-        String businessName = "Nicola SRL";
-        String vatNumber = "IT05104990287";
-        String taxCode = "BSCNCL99A10B563P";
-        String address = "Via Roma 1";
-        String city = "Milano";
-        String province = "MI";
-        String postalCode = "00100";
-        String emailAddress = "mirco.itis1999@gmail.com";
-        String pec = "mirco.cazzaro@pec.it";
-        String uniqueCode = "MXU5CS";
+        String businessName = null;
+        String vatNumber = null;
+        String taxCode = null;
+        String address = null;
+        String city = null;
+        String province = null;
+        String postalCode = null;
+        String emailAddress = null;
+        String pec = null;
+        String uniqueCode = null;
 
         try {
+
+            // retrieves the request parameters
+            businessName = req.getParameter("businessName");
+            vatNumber = req.getParameter("vatNumber");
+            taxCode = req.getParameter("taxCode");
+            address = req.getParameter("address");
+            city = req.getParameter("city");
+            province = req.getParameter("province");
+            postalCode = req.getParameter("postalCode");
+            emailAddress = req.getParameter("emailAddress");
+            pec = req.getParameter("pec");
+            uniqueCode = req.getParameter("uniqueCode");
+
+            LOGGER.info("DATA: bname: " + businessName + " vat: " + vatNumber + " taxcode: " + taxCode);
+
+
             fieldRegexValidation("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", emailAddress, "EMAIL");
             fieldRegexValidation("^(IT)?[0-9]{11}$", vatNumber, "VAT NUMBER");
             fieldRegexValidation("^([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$|([0-9]{11})$", taxCode, "TAX CODE");
@@ -70,10 +86,10 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
 
 
                     // creates a new foo customer
-            e = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode);
+            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode);
 
             // creates a new object for accessing the database and stores the customer
-            new CreateCustomerDAO(getConnection(), e).access();
+            new CreateCustomerDAO(getConnection(), c).access();
 
             m = new Message(String.format("Customer %s successfully created.", businessName));
 
@@ -118,10 +134,6 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
 
     }
 
-    public void fieldRegexValidation(String regexPattern, String emailAddress, String type) {
-        if(!Pattern.compile(regexPattern).matcher(emailAddress).matches()) {
-            throw new IllegalArgumentException(String.valueOf(new StringFormattedMessage("%s : format not valid", type)));
-        }
-    }
+
 
 }

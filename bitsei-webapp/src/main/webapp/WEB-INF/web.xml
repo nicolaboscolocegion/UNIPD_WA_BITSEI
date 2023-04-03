@@ -18,12 +18,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>FooServlet</servlet-name>
+        <servlet-name>CreateCustomerServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.CreateCustomerServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FooServlet</servlet-name>
+        <servlet-name>CreateCustomerServlet</servlet-name>
         <url-pattern>/customertest</url-pattern>
     </servlet-mapping>
 
