@@ -59,13 +59,13 @@ CREATE TABLE bitsei_schema."Company" (
                                          owner_id integer NOT NULL,
                                          logo character(255),
                                          business_name character(255) NOT NULL,
-                                         vat_number character(11),
+                                         vat_number character(13),
                                          tax_code character(16),
                                          address character(255),
                                          city character(255),
                                          province character(2),
                                          postal_code character(5),
-                                         unique_code character(6),
+                                         unique_code character(7),
                                          has_telegram_notifications boolean DEFAULT false,
                                          has_mail_notifications boolean DEFAULT false
 );
@@ -81,7 +81,7 @@ ALTER TABLE bitsei_schema."Company" OWNER TO bitsei_user;
 CREATE TABLE bitsei_schema."Customer" (
                                           customer_id serial NOT NULL,
                                           business_name character(255) NOT NULL,
-                                          vat_number character(11),
+                                          vat_number character(13),
                                           tax_code character(16),
                                           address character(255),
                                           city character(255),
@@ -89,7 +89,7 @@ CREATE TABLE bitsei_schema."Customer" (
                                           postal_code character(5),
                                           email character(255) NOT NULL,
                                           pec character(255),
-                                          unique_code character(6),
+                                          unique_code character(7),
                                           company_id integer NOT NULL
 );
 
