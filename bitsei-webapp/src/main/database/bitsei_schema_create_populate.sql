@@ -79,7 +79,7 @@ ALTER TABLE bitsei_schema."Company" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Customer" (
-                                          customer_id integer NOT NULL,
+                                          customer_id serial NOT NULL,
                                           business_name character(255) NOT NULL,
                                           vat_number character(11),
                                           tax_code character(16),
@@ -102,7 +102,7 @@ ALTER TABLE bitsei_schema."Customer" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Invoice" (
-                                         invoice_id integer NOT NULL,
+                                         invoice_id serial NOT NULL,
                                          customer_id integer NOT NULL,
                                          status smallint DEFAULT 0 NOT NULL,
                                          warning_number character(255),
@@ -178,7 +178,7 @@ ALTER TABLE bitsei_schema."Owner" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Product" (
-                                         product_id integer NOT NULL,
+                                         product_id serial NOT NULL,
                                          company_id integer NOT NULL,
                                          title character(255) NOT NULL,
                                          default_price integer NOT NULL,
