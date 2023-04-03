@@ -26,7 +26,6 @@ public class ChangePasswordRR extends AbstractRR {
 
             if (is_done) {
                 LOGGER.info("User successfully found.");
-                // TODO: send the user object to the client
                 m = new Message("Successfully done, login", null, null);
                 res.setStatus(HttpServletResponse.SC_OK);
                 m.toJSON(res.getOutputStream());
@@ -38,6 +37,13 @@ public class ChangePasswordRR extends AbstractRR {
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
+            if(con != null){
+                try {
+                    con.rollback();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             LOGGER.error("Cannot get user: unexpected database error.", ex);
 
             m = new Message("Cannot get user: unexpected database error.", "E5A1", ex.getMessage());
