@@ -12,6 +12,11 @@ public class Customer {
     /**
      * The business name of the customer company
      */
+    private final int customerID;
+
+    /**
+     * The business name of the customer company
+     */
     private final String businessName;
 
     /**
@@ -59,6 +64,11 @@ public class Customer {
      */
     private final String uniqueCode;
 
+    /**
+     * The province of the customer company
+     */
+    private final Integer companyID;
+
 
 
 
@@ -73,7 +83,8 @@ public class Customer {
      * @param taxCode
      *            the tax code associated to the customer company (can be the same of the vat number if the company is an autonomous juridical person).
      */
-    public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode) {
+    public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
+        this.customerID = -1;
         this.businessName = businessName;
         this.vatNumber = vatNumber;
         this.taxCode = taxCode;
@@ -84,6 +95,27 @@ public class Customer {
         this.emailAddress = emailAddress;
         this.pec = pec;
         this.uniqueCode = uniqueCode;
+        if (companyID != -1) {
+            this.companyID = companyID;
+        }
+        else {
+            this.companyID = null;
+        }
+    }
+
+    public Customer(int customerID) {
+        this.customerID = customerID;
+        this.businessName = null;
+        this.vatNumber = null;
+        this.taxCode = null;
+        this.address = null;
+        this.city = null;
+        this.province = null;
+        this.postalCode = null;
+        this.emailAddress = null;
+        this.pec = null;
+        this.uniqueCode = null;
+        this.companyID = -1;
     }
 
     /**
@@ -174,5 +206,23 @@ public class Customer {
      */
     public String getUniqueCode() {
         return uniqueCode;
+    }
+
+    /**
+     * Returns the company id that has registered this customer.
+     *
+     * @return the company id that has registered this customer.
+     */
+    public int getCompanyID() {
+        return companyID;
+    }
+
+    /**
+     * Returns the customer id.
+     *
+     * @return the customer id.
+     */
+    public int getCustomerID() {
+        return customerID;
     }
 }
