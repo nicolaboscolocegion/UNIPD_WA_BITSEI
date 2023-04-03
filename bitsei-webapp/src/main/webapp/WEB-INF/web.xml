@@ -22,21 +22,30 @@
         <servlet-class>it.unipd.dei.bitsei.servlet.CreateCustomerServlet</servlet-class>
     </servlet>
 
+    <servlet-mapping>
+        <servlet-name>CreateCustomerServlet</servlet-name>
+        <url-pattern>/customerinsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteCustomerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/customerdelete</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CreateProductServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.CreateProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>CreateCustomerServlet</servlet-name>
-        <url-pattern>/customertest</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>CreateProductServlet</servlet-name>
-        <url-pattern>/producttest</url-pattern>
+        <url-pattern>/productinsert</url-pattern>
     </servlet-mapping>
-
 
     <resource-ref>
         <description>Connection pool to the database</description>

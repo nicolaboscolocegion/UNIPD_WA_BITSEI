@@ -58,6 +58,7 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
         String emailAddress = null;
         String pec = null;
         String uniqueCode = null;
+        int companyID = -1;
 
         try {
 
@@ -72,9 +73,16 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
             emailAddress = req.getParameter("emailAddress");
             pec = req.getParameter("pec");
             uniqueCode = req.getParameter("uniqueCode");
+            String companyID_raw = req.getParameter("companyID");
+            try {
+                companyID = Integer.parseInt(companyID_raw);
+            }
+            catch (NumberFormatException ex) {
+                LOGGER.info("No company id provided for %s, will be set to null.", businessName);
+            }
 
-            LOGGER.info("DATA: bname: " + businessName + " vat: " + vatNumber + " taxcode: " + taxCode);
 
+            //filterCompanyOwner(companyID, ownerID)
 
             fieldRegexValidation("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", emailAddress, "EMAIL");
             fieldRegexValidation("^(IT)?[0-9]{11}$", vatNumber, "VAT NUMBER");
@@ -86,7 +94,7 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
 
 
                     // creates a new foo customer
-            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode);
+            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode, companyID);
 
             // creates a new object for accessing the database and stores the customer
             new CreateCustomerDAO(getConnection(), c).access();
@@ -133,7 +141,5 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
 
 
     }
-
-
 
 }
