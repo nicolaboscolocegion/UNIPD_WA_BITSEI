@@ -17,10 +17,9 @@
 
 package it.unipd.dei.bitsei.dao;
 
-import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import it.unipd.dei.bitsei.resources.LoginResurce;
+import it.unipd.dei.bitsei.resources.LoginResource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,38 +29,38 @@ import java.sql.SQLException;
 /**
  * Searches the user from username and password, will return true if the user have right username and passoerd
  *
- * @author Nicola Boscolo
+ * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
 public class UserAuthDAO extends AbstractDAO<Boolean> {
 
     /**
-	 * The SQL statement to be executed
-	 */
+     * The SQL statement to be executed
+     */
     private static final String STATEMENT = "SELECT password FROM bitsei_schema.\"Owner\" WHERE email=?";
 
     /**
      * username of the user
      */
     private final String usr;
+
     /**
      * hashed
      */
     private final String pass;
 
     /**
-	 * Creates a new object for searching the user
-	 *
-	 * @param con    the connection to the database.
-	 * @param username username of the user
-     * @param password the password of the user in clear
-	 */
-    public UserAuthDAO(final Connection con, final LoginResurce user){
+     * Creates a new object for searching the user
+     *
+     * @param con          the connection to the database.
+     * @param loginResource the username and password of the user
+     */
+    public UserAuthDAO(final Connection con, final LoginResource loginResource) {
         super(con);
-        this.usr=user.getEmail();
-        this.pass= user.getPassword(); 
-        this.outputParam=false;
+        this.usr = loginResource.getEmail();
+        this.pass = loginResource.getPassword();
+        this.outputParam = false;
     }
 
     /**
@@ -71,42 +70,29 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     protected void doAccess() throws SQLException {
 
         PreparedStatement pstmt = null;
-		ResultSet rs = null;
+        ResultSet rs = null;
 
         final String hashPassword;
 
-        LOGGER.info("email: " + usr + " password: " + pass);
-
         try {
-			pstmt = con.prepareStatement(STATEMENT);
-            
-            LOGGER.info(pstmt.toString());
-			
-            
+            pstmt = con.prepareStatement(STATEMENT);
+
             pstmt.setString(1, usr);
-
-            
-            LOGGER.info(pstmt.toString());
-            
-
-            
-			rs = pstmt.executeQuery();
-            rs.next();
+            rs = pstmt.executeQuery();
             hashPassword = rs.getString("password");
-            rs.next();
-		} finally {
-			if (rs != null) {
+        } finally {
+            if (rs != null) {
                 rs.close();
-			}
+            }
 
-			if (pstmt != null) {
-				pstmt.close();
-			}
-		}
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        }
 
         BCrypt.Result result = BCrypt.verifyer().verify(pass.toCharArray(), hashPassword);
-        if(result.verified){
-            this.outputParam=true;
+        if (result.verified) {
+            outputParam = true;
         }
 
     }

@@ -1,6 +1,20 @@
+/*
+ * Copyright 2022-2023 University of Padua, Italy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package it.unipd.dei.bitsei.filter;
 
-import it.unipd.dei.bitsei.resources.TokenJWT;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -14,14 +28,30 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import it.unipd.dei.bitsei.utils.TokenJWT;
 
+
+/**
+ * Filter that checks if the request contains a valid JWT token.
+ * If the token is valid, the filter adds the user email to the session.
+ * If the token is not valid, the filter returns a 401 status code.
+ *
+ * @author BITSEI GROUP
+ * @version 1.00
+ * @since 1.00
+ */
 public class JwtAuthenticationFilter implements Filter {
 
+    // logger for this class
     private static final java.util.logging.Logger LOG = Logger.getLogger(JwtAuthenticationFilter.class.getName());
 
+    // header key for the Authorization header -> "Authorization"
     private static final String AUTH_HEADER_KEY = "Authorization";
+
+    // prefix for the value of the Authorization header (with trailing space) -> "Bearer "
     private static final String AUTH_HEADER_VALUE_PREFIX = "Bearer "; // with trailing space to separate token
 
+    // HTTP status code for "Unauthorized" (401)
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
 
     @Override
@@ -29,6 +59,7 @@ public class JwtAuthenticationFilter implements Filter {
         LOG.info("JwtAuthenticationFilter initialized");
     }
 
+    // This method is called for every request
     @Override
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,
@@ -39,7 +70,7 @@ public class JwtAuthenticationFilter implements Filter {
             TokenJWT token_jwt = new TokenJWT(getBearerToken(httpRequest));
 
             if (token_jwt.getIsValid() == TokenJWT.NOT_VALID) {
-                throw new Exception("Invalid JWT");
+                throw new Exception("Invalid JWT token in request");
             }
 
             httpRequest.getSession().setAttribute("email", token_jwt.getEmail());
@@ -53,6 +84,7 @@ public class JwtAuthenticationFilter implements Filter {
         }
     }
 
+    // This method is only called once at the end of the application lifecycle
     @Override
     public void destroy() {
         LOG.info("JwtAuthenticationFilter destroyed");

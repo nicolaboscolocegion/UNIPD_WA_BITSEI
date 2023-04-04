@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022-2023 University of Padua, Italy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package it.unipd.dei.bitsei.resources;
 
 import com.fasterxml.jackson.core.*;
@@ -5,17 +20,17 @@ import com.fasterxml.jackson.core.*;
 import java.io.*;
 
 /**
- * Represents the data about an user.
+ * Represents the data about a change password.
  */
 public class ChangePassword extends AbstractResource {
 
     /**
-     * The name of the user
+     * The new password of the user that wants to update his password
      */
     private final String password;
 
     /**
-     * The surname of the user
+     * The reset token of the user that wants to update his password in email
      */
     private final String reset_token;
 
@@ -32,18 +47,18 @@ public class ChangePassword extends AbstractResource {
     }
 
     /**
-     * Returns the name of the user.
+     * Returns the password of the user.
      *
-     * @return the name of the user.
+     * @return the password of the user.
      */
     public final String getPassword() {
         return password;
     }
 
     /**
-     * Returns the surname of the user.
+     * Returns the reset token of the user.
      *
-     * @return the surname of the user.
+     * @return the reset token of the user.
      */
     public final String getReset_token() {
         return reset_token;
@@ -83,7 +98,6 @@ public class ChangePassword extends AbstractResource {
             }
 
             while (jp.nextToken() != JsonToken.END_OBJECT) {
-
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
                         case "reset_token" -> {
@@ -98,7 +112,7 @@ public class ChangePassword extends AbstractResource {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("Unable to parse an User object from JSON.", e);
+            LOGGER.error("Unable to parse an Data object from JSON.", e);
             throw e;
         }
 
