@@ -20,6 +20,7 @@ package it.unipd.dei.bitsei.dao;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import it.unipd.dei.bitsei.resources.LoginResurce;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,10 +57,10 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
 	 * @param username username of the user
      * @param password the password of the user in clear
 	 */
-    public UserAuthDAO(final Connection con, final String username, final String password){
+    public UserAuthDAO(final Connection con, final LoginResurce user){
         super(con);
-        this.usr=username;
-        this.pass= password; 
+        this.usr=user.getEmail();
+        this.pass= user.getPassword(); 
         this.outputParam=false;
     }
 

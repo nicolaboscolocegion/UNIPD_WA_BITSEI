@@ -15,7 +15,7 @@
  */
 
 
-package it.unipd.dei.bitsei.resources;
+package it.unipd.dei.bitsei.utils;
 
 
 
@@ -152,7 +152,7 @@ public class TokenJWT {
     }
 
     public String getTokenString() throws JoseException {
-        return token.getCompactSerialization();
+        return "Bearer ".concat(token.getCompactSerialization());
     }
 
     public String getEmail() {
