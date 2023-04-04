@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package it.unipd.dei.bitsei.utils;
-
 
 
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
@@ -33,96 +30,82 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 
 
-
 /**
  * token resource for a JWT implementation
+ *
+ * @author BITSEI GROUP
+ * @version 1.00
+ * @since 1.00
  */
 public class TokenJWT {
-    
-    
-
+    // 0 = valid, 1 = expired, 2 = not valid
     public static final int VALID = 0;
     public static final int EXPIRED = 1;
     public static final int NOT_VALID = 2;
 
-    private static final float EXPIRATION_TIME_MINUTES = 1440; //24H
+    // expiration time of the token -> 24H
+    private static final float EXPIRATION_TIME_MINUTES = 1440;
 
     private JsonWebSignature token;
     private JwtClaims claims;
-    private int isValid =2;
+    private int isValid = 2;
 
-    private static RsaJsonWebKey rsaJsonWebKey = null ;
-    
+    private static RsaJsonWebKey rsaJsonWebKey = null;
+
 
     /**
-     * recreates the token given the string of it
-     * it also controls if is valid
+     * recreates the token given the string of it is also controls if is valid
+     *
      * @throws JoseException
      * @throws MalformedClaimException
      */
-    public TokenJWT(String T) throws JoseException, MalformedClaimException{
-        if(rsaJsonWebKey==null){
+    public TokenJWT(String T) throws JoseException, MalformedClaimException {
+        if (rsaJsonWebKey == null) {
             rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
             rsaJsonWebKey.setKeyId("k1");
         }
 
-        //prepers all the fields of the token that we are expeting
+        //prepare all the fields of the token that we are exception
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
-            .setRequireExpirationTime() 
-            .setExpectedIssuer("bitsei_webapp") 
-            .setAllowedClockSkewInSeconds(10)
-            .setExpectedAudience("user") 
-            .setVerificationKey(rsaJsonWebKey.getKey()) 
-            .setJwsAlgorithmConstraints( 
-                    ConstraintType.PERMIT, AlgorithmIdentifiers.RSA_USING_SHA256) 
-            
-            .build(); // create the JwtConsumer instance
-            
-            
-            try
-            {
-                //  Validate the JWT and process it to the Claims
-                this.claims = jwtConsumer.processToClaims(T);
+                .setRequireExpirationTime()
+                .setExpectedIssuer("bitsei_webapp")
+                .setAllowedClockSkewInSeconds(10)
+                .setExpectedAudience("user")
+                .setVerificationKey(rsaJsonWebKey.getKey())
+                .setJwsAlgorithmConstraints(
+                        ConstraintType.PERMIT, AlgorithmIdentifiers.RSA_USING_SHA256
+                )
+                .build(); // create the JwtConsumer instance
 
-                this.isValid = VALID;
-                
 
+        try {
+            //  Validate the JWT and process it to the Claims
+            this.claims = jwtConsumer.processToClaims(T);
+            this.isValid = VALID;
+        } catch (InvalidJwtException e) {
+            if (e.hasExpired()) {
+                isValid = EXPIRED;
             }
-            catch (InvalidJwtException e)
-            {
-                
-                
-                
-                if (e.hasExpired())
-                {
-                    isValid = EXPIRED;
-                }
-        
-                
-                if (e.hasErrorCode(ErrorCodes.AUDIENCE_INVALID))
-                {
-                    isValid = NOT_VALID;
-                }
-
-                
+            if (e.hasErrorCode(ErrorCodes.AUDIENCE_INVALID)) {
+                isValid = NOT_VALID;
             }
-            
-    
+        }
     }
 
     /**
      * create a token given the email and the password
-     * @param email user email
+     *
+     * @param email    user email
      * @param password password of the user, for now is just having two different constructor
-     * @throws JoseException 
+     * @throws JoseException
      */
-    public TokenJWT(String email, String password) throws JoseException{
-        if(rsaJsonWebKey==null){
+    public TokenJWT(String email, String password) throws JoseException {
+        if (rsaJsonWebKey == null) {
             rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
             rsaJsonWebKey.setKeyId("k1");
         }
-        
-        
+
+
         //creates a set of claims
         claims = new JwtClaims();
         claims.setIssuer("bitsei_webapp");
@@ -133,8 +116,7 @@ public class TokenJWT {
         claims.setNotBeforeMinutesInThePast(2);
         claims.setClaim("email", email);
 
-        
-        
+
         //create the token
         token = new JsonWebSignature();
         token.setPayload(claims.toJson());
@@ -142,13 +124,11 @@ public class TokenJWT {
 
         //set the private key of the token
         token.setKey(rsaJsonWebKey.getPrivateKey());
-
         token.setKeyIdHeaderValue(rsaJsonWebKey.getKeyId());
-
         token.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
 
         isValid = VALID;
-        
+
     }
 
     public String getTokenString() throws JoseException {
@@ -160,38 +140,32 @@ public class TokenJWT {
     }
 
     /**
-     * 
-     * @return the exiration date in Unix timestamp, if the claim is malformed will return 0
+     * @return the expiration date in Unix timestamp, if the claim is malformed will return 0
      */
-    public long getExpireDate(){
-        try{
-            return claims.getExpirationTime().getValueInMillis()/1000;
-        }catch(Exception  e){
+    public long getExpireDate() {
+        try {
+            return claims.getExpirationTime().getValueInMillis() / 1000;
+        } catch (Exception e) {
             return 0;
         }
 
     }
 
-     /**
-     * 
-     * @return the issiued date in Unix timestamp, if the claim is malformed will return 0
+    /**
+     * @return the issued date in Unix timestamp, if the claim is malformed will return 0
      */
     public long getCreationDate() {
-        try{
-            return claims.getIssuedAt().getValueInMillis()/1000;
-        }catch(Exception  e){
+        try {
+            return claims.getIssuedAt().getValueInMillis() / 1000;
+        } catch (Exception e) {
             return 0;
         }
     }
 
     /**
-     * 
      * @return returns one of this 3 things: VALID EXPIRED NOT_VALID
      */
     public int getIsValid() {
-        return  isValid;
+        return isValid;
     }
-
-    
-
 }

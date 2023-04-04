@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022-2023 University of Padua, Italy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package it.unipd.dei.bitsei.resources;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -6,18 +21,22 @@ import com.fasterxml.jackson.core.JsonToken;
 import java.io.*;
 
 /**
- * Represents a message or an error message.
+ * Represents a JSON string value for one field.
+ *
+ * @author BITSEI GROUP
+ * @version 1.00
+ * @since 1.00
  */
 public class StringValue extends AbstractResource {
 
     /**
-     * The email
+     * The string value of the given field.
      */
     private final String strVal;
 
 
     /**
-     * Creates a email.
+     * string value of the given field.
      *
      * @param strVal the value.
      */
@@ -27,9 +46,9 @@ public class StringValue extends AbstractResource {
 
 
     /**
-     * Returns the email.
+     * Returns the value.
      *
-     * @return the email.
+     * @return the value.
      */
     public final String getValue() {
         return strVal;
@@ -49,8 +68,8 @@ public class StringValue extends AbstractResource {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No Email object found in the stream.");
-                    throw new EOFException("Unable to parse JSON: no Email object found.");
+                    LOGGER.error("No %s object found in the stream.", field_name);
+                    throw new EOFException("Unable to parse JSON: no specific object found.");
                 }
             }
 
@@ -62,7 +81,7 @@ public class StringValue extends AbstractResource {
             }
 
         } catch (IOException e) {
-            LOGGER.error("Unable to parse an User object from JSON.", e);
+            LOGGER.error("Unable to parse a object value from JSON.", e);
             throw e;
         }
 
