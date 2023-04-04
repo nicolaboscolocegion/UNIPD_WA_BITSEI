@@ -12,21 +12,40 @@
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>FilterInvoiceByDateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.FilterInvoiceByDateServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.FilterInvoiceByTotalServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>InvoicesByDateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.InvoicesByDateServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>CreateCustomerServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CreateCustomerServlet</servlet-class>
-    </servlet>
-
     <servlet-mapping>
-        <servlet-name>CreateCustomerServlet</servlet-name>
-        <url-pattern>/customertest</url-pattern>
+        <servlet-name>FilterInvoiceByDateServlet</servlet-name>
+        <url-pattern>/filter-invoices-by-period</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
+        <url-pattern>/filter-invoices-by-total</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>InvoicesByDateServlet</servlet-name>
+        <url-pattern>/invoices-by-date</url-pattern>
+    </servlet-mapping>
 
     <resource-ref>
         <description>Connection pool to the database</description>
