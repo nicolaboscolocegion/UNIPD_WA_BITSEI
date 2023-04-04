@@ -1,8 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.CreateCustomerDAO;
 import it.unipd.dei.bitsei.dao.CreateProductDAO;
-import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Product;
@@ -52,9 +50,9 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
         try {
 
             // retrieves the request parameters
-            company_id = Integer.valueOf(req.getParameter("company_id")).intValue();
+            company_id = Integer.valueOf(req.getParameter("company_id"));
             title = req.getParameter("title");
-            default_price = Integer.valueOf(req.getParameter("default_price")).intValue();
+            default_price = Integer.valueOf(req.getParameter("default_price"));
             logo = req.getParameter("logo");
             measurement_unit = req.getParameter("measurement_unit");
             description = req.getParameter("description");
@@ -63,7 +61,7 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
 
 
 
-            fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|png|gif|bmp))$", logo, "LOGO");
+            fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", logo, "LOGO");
 
 
             // creates a new foo customer
