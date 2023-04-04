@@ -1,8 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.CreateCustomerDAO;
 import it.unipd.dei.bitsei.dao.CreateProductDAO;
-import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Product;
@@ -52,9 +50,9 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
         try {
 
             // retrieves the request parameters
-            company_id = Integer.parseInt(req.getParameter("company_id"));
+            company_id = Integer.valueOf(req.getParameter("company_id"));
             title = req.getParameter("title");
-            default_price = Integer.parseInt(req.getParameter("default_price"));
+            default_price = Integer.valueOf(req.getParameter("default_price"));
             logo = req.getParameter("logo");
             measurement_unit = req.getParameter("measurement_unit");
             description = req.getParameter("description");
@@ -62,8 +60,8 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
             LOGGER.info("DATA: compID: " + company_id + " title: " + title + " defPrice: " + default_price + " logo: " + logo + " measurUnit: " + measurement_unit + " descr: " + description);
 
 
-            //fieldRegexValidation("([0-9a-zA-Z :\\-_!@$%^&*()])+(.jpg|.JPG|.jpeg|.JPEG|.bmp|.BMP|.gif|.GIF|.psd|.PSD)$", logo, "LOGO");
 
+            fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", logo, "LOGO");
 
 
             // creates a new foo customer
