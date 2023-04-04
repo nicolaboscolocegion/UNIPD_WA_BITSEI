@@ -40,10 +40,16 @@ public class FilterInvoiceByTotalDAO extends AbstractDAO<List<Invoice>> {
      * Start total for the interval to be considered
      */
     private final double startTotal;
+
     /**
      * End total for the interval to be considered
      */
     private final double endTotal;
+
+    /**
+     * Parameter to order the query results by total, descending (1) or ascending(2) (default value=0)
+     */
+    private int orderedByTotal = 1;
 
     /**
      * Creates a new object for searching the invoices from startTotal to endTotal
@@ -56,6 +62,14 @@ public class FilterInvoiceByTotalDAO extends AbstractDAO<List<Invoice>> {
         super(con);
         this.startTotal = startTotal;
         this.endTotal = endTotal;
+    }
+
+    public FilterInvoiceByTotalDAO(final Connection con, final double startTotal, final double endTotal, final int orderedByTotal){
+        super(con);
+        this.startTotal = startTotal;
+        this.endTotal = endTotal;
+        if(orderedByTotal == 1 || orderedByTotal == 2)
+            this.orderedByTotal = orderedByTotal;
     }
 
     /**
