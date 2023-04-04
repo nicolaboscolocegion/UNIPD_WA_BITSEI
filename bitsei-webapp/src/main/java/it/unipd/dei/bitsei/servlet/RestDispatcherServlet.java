@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 /**
  * Dispatches the request to the proper REST resource.
@@ -31,6 +32,9 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an User, delegate its processing and return
             if (processUser(req, res)) {
+                return;
+            }
+            if(processLogin(req, res)){
                 return;
             }
 
@@ -95,6 +99,43 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     break;
                 case "POST":
 //                    new CreateUserRR(req, res, getConnection()).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /user.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+    private boolean processLogin(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException{
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/login") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("login") + 5);
+
+        // the request URI is: /login
+        // if method POST, authenticate the user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                case "POST":
+                    new LoginUserRR(req, res, getConnection()).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /user: %s.", method);

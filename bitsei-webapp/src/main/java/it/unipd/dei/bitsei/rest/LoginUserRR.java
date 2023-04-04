@@ -15,7 +15,7 @@
 */
 
 
-package it.unipd.dei.bitsei.servlet;
+package it.unipd.dei.bitsei.rest;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +24,20 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.jose4j.lang.JoseException;
 
 import it.unipd.dei.bitsei.dao.UserAuthDAO;
-
+import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.LogContext;
+import it.unipd.dei.bitsei.resources.LoginResurce;
 import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.TokenJWT;
+import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.resources.Token;
+import it.unipd.dei.bitsei.servlet.AbstractDatabaseServlet;
+import it.unipd.dei.bitsei.utils.TokenJWT;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
  
  
@@ -42,22 +49,27 @@ import java.sql.SQLException;
 * @version 1.00
 * @since 1.00
 */
-public class LoginServlet extends AbstractDatabaseServlet{
+public class LoginUserRR extends AbstractRR{
  
+
+	public LoginUserRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.LOGIN, req, res, con);
+    }
+
+	
+
+	
+
 	/**
 	 * Controll the autetication of the user
 	*
-	* @param req the HTTP request from the client.
-	* @param res the HTTP response from the server.
+	* 
+	* 
 	*
 	* @throws IOException if any error occurs in the client/server communication.
 	*/
-	public void doPost(HttpServletRequest req, HttpServletResponse res)  {
-		
-	LogContext.setIPAddress(req.getRemoteAddr());
-	LogContext.setResource(req.getRequestURI());
-	LogContext.setAction("LOGIN");
-
+	@Override
+	protected void doServe() throws IOException{
 		
 	//username of the user
 	String email = null; 
@@ -75,68 +87,39 @@ public class LoginServlet extends AbstractDatabaseServlet{
 	try {
 
 			// retrieves the user paramiters
+				
+			 LoginResurce	user = LoginResurce.fromJSON(req.getInputStream());
 			
-			email = req.getParameter("email");
-			password = req.getParameter("password");
 
 
 			// creates a new object for accessing the database and searching the employees
 			
-			autenticate = new UserAuthDAO(getConnection(), email, password).access().getOutputParam();
+			autenticate = new UserAuthDAO(con, user).access().getOutputParam();
 
 
-		} catch (SQLException ex) {
-			m = new Message("Cannot search for user: unexpected error while accessing the database.", "E200",
-					ex.getMessage());
+	} catch (SQLException ex) {
+		m = new Message("Cannot search for user: unexpected error while accessing the database.", "E200",
+				ex.getMessage());
 
-			LOGGER.error("Cannot search for user: unexpected error while accessing the database.", ex);
-		}
+		LOGGER.error("Cannot search for user: unexpected error while accessing the database.", ex);
+	}catch(IOException e){
+		LOGGER.error("unable to read request inputStream", e);
+	}
 		
 		
 		
 		try {
 			// set the MIME media type of the response
-			res.setContentType("text/html; charset=utf-8");
+			res.setContentType("application/json; charset=utf-8");
 
 			if (autenticate){
 			TokenJWT token = new TokenJWT(email, password);
-			res.addHeader("Authorization", "Bearer "+token.getTokenString());
-
 			
+			res.setStatus(HttpServletResponse.SC_OK);
+			new Token(token.getTokenString()).toJSON(res.getOutputStream());
+
 			}
-
-			// get a stream to write the response
-			PrintWriter out = res.getWriter();
-
-			// write the HTML page
-			out.printf("<!DOCTYPE html>%n");
-
-			out.printf("<html lang=\"en\">%n");
-			out.printf("<head>%n");
-			out.printf("<meta charset=\"utf-8\">%n");
-			out.printf("<title>Auth</title>%n");
-			out.printf("</head>%n");
-
-			out.printf("<body>%n");
-
-			if(autenticate){
-				out.printf("<h1>Autenticate</h1>%n");
-				out.printf("<hr>%n");
-			}else{
-				out.printf("<h1>NOT Autenticate</h1>%n");
-				out.printf("<hr>%n");
-			}
-
-
-			out.printf("</body>%n");
-
-			out.printf("</html>%n");
-
-			// flush the output stream buffer
-			out.flush();
-
-			// close the output stream
-			out.close();
+			
 		} catch (IOException | JoseException ex) {
 			LOGGER.error(new StringFormattedMessage("Unable to send response when Autenticate"), ex);
 			
@@ -145,8 +128,8 @@ public class LoginServlet extends AbstractDatabaseServlet{
 			LogContext.removeAction();
 			LogContext.removeUser();
 		}
+	
 	}
-
 		//send the token and the message if the user is autenticated
 }
 

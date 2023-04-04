@@ -51,8 +51,10 @@ public class LoginResurce extends AbstractResource {
             }
 
         }catch(Exception e){
-
+            LOGGER.error("Unable to parse an User object from JSON.", e);
+            
         }
+
 
         
 
@@ -63,6 +65,14 @@ public class LoginResurce extends AbstractResource {
     protected void writeJSON(OutputStream out) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("");
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
     
 }
