@@ -24,7 +24,7 @@
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/loggged</url-pattern>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
     <resource-ref>
