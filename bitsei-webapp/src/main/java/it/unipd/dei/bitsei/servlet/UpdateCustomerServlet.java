@@ -1,11 +1,7 @@
 package it.unipd.dei.bitsei.servlet;
 
 
-
-import java.io.IOException;
-import java.sql.SQLException;
-
-import it.unipd.dei.bitsei.dao.CreateCustomerDAO;
+import it.unipd.dei.bitsei.dao.UpdateCustomerDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -14,16 +10,19 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static it.unipd.dei.bitsei.utils.RegexValidation.fieldRegexValidation;
 
 /**
- * Creates a new customer into the database.
+ * Updates a customer into the database.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
-public final class CreateCustomerServlet extends AbstractDatabaseServlet {
+public final class UpdateCustomerServlet extends AbstractDatabaseServlet {
 
     /**
      * Creates a new customer into the database.
@@ -38,7 +37,7 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
      * @throws IOException
      *             if any error occurs in the client/server communication.
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
+    public void doPut(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
         LogContext.setIPAddress(req.getRemoteAddr());
@@ -58,6 +57,7 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
         String pec = null;
         String uniqueCode = null;
         int companyID = -1;
+        int customerID = -1;
 
         try {
 
@@ -80,8 +80,16 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
                 LOGGER.info("No company id provided for %s, will be set to null.", businessName);
             }
 
+            String customerID_raw = req.getParameter("customerID");
+            try {
+                customerID = Integer.parseInt(customerID_raw);
+            }
+            catch (NumberFormatException ex) {
+                LOGGER.error("Error while parsing business %s", businessName);
+            }
+
             //filterCompanyOwner(companyID, ownerID)
-            //LOGGER.info("data parsed: " + businessName + vatNumber + taxCode + emailAddress);
+            LOGGER.info("data parsed: " + emailAddress);
 
             fieldRegexValidation("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", emailAddress, "EMAIL");
             fieldRegexValidation("^(IT)?[0-9]{11}$", vatNumber, "VAT NUMBER");
@@ -92,38 +100,37 @@ public final class CreateCustomerServlet extends AbstractDatabaseServlet {
 
 
 
-
             // creates a new foo customer
-            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode, companyID);
+            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode, companyID, customerID);
 
             // creates a new object for accessing the database and stores the customer
-            new CreateCustomerDAO(getConnection(), c).access();
+            new UpdateCustomerDAO(getConnection(), c).access();
 
-            m = new Message(String.format("Customer %s successfully created.", businessName));
+            m = new Message(String.format("Customer %s successfully updated.", businessName));
 
-            LOGGER.info("Customer %s successfully created in the database.", businessName);
+            LOGGER.info("Customer %s successfully updated in the database.", businessName);
 
         } catch (NumberFormatException ex) {
             m = new Message(
-                    "Cannot create the customer. Invalid input parameters: business name, vat number and tax code must be string.",
+                    "Cannot update the customer. Invalid input parameters: business name, vat number and tax code must be string.",
                     "E100", ex.getMessage());
 
             LOGGER.error(
-                    "Cannot create the customer. Invalid input parameters: business name, vat number and tax code must be string",
+                    "Cannot update the customer. Invalid input parameters: business name, vat number and tax code must be string",
                     ex);
         } catch (SQLException ex) {
             if ("23505".equals(ex.getSQLState())) {
-                m = new Message(String.format("Cannot create the customer: customer %s already exists.", businessName), "E300",
+                m = new Message(String.format("Cannot update the customer: customer %s already exists.", businessName), "E300",
                         ex.getMessage());
 
                 LOGGER.error(
-                        new StringFormattedMessage("Cannot create the customer: customer %s already exists.", businessName),
+                        new StringFormattedMessage("Cannot update the customer: customer %s already exists.", businessName),
                         ex);
             } else {
-                m = new Message("Cannot create the customer: unexpected error while accessing the database.", "E200",
+                m = new Message("Cannot update the customer: unexpected error while accessing the database.", "E200",
                         ex.getMessage());
 
-                LOGGER.error("Cannot create the customer: unexpected error while accessing the database.", ex);
+                LOGGER.error("Cannot update the customer: unexpected error while accessing the database.", ex);
             }
         }  catch (IllegalArgumentException ex) {
             m = new Message(
