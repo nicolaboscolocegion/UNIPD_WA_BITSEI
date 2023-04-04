@@ -70,6 +70,16 @@
         <url-pattern>/loadcustomer</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GenerateCustomersReportServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateCustomersReportServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenerateCustomersReportServlet</servlet-name>
+        <url-pattern>/generatecreport</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>

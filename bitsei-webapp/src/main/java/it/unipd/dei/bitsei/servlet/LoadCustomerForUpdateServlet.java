@@ -11,12 +11,12 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
+
 
 /**
  * Searches customer by his ID.
  *
- * @author Nicola Ferro (mirco.cazzaro@studenti.unipd.it)
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */

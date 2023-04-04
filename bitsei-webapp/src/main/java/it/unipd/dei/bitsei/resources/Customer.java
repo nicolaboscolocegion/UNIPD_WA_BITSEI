@@ -50,6 +50,11 @@ public class Customer {
     private final String postalCode;
 
     /**
+     * The full address of the customer company
+     */
+    private final String fullAddress;
+
+    /**
      * The province of the customer company
      */
     private final String emailAddress;
@@ -68,6 +73,7 @@ public class Customer {
      * The province of the customer company
      */
     private final Integer companyID;
+
 
 
     /**
@@ -105,6 +111,7 @@ public class Customer {
         this.city = city;
         this.province = province;
         this.postalCode = postalCode;
+        this.fullAddress = this.address + " " + this.postalCode + " " + this.city + " (" + this.province + ")";
         this.emailAddress = emailAddress;
         this.pec = pec;
         this.uniqueCode = uniqueCode;
@@ -144,7 +151,7 @@ public class Customer {
      * @param customerID
      *            the customerID of the customer.
      */
-    public Customer( final int customerID, final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
+    public Customer( final int customerIgitD, final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
         this.customerID = customerID;
         this.businessName = businessName;
         this.vatNumber = vatNumber;
@@ -153,6 +160,7 @@ public class Customer {
         this.city = city;
         this.province = province;
         this.postalCode = postalCode;
+        this.fullAddress = this.address + " " + this.postalCode + " " + this.city + " (" + this.province + ")";
         this.emailAddress = emailAddress;
         this.pec = pec;
         this.uniqueCode = uniqueCode;
@@ -179,6 +187,7 @@ public class Customer {
         this.city = null;
         this.province = null;
         this.postalCode = null;
+        this.fullAddress = null;
         this.emailAddress = null;
         this.pec = null;
         this.uniqueCode = null;
@@ -246,6 +255,15 @@ public class Customer {
      */
     public String getPostalCode() {
         return postalCode;
+    }
+
+    /**
+     * Returns the email address of the customer company.
+     *
+     * @return the email address of the customer company.
+     */
+    public String getFullAddress() {
+        return fullAddress;
     }
 
     /**
