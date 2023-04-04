@@ -27,6 +27,18 @@
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
 
+<!--    Authentication filter-->
+
+<!--    <filter>-->
+<!--        <filter-name>AuthenticationFilter</filter-name>-->
+<!--        <filter-class>it.unipd.dei.bitsei.filter.JwtAuthenticationFilter</filter-class>-->
+<!--    </filter>-->
+<!--    -->
+<!--    <filter-mapping>-->
+<!--        <filter-name>AuthenticationFilter</filter-name>-->
+<!--        <url-pattern>/NeedAuth</url-pattern>-->
+<!--    </filter-mapping>-->
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>
