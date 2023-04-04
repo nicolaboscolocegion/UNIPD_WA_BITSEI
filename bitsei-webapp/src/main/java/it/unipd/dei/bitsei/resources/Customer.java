@@ -76,6 +76,7 @@ public class Customer {
 
 
 
+
     /**
      * Constructor used to create a new customer
      *
@@ -151,7 +152,7 @@ public class Customer {
      * @param customerID
      *            the customerID of the customer.
      */
-    public Customer( final int customerIgitD, final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
+    public Customer( final int customerID, final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
         this.customerID = customerID;
         this.businessName = businessName;
         this.vatNumber = vatNumber;
