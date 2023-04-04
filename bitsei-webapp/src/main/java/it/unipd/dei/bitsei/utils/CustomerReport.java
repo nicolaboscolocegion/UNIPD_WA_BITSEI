@@ -18,7 +18,7 @@ public class CustomerReport {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lc);
         Map<String, Object> map = new HashMap<>();
         map.put("proudlyCreatedBy", "Dott. Mirco CAZZARO");
-        map.put("banner", path + "jrxml\\leaf_banner_green.png");
+        map.put("banner", path + "jrxml\\customer_report_header.png");
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
         JasperExportManager.exportReportToPdfFile(jasperPrint, path + "/pdf/customers_report.pdf");
         return "";
