@@ -141,8 +141,11 @@ public class Customer {
      *            the unique code associated to the Italian Income Agency invoice submitter provider.
      * @param companyID
      *            the companyID that is setting the customer.
+     * @param customerID
+     *            the customerID of the customer.
      */
-    public Customer(final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID, final int customerID) {
+    public Customer( final int customerID, final String businessName, final String vatNumber, final String taxCode, final String address, final String city, final String province, final String postalCode, final String emailAddress, final String pec, final String uniqueCode, final int companyID) {
+        this.customerID = customerID;
         this.businessName = businessName;
         this.vatNumber = vatNumber;
         this.taxCode = taxCode;
@@ -159,7 +162,6 @@ public class Customer {
         else {
             this.companyID = null;
         }
-        this.customerID = customerID;
     }
 
     /**

@@ -101,7 +101,7 @@ public final class UpdateCustomerServlet extends AbstractDatabaseServlet {
 
 
             // creates a new foo customer
-            c = new Customer(businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode, companyID, customerID);
+            c = new Customer(customerID, businessName, vatNumber, taxCode, address, city, province, postalCode, emailAddress, pec, uniqueCode, companyID);
 
             // creates a new object for accessing the database and stores the customer
             new UpdateCustomerDAO(getConnection(), c).access();
