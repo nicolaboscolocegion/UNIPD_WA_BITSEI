@@ -12,7 +12,9 @@
 
     <!-- Project description elements -->
     <name>Business Integrated System for Electronic Invoicing</name>
-    <description>Management system that allows companies and professionals to keep track of their customers' activities and generate proper documentation, including XML invoices that comply with Italian regulations. </description>
+    <description>Management system that allows companies and professionals to keep track of their customers' activities
+        and generate proper documentation, including XML invoices that comply with Italian regulations.
+    </description>
 
     <url>https://bitbucket.org/upd-dei-stud-prj/bitsei</url>
     <inceptionYear>2023</inceptionYear>
