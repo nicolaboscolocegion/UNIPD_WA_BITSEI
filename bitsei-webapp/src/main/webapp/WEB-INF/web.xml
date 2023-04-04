@@ -2,65 +2,69 @@
 
 
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
     <display-name>BITSEI Rest Api</display-name>
 
     <description>Business Integrated System for Electronic Invoicing.</description>
 
-
     <servlet>
-
         <servlet-name>RestManagerServlet</servlet-name>
-
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
-
     </servlet>
 
-
     <servlet-mapping>
-
         <servlet-name>RestManagerServlet</servlet-name>
-
         <url-pattern>/rest/*</url-pattern>
-
     </servlet-mapping>
-
 
     <servlet>
-
         <servlet-name>CreateCustomerServlet</servlet-name>
-
         <servlet-class>it.unipd.dei.bitsei.servlet.CreateCustomerServlet</servlet-class>
-
     </servlet>
 
-
     <servlet-mapping>
-
         <servlet-name>CreateCustomerServlet</servlet-name>
-
-        <url-pattern>/customertest</url-pattern>
-
+        <url-pattern>/customerinsert</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteCustomerServlet</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/customerdelete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateCustomerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <url-pattern>/customerupdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CreateProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <url-pattern>/productinsert</url-pattern>
+    </servlet-mapping>
 
     <resource-ref>
-
         <description>Connection pool to the database</description>
-
         <res-ref-name>jdbc/bitsei</res-ref-name>
-
         <res-type>javax.sql.DataSource</res-type>
-
         <res-auth>Container</res-auth>
-
     </resource-ref>
-
 
 </web-app>
