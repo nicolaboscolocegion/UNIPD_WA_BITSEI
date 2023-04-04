@@ -62,8 +62,8 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
             LOGGER.info("DATA: compID: " + company_id + " title: " + title + " defPrice: " + default_price + " logo: " + logo + " measurUnit: " + measurement_unit + " descr: " + description);
 
 
-            //fieldRegexValidation("([0-9a-zA-Z :\\-_!@$%^&*()])+(.jpg|.JPG|.jpeg|.JPEG|.bmp|.BMP|.gif|.GIF|.psd|.PSD)$", logo, "LOGO");
 
+            fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|png|gif|bmp))$", logo, "LOGO");
 
 
             // creates a new foo customer
