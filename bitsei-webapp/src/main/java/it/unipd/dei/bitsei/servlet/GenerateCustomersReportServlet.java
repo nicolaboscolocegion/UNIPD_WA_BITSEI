@@ -18,11 +18,17 @@ import java.util.Map;
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
 
-
+/**
+ * Servlet for customers reporting
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
 
     /**
-     * Searches employees by their salary.
+     * Generates customers pdf report.
      *
      * @param req
      *            the HTTP request from the client.

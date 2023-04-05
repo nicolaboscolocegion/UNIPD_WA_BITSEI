@@ -4,6 +4,13 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.util.regex.Pattern;
 
+/**
+ * Utils class for regEx validation of input fields.
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public abstract class RegexValidationClass {
 
     public static void fieldRegexValidation(String regexPattern, String emailAddress, String type) {
