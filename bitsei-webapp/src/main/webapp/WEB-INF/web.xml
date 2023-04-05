@@ -90,6 +90,16 @@
         <url-pattern>/generatecreport</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GenerateProductsReportServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateProductsReportServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenerateProductsReportServlet</servlet-name>
+        <url-pattern>/generatepreport</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>

@@ -1,6 +1,7 @@
 package it.unipd.dei.bitsei.utils;
 
 import it.unipd.dei.bitsei.resources.Customer;
+import it.unipd.dei.bitsei.resources.Product;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
@@ -12,15 +13,13 @@ import java.util.Map;
 
 public class ReportClass {
 
-    public static String exportCustomerReport(List<Customer> lc, String path) throws FileNotFoundException, JRException {
-        File f = new File("webapps/bitsei-1.0/jrxml/CustomerList.jrxml");
+    public static void exportReport(List<?> l, String path, String jrxmlPath, String fileOutputName, Map<String, Object> map) throws FileNotFoundException, JRException {
+        File f = new File(jrxmlPath);
         JasperReport jasperReport = JasperCompileManager.compileReport(f.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lc);
-        Map<String, Object> map = new HashMap<>();
-        map.put("proudlyCreatedBy", "Dott. Mirco CAZZARO");
-        map.put("banner", path + "jrxml\\customer_report_header.png");
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(l);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, dataSource);
-        JasperExportManager.exportReportToPdfFile(jasperPrint, path + "/pdf/customers_report.pdf");
-        return "";
+        JasperExportManager.exportReportToPdfFile(jasperPrint, path + "/pdf/" + fileOutputName);
     }
+
+
 }
