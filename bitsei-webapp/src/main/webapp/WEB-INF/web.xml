@@ -120,6 +120,26 @@
         <url-pattern>/generatepreport</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.FilterInvoiceByTotalServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
+        <url-pattern>/filter-invoices-by-total</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>

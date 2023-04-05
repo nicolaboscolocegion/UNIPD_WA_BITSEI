@@ -55,6 +55,7 @@ public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 		LogContext.setIPAddress(req.getRemoteAddr());
 		LogContext.setAction(Actions.FILTER_INVOICES_BY_PERIOD);
 
+
 		final Date BASE_DATE = new Date(70, 01, 01);
 		LocalDate currentDate = LocalDate.now();
 		final Date CURRENT_DATE = Date.valueOf(currentDate);
