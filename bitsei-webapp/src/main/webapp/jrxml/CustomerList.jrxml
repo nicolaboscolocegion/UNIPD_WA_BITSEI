@@ -62,7 +62,7 @@
                     <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51cf9ab-6ed7-4978-8cb8-62eab0ce52af"/>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Calibri" size="10" isBold="true"/>
+                    <font fontName="Arial" size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[Business Name]]></text>
             </staticText>

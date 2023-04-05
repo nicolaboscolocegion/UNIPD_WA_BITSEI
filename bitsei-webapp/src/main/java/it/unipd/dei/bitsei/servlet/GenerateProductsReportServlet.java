@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.nio.file.FileSystems;
+
 
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
@@ -55,15 +57,17 @@ public class GenerateProductsReportServlet extends AbstractDatabaseServlet{
             LOGGER.info("Products successfully fetched.");
             LOGGER.info("fetched " + lp.size() + " prods");
 
+
             String absPath = super.getServletContext().getRealPath("/");
+            String separator = FileSystems.getDefault().getSeparator();
             Map<String, Object> map = new HashMap<>();
             map.put("proudlyCreatedBy", "Dott. Mirco CAZZARO");
             map.put("company_name", "TEST NAME");
-            map.put("company_logo", absPath + "company_logos\\user_logo_sample.png");
-            map.put("box", absPath + "jrxml\\box.png");
+            map.put("company_logo", absPath + "company_logos" + separator + "user_logo_sample.png");
+            map.put("box", absPath + "jrxml" + separator + "box.png");
 
             //exportProductReport(lp, super.getServletContext().getRealPath("/"));
-            exportReport(lp, absPath, "webapps/bitsei-1.0/jrxml/ProductList.jrxml", "product_reports.pdf", map);
+            exportReport(lp, absPath, "/jrxml/ProductList.jrxml", "product_reports.pdf", map);
 
 
 

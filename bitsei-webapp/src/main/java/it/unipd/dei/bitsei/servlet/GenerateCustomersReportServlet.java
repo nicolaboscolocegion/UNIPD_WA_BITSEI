@@ -11,6 +11,7 @@ import net.sf.jasperreports.engine.JRException;
 
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -53,12 +54,13 @@ public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
             LOGGER.info("Customers successfully fetched.");
 
             String absPath = super.getServletContext().getRealPath("/");
+            String separator = FileSystems.getDefault().getSeparator();
             Map<String, Object> map = new HashMap<>();
             map.put("proudlyCreatedBy", "Dott. Mirco CAZZARO");
-            map.put("banner", absPath + "jrxml\\customer_report_header.png");
+            map.put("banner", absPath + "jrxml" + separator + "customer_report_header.png");
 
             //exportCustomerReport(lc, super.getServletContext().getRealPath("/")); //old style
-            exportReport(lc, absPath, "webapps/bitsei-1.0/jrxml/CustomerList.jrxml", "customer_reports.pdf", map);
+            exportReport(lc, absPath, "/jrxml/CustomerList.jrxml", "customer_reports.pdf", map);
 
 
 
