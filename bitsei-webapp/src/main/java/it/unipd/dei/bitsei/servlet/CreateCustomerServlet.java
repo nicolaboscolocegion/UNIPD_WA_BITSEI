@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
-import static it.unipd.dei.bitsei.utils.RegexValidation.fieldRegexValidation;
+import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
 /**
  * Creates a new customer into the database.

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Searches employees by their salary.
  *
- * @author Nicola Ferro (ferro@dei.unipd.it)
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
@@ -29,9 +29,8 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
      * Creates a new object for searching employees by salary.
      *
      * @param con    the connection to the database.
-     * @param salary the salary of the employee.
      */
-    public FetchCustomersDAO(final Connection con, final int salary) {
+    public FetchCustomersDAO(final Connection con) {
         super(con);
     }
 

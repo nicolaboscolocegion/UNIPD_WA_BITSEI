@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerReport {
+public class ReportClass {
 
     public static String exportCustomerReport(List<Customer> lc, String path) throws FileNotFoundException, JRException {
         File f = new File("webapps/bitsei-1.0/jrxml/CustomerList.jrxml");

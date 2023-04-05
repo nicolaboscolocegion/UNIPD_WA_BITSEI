@@ -13,7 +13,7 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static it.unipd.dei.bitsei.utils.RegexValidation.fieldRegexValidation;
+import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
 /**
  * Updates a customer into the database.

@@ -12,10 +12,9 @@ import net.sf.jasperreports.engine.JRException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static it.unipd.dei.bitsei.utils.CustomerReport.exportCustomerReport;
+import static it.unipd.dei.bitsei.utils.ReportClass.exportCustomerReport;
 
 
 public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
@@ -34,8 +33,6 @@ public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
 
         LogContext.setIPAddress(req.getRemoteAddr());
 
-        // request parameter
-        int customerID = -1;
 
         // model
         List<Customer> lc;
@@ -45,13 +42,13 @@ public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
 
 
             // creates a new object for accessing the database and searching the employees
-            lc = new FetchCustomersDAO(getConnection(), customerID).access().getOutputParam();
+            lc = new FetchCustomersDAO(getConnection()).access().getOutputParam();
 
             m = new Message("Customers successfully fetched.");
 
             LOGGER.info("Customers successfully fetched.");
 
-            LOGGER.info("abs path: " + super.getServletContext().getRealPath("/"));
+            //LOGGER.info("abs path: " + super.getServletContext().getRealPath("/"));
 
             exportCustomerReport(lc, super.getServletContext().getRealPath("/"));
 

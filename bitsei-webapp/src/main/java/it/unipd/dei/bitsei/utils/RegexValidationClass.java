@@ -4,7 +4,7 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.util.regex.Pattern;
 
-public abstract class RegexValidation {
+public abstract class RegexValidationClass {
 
     public static void fieldRegexValidation(String regexPattern, String emailAddress, String type) {
         if(!Pattern.compile(regexPattern).matcher(emailAddress).matches()) {
