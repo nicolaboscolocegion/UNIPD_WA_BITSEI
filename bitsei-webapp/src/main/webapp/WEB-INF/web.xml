@@ -91,6 +91,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.LoadProductForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <url-pattern>/loadproduct</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>GenerateCustomersReportServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.GenerateCustomersReportServlet</servlet-class>
     </servlet>
