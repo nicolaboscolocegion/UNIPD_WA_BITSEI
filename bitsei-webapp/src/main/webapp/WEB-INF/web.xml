@@ -131,14 +131,15 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.FilterInvoiceByTotalServlet</servlet-class>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersJspServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>FilterInvoiceByTotalServlet</servlet-name>
-        <url-pattern>/filter-invoices-by-total</url-pattern>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters-jsp</url-pattern>
     </servlet-mapping>
+
 
     <resource-ref>
         <description>Connection pool to the database</description>
