@@ -46,6 +46,8 @@ public final class Actions {
      */
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
+    public static final String CHANGE_BANK_ACCOUNT = "CHANGE_BANK_ACCOUNT";
+
     /**
      * This class can be neither instantiated nor sub-classed.
      */

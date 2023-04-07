@@ -3,6 +3,7 @@ package it.unipd.dei.bitsei.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import it.unipd.dei.bitsei.resources.BankAccount;
 
@@ -22,7 +23,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * @param oldba the bank account to update
      * @param newBA the new bank account
      */
-    protected UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA) {
+    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA) {
         super(con);
         oldBankAccount=oldBA;
         newBankAccount=newBA;
@@ -33,7 +34,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * updates the old bank account with a new one, if the process is complete will return true 
      */
     @Override
-    protected void doAccess() throws Exception {
+    protected void doAccess() throws SQLException {
         outputParam = false;
         PreparedStatement pstmt = null;
         ResultSet rs = null;

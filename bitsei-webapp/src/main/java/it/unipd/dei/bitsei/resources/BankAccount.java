@@ -97,16 +97,15 @@ public class BankAccount extends AbstractResource{
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
 
-            // while we are not on the start of an element or the element is not
-            // a token element, advance to the next element (if any)
-            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"user".equals(jp.getCurrentName())) {
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"bankAccout".equals(jp.getCurrentName())) {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No User object found in the stream.");
-                    throw new EOFException("Unable to parse JSON: no User object found.");
+                    LOGGER.error("Not able to fin a bank account");
+                    
                 }
             }
+
 
             while (jp.nextToken() != JsonToken.END_OBJECT) {
 
