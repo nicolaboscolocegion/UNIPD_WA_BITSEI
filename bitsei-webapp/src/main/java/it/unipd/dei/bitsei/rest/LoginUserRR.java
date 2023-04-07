@@ -16,6 +16,7 @@
 package it.unipd.dei.bitsei.rest;
 
 
+import com.fasterxml.jackson.core.JsonFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
@@ -28,7 +29,10 @@ import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Token;
 import it.unipd.dei.bitsei.utils.TokenJWT;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -55,31 +59,30 @@ public class LoginUserRR extends AbstractRR {
 
     @Override
     protected void doServe() throws IOException {
-        LoginResource user;
-        //username of the user
-        String email = null;
+        LOGGER.info("KIIIIIIR KHARAAAAAAAA");
 
-        //password in clear of the username, this will changed when doing the frontend
+        //email of the user
+        String email = null;
+        //password in clear of the username, this will be changed when doing the frontend
         String password = null;
 
         //Response
         Message m;
 
-        boolean autenticate = false; //authentication flag
+        int owner_id; //authentication flag
 
         try {
-            // retrieves the user parameters
-            user = LoginResource.fromJSON(req.getInputStream());
-
+            // retrieves the user parameters from the request
+            final LoginResource loginResource = LoginResource.fromJSON(req.getInputStream());
             // creates a new object for accessing the database and searching the employees
-            autenticate = new UserAuthDAO(con, user).access().getOutputParam();
+            owner_id = new UserAuthDAO(con, loginResource).access().getOutputParam();
 
             // if the user is authenticated
-            if (autenticate) {
+            if (owner_id != -1) {
                 // set the MIME media type of the response
-                res.setContentType("application/json; charset=utf-8");
+//                res.setContentType("application/json; charset=utf-8");
 
-                TokenJWT token = new TokenJWT(user.getEmail(), user.getPassword());
+                TokenJWT token = new TokenJWT(loginResource.getEmail(), loginResource.getPassword(), owner_id);
                 res.setStatus(HttpServletResponse.SC_OK);
                 new Token(token.getTokenString()).toJSON(res.getOutputStream());
             }

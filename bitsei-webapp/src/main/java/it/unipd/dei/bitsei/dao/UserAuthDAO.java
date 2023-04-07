@@ -33,17 +33,17 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public class UserAuthDAO extends AbstractDAO<Boolean> {
+public class UserAuthDAO extends AbstractDAO<Integer> {
 
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT password FROM bitsei_schema.\"Owner\" WHERE email=?";
+    private static final String STATEMENT = "SELECT password, owner_id FROM bitsei_schema.\"Owner\" WHERE email = ?";
 
     /**
      * username of the user
      */
-    private final String usr;
+    private final String email;
 
     /**
      * hashed
@@ -53,14 +53,24 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
     /**
      * Creates a new object for searching the user
      *
-     * @param con          the connection to the database.
+     * @param con           the connection to the database.
      * @param loginResource the username and password of the user
      */
     public UserAuthDAO(final Connection con, final LoginResource loginResource) {
         super(con);
-        this.usr = loginResource.getEmail();
+
+        if (loginResource.getEmail() == null) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
+
+        this.email = loginResource.getEmail();
+
+        if (loginResource.getPassword() == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
         this.pass = loginResource.getPassword();
-        this.outputParam = false;
+
+        this.outputParam = -1;
     }
 
     /**
@@ -73,13 +83,21 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
         ResultSet rs = null;
 
         final String hashPassword;
+        final int owner_id;
 
         try {
             pstmt = con.prepareStatement(STATEMENT);
 
-            pstmt.setString(1, usr);
+            pstmt.setString(1, email);
             rs = pstmt.executeQuery();
+            if(!rs.next()) {
+                return;
+            }
+            LOGGER.info("User successfully found." + email + rs.getString("password"));
+
             hashPassword = rs.getString("password");
+            owner_id = rs.getInt("owner_id");
+
         } finally {
             if (rs != null) {
                 rs.close();
@@ -92,7 +110,7 @@ public class UserAuthDAO extends AbstractDAO<Boolean> {
 
         BCrypt.Result result = BCrypt.verifyer().verify(pass.toCharArray(), hashPassword);
         if (result.verified) {
-            outputParam = true;
+            outputParam = owner_id;
         }
 
     }
