@@ -226,5 +226,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
         return true;
+
     }
 }
