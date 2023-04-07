@@ -48,6 +48,7 @@ public final class Actions {
 
 
     public static final String CREATE_COMPANY = "CREATE_COMPANY";
+
     public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
 
     public static final String LIST_COMPANIES = "LIST_COMPANIES";
