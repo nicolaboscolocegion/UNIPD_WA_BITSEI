@@ -16,7 +16,7 @@
 
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersDAO;
+import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersJspDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -68,18 +67,23 @@ public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServle
 		final Date END_DATE = Date.valueOf(currentDate);
 
 		// request parameters
+		boolean filterByTotal = false;
 		double startTotal = START_TOTAL;
 		double endTotal = END_TOTAL;
 
+		boolean filterByDiscount = false;
 		double startDiscount = START_TOTAL;
 		double endDiscount = END_TOTAL;
-		
+
+		boolean filterByPfr = false;
 		double startPfr = START_TOTAL;
 		double endPfr = END_TOTAL;
 
+		boolean filterByInvoiceDate = false;
 		Date startInvoiceDate = START_DATE;
 		Date endInvoiceDate = END_DATE;
-		
+
+		boolean filterByWarningDate = false;
 		Date startWarningDate = START_DATE;
 		Date endWarningDate = END_DATE;
 
@@ -88,6 +92,20 @@ public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServle
 		Message m = null;
 
 		try {
+			if(req.getParameter("filterByTotal") != null)
+				filterByTotal = true;
+
+			if(req.getParameter("filterByDiscount") != null)
+				filterByDiscount = true;
+
+			if(req.getParameter("filterByPfr") != null)
+				filterByPfr = true;
+
+			if(req.getParameter("filterByInvoiceDate") != null)
+				filterByInvoiceDate = true;
+
+			if(req.getParameter("filterByWarningDate") != null)
+				filterByWarningDate = true;
 
 			try {
 				startTotal = Double.parseDouble(req.getParameter("startTotal"));
@@ -130,7 +148,7 @@ public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServle
 			} catch (NumberFormatException ex) {
 				endPfr = END_TOTAL;
 			}
-			
+
 			try {
 				startInvoiceDate = Date.valueOf(req.getParameter("startInvoiceDate"));
 			} catch (IllegalArgumentException ex) {
@@ -156,12 +174,18 @@ public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServle
 			}
 
 			// creates a new object for accessing the database and searching the employees
-			el = new GetInvoicesByFiltersDAO(getConnection(), startTotal, endTotal, startDiscount, endDiscount, startPfr, endPfr, startInvoiceDate, endInvoiceDate, startWarningDate, endWarningDate).access().getOutputParam();
+			el = new GetInvoicesByFiltersJspDAO(getConnection(),
+					filterByTotal, startTotal, endTotal,
+					filterByDiscount, startDiscount, endDiscount,
+					filterByPfr, startPfr, endPfr,
+					filterByInvoiceDate, startInvoiceDate, endInvoiceDate,
+					filterByWarningDate, startWarningDate, endWarningDate).access().getOutputParam();
 
 			//String tmp_string = "Invoices succesfully searched. Start Total: " + startTotal + " End Total: " + endTotal + " startDiscount: " + startDiscount + " endDiscount: " + endDiscount + " startPfr: " + startPfr + " endPfr: " + endPfr + " startInvoiceDate: " + startInvoiceDate.toString() + " endInvoiceDate: " + endInvoiceDate.toString() + " startWarningDate: " + startWarningDate + " endWarningDate: " + endWarningDate + ".";
 			m = new Message("Invoices succesfully searched");
 
 			LOGGER.info("## SERVLET: Invoices successfully searched ##");
+			LOGGER.info("## FilterByTotal: " + filterByTotal + " FilterByDiscount: " + filterByDiscount + " FilterByPfr: " + filterByPfr + " FilterByInvoiceDate: " + filterByInvoiceDate + " FilterByWarningDate: " + filterByWarningDate + " ##");
 
 		} catch (NumberFormatException ex) {
 			m = new Message("Cannot search for invoices. Invalid input parameters: totals must be double", "E100",
