@@ -147,9 +147,8 @@
 
     <servlet-mapping>
         <servlet-name>ChartJspServlet</servlet-name>
-        <url-pattern>/invoices-by-date</url-pattern>
+        <url-pattern>/chart-form</url-pattern>
     </servlet-mapping>
-
 
     <resource-ref>
         <description>Connection pool to the database</description>

@@ -16,7 +16,7 @@
 
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.FilterInvoiceByDateDAO;
+import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
@@ -71,13 +71,33 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
         LogContext.setIPAddress(req.getRemoteAddr());
         LogContext.setAction(Actions.INVOICES_BY_DATE);
 
-        final Date BASE_DATE = new Date(70, 01, 01);
-        LocalDate currentDate = LocalDate.now();
-        final Date CURRENT_DATE = Date.valueOf(currentDate);
-        // request parameter
-        Date startDate = BASE_DATE;
-        Date endDate = BASE_DATE;
-        int chart_type = 1;
+        // Default value for startTotal and startDiscount
+		final double START_TOTAL = 0.00;
+		// Default value for endTotal and endDiscount
+		final double END_TOTAL = 9E20;
+		// Default value for startInvoiceDate
+		final LocalDate baseDate = LocalDate.of(1970, 01, 01);
+		final Date START_DATE = Date.valueOf(baseDate);
+		// Default value for endInvoiceDate
+		final LocalDate currentDate = LocalDate.now();
+		final Date END_DATE = Date.valueOf(currentDate);
+
+		// request parameters
+		double startTotal = START_TOTAL;
+		double endTotal = END_TOTAL;
+
+		double startDiscount = START_TOTAL;
+		double endDiscount = END_TOTAL;
+		
+		double startPfr = START_TOTAL;
+		double endPfr = END_TOTAL;
+
+		Date startInvoiceDate = START_DATE;
+		Date endInvoiceDate = END_DATE;
+		
+		Date startWarningDate = START_DATE;
+		Date endWarningDate = END_DATE;
+        int chart_type = Integer.parseInt(req.getParameter("chartType"));
 
         // model
         List<Invoice> el = null;
@@ -85,36 +105,89 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
 
         try {
 
-            // retrieves the request parameter
             try {
-                startDate = Date.valueOf(req.getParameter("startDate"));
-            } catch (IllegalArgumentException ex) {
-                startDate = BASE_DATE;
-            }
+				startTotal = Double.parseDouble(req.getParameter("startTotal"));
+				if (startTotal <= 0)
+					startTotal = START_TOTAL;
+			} catch (NumberFormatException ex) {
+				startTotal = START_TOTAL;
+			}
 
-            try {
-                endDate = Date.valueOf(req.getParameter("endDate"));
-            } catch(IllegalArgumentException ex){
-                endDate = CURRENT_DATE;
-            }
+			try {
+				endTotal = Double.parseDouble(req.getParameter("endTotal"));
+			} catch (NumberFormatException ex) {
+				endTotal = END_TOTAL;
+			}
+
+			try {
+				startDiscount = Double.parseDouble(req.getParameter("startDiscount"));
+				if (startDiscount <= 0)
+					startDiscount = START_TOTAL;
+			} catch (NumberFormatException ex) {
+				startDiscount = START_TOTAL;
+			}
+
+			try {
+				endDiscount = Double.parseDouble(req.getParameter("endDiscount"));
+			} catch (NumberFormatException ex) {
+				endDiscount = END_TOTAL;
+			}
+
+			try {
+				startPfr = Double.parseDouble(req.getParameter("startPfr"));
+				if (startPfr <= 0)
+					startPfr = START_TOTAL;
+			} catch (NumberFormatException ex) {
+				startPfr = START_TOTAL;
+			}
+
+			try {
+				endPfr = Double.parseDouble(req.getParameter("endPfr"));
+			} catch (NumberFormatException ex) {
+				endPfr = END_TOTAL;
+			}
+			
+			try {
+				startInvoiceDate = Date.valueOf(req.getParameter("startInvoiceDate"));
+			} catch (IllegalArgumentException ex) {
+				startInvoiceDate = START_DATE;
+			}
+
+			try {
+				endInvoiceDate = Date.valueOf(req.getParameter("endInvoiceDate"));
+			} catch(IllegalArgumentException ex){
+				endInvoiceDate = END_DATE;
+			}
+
+			try {
+				startWarningDate = Date.valueOf(req.getParameter("startWarningDate"));
+			} catch (IllegalArgumentException ex) {
+				startWarningDate = START_DATE;
+			}
+
+			try {
+				endWarningDate = Date.valueOf(req.getParameter("endWarningDate"));
+			} catch(IllegalArgumentException ex){
+				endWarningDate = END_DATE;
+			}
 
             // creates a new object for accessing the database and searching the employees
-            el = new FilterInvoiceByDateDAO(getConnection(), startDate, endDate).access().getOutputParam();
+            el = new GetInvoicesByFiltersDAO(getConnection(), startTotal, endTotal, startDiscount, endDiscount, startPfr, endPfr, startInvoiceDate, endInvoiceDate, startWarningDate, endWarningDate).access().getOutputParam();
 
-            m = new Message("Employees successfully searched.");
+            m = new Message("Invoices succesfully searched");
 
-            LOGGER.info("Invoices successfully searched by startDate %s and endDate %s.", startDate.toString(), endDate.toString());
+			LOGGER.info("## SERVLET: Invoices successfully searched ##");
 
         } catch (NumberFormatException ex) {
-            m = new Message("Cannot search for employees. Invalid input parameters: salary must be integer.", "E100",
+            m = new Message("Cannot search for invoices. Invalid input parameters: totals must be double.", "E100",
                     ex.getMessage());
 
-            LOGGER.error("Cannot search for employees. Invalid input parameters: salary must be integer.", ex);
+            LOGGER.error("Cannot search for invoices. Invalid input parameters: totals must be double.", ex);
         } catch (SQLException ex) {
-            m = new Message("Cannot search for employees: unexpected error while accessing the database.", "E200",
+            m = new Message("Cannot search for invoices: unexpected error while accessing the database.", "E200",
                     ex.getMessage());
 
-            LOGGER.error("Cannot search for employees: unexpected error while accessing the database.", ex);
+            LOGGER.error("Cannot search for invoices: unexpected error while accessing the database.", ex);
         }
         
         ArrayList<String> tmap_labels = new ArrayList<>();
@@ -125,10 +198,10 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
             //INVOICE BY DATE (MONTH)
             TreeMap<Date,Integer> tmap_numb_month = new TreeMap<>();
             for (Invoice i: el){
-                
-                tmap_numb_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
-                1+tmap_numb_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0));
-
+                if(i.getInvoice_date()!=null){
+                    tmap_numb_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
+                    1+tmap_numb_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0));
+                }
             }
             
             int size = tmap_numb_month.size();
@@ -145,10 +218,10 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
             //TOTAL BY DATE (MONTH)
             TreeMap<Date,Double> tmap_total_month = new TreeMap<>();
             for (Invoice i: el){
-                
-                tmap_total_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
-                i.getTotal()+tmap_total_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0.0));
-
+                if(i.getInvoice_date()!=null){
+                    tmap_total_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
+                    i.getTotal()+tmap_total_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0.0));
+                }
             }
             int size2 = tmap_total_month.size();
             for (int i=0;i<size2;i++) {
@@ -193,7 +266,7 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
             req.getRequestDispatcher("/jsp/chart-results.jsp").forward(req, res);
 
         } catch(Exception ex) {
-            LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoice. StartDate %s , EndDate %s.", startDate.toString(), endDate.toString()), ex);
+            LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoices."), ex);
             throw ex;
         } finally {
             LogContext.removeIPAddress();
