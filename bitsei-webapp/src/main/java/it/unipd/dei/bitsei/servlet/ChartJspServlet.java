@@ -199,16 +199,16 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
             TreeMap<Date,Integer> tmap_numb_month = new TreeMap<>();
             for (Invoice i: el){
                 if(i.getInvoice_date()!=null){
-                    tmap_numb_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
-                    1+tmap_numb_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0));
+                    Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                    tmap_numb_month.put(d, 1+tmap_numb_month.getOrDefault(d, 0));
                 }
             }
             
             int size = tmap_numb_month.size();
             for (int i=0;i<size;i++) {
                 Date d = tmap_numb_month.firstKey();
-                
-                tmap_labels.add(new SimpleDateFormat("MMMM yyyy").format(d));
+                String month = new SimpleDateFormat("MMMM yyyy").format(d);
+                tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
                 tmap_data.add(tmap_numb_month.get(d).toString());
                 
                 tmap_numb_month.remove(d);
@@ -219,15 +219,15 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
             TreeMap<Date,Double> tmap_total_month = new TreeMap<>();
             for (Invoice i: el){
                 if(i.getInvoice_date()!=null){
-                    tmap_total_month.put(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1),
-                    i.getTotal()+tmap_total_month.getOrDefault(new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1), 0.0));
+                    Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                    tmap_total_month.put(d, i.getTotal()+tmap_total_month.getOrDefault(d, 0.0));
                 }
             }
             int size2 = tmap_total_month.size();
             for (int i=0;i<size2;i++) {
                 Date d = tmap_total_month.firstKey();
-                
-                tmap_labels.add(new SimpleDateFormat("MMMM yyyy").format(d));
+                String month = new SimpleDateFormat("MMMM yyyy").format(d);
+                tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
                 tmap_data.add(tmap_total_month.get(d).toString());
                 
                 tmap_total_month.remove(d);
@@ -250,6 +250,25 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                 tmap_data.add(tmap_numb_customer.get(d).toString());
                 
                 tmap_numb_customer.remove(d);
+            }
+            break;
+            case 4:
+            //TOTAL BY CUSTOMER
+            TreeMap<Integer,Double> tmap_total_customer = new TreeMap<>();
+            for (Invoice i: el){
+                
+                tmap_total_customer.put(i.getCustomer_id(),
+                i.getTotal()+tmap_total_customer.getOrDefault(i.getCustomer_id(),0.0));
+
+            }
+            int size4 = tmap_total_customer.size();
+            for (int i=0;i<size4;i++) {
+                int d = tmap_total_customer.firstKey();
+                
+                tmap_labels.add(d+"");
+                tmap_data.add(tmap_total_customer.get(d).toString());
+                
+                tmap_total_customer.remove(d);
             }
             break;
         }

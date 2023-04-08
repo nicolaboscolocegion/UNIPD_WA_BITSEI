@@ -118,6 +118,32 @@
 				});
 			</script>
 			</c:when>
+
+			<c:when test="${chart_type == 4}">
+			<script>
+				const ctx = document.getElementById('myChart');
+				
+				new Chart(ctx, {
+					type: 'doughnut',
+					data: {
+					labels: [<c:forEach var="element" items="${tmap_labels}">'<c:out value="${element}"/>'<c:if test ="${tmap_labels.indexOf(element)!=tmap_labels.size()-1}">,</c:if></c:forEach>],
+					datasets: [{
+						label: 'Total profit',
+						data: [<c:forEach var="element" items="${tmap_data}"><c:out value="${element}"/><c:if test ="${tmap_data.indexOf(element)!=tmap_data.size()-1}">,</c:if></c:forEach>],
+						borderWidth: 2,
+						hoverOffset: 4
+					}]
+					},
+					options: {
+					scales: {
+						y: {
+						beginAtZero: true
+						}
+					}
+					}
+				});
+			</script>
+			</c:when>
 		</c:choose>
 	</body>
 </html>
