@@ -12,6 +12,11 @@ public final class Actions {
     public static final String LIST_USER = "LIST_USER";
 
     /**
+     * The list of the invoices filtered by Company ID
+     */
+    public static final String LIST_INVOICES_BY_COMPANY_ID = "LIST_INVOICES_BY_COMPANY_ID";
+
+    /**
      * The filter of invoices by their period of time
      */
     public static final String FILTER_INVOICES_BY_PERIOD = "FILTER_INVOICES_BY_PERIOD";

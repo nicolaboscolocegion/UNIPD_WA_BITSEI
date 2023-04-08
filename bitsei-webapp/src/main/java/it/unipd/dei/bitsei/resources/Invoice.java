@@ -1,6 +1,8 @@
 package it.unipd.dei.bitsei.resources;
 
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -9,8 +11,7 @@ import java.sql.Date;
 /**
  * Represents the data about an invoice.
  */
-//public class Invoice extends AbstractResource {
-public class Invoice {
+public class Invoice extends AbstractResource {
     /**
      * The id of the invoice
      */
@@ -242,7 +243,7 @@ public class Invoice {
         return has_stamp;
     }
 
-    /*
+
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {
 
@@ -252,26 +253,30 @@ public class Invoice {
         jg.writeFieldName("invoice");
         jg.writeStartObject();
 
-        jg.writeNumberField("invoice_id", invoice_id);
-        jg.writeNumberField("customer_id", customer_id);
-        jg.writeNumberField("status", status);
-        jg.writeNumberField("warning_number", warning_number);
-        jg.writeStringField("warning_date", warning_date.toString());
-        jg.writeStringField("warning_pdf_file", warning_pdf_file);
-        jg.writeStringField("invoice_number", invoice_number);
-        jg.writeStringField("invoice_date", invoice_date.toString());
-        jg.writeStringField("invoice_pdf_file", invoice_pdf_file);
-        jg.writeStringField("invoice_xml_file", invoice_xml_file);
-        jg.writeNumberField("total", total);
-        jg.writeNumberField("discount", discount);
-        jg.writeNumberField("pension_fund_refund", pension_fund_refund);
-        jg.writeBooleanField("has_stamp", has_stamp);
+        try {
+            jg.writeNumberField("invoice_id", invoice_id);
+            jg.writeNumberField("customer_id", customer_id);
+            jg.writeNumberField("status", status);
+            jg.writeNumberField("warning_number", warning_number);
+            jg.writeStringField("warning_date", warning_date.toString());
+            jg.writeStringField("warning_pdf_file", warning_pdf_file);
+            jg.writeStringField("invoice_number", invoice_number);
+            jg.writeStringField("invoice_date", invoice_date.toString());
+            jg.writeStringField("invoice_pdf_file", invoice_pdf_file);
+            jg.writeStringField("invoice_xml_file", invoice_xml_file);
+            jg.writeNumberField("total", total);
+            jg.writeNumberField("discount", discount);
+            jg.writeNumberField("pension_fund_refund", pension_fund_refund);
+            jg.writeBooleanField("has_stamp", has_stamp);
+
+        } catch (Throwable T) {
+            //LOGGER.warn("## INVOICE CLASS: Invoice #%d has null field(s).", invoice_id);
+        }
 
         jg.writeEndObject();
         jg.writeEndObject();
         jg.flush();
     }
-    */
 
     /**
      * Creates a {@code Invoice} from its JSON representation.
@@ -280,23 +285,22 @@ public class Invoice {
      * @return the {@code Invoice} created from the JSON representation.
      * @throws IOException if something goes wrong while parsing.
      */
-    /*
     public static Invoice fromJSON(final InputStream in) throws IOException {
 
         // the fields read from JSON
-        int jInvoice_id = 0;
-        int jCustomer_id = 0;
-        int jStatus = 0;
-        int jWarning_number = 0;
+        int jInvoice_id = -1;
+        int jCustomer_id = -1;
+        int jStatus = -1;
+        int jWarning_number = -1;
         Date jWarning_date = null;
         String jWarning_pdf_file = null;
         String jInvoice_number = null;
         Date jInvoice_date = null;
         String jInvoice_pdf_file = null;
         String jInvoice_xml_file = null;
-        double jTotal = 0;
-        double jDiscount = 0;
-        double jPension_fund_refund = 0;
+        double jTotal = -1;
+        double jDiscount = -1;
+        double jPension_fund_refund = -1;
         boolean jHas_stamp = false;
 
         try {
@@ -308,8 +312,8 @@ public class Invoice {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No User object found in the stream.");
-                    throw new EOFException("Unable to parse JSON: no User object found.");
+                    LOGGER.error("No Invoice object found in the stream.");
+                    throw new EOFException("Unable to parse JSON: no Invoice object found.");
                 }
             }
 
@@ -336,8 +340,7 @@ public class Invoice {
                         case "warning_date":
                             jp.nextToken();
                             String tmpDate = jp.getText();
-                            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(tmpDate);
-                            jWarning_date = date;
+                            jWarning_date = Date.valueOf(tmpDate);
                             break;
                         case "warning_pdf_file":
                             jp.nextToken();
@@ -350,8 +353,7 @@ public class Invoice {
                         case "invoice_date":
                             jp.nextToken();
                             String tmpDate2 = jp.getText();
-                            Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(tmpDate2);
-                            jInvoice_date = date2;
+                            jInvoice_date = Date.valueOf(tmpDate2);
                             break;
                         case "invoice_pdf_file":
                             jp.nextToken();
@@ -386,5 +388,5 @@ public class Invoice {
 
         return new Invoice(jInvoice_id, jCustomer_id, jStatus, jWarning_number, jWarning_date, jWarning_pdf_file, jInvoice_number, jInvoice_date, jInvoice_pdf_file, jInvoice_xml_file, jTotal, jDiscount, jPension_fund_refund, jHas_stamp);
     }
-     */
+
 }
