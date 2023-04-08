@@ -231,29 +231,36 @@ public class GetInvoicesByFiltersJspDAO extends AbstractDAO<List<Invoice>> {
             }
 
             pstmt = con.prepareStatement(query.toString());
+            String param = "";
             int i = 1;
             if(filterByTotal) {
                 pstmt.setDouble(i++, startTotal);
                 pstmt.setDouble(i++, endTotal);
+                param += "startTotal: " + startTotal + " endTotal: " + endTotal + " ";
             }
             if(filterByDiscount) {
                 pstmt.setDouble(i++, startDiscount);
                 pstmt.setDouble(i++, endDiscount);
+                param += "startDiscount: " + startDiscount + " endDiscount: " + endDiscount + " ";
             }
             if(filterByPfr) {
                 pstmt.setDouble(i++, startPfr);
                 pstmt.setDouble(i++, endPfr);
+                param += "startPfr: " + startPfr + "endPfr: " + endPfr + " ";
             }
             if(filterByInvoiceDate) {
                 pstmt.setDate(i++, startInvoiceDate);
                 pstmt.setDate(i++, endInvoiceDate);
+                param += "startInvoiceDate: " + startInvoiceDate + "endInvoiceDate: " + endInvoiceDate + " ";
             }
             if(filterByWarningDate) {
                 pstmt.setDate(i++, startWarningDate);
                 pstmt.setDate(i++, endWarningDate);
+                param += "startWarningDate: " + startWarningDate + "endWarningDate: " + endWarningDate + " ";
             }
 
             LOGGER.info("## DAO: Submitted query: " + query + " ##");
+            LOGGER.info("## DAO: Submitted parameters --> " + param + " ##");
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
