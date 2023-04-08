@@ -1,5 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
+import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -9,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Dispatches the request to the proper REST resource.
@@ -118,7 +119,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
     /**
-     * Checks whether the request is for an {@link it.unipd.dei.bitsei.resources.Invoice} resource and, in case, processes it.
+     * Checks whether the request is for an {@link Invoice} resource and, in case, processes it.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -126,6 +127,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processFilterInvoices(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
 
         String path = req.getRequestURI();
@@ -141,13 +143,12 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         // the request URI is: /filter-invoices
         // if method GET, list all invoices where CompanyId == currentUser_CompanyId
-        // if method POST, list invoices by filters
+        // if method POST, TODO
         if (path.length() == 0 || path.equals("/")) {
 
             switch (method) {
                 case "GET":
-                    int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-                    new ListInvoicesRR(req, res, getConnection(), companyId).serve();
+                    new ListInvoicesRR(req, res, getConnection()).listInvoicesByCompanyId(companyId);
                     break;
                 case "POST":
                     //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
@@ -162,36 +163,58 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     break;
             }
         } else {
-            List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate");
-            // the request URI contains filter(s)
-            boolean checkFilters = false;
-            for(String filter : filterList) {
-                boolean tmp = checkPath(path, filter, req, res, m);
-                if(tmp)
-                    path = path.substring(path.lastIndexOf(filter) + filter.length());
-                checkFilters = checkFilters || tmp;
-            }
-            if (!checkFilters) {
-                LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
-                m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
-                        String.format("Requested URI: %s.", req.getRequestURI()));
-                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                m.toJSON(res.getOutputStream());
-            }
-            else {
+            // the request URI is: /filter-invoices/list-customers
+            if(path.contains("list-customers")) {
+                path = path.substring(path.lastIndexOf("list-customers") + "list-customers".length());
+
                 switch (method) {
                     case "GET":
-                        new ListInvoicesRR(req, res, getConnection(), -1).serve();
+                        new ListInvoicesRR(req, res, getConnection()).listCustomersByCompanyId(companyId);
+                    case "POST":
+                        //TODO
+                }
 
-                        break;
-                    default:
-                        LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+            } else {
+                // the request URI is: /filter-invoices/with-filters/filter1/{value_of_filter1}/filter2/{value_of_filter2}...
+                if(path.contains("with-filters")) {
+                    path = path.substring(path.lastIndexOf("with-filters") + "with-filters".length());
 
-                        m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
-                                String.format("Requested operation %s.", method));
-                        res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    Map<String, Object> filtersMap = Map.of("fromTotal", null, "toTotal", null, "fromDiscount", null, "toDiscount", null, "fromPfr", null, "toPfr", null, "fromInvoiceDate", null, "toInvoiceDate", null, "fromWarningDate", null, "toWarningDate", null);
+                    // the request URI contains filter(s)
+                    boolean checkFilters = false;
+                    for(String filter : filtersMap.keySet()) {
+                        boolean tmp = checkPath(path, filter, req, res, m);
+                        if(tmp) {
+                            path = path.substring(path.lastIndexOf(filter) + filter.length());
+                            filtersMap.put(filter, true);
+                        }
+                        checkFilters = checkFilters || tmp;
+                    }
+
+                    // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
+                    if (!checkFilters) {
+                        LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
+                        m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
+                                String.format("Requested URI: %s.", req.getRequestURI()));
+                        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         m.toJSON(res.getOutputStream());
-                        break;
+                    }
+                    else {
+                        switch (method) {
+                            case "GET":
+                                new ListInvoicesRR(req, res, getConnection()).listInvoicesByFilters(companyId, filtersMap);
+
+                                break;
+                            default:
+                                LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+
+                                m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
+                                        String.format("Requested operation %s.", method));
+                                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                                m.toJSON(res.getOutputStream());
+                                break;
+                        }
+                    }
                 }
             }
 
@@ -204,7 +227,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         try {
             if(path.contains(filter)) {
                 path = path.substring(path.lastIndexOf(filter) + filter.length() + 1);
-                path = path.substring(0, path.indexOf("/"));
+                if(path.indexOf("/") > -1)
+                    path = path.substring(0, path.indexOf("/"));
 
                 if (path.length() == 0 || path.equals("/")) {
                     LOGGER.warn("Wrong format for URI /filter-invoices/" + filter + "/{" + filter + "}: no {" + filter + "} specified. Requested URI: %s.", req.getRequestURI());
