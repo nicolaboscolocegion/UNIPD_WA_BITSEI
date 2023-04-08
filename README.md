@@ -1,5 +1,5 @@
 ## 
-<h2> BITSEI <img src="https://media.giphy.com/media/mGcNjsfWAjY5AEZNw6/giphy.gif" width="50"></h2>
+<img src="bitsei-webapp/src/main/webapp/company_logos/bitsei_1024_white.png" width="100" alt="BITSEI Logo"/>
 
 ---
 BITSEI (Business Integrated System for Electronic Invoicing)
@@ -36,5 +36,6 @@ nothing to say init :)
 - Christian Marchiori - 2078343
 - Farzad Shami - 2090160
 - Andrea Costa - 2061900
+- Marco Martinelli - 2087646
 
-<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
+<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova </a></em>

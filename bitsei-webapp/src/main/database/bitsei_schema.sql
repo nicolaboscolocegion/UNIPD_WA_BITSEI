@@ -38,7 +38,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE bitsei_schema."BankAccount" (
-                                             bankaccount_id integer NOT NULL,
+                                             bankaccount_id serial NOT NULL,
                                              "IBAN" character(34) NOT NULL,
                                              bank_name character(255),
                                              bankaccount_friendly_name character(255) NOT NULL,
