@@ -27,9 +27,14 @@
         <servlet-class>it.unipd.dei.bitsei.servlet.InvoicesByDateServlet</servlet-class>
     </servlet>-->
 
-    <servlet>
+    <!--<servlet>
         <servlet-name>ChartServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.ChartServlet</servlet-class>
+    </servlet>-->
+
+    <servlet>
+        <servlet-name>ChartJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.ChartJspServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -52,8 +57,13 @@
         <url-pattern>/invoices-by-date</url-pattern>
     </servlet-mapping>-->
 
-    <servlet-mapping>
+    <!--<servlet-mapping>
         <servlet-name>ChartServlet</servlet-name>
+        <url-pattern>/invoices-by-date</url-pattern>
+    </servlet-mapping>-->
+
+    <servlet-mapping>
+        <servlet-name>ChartJspServlet</servlet-name>
         <url-pattern>/invoices-by-date</url-pattern>
     </servlet-mapping>
 
