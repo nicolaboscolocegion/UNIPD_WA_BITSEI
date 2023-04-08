@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
@@ -30,7 +29,7 @@ public final class CreateProductDAO extends AbstractDAO {
      *
      * @param con the connection to the database.
      *
-     * @param product the customer to be stored into the database.
+     * @param product the product to be stored into the database.
      */
     public CreateProductDAO(final Connection con, final Product product) {
         super(con);
