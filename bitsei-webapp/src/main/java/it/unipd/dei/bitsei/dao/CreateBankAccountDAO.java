@@ -15,7 +15,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
      */
     private BankAccount newBankAccount;
 
-    protected CreateBankAccountDAO(Connection con, BankAccount ba) {
+    public CreateBankAccountDAO(Connection con, BankAccount ba) {
         super(con);
         newBankAccount = ba;
     }

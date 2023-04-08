@@ -43,16 +43,16 @@ public class ChangeBankAccoutRR extends AbstractRR{
                 res.setStatus(HttpServletResponse.SC_OK);
                 LOGGER.info("changed " + oldBankAccount.getIban() +  " to "  + newBankAccount.getIban());
             }else{
-                LOGGER.error("Fatal error while getting user.");
+                LOGGER.error("Fatal error while getting bankaccount.");
 
-                m = new Message("Cannot change password: the bank account", "E5A1", null);
+                m = new Message("Cannot change the bank account", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
-            LOGGER.error("Cannot search for user: unexpected error while accessing the database.", e);
+            LOGGER.error("Cannot change bank account: unexpected error while accessing the database.", e);
 
-            m = new Message("Cannot search for user: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
