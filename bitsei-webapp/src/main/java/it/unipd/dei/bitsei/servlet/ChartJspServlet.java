@@ -16,7 +16,7 @@
 
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersDAO;
+import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersJspDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
@@ -40,6 +40,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
+import org.eclipse.tags.shaded.org.apache.xalan.templates.ElemSort;
 
 import javax.sql.DataSource;
 
@@ -83,28 +84,54 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
 		final Date END_DATE = Date.valueOf(currentDate);
 
 		// request parameters
-		double startTotal = START_TOTAL;
+        boolean filterByTotal = false;
+        double startTotal = START_TOTAL;
 		double endTotal = END_TOTAL;
 
-		double startDiscount = START_TOTAL;
+		boolean filterByDiscount = false;
+        double startDiscount = START_TOTAL;
 		double endDiscount = END_TOTAL;
 		
-		double startPfr = START_TOTAL;
+		boolean filterByPfr = false;
+        double startPfr = START_TOTAL;
 		double endPfr = END_TOTAL;
 
-		Date startInvoiceDate = START_DATE;
+		boolean filterByInvoiceDate = false;
+        Date startInvoiceDate = START_DATE;
 		Date endInvoiceDate = END_DATE;
 		
-		Date startWarningDate = START_DATE;
+		boolean filterByWarningDate = false;
+        Date startWarningDate = START_DATE;
 		Date endWarningDate = END_DATE;
-        int chart_type = Integer.parseInt(req.getParameter("chartType"));
 
+        int chart_type = Integer.parseInt(req.getParameter("chartType"));
+        int chart_period;
+        if(req.getParameter("chartPeriod")!=null)
+            chart_period = Integer.parseInt(req.getParameter("chartPeriod"));
+        else
+            chart_period = 1;
+                
         // model
         List<Invoice> el = null;
         Message m = null;
 
         try {
+            
+            if(req.getParameter("filterByTotal") != null)
+				filterByTotal = true;
 
+			if(req.getParameter("filterByDiscount") != null)
+				filterByDiscount = true;
+
+			if(req.getParameter("filterByPfr") != null)
+				filterByPfr = true;
+
+			if(req.getParameter("filterByInvoiceDate") != null)
+				filterByInvoiceDate = true;
+
+			if(req.getParameter("filterByWarningDate") != null)
+				filterByWarningDate = true;
+            
             try {
 				startTotal = Double.parseDouble(req.getParameter("startTotal"));
 				if (startTotal <= 0)
@@ -172,7 +199,12 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
 			}
 
             // creates a new object for accessing the database and searching the employees
-            el = new GetInvoicesByFiltersDAO(getConnection(), startTotal, endTotal, startDiscount, endDiscount, startPfr, endPfr, startInvoiceDate, endInvoiceDate, startWarningDate, endWarningDate).access().getOutputParam();
+            el = new GetInvoicesByFiltersJspDAO(getConnection(),
+                    filterByTotal, startTotal, endTotal,
+                    filterByDiscount, startDiscount, endDiscount,
+                    filterByPfr, startPfr, endPfr,
+                    filterByInvoiceDate, startInvoiceDate, endInvoiceDate,
+                    filterByWarningDate, startWarningDate, endWarningDate).access().getOutputParam();
 
             m = new Message("Invoices succesfully searched");
 
@@ -195,23 +227,67 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
 
         switch(chart_type){
             case 1:
-            //INVOICE BY DATE (MONTH)
-            TreeMap<Date,Integer> tmap_numb_month = new TreeMap<>();
-            for (Invoice i: el){
-                if(i.getInvoice_date()!=null){
-                    Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
-                    tmap_numb_month.put(d, 1+tmap_numb_month.getOrDefault(d, 0));
+            switch(chart_period){
+                case 1:
+                //INVOICE BY DATE (MONTH)
+                TreeMap<Date,Integer> tmap_numb_month = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                        tmap_numb_month.put(d, 1+tmap_numb_month.getOrDefault(d, 0));
+                    }
                 }
-            }
-            
-            int size = tmap_numb_month.size();
-            for (int i=0;i<size;i++) {
-                Date d = tmap_numb_month.firstKey();
-                String month = new SimpleDateFormat("MMMM yyyy").format(d);
-                tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
-                tmap_data.add(tmap_numb_month.get(d).toString());
                 
-                tmap_numb_month.remove(d);
+                int size = tmap_numb_month.size();
+                for (int i=0;i<size;i++) {
+                    Date d = tmap_numb_month.firstKey();
+                    String month = new SimpleDateFormat("MMMM yyyy").format(d);
+                    tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
+                    tmap_data.add(tmap_numb_month.get(d).toString());
+                    
+                    tmap_numb_month.remove(d);
+                }
+                break;
+                case 2:
+                //INVOICE BY DATE (YEAR)
+                TreeMap<Date,Integer> tmap_numb_year = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),0,1);
+                        tmap_numb_year.put(d, 1+tmap_numb_year.getOrDefault(d, 0));
+                    }
+                }
+                
+                int size5 = tmap_numb_year.size();
+                for (int i=0;i<size5;i++) {
+                    Date d = tmap_numb_year.firstKey();
+                    String year = new SimpleDateFormat("yyyy").format(d);
+                    tmap_labels.add(year);
+                    tmap_data.add(tmap_numb_year.get(d).toString());
+                    
+                    tmap_numb_year.remove(d);
+                }
+                break;
+                case 3:
+                //INVOICE BY DATE (DAY)
+                TreeMap<Date,Integer> tmap_numb_day = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),i.getInvoice_date().getDay());
+                        tmap_numb_day.put(d, 1+tmap_numb_day.getOrDefault(d, 0));
+                    }
+                }
+                
+                int size6 = tmap_numb_day.size();
+                for (int i=0;i<size6;i++) {
+                    Date d = tmap_numb_day.firstKey();
+                    String day = new SimpleDateFormat("d/MM/yyyy").format(d);
+                    tmap_labels.add(day);
+                    tmap_data.add(tmap_numb_day.get(d).toString());
+                    
+                    tmap_numb_day.remove(d);
+                }
+                break;
             }
             break;
             case 2:
