@@ -8,7 +8,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Date;
 
 /**
  * Represents the data about a customer.
@@ -345,7 +344,7 @@ public class Customer extends AbstractResource {
             jg.writeStringField("unique_code", uniqueCode);
             jg.writeNumberField("company_id", companyID);
         } catch (Throwable T) {
-            //LOGGER.warn("## INVOICE CLASS: Invoice #%d has null field(s).", invoice_id);
+            //LOGGER.warn("## CUSTOMER CLASS: Customer #%d has null field(s).", customer_id);
         }
 
         jg.writeEndObject();

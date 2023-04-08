@@ -175,6 +175,17 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 }
 
             } else {
+                if(path.contains("list-products")) {
+                    path = path.substring(path.lastIndexOf("list-products") + "list-products".length());
+
+                    switch (method) {
+                        case "GET":
+                            new ListInvoicesRR(req, res, getConnection()).listProductsByCompanyId(companyId);
+                        case "POST":
+                            //TODO
+                    }
+                }
+
                 // the request URI is: /filter-invoices/with-filters/filter1/{value_of_filter1}/filter2/{value_of_filter2}...
                 if(path.contains("with-filters")) {
                     path = path.substring(path.lastIndexOf("with-filters") + "with-filters".length());

@@ -18,6 +18,7 @@ package it.unipd.dei.bitsei.dao;
 
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.Invoice;
+import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -131,7 +132,6 @@ public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
         }
 
         return invoices;
-
     }
 
     /**
@@ -152,7 +152,7 @@ public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
 
             customers = parseCustomerRS(rs);
 
-            LOGGER.info("## ListInvoiceDAO: Invoices of companyId: %d succesfully listed ##", companyId);
+            LOGGER.info("## ListInvoiceDAO: Customers of companyId: %d succesfully listed ##", companyId);
         } finally {
             if (rs != null) {
                 rs.close();
@@ -164,7 +164,38 @@ public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
         }
 
         return customers;
+    }
 
+    /**
+     * List the products associated to the company_id passed as argument
+     */
+    public List<Product> listProductsByCompanyId(int companyId) throws SQLException {
+        final String STATEMENT = "SELECT p.* FROM bitsei_schema.\"Product\" AS p JOIN bitsei_schema.\"Company\" AS c ON p.company_id = c.company_id WHERE ((c.company_id = ?) OR (1=1))";
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        // the results of the search
+        List<Product> products = new ArrayList<Product>();
+
+        try {
+            pstmt = con.prepareStatement(STATEMENT);
+            pstmt.setInt(1, companyId);
+            rs = pstmt.executeQuery();
+
+            products = parseProductRS(rs);
+
+            LOGGER.info("## ListInvoiceDAO: Products of companyId: %d succesfully listed ##", companyId);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        }
+
+        return products;
     }
 
     private List<Invoice> parseInvoiceRS(ResultSet rs) throws SQLException {
@@ -215,6 +246,22 @@ public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
         return customers;
     }
 
+    private List<Product> parseProductRS(ResultSet rs) throws SQLException {
+        final List<Product> products = new ArrayList<Product>();
 
+        while (rs.next()) {
+            products.add(new Product(
+                    rs.getInt("product_id"),
+                    rs.getInt("company_id"),
+                    rs.getString("title"),
+                    rs.getInt("default_price"),
+                    rs.getString("logo"),
+                    rs.getString("measurement_unit"),
+                    rs.getString("description"))
+            );
+        }
+
+        return products;
+    }
 
 }
