@@ -1,5 +1,14 @@
 package it.unipd.dei.bitsei.resources;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  * Represents the data about a customer.
  *
@@ -7,7 +16,7 @@ package it.unipd.dei.bitsei.resources;
  * @version 1.00
  * @since 1.00
  */
-public class Customer {
+public class Customer extends AbstractResource {
 
     /**
      * The business name of the customer company
@@ -311,4 +320,142 @@ public class Customer {
     public int getCustomerID() {
         return customerID;
     }
+
+    @Override
+    protected final void writeJSON(final OutputStream out) throws IOException {
+        final JsonGenerator jg = JSON_FACTORY.createGenerator(out);
+
+        jg.writeStartObject();
+        jg.writeFieldName("customer");
+        jg.writeStartObject();
+
+        try {
+            jg.writeNumberField("customer_id", customerID);
+            jg.writeStringField("business_name", businessName);
+            jg.writeStringField("vat_number", vatNumber);
+            jg.writeStringField("tax_code", taxCode);
+            jg.writeStringField("address", address);
+            jg.writeStringField("city", city);
+            jg.writeStringField("province", province);
+            jg.writeStringField("postal_code", postalCode);
+            jg.writeStringField("full_address", fullAddress);
+            jg.writeStringField("email_address", emailAddress);
+            jg.writeStringField("pec", pec);
+            jg.writeStringField("unique_code", uniqueCode);
+            jg.writeNumberField("company_id", companyID);
+        } catch (Throwable T) {
+            //LOGGER.warn("## CUSTOMER CLASS: Customer #%d has null field(s).", customer_id);
+        }
+
+        jg.writeEndObject();
+        jg.writeEndObject();
+        jg.flush();
+    }
+
+    /**
+     * Creates a {@link Customer} from its JSON representation.
+     *
+     * @param in the input stream containing the JSON document.
+     * @return the {@code Customer} created from the JSON representation.
+     * @throws IOException if something goes wrong while parsing.
+     */
+    public static Customer fromJSON(final InputStream in) throws IOException {
+
+        // the fields read from JSON
+        int jCustomer_id = -1;
+        String jBusiness_name = null;
+        String jVat_number = null;
+        String jTax_code = null;
+        String jAddress = null;
+        String jCity = null;
+        String jProvince = null;
+        String jPostal_code = null;
+        String jFull_address = null;
+        String jEmail_address = null;
+        String jPec = null;
+        String jUnique_code = null;
+        int jCompany_id = -1;
+
+        try {
+            final JsonParser jp = JSON_FACTORY.createParser(in);
+
+            // while we are not on the start of an element or the element is not
+            // a token element, advance to the next element (if any)
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"customer".equals(jp.getCurrentName())) {
+
+                // there are no more events
+                if (jp.nextToken() == null) {
+                    LOGGER.error("No Customer object found in the stream.");
+                    throw new EOFException("Unable to parse JSON: no Customer object found.");
+                }
+            }
+
+            while (jp.nextToken() != JsonToken.END_OBJECT) {
+
+                if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
+                    switch (jp.getCurrentName()) {
+                        case "customer_id":
+                            jp.nextToken();
+                            jCustomer_id = jp.getIntValue();
+                            break;
+                        case "business_name":
+                            jp.nextToken();
+                            jBusiness_name = jp.getText();
+                            break;
+                        case "vat_number":
+                            jp.nextToken();
+                            jVat_number = jp.getText();
+                            break;
+                        case "tax_code":
+                            jp.nextToken();
+                            jTax_code = jp.getText();
+                            break;
+                        case "address":
+                            jp.nextToken();
+                            jAddress = jp.getText();
+                            break;
+                        case "city":
+                            jp.nextToken();
+                            jCity = jp.getText();
+                            break;
+                        case "province":
+                            jp.nextToken();
+                            jProvince = jp.getText();
+                            break;
+                        case "postal_code":
+                            jp.nextToken();
+                            jPostal_code = jp.getText();
+                            break;
+                        case "full_address":
+                            jp.nextToken();
+                            jFull_address = jp.getText();
+                            break;
+                        case "email_address":
+                            jp.nextToken();
+                            jEmail_address = jp.getText();
+                            break;
+                        case "pec":
+                            jp.nextToken();
+                            jPec = jp.getText();
+                            break;
+                        case "unique_code":
+                            jp.nextToken();
+                            jUnique_code = jp.getText();
+                            break;
+                        case "company_id":
+                            jp.nextToken();
+                            jCompany_id = jp.getIntValue();
+                            break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Unable to parse an User object from JSON.", e);
+            throw e;
+        }
+
+        return new Customer(jCustomer_id, jBusiness_name, jVat_number, jTax_code, jAddress, jCity, jProvince, jPostal_code, jEmail_address, jPec, jUnique_code, jCompany_id);
+    }
+
+
 }

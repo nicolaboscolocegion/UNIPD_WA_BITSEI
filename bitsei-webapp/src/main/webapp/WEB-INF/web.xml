@@ -81,6 +81,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CreateInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <url-pattern>/invoiceinsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>LoadCustomerForUpdateServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.LoadCustomerForUpdateServlet</servlet-class>
     </servlet>

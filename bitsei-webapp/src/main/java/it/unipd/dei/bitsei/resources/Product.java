@@ -1,5 +1,14 @@
 package it.unipd.dei.bitsei.resources;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  * Represents the data about a product.
  *
@@ -7,7 +16,7 @@ package it.unipd.dei.bitsei.resources;
  * @version 1.00
  * @since 1.00
  */
-public class Product {
+public class Product extends AbstractResource{
     /**
      * The unique id of the product.
      */
@@ -165,4 +174,105 @@ public class Product {
      * @return the textual description of the product.
      */
     public String getDescription() { return description; }
+
+    @Override
+    protected final void writeJSON(final OutputStream out) throws IOException {
+        final JsonGenerator jg = JSON_FACTORY.createGenerator(out);
+
+        jg.writeStartObject();
+        jg.writeFieldName("product");
+        jg.writeStartObject();
+
+        try {
+            jg.writeNumberField("product_id", product_id);
+            jg.writeNumberField("company_id", company_id);
+            jg.writeStringField("title", title);
+            jg.writeNumberField("default_price", default_price);
+            jg.writeStringField("logo", logo);
+            jg.writeStringField("measurement_unit", measurement_unit);
+            jg.writeStringField("description", description);
+
+        } catch (Throwable T) {
+            //LOGGER.warn("## PRODUCT CLASS: Product #%d has null field(s).", product_id);
+        }
+
+        jg.writeEndObject();
+        jg.writeEndObject();
+        jg.flush();
+    }
+
+    /**
+     * Creates a {@code Product} from its JSON representation.
+     *
+     * @param in the input stream containing the JSON document.
+     * @return the {@code Product} created from the JSON representation.
+     * @throws IOException if something goes wrong while parsing.
+     */
+    public static Product fromJSON(final InputStream in) throws IOException {
+
+        // the fields read from JSON
+        int jProduct_id = -1;
+        int jCompany_id = -1;
+        String jTitle = null;
+        int jDefault_price = -1;
+        String jLogo = null;
+        String jMeasurement_unit = null;
+        String jDescription = null;
+
+        try {
+            final JsonParser jp = JSON_FACTORY.createParser(in);
+
+            // while we are not on the start of an element or the element is not
+            // a token element, advance to the next element (if any)
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"product".equals(jp.getCurrentName())) {
+
+                // there are no more events
+                if (jp.nextToken() == null) {
+                    LOGGER.error("No Product object found in the stream.");
+                    throw new EOFException("Unable to parse JSON: no Product object found.");
+                }
+            }
+
+            while (jp.nextToken() != JsonToken.END_OBJECT) {
+
+                if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
+                    switch (jp.getCurrentName()) {
+                        case "product_id":
+                            jp.nextToken();
+                            jProduct_id = jp.getIntValue();
+                            break;
+                        case "company_id":
+                            jp.nextToken();
+                            jCompany_id = jp.getIntValue();
+                            break;
+                        case "title":
+                            jp.nextToken();
+                            jTitle = jp.getText();
+                            break;
+                        case "default_price":
+                            jp.nextToken();
+                            jDefault_price = jp.getIntValue();
+                            break;
+                        case "logo":
+                            jp.nextToken();
+                            jLogo = jp.getText();
+                        case "measurement_unit":
+                            jp.nextToken();
+                            jMeasurement_unit = jp.getText();
+                            break;
+                        case "description":
+                            jp.nextToken();
+                            jDescription = jp.getText();
+                            break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Unable to parse an User object from JSON.", e);
+            throw e;
+        }
+
+        return new Product(jProduct_id, jCompany_id, jTitle, jDefault_price, jLogo, jMeasurement_unit, jDescription);
+    }
+
 }

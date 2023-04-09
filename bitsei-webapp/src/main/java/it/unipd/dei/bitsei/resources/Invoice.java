@@ -102,7 +102,51 @@ public class Invoice extends AbstractResource {
      */
     public Invoice(final int invoice_id, final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp) {
         this.invoice_id = invoice_id;
-        this.customer_id = customer_id;
+        if (customer_id != -1) {
+            this.customer_id = customer_id;
+        }
+        else {
+            this.customer_id = 0;
+        }
+        this.status = status;
+        this.warning_number = warning_number;
+        this.warning_date = warning_date;
+        this.warning_pdf_file = warning_pdf_file;
+        this.invoice_number = invoice_number;
+        this.invoice_date = invoice_date;
+        this.invoice_pdf_file = invoice_pdf_file;
+        this.invoice_xml_file = invoice_xml_file;
+        this.total = total;
+        this.discount = discount;
+        this.pension_fund_refund = pension_fund_refund;
+        this.has_stamp = has_stamp;
+    }
+
+    /**
+     * Creates a new invoice
+     *
+     * @param customer_id       the id of the customer
+     * @param status            the status of the invoice
+     * @param warning_number    the warning number of the invoice
+     * @param warning_date      the warning date of the invoice
+     * @param warning_pdf_file  the warning pdf file of the invoice
+     * @param invoice_number    the invoice number of the invoice
+     * @param invoice_date      the invoice date of the invoice
+     * @param invoice_pdf_file  the invoice pdf file of the invoice
+     * @param invoice_xml_file  the invoice xml file of the invoice
+     * @param total             the total of the invoice
+     * @param discount          the discount of the invoice
+     * @param pension_fund_refund   the pension fund refund of the invoice
+     * @param has_stamp         the stamp of the invoice
+     */
+    public Invoice(final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp) {
+        this.invoice_id = -1;
+        if (customer_id != -1) {
+            this.customer_id = customer_id;
+        }
+        else {
+            this.customer_id = 0;
+        }
         this.status = status;
         this.warning_number = warning_number;
         this.warning_date = warning_date;
