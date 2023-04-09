@@ -13,6 +13,8 @@ import it.unipd.dei.bitsei.resources.Product;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,13 +46,18 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
-            // if the requested resource was a list of invoices, delegate its processing and return
+            // if the requested resource was a list of customers, delegate its processing and return
             if (processListCustomer(req, res)) {
                 return;
             }
 
-            // if the requested resource was a list of invoices, delegate its processing and return
+            // if the requested resource was a list of products, delegate its processing and return
             if (processListProduct(req, res)) {
+                return;
+            }
+
+            // if the requested resource was a list of filtered invoices, delegate its processing and return
+            if(processListInvoiceByFilters(req, res)) {
                 return;
             }
 
@@ -274,6 +281,68 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         return true;
     }
+
+
+    /**
+     * Checks whether the request is for a list of filtered {@link Invoice}s resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for a filtered list of {@code Invoice}s; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a filter-invoices
+        if (path.lastIndexOf("rest/filter-invoices") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /filter-invoices
+        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
+
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate");
+        // the request URI contains filter(s)
+        boolean checkFilters = false;
+        for(String filter : filterList) {
+            boolean tmp = checkPath(path, filter, req, res, m);
+            if(tmp)
+                path = path.substring(path.lastIndexOf(filter) + filter.length());
+            checkFilters = checkFilters || tmp;
+        }
+
+        // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
+        if (!checkFilters) {
+            LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
+            m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
+                    String.format("Requested URI: %s.", req.getRequestURI()));
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        }
+        else {
+            switch (method) {
+                case "GET":
+                    new ListInvoiceByFiltersRR(req, res, getConnection(), companyId).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+    }
+
 
 
     private boolean checkPath(String path, String filter, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {

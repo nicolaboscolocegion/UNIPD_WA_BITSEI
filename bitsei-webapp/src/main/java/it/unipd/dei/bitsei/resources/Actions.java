@@ -46,6 +46,7 @@ public final class Actions {
      * The invoices get by filters
      */
     public static final String GET_INVOICES_BY_FILTERS = "GET_INVOICES_BY_FILTERS";
+    public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
 
     /**
      * This class can be neither instantiated nor sub-classed.
