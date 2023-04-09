@@ -15,79 +15,74 @@
  */
 package it.unipd.dei.bitsei.rest;
 
-import it.unipd.dei.bitsei.dao.CreateCompanyDAO;
-import it.unipd.dei.bitsei.dao.ListUserDAO;
+import it.unipd.dei.bitsei.dao.GetCompanyImageDAO;
 import it.unipd.dei.bitsei.resources.*;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
- * A REST resource for creating a new {@link Company}.
+ * A REST resource for getting {@link Company}.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-@MultipartConfig(
-        fileSizeThreshold = 1024 * 1024, // 10 MB
-        maxFileSize = 1024 * 1024 * 10, // 50 MB
-        maxRequestSize = 1024 * 1024 * 100 // 100 MB
-)
-public final class CreateCompanyRR extends AbstractRR {
+public final class GetCompanyImageRR extends AbstractRR {
 
     /**
-     * Creates a new REST resource for listing {@code User}s.
+     * Creates a new REST resource for listing {@code Company}s.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public CreateCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.CREATE_COMPANY, req, res, con);
+    public GetCompanyImageRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.GET_COMPANY_IMAGE, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        Company c = null;
+        byte[] el = null;
         Message m = null;
 
         try {
+            String uri = req.getRequestURI();
+            String id = uri.substring(uri.lastIndexOf('/') + 1);
+            if (id.isEmpty() || id.isBlank()) {
+                throw new IOException("company id cannot be empty.");
+            }
+
+            int company_id = Integer.parseInt(id);
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-            // creates a new DAO for accessing the database and creates the company
-            final Company company = Company.fromMultiPart(req);
 
-            c = new CreateCompanyDAO(con, owner_id, company).access().getOutputParam();
+            el = new GetCompanyImageDAO(con, company_id, owner_id).access().getOutputParam();
 
-            if (c != null) {
-                LOGGER.info("Company created successfully.");
+            if (el != null) {
+                LOGGER.info("Company successfully get.");
 
+                res.setContentType("image/png");
                 res.setStatus(HttpServletResponse.SC_OK);
-                c.toJSON(res.getOutputStream());
-            } else { // it should not happen
-                LOGGER.error("Fatal error while creating company.");
+                res.getOutputStream().write(el);
 
-                m = new Message("Cannot create company: you reach your plan limitations.", "E5A1", null);
+            } else {
+                LOGGER.error("Fatal error while fetching Company.");
+
+                m = new Message("Cannot fetch Company: make sure you have a right access to this company.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("Cannot create company: unexpected database error.", ex);
+            LOGGER.error("Cannot list Companies: unexpected database error.", ex);
 
-            m = new Message("Cannot create company: unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list Companies: unexpected database error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
         }
     }
 

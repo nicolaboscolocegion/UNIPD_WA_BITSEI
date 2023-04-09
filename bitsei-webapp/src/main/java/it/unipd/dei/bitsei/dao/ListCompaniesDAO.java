@@ -72,7 +72,6 @@ public final class ListCompaniesDAO extends AbstractDAO<List<Company>> {
                         new Company(
                                 rs.getInt("company_id"),
                                 rs.getString("title"),
-                                rs.getString("logo"),
                                 rs.getString("business_name"),
                                 rs.getString("vat_number"),
                                 rs.getString("tax_code"),

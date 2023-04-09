@@ -31,12 +31,12 @@ import java.util.List;
  * @version 1.00
  * @since 1.00
  */
-public final class GetCompanyDAO extends AbstractDAO<Company> {
+public final class GetCompanyImageDAO extends AbstractDAO<byte[]> {
 
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Company\" WHERE owner_id = ? AND company_id = ?";
+    private static final String STATEMENT = "SELECT logo FROM bitsei_schema.\"Company2\" WHERE owner_id = ? AND company_id = ?";
 
     // the id of the owner
     private final int owner_id;
@@ -48,7 +48,7 @@ public final class GetCompanyDAO extends AbstractDAO<Company> {
      *
      * @param con the connection to the database.
      */
-    public GetCompanyDAO(final Connection con, final int company_id, final int owner_id) {
+    public GetCompanyImageDAO(final Connection con, final int company_id, final int owner_id) {
         super(con);
         this.owner_id = owner_id;
         this.company_id = company_id;
@@ -61,7 +61,7 @@ public final class GetCompanyDAO extends AbstractDAO<Company> {
         ResultSet rs = null;
 
         // the results of the search
-        Company company = null;
+        byte[] image;
 
         try {
             pstmt = con.prepareStatement(STATEMENT);
@@ -74,22 +74,9 @@ public final class GetCompanyDAO extends AbstractDAO<Company> {
                 return;
             }
 
-            company = new Company(
-                    rs.getInt("company_id"),
-                    rs.getString("title"),
-                    rs.getString("business_name"),
-                    rs.getString("vat_number"),
-                    rs.getString("tax_code"),
-                    rs.getString("address"),
-                    rs.getString("province"),
-                    rs.getString("city"),
-                    rs.getString("postal_code"),
-                    rs.getString("unique_code"),
-                    rs.getBoolean("has_mail_notifications"),
-                    rs.getBoolean("has_telegram_notifications")
-            );
+            image = rs.getBytes("logo");
 
-            LOGGER.info("Company successfully fetch.");
+            LOGGER.info("Company Image successfully fetch.");
         } finally {
             if (rs != null) {
                 rs.close();
@@ -101,6 +88,6 @@ public final class GetCompanyDAO extends AbstractDAO<Company> {
 
         }
 
-        outputParam = company;
+        outputParam = image;
     }
 }

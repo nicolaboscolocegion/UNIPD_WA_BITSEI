@@ -29,13 +29,14 @@ import java.sql.*;
 public class CreateCompanyDAO extends AbstractDAO<Company> {
     private final String CAN_CREATE_COMPANIES = "can_create_more_companies";
     private static final String CHECK_STATEMENT = "SELECT Count(*) < (SELECT \"Owner\".number_of_companies FROM bitsei_schema.\"Owner\" WHERE \"Owner\".owner_id = ?) As can_create_more_companies FROM bitsei_schema.\"Company\" WHERE \"Company\".owner_id = ?";
-    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company\" (title, owner_id, logo, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
+    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company2\" (title, owner_id, logo, logo_file_name, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
 
 
     private final int owner_id;
 
     private final String title;
-    private final String logo;
+    private final byte[] logo;
+
     private final String business_name;
 
     private final String vat_number;
@@ -96,7 +97,7 @@ public class CreateCompanyDAO extends AbstractDAO<Company> {
                 pstmt = con.prepareStatement(CREATE_STATEMENT);
                 pstmt.setString(1, title);
                 pstmt.setInt(2, owner_id);
-                pstmt.setString(3, logo);
+                pstmt.setBytes(3, logo);
                 pstmt.setString(4, business_name);
                 pstmt.setString(5, vat_number);
                 pstmt.setString(6, tax_code);
@@ -113,7 +114,6 @@ public class CreateCompanyDAO extends AbstractDAO<Company> {
                     company = new Company(
                             rs.getInt("company_id"),
                             rs.getString("title"),
-                            rs.getString("logo"),
                             rs.getString("business_name"),
                             rs.getString("vat_number"),
                             rs.getString("tax_code"),

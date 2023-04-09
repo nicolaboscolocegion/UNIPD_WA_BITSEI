@@ -59,8 +59,6 @@ public class LoginUserRR extends AbstractRR {
 
     @Override
     protected void doServe() throws IOException {
-        LOGGER.info("KIIIIIIR KHARAAAAAAAA");
-
         //email of the user
         String email = null;
         //password in clear of the username, this will be changed when doing the frontend
@@ -80,7 +78,7 @@ public class LoginUserRR extends AbstractRR {
             // if the user is authenticated
             if (owner_id != -1) {
                 // set the MIME media type of the response
-//                res.setContentType("application/json; charset=utf-8");
+                res.setContentType("application/json; charset=utf-8");
 
                 TokenJWT token = new TokenJWT(loginResource.getEmail(), loginResource.getPassword(), owner_id);
                 res.setStatus(HttpServletResponse.SC_OK);

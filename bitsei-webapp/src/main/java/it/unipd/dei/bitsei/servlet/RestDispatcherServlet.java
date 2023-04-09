@@ -190,6 +190,13 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                 }
             }
+        } else if (path.matches("/image/\\d+")) {
+            // the request URI is: /company/image/{id}
+            // if method GET, get company image
+            // TODO: change the sql query to get the image from the database table company not company2
+            if (method.equals("GET")) {
+                new GetCompanyImageRR(req, res, getConnection()).serve();
+            }
         } else if (path.matches("/\\d+")) {
             // the request URI is: /company/{id}
             // if method GET, get company

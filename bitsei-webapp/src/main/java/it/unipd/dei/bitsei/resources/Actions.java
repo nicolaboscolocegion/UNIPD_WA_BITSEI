@@ -53,6 +53,7 @@ public final class Actions {
 
     public static final String GET_COMPANIES = "GET_COMPANIES";
 
+    public static final String GET_COMPANY_IMAGE = "GET_COMPANY_IMAGE";
     /**
      * This class can be neither instantiated nor sub-classed.
      */

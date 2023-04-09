@@ -16,8 +16,13 @@
 package it.unipd.dei.bitsei.resources;
 
 import com.fasterxml.jackson.core.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 /**
  * Represents the data about a company.
@@ -33,7 +38,8 @@ public class Company extends AbstractResource {
     private int company_id;
 
     private final String title;
-    private final String logo;
+    private final byte[] logo;
+
     private final String business_name;
 
     private final String vat_number;
@@ -65,10 +71,26 @@ public class Company extends AbstractResource {
      * @param has_mail_notifications     the mail notifications of the company
      * @param has_telegram_notifications the telegram notifications of the company
      */
-    public Company(final int company_id, final String title, final String logo, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final boolean has_mail_notifications, final boolean has_telegram_notifications) {
-        this.company_id = company_id;
+    public Company(final String title, final byte[] logo, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final boolean has_mail_notifications, final boolean has_telegram_notifications) {
+        this.company_id = -1;
         this.title = title;
         this.logo = logo;
+        this.business_name = business_name;
+        this.vat_number = vat_number;
+        this.tax_code = tax_code;
+        this.address = address;
+        this.province = province;
+        this.city = city;
+        this.postal_code = postal_code;
+        this.unique_code = unique_code;
+        this.has_mail_notifications = has_mail_notifications;
+        this.has_telegram_notifications = has_telegram_notifications;
+    }
+
+    public Company(final int company_id, final String title, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final boolean has_mail_notifications, final boolean has_telegram_notifications) {
+        this.logo = null;
+        this.company_id = company_id;
+        this.title = title;
         this.business_name = business_name;
         this.vat_number = vat_number;
         this.tax_code = tax_code;
@@ -93,8 +115,12 @@ public class Company extends AbstractResource {
         return title;
     }
 
-    public String getLogo() {
+    public byte[] getLogo() {
         return logo;
+    }
+
+    public String getLogo_file_name() {
+        return "http://localhost:8080/bitsei-1.0/rest/company/image/" + company_id;
     }
 
     public String getBusiness_name() {
@@ -147,7 +173,7 @@ public class Company extends AbstractResource {
 
         jg.writeNumberField("company_id", company_id);
         jg.writeStringField("title", title);
-        jg.writeStringField("logo", logo);
+        jg.writeStringField("logo", getLogo_file_name());
         jg.writeStringField("business_name", business_name);
         jg.writeStringField("vat_number", vat_number);
         jg.writeStringField("tax_code", tax_code);
@@ -163,19 +189,11 @@ public class Company extends AbstractResource {
         jg.flush();
     }
 
-    /**
-     * Creates a {@code User} from its JSON representation.
-     *
-     * @param in the input stream containing the JSON document.
-     * @return the {@code User} created from the JSON representation.
-     * @throws IOException if something goes wrong while parsing.
-     */
-    public static Company fromJSON(final InputStream in) throws IOException {
 
-        // the fields read from JSON
-        int jCompany_id = -1;
+    public static Company fromMultiPart(final HttpServletRequest req) throws IOException, ServletException {
         String jTitle = null;
-        String jLogo = null;
+        byte[] jLogo = null;
+        String photoMediaType = null;
         String jBusiness_name = null;
         String jVat_number = null;
         String jTax_code = null;
@@ -188,83 +206,63 @@ public class Company extends AbstractResource {
         boolean jHas_telegram_notifications = false;
 
         try {
-            final JsonParser jp = JSON_FACTORY.createParser(in);
+            Collection<Part> parts = req.getParts();
 
-            // while we are not on the start of an element or the element is not
-            // a token element, advance to the next element (if any)
-            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"company".equals(jp.getCurrentName())) {
-
-                // there are no more events
-                if (jp.nextToken() == null) {
-                    LOGGER.error("No Company object found in the stream.");
-                    throw new EOFException("Unable to parse JSON: no Company object found.");
-                }
-            }
-
-            while (jp.nextToken() != JsonToken.END_OBJECT) {
-                if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
-                    switch (jp.getCurrentName()) {
-                        case "company_id" -> {
-                            jp.nextToken();
-                            jCompany_id = jp.getIntValue();
-                        }
-                        case "title" -> {
-                            jp.nextToken();
-                            jTitle = jp.getText();
-                        }
-                        case "logo" -> {
-                            jp.nextToken();
-                            jLogo = jp.getText();
-                        }
-                        case "business_name" -> {
-                            jp.nextToken();
-                            jBusiness_name = jp.getText();
-                        }
-                        case "vat_number" -> {
-                            jp.nextToken();
-                            jVat_number = jp.getText();
-                        }
-                        case "tax_code" -> {
-                            jp.nextToken();
-                            jTax_code = jp.getText();
-                        }
-                        case "address" -> {
-                            jp.nextToken();
-                            jAddress = jp.getText();
-                        }
-                        case "province" -> {
-                            jp.nextToken();
-                            jProvince = jp.getText();
-                        }
-                        case "city" -> {
-                            jp.nextToken();
-                            jCity = jp.getText();
-                        }
-                        case "postal_code" -> {
-                            jp.nextToken();
-                            jPostal_code = jp.getText();
-                        }
-                        case "unique_code" -> {
-                            jp.nextToken();
-                            jUnique_code = jp.getText();
-                        }
-                        case "has_mail_notifications" -> {
-                            jp.nextToken();
-                            jHas_mail_notifications = jp.getBooleanValue();
-                        }
-                        case "has_telegram_notifications" -> {
-                            jp.nextToken();
-                            jHas_telegram_notifications = jp.getBooleanValue();
-                        }
+            for (Part part : parts) {
+                switch (part.getName()) {
+                    case "title" -> {
+                        jTitle = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
+                    case "logo" -> {
+                        photoMediaType = part.getContentType();
+                        switch (photoMediaType.toLowerCase().trim()) {
+                            case "image/png":
+                            case "image/jpeg":
+                            case "image/jpg":
+                                break;
+                            default:
+                                throw new ServletException("Invalid image type");
+                        }
+                        jLogo = part.getInputStream().readAllBytes();
+                    }
+                    case "business_name" -> {
+                        jBusiness_name = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "vat_number" -> {
+                        jVat_number = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "tax_code" -> {
+                        jTax_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "address" -> {
+                        jAddress = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "province" -> {
+                        jProvince = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "city" -> {
+                        jCity = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "postal_code" -> {
+                        jPostal_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "unique_code" -> {
+                        jUnique_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                    }
+                    case "has_mail_notifications" -> {
+                        jHas_mail_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
+                    }
+                    case "has_telegram_notifications" -> {
+                        jHas_telegram_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
+                    }
+
                 }
             }
-        } catch (IOException e) {
-            LOGGER.error("Unable to parse an User object from JSON.", e);
+        } catch (ServletException e) {
+            LOGGER.error("Unable to parse an User object from Multipart request.", e);
             throw e;
         }
 
-        return new Company(jCompany_id, jTitle, jLogo, jBusiness_name, jVat_number, jTax_code, jAddress, jProvince, jCity, jPostal_code, jUnique_code, jHas_mail_notifications, jHas_telegram_notifications);
+        return new Company(jTitle, jLogo, jBusiness_name, jVat_number, jTax_code, jAddress, jProvince, jCity, jPostal_code, jUnique_code, jHas_mail_notifications, jHas_telegram_notifications);
     }
-
 }
