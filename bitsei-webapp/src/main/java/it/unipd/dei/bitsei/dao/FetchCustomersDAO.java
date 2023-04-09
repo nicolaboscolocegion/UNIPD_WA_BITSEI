@@ -26,7 +26,7 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
 
 
     /**
-     * Creates a new object for searching employees by salary.
+     * Creates a new object fetching all Customers.
      *
      * @param con    the connection to the database.
      */
