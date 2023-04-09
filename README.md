@@ -1,5 +1,5 @@
-## 
-<img src="bitsei-webapp/src/main/webapp/company_logos/bitsei_1024_white.png" width="100" alt="BITSEI Logo"/>
+###
+<img src="bitsei-webapp/src/main/webapp/company_logos/bitsei_1024_gray_multi.png" width="100" alt="BITSEI Logo"/>
 
 ---
 BITSEI (Business Integrated System for Electronic Invoicing)
