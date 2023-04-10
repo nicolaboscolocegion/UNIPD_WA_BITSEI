@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public class BankAccount extends AbstractResource{
 
+    
     /**
      * IBAN identification code
      */

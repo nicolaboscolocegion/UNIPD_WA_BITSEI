@@ -56,6 +56,10 @@ public final class Actions {
      */
     public static final String CREATE_BANK_ACCOUNT = "CREATE_BANK_ACCOUNT";
 
+    /**
+     * Delete the bank account
+     */
+    public static final String DELETE_BANK_ACCOUNT = "DELETE_BANK_ACCOUNT";
 
     /**
      * This class can be neither instantiated nor sub-classed.

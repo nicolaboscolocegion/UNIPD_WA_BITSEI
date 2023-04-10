@@ -34,7 +34,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * updates the old bank account with a new one, if the process is complete will return true 
      */
     @Override
-    protected void doAccess() throws SQLException {
+    public void doAccess() throws SQLException {
         outputParam = false;
         PreparedStatement pstmt = null;
         ResultSet rs = null;

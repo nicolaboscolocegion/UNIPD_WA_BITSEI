@@ -6,20 +6,22 @@ import java.sql.ResultSet;
 
 import it.unipd.dei.bitsei.resources.BankAccount;
 
-public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
+public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', '?');";
-
+    private final static String STATEMENT="DELETE FROM \"BankAccount\"  WHERE \"IBAN\"=? AND company_id=?;";
     /**
-     * new bank account for the user
+     * bank account to delete
      */
-    private BankAccount newBankAccount;
+    private BankAccount bankAccount;
 
-    public CreateBankAccountDAO(Connection con, BankAccount ba) {
+    public DeleteBankAccountDAO(Connection con, BankAccount b) {
         super(con);
-        newBankAccount = ba;
+        this.bankAccount=b;
     }
 
+    /**
+     * delete the bank account 
+     */
     @Override
     protected void doAccess() throws Exception {
         outputParam = false;
@@ -27,13 +29,11 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
         ResultSet rs = null;
 
         try{
-            //query
+            //execute the query
             pstmt= con.prepareStatement(STATEMENT);
-
-            pstmt.setString(1, newBankAccount.getIban());
-            pstmt.setString(2, newBankAccount.getBankName());
-            pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
-            pstmt.setString(4, newBankAccount.getCompanyId());
+            
+            pstmt.setString(1, bankAccount.getIban());
+            pstmt.setString(2, bankAccount.getCompanyId());
 
             rs = pstmt.executeQuery();
 
@@ -49,5 +49,5 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             }
         }
     }
-    
+
 }
