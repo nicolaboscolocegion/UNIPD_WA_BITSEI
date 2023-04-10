@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.resources;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +26,7 @@ public class BankAccount extends AbstractResource{
     /**
      * company id that use the bank account
      */
-    private String companyId;
+    private int companyId;
 
     /**
      * create a bank account by having evry entry
@@ -36,7 +35,7 @@ public class BankAccount extends AbstractResource{
      * @param bankAccountFriendlyName
      * @param companyId
      */
-    public BankAccount(String iban, String bankName, String bankAccountFriendlyName, String companyId ){
+    public BankAccount(String iban, String bankName, String bankAccountFriendlyName, int companyId ){
         this.iban = iban;
         this.bankName= bankName;
         this.bankAccountFriendlyName=bankAccountFriendlyName;
@@ -58,7 +57,7 @@ public class BankAccount extends AbstractResource{
     /**
      * @return the company ID that uses the bank account
      */
-    public String getCompanyId() {
+    public int getCompanyId() {
         return companyId;
     }
     /**
@@ -81,7 +80,7 @@ public class BankAccount extends AbstractResource{
         jg.writeStringField("IBAN", iban);
         jg.writeStringField("bank_name", bankName);
         jg.writeStringField("bankaccount_friendly_name", bankAccountFriendlyName);
-        jg.writeStringField("company_id", companyId);
+        jg.writeNumberField("company_id", companyId);
 
         jg.writeEndObject();
         jg.flush();
@@ -92,7 +91,7 @@ public class BankAccount extends AbstractResource{
         String jIban = null;
         String jBankName = null;
         String jBankAccountFriendlyName = null;
-        String jCompanyId = null;
+        int jCompanyId = -1;
         
 
         try {
@@ -126,7 +125,7 @@ public class BankAccount extends AbstractResource{
                         }
                         case "company_id" -> {
                             jp.nextToken();
-                            jCompanyId = jp.getText();
+                            jCompanyId = jp.getNumberValue().intValue();
                         }
                     }
                 }

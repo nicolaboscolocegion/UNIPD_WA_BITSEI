@@ -47,7 +47,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             
-            pstmt.setString(4, oldBankAccount.getCompanyId());
+            pstmt.setInt(4, oldBankAccount.getCompanyId());
             pstmt.setString(5, oldBankAccount.getIban());
 
             rs = pstmt.executeQuery();

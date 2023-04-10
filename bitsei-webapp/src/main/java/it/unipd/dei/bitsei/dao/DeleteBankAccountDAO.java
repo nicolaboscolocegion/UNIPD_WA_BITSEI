@@ -33,7 +33,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt= con.prepareStatement(STATEMENT);
             
             pstmt.setString(1, bankAccount.getIban());
-            pstmt.setString(2, bankAccount.getCompanyId());
+            pstmt.setInt(2, bankAccount.getCompanyId());
 
             rs = pstmt.executeQuery();
 

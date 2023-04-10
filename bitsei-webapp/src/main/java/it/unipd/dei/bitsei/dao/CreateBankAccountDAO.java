@@ -33,7 +33,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(1, newBankAccount.getIban());
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
-            pstmt.setString(4, newBankAccount.getCompanyId());
+            pstmt.setString(4, String.valueOf(newBankAccount.getCompanyId()));
 
             rs = pstmt.executeQuery();
 
