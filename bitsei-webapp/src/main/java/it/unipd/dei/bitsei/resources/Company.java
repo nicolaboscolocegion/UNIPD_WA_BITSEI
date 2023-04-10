@@ -51,8 +51,8 @@ public class Company extends AbstractResource {
 
     private final String unique_code;
 
-    private final boolean has_mail_notifications;
-    private final boolean has_telegram_notifications;
+    private final Boolean has_mail_notifications;
+    private final Boolean has_telegram_notifications;
 
 
     /**
@@ -71,7 +71,7 @@ public class Company extends AbstractResource {
      * @param has_mail_notifications     the mail notifications of the company
      * @param has_telegram_notifications the telegram notifications of the company
      */
-    public Company(final String title, final byte[] logo, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final boolean has_mail_notifications, final boolean has_telegram_notifications) {
+    public Company(final String title, final byte[] logo, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final Boolean has_mail_notifications, final Boolean has_telegram_notifications) {
         this.company_id = -1;
         this.title = title;
         this.logo = logo;
@@ -87,7 +87,7 @@ public class Company extends AbstractResource {
         this.has_telegram_notifications = has_telegram_notifications;
     }
 
-    public Company(final int company_id, final String title, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final boolean has_mail_notifications, final boolean has_telegram_notifications) {
+    public Company(final int company_id, final String title, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final Boolean has_mail_notifications, final Boolean has_telegram_notifications) {
         this.logo = null;
         this.company_id = company_id;
         this.title = title;
@@ -155,11 +155,11 @@ public class Company extends AbstractResource {
         return unique_code;
     }
 
-    public boolean isHas_mail_notifications() {
+    public Boolean isHas_mail_notifications() {
         return has_mail_notifications;
     }
 
-    public boolean isHas_telegram_notifications() {
+    public Boolean isHas_telegram_notifications() {
         return has_telegram_notifications;
     }
 
@@ -202,8 +202,8 @@ public class Company extends AbstractResource {
         String jCity = null;
         String jPostal_code = null;
         String jUnique_code = null;
-        boolean jHas_mail_notifications = false;
-        boolean jHas_telegram_notifications = false;
+        Boolean jHas_mail_notifications = null;
+        Boolean jHas_telegram_notifications = null;
 
         try {
             Collection<Part> parts = req.getParts();

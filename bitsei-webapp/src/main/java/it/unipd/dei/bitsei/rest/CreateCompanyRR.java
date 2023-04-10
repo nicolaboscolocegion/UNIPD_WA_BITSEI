@@ -16,18 +16,15 @@
 package it.unipd.dei.bitsei.rest;
 
 import it.unipd.dei.bitsei.dao.CreateCompanyDAO;
-import it.unipd.dei.bitsei.dao.ListUserDAO;
 import it.unipd.dei.bitsei.resources.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * A REST resource for creating a new {@link Company}.

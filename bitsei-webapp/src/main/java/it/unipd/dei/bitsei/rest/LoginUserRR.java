@@ -16,7 +16,6 @@
 package it.unipd.dei.bitsei.rest;
 
 
-import com.fasterxml.jackson.core.JsonFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
@@ -29,10 +28,7 @@ import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Token;
 import it.unipd.dei.bitsei.utils.TokenJWT;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 

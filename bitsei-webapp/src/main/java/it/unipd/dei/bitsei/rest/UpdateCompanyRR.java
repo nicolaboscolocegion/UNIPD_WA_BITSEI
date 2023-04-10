@@ -15,8 +15,10 @@
  */
 package it.unipd.dei.bitsei.rest;
 
-import it.unipd.dei.bitsei.dao.GetCompanyDAO;
+import it.unipd.dei.bitsei.dao.UpdateCompanyDAO;
 import it.unipd.dei.bitsei.resources.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,30 +27,35 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * A REST resource for getting {@link Company}.
+ * A REST resource for updating a new {@link Company}.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class GetCompanyRR extends AbstractRR {
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 10 MB
+        maxFileSize = 1024 * 1024 * 10, // 50 MB
+        maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
+public final class UpdateCompanyRR extends AbstractRR {
 
     /**
-     * Creates a new REST resource for listing {@code Company}s.
+     * Creates a new REST resource for listing {@code User}s.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GetCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.GET_COMPANIES, req, res, con);
+    public UpdateCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.UPDATE_COMPANY, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        Company el = null;
+        boolean is_ok = false;
         Message m = null;
 
         try {
@@ -59,28 +66,35 @@ public final class GetCompanyRR extends AbstractRR {
             }
 
             int company_id = Integer.parseInt(id);
+
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            // creates a new DAO for accessing the database and creates the company
+            final Company company = Company.fromMultiPart(req);
+            company.setCompany_id(company_id);
 
-            el = new GetCompanyDAO(con, company_id, owner_id).access().getOutputParam();
+             is_ok = new UpdateCompanyDAO(con, owner_id, company).access().getOutputParam();
 
-            if (el != null) {
-                LOGGER.info("Company successfully get.");
+            if (is_ok) {
+                LOGGER.info("Company updated successfully.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
-                el.toJSON(res.getOutputStream());
-            } else {
-                LOGGER.error("Fatal error while fetching Company.");
+                m = new Message("Company updated successfully.", null, null);
+                m.toJSON(res.getOutputStream());
+            } else { // it should not happen
+                LOGGER.error("Fatal error while creating company.");
 
-                m = new Message("Cannot fetch Company: make sure you have a right access to this company.", "E5A1", null);
+                m = new Message("Cannot create company: you reach your plan limitations.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("Cannot list Companies: unexpected database error.", ex);
+            LOGGER.error("Cannot create company: unexpected database error.", ex);
 
-            m = new Message("Cannot list Companies: unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot create company: unexpected database error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
         }
     }
 

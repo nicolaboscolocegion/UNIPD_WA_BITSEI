@@ -204,8 +204,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             // if method DELETE, delete company
             switch (method) {
                 case "GET" -> new GetCompanyRR(req, res, getConnection()).serve();
-                // TODO: implement the update company section
-//                case "PUT" -> new UpdateCompanyRR(req, res, getConnection()).serve();
+                // TODO: change the sql query to get the image from the database table company not company2
+                case "PUT" -> new UpdateCompanyRR(req, res, getConnection()).serve();
                 // TODO: implement delete company -> as there is a lot of constraints we should delete them first in the right order
                 // after that we can delete the company itself. -> use atomic transactions
                 case "DELETE" -> new DeleteCompanyRR(req, res, getConnection()).serve();
