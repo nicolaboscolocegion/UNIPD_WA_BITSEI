@@ -97,9 +97,10 @@ public class TokenJWT {
      *
      * @param email    user email
      * @param password password of the user, for now is just having two different constructor
+     * @param owner_id id of the owner of the token
      * @throws JoseException
      */
-    public TokenJWT(String email, String password) throws JoseException {
+    public TokenJWT(String email, String password, int owner_id) throws JoseException {
         if (rsaJsonWebKey == null) {
             rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
             rsaJsonWebKey.setKeyId("k1");
@@ -115,6 +116,7 @@ public class TokenJWT {
         claims.setIssuedAtToNow();
         claims.setNotBeforeMinutesInThePast(2);
         claims.setClaim("email", email);
+        claims.setClaim("owner_id", owner_id);
 
 
         //create the token
@@ -137,6 +139,10 @@ public class TokenJWT {
 
     public String getEmail() {
         return claims.getClaimValueAsString("email");
+    }
+
+    public String getOwnerID() {
+        return claims.getClaimValueAsString("owner_id");
     }
 
     /**

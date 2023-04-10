@@ -68,7 +68,7 @@ public class StringValue extends AbstractResource {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No %s object found in the stream.", field_name);
+                    LOGGER.error("No {} object found in the stream.", field_name);
                     throw new EOFException("Unable to parse JSON: no specific object found.");
                 }
             }
