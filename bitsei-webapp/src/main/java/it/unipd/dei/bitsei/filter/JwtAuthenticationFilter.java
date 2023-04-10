@@ -74,6 +74,7 @@ public class JwtAuthenticationFilter implements Filter {
             }
 
             httpRequest.getSession().setAttribute("email", token_jwt.getEmail());
+            httpRequest.getSession().setAttribute("owner_id", token_jwt.getOwnerID());
 
             filterChain.doFilter(httpRequest, servletResponse);
         } catch (final Exception e) {

@@ -47,6 +47,15 @@ public final class Actions {
      */
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
+
+    public static final String CREATE_COMPANY = "CREATE_COMPANY";
+    public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
+
+    public static final String LIST_COMPANIES = "LIST_COMPANIES";
+
+    public static final String GET_COMPANIES = "GET_COMPANIES";
+
+    public static final String GET_COMPANY_IMAGE = "GET_COMPANY_IMAGE";
     /**
      * This class can be neither instantiated nor sub-classed.
      */

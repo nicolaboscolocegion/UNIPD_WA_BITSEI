@@ -30,11 +30,14 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         try {
 
-            // if the requested resource was an User, delegate its processing and return
+            // if the requested resource was a User, delegate its processing and return
             if (processUser(req, res)) {
                 return;
             }
-            if(processLogin(req, res)){
+            if (processLogin(req, res)) {
+                return;
+            }
+            if (processCompany(req, res)) {
                 return;
             }
 
@@ -80,7 +83,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
+        // the requested resource was not a user
         if (path.lastIndexOf("rest/user") <= 0) {
             return false;
         }
@@ -101,13 +104,55 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 //                    new CreateUserRR(req, res, getConnection()).serve();
                     break;
                 default:
-                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
 
                     m = new Message("Unsupported operation for URI /user.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
                     break;
+            }
+        } else if (path.equals("/reset-password")) {
+            if (method.equals("POST")) {
+                new RestPasswordRR(req, res, getConnection()).serve();
+            }
+        } else if (path.equals("/change-password")) {
+            if (method.equals("POST")) {
+                new ChangePasswordRR(req, res, getConnection()).serve();
+            }
+        }
+
+
+        return true;
+
+    }
+
+    private boolean processLogin(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a login
+        if (path.lastIndexOf("rest/login") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /login
+        path = path.substring(path.lastIndexOf("login") + 5);
+
+        // the request URI is: /login
+        // if method POST, authenticate the user
+        if (path.length() == 0 || path.equals("/")) {
+            if (method.equals("POST")) {
+                new LoginUserRR(req, res, getConnection()).serve();
+            } else {
+                LOGGER.warn("Unsupported operation for URI /user: {}.", method);
+
+                m = new Message("Unsupported operation for URI /user.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
             }
         } else if (path.equals("/reset-password")){
             if (method.equals("POST")){
@@ -124,49 +169,64 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
     }
 
-    private boolean processLogin(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException{
+
+    private boolean processCompany(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
 
         String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/login") <= 0) {
+        // the requested resource was not a company
+        if (path.lastIndexOf("rest/company") <= 0) {
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("login") + 5);
+        // strip everything until after the /company
+        path = path.substring(path.lastIndexOf("company") + 7);
 
-        // the request URI is: /login
-        // if method POST, authenticate the user
+        // the request URI is: /company
+        // if method GET, list companies
+        // if method POST, create company
         if (path.length() == 0 || path.equals("/")) {
-
             switch (method) {
-                case "POST":
-                    new LoginUserRR(req, res, getConnection()).serve();
-                    break;
-                default:
-                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
-
-                    m = new Message("Unsupported operation for URI /user.", "E4A5",
+                case "GET" -> new ListCompanyRR(req, res, getConnection()).serve();
+                case "POST" -> new CreateCompanyRR(req, res, getConnection()).serve();
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
+                    m = new Message("Unsupported operation for URI /company.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
-                    break;
+                }
             }
-        } else if (path.equals("/reset-password")){
-            if (method.equals("POST")){
-                new RestPasswordRR(req, res, getConnection()).serve();
+        } else if (path.matches("/image/\\d+")) {
+            // the request URI is: /company/image/{id}
+            // if method GET, get company image
+            // TODO: change the sql query to get the image from the database table company not company2
+            if (method.equals("GET")) {
+                new GetCompanyImageRR(req, res, getConnection()).serve();
             }
-        } else if (path.equals("/change-password")){
-            if (method.equals("POST")){
-                new ChangePasswordRR(req, res, getConnection()).serve();
+        } else if (path.matches("/\\d+")) {
+            // the request URI is: /company/{id}
+            // if method GET, get company
+            // if method PUT, update company
+            // if method DELETE, delete company
+            switch (method) {
+                case "GET" -> new GetCompanyRR(req, res, getConnection()).serve();
+                // TODO: change the sql query to get the image from the database table company not company2
+                case "PUT" -> new UpdateCompanyRR(req, res, getConnection()).serve();
+                // TODO: implement delete company -> as there is a lot of constraints we should delete them first in the right order
+                // after that we can delete the company itself. -> use atomic transactions
+                case "DELETE" -> new DeleteCompanyRR(req, res, getConnection()).serve();
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /company: {}.", method);
+                    m = new Message("Unsupported operation for URI /company.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                }
             }
         }
-
-
         return true;
-
     }
 }
