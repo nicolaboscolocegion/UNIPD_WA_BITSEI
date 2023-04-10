@@ -11,7 +11,7 @@ import it.unipd.dei.bitsei.resources.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class ChangeBankAccoutRR extends AbstractRR{
+public class UpdateBankAccoutRR extends AbstractRR{
     /**
      * Control the authentication of the user
      *
@@ -19,7 +19,7 @@ public class ChangeBankAccoutRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ChangeBankAccoutRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+    public UpdateBankAccoutRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
         super(Actions.CHANGE_BANK_ACCOUNT, req, res, con);
     }
 

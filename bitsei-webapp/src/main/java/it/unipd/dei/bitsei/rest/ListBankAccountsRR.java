@@ -33,7 +33,7 @@ public class ListBankAccountsRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListBankAccountsRR(String action, HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public ListBankAccountsRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
         super(Actions.LIST_BANK_ACCOUNTS, req, res, con);
     }
 
@@ -48,10 +48,18 @@ public class ListBankAccountsRR extends AbstractRR{
         
 
         try {
-            Company c = Company.fromMultiPart(req);
+            
+            String uri = req.getRequestURI();
+            String id = uri.substring(uri.lastIndexOf('/') + 1);
+            if (id.isEmpty() || id.isBlank()) {
+                throw new IOException("company id cannot be empty.");
+            }
+
+            int company_id = Integer.parseInt(id);
+            
 
             // creates a new DAO for accessing the database and lists the user(s)
-            el = new ListBankAccountsDAO(con, c).access().getOutputParam();
+            el = new ListBankAccountsDAO(con, company_id).access().getOutputParam();
 
             if (el != null) {
                 LOGGER.info("bank account(s) successfully listed.");
@@ -70,12 +78,6 @@ public class ListBankAccountsRR extends AbstractRR{
             LOGGER.error("Cannot list bank account(s): unexpected database error.", ex);
 
             m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", ex.getMessage());
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            m.toJSON(res.getOutputStream());
-        }catch (ServletException ex){
-            LOGGER.error("Cannot list bank account(s): unexpected servletExpection error error.", ex);
-
-            m = new Message("Cannot list bank account(s): unexpected servletExpection error error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

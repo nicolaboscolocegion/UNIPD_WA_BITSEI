@@ -1,6 +1,7 @@
 package it.unipd.dei.bitsei.servlet;
 
 import it.unipd.dei.bitsei.resources.User;
+import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
@@ -217,6 +218,43 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                 }
             }
+        }else if (path.matches("/bankaccounts/\\d+")){
+            // the request URI is: /company/bankaccount/{id}
+            // if method GET, get all the bank account of the company
+            switch (method) {
+                case "GET" -> new ListBankAccountsRR(req, res, getConnection()).serve();
+
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /company/bankaccounts: {}.", method);
+                    m = new Message("Unsupported operation for URI /company/bankaccounts.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                }
+
+            }
+            
+        }else if (path.matches("/bank/")){
+            // the request URI is: /company/bank
+            //POST: create a new bank account
+            //PUT: update a bank account
+            //DELETE: delete a bank accounte
+            switch (method) {
+                case "POST" -> new CreateBankAccountRR(req, res, getConnection()).serve();
+
+                case "PUT" -> new UpdateBankAccoutRR(req, res, getConnection());
+
+                case "DELETE" -> new DeleteBankAccountRR(req, res, getConnection());
+
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /company/bank: {}.", method);
+                    m = new Message("Unsupported operation for URI /company/bank.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                }
+            }
+
         }
         return true;
     }

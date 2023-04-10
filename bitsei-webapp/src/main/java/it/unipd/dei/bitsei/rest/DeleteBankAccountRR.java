@@ -23,7 +23,7 @@ public class DeleteBankAccountRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    protected DeleteBankAccountRR(String action, HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public DeleteBankAccountRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
         super(Actions.DELETE_BANK_ACCOUNT, req, res, con);
     }
 
@@ -32,7 +32,7 @@ public class DeleteBankAccountRR extends AbstractRR{
      * creates bank a new bank account
      */
     @Override
-    protected void doServe() throws IOException {
+    public void doServe() throws IOException {
         Message m;
         InputStream requestStream = req.getInputStream();
 

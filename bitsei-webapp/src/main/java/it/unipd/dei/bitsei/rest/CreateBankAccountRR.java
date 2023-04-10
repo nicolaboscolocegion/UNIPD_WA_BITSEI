@@ -22,7 +22,7 @@ public class CreateBankAccountRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    protected CreateBankAccountRR(String action, HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public CreateBankAccountRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
         super(Actions.CREATE_BANK_ACCOUNT, req, res, con);
     }
 

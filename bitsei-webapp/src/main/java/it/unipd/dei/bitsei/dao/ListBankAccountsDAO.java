@@ -16,16 +16,16 @@ import it.unipd.dei.bitsei.resources.Company;
 public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
     private static final String STATEMENT="select * from \"BankAccount\" where company_id=?";
-    private final Company company;
+    private final int companyID;
 
     /**
      * constructor for: retrives all bank account in a list by givin a certain company
      * @param con connettion of the database
-     * @param c company to search
+     * @param companyID company id to search
      */
-    public ListBankAccountsDAO(Connection con, Company c) {
+    public ListBankAccountsDAO(Connection con, int companyID) {
         super(con);
-        this.company = c;
+        this.companyID = companyID;
     }
 
     /**
@@ -42,7 +42,7 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
             //execute the query
             pstmt= con.prepareStatement(STATEMENT);
             
-            pstmt.setInt(1, company.getCompany_id());
+            pstmt.setInt(1, companyID);
             
 
             rs = pstmt.executeQuery();
