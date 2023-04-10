@@ -37,7 +37,7 @@ public class CreateCompanyDAO extends AbstractDAO<Company> {
      * insert the new company in the database
      */
     private static final String CHECK_STATEMENT = "SELECT Count(*) < (SELECT \"Owner\".number_of_companies FROM bitsei_schema.\"Owner\" WHERE \"Owner\".owner_id = ?) As can_create_more_companies FROM bitsei_schema.\"Company\" WHERE \"Company\".owner_id = ?";
-    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company2\" (title, owner_id, logo, logo_file_name, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
+    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company2\" (title, owner_id, logo, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
 
 
     // the owner of the company
