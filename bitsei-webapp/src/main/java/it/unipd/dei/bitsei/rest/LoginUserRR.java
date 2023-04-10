@@ -55,31 +55,28 @@ public class LoginUserRR extends AbstractRR {
 
     @Override
     protected void doServe() throws IOException {
-        LoginResource user;
-        //username of the user
+        //email of the user
         String email = null;
-
-        //password in clear of the username, this will changed when doing the frontend
+        //password in clear of the username, this will be changed when doing the frontend
         String password = null;
 
         //Response
         Message m;
 
-        boolean autenticate = false; //authentication flag
+        int owner_id; //authentication flag
 
         try {
-            // retrieves the user parameters
-            user = LoginResource.fromJSON(req.getInputStream());
-
+            // retrieves the user parameters from the request
+            final LoginResource loginResource = LoginResource.fromJSON(req.getInputStream());
             // creates a new object for accessing the database and searching the employees
-            autenticate = new UserAuthDAO(con, user).access().getOutputParam();
+            owner_id = new UserAuthDAO(con, loginResource).access().getOutputParam();
 
             // if the user is authenticated
-            if (autenticate) {
+            if (owner_id != -1) {
                 // set the MIME media type of the response
                 res.setContentType("application/json; charset=utf-8");
 
-                TokenJWT token = new TokenJWT(user.getEmail(), user.getPassword());
+                TokenJWT token = new TokenJWT(loginResource.getEmail(), loginResource.getPassword(), owner_id);
                 res.setStatus(HttpServletResponse.SC_OK);
                 new Token(token.getTokenString()).toJSON(res.getOutputStream());
             }

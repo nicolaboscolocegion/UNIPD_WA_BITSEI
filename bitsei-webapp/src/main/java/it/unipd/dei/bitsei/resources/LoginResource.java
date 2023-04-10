@@ -15,6 +15,7 @@
  */
 package it.unipd.dei.bitsei.resources;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -38,9 +39,18 @@ public class LoginResource extends AbstractResource {
      * @param email    email of the user
      * @param password password of the user
      */
-    public LoginResource(String email, String password) {
+    public LoginResource(final String email, final String password) {
         this.email = email;
         this.password = password;
+    }
+
+
+    public final String getEmail() {
+        return email;
+    }
+
+    public final String getPassword() {
+        return password;
     }
 
     /**
@@ -48,12 +58,13 @@ public class LoginResource extends AbstractResource {
      *
      * @param in input stream with json file
      */
-    public static LoginResource fromJSON(final InputStream in) {
+    public static LoginResource fromJSON(final InputStream in) throws IOException {
         String jemail = null;
         String jPassword = null;
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
+
             while (jp.nextToken() != JsonToken.END_OBJECT) {
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
@@ -70,26 +81,16 @@ public class LoginResource extends AbstractResource {
             }
 
         } catch (Exception e) {
-            LOGGER.error("Unable to parse an User object from JSON.", e);
-
+            LOGGER.error("Unable to parse a data object from JSON.", e);
+            throw new IOException("Unable to parse a data object from JSON.", e);
         }
-
 
         return new LoginResource(jemail, jPassword);
     }
 
     @Override
     protected void writeJSON(OutputStream out) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("");
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
 }
