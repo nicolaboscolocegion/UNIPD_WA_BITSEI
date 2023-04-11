@@ -202,7 +202,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         } else if (path.matches("/image/\\d+")) {
             // the request URI is: /company/image/{id}
             // if method GET, get company image
-            // TODO: change the sql query to get the image from the database table company not company2
             if (method.equals("GET")) {
                 new GetCompanyImageRR(req, res, getConnection()).serve();
             }
@@ -213,7 +212,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             // if method DELETE, delete company
             switch (method) {
                 case "GET" -> new GetCompanyRR(req, res, getConnection()).serve();
-                // TODO: change the sql query to get the image from the database table company not company2
                 case "PUT" -> new UpdateCompanyRR(req, res, getConnection()).serve();
                 // TODO: implement delete company -> as there is a lot of constraints we should delete them first in the right order
                 // after that we can delete the company itself. -> use atomic transactions
