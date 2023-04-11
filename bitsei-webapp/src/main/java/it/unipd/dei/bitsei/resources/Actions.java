@@ -50,11 +50,11 @@ public final class Actions {
     public static final String CREATE_COMPANY = "CREATE_COMPANY";
     public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
 
-    public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
-
     public static final String LIST_COMPANIES = "LIST_COMPANIES";
 
-    public static final String GET_COMPANIES = "GET_COMPANIES";
+    public static final String GET_COMPANY = "GET_COMPANY";
+
+    public static final String DELETE_COMPANY = "DELETE_COMPANY";
 
     public static final String GET_COMPANY_IMAGE = "GET_COMPANY_IMAGE";
     /**
