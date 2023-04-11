@@ -31,6 +31,11 @@ public abstract class AbstractRR implements RestResource {
     protected static final String JSON_MEDIA_TYPE = "application/json";
 
     /**
+     * The multipart/form-data MIME media type
+     */
+    protected static final String MULTIPART_FORM_DATA_MEDIA_TYPE = "multipart/form-data";
+
+    /**
      * The JSON UTF-8 MIME media type
      */
     protected static final String JSON_UTF_8_MEDIA_TYPE = "application/json; charset=utf-8";
@@ -101,9 +106,9 @@ public abstract class AbstractRR implements RestResource {
         try {
             // if the request method and/or the MIME media type are not allowed, return.
             // Appropriate error message sent by {@code checkMethodMediaType}
-//            if (!checkMethodMediaType(req, res)) {
-//                return;
-//            }
+            if (!checkMethodMediaType(req, res)) {
+                return;
+            }
 
             doServe();
         } catch (Throwable t) {
