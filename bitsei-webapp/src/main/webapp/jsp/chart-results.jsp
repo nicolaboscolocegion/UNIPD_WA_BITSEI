@@ -144,10 +144,36 @@
 				});
 			</script>
 			</c:when>
+
+			<c:when test="${chart_type == 5}">
+			<script>
+				const ctx = document.getElementById('myChart');
+				
+				new Chart(ctx, {
+					type: 'line',
+					data: {
+					labels: [<c:forEach var="element" items="${tmap_labels}">'<c:out value="${element}"/>'<c:if test ="${tmap_labels.indexOf(element)!=tmap_labels.size()-1}">,</c:if></c:forEach>],
+					datasets: [{
+						label: 'Average discount',
+						data: [<c:forEach var="element" items="${tmap_data}"><c:out value="${element}"/><c:if test ="${tmap_data.indexOf(element)!=tmap_data.size()-1}">,</c:if></c:forEach>],
+						borderWidth: 1,
+						borderColor: 'rgb(75, 192, 192)'
+					}]
+					},
+					options: {
+					scales: {
+						y: {
+						beginAtZero: true
+						}
+					}
+					}
+				});
+			</script>
+			</c:when>
 		</c:choose>
 		<hr>
 		
-		<form method="POST" action="../chart-form">
+		<form method="POST" action="./chart-form">
 			
 			<label for="chartPeriodID">Period of chart:  </label>
 			<select id="chartPeriodID" name="chartPeriod">
@@ -214,10 +240,11 @@
 	
 			<label for="chartTypeID">Type of chart:</label><br/><br/>
 			<select id="chartTypeID" name="chartType">
-			<option value="1">Invoices by month</option>
-			<option value="2">Total profit by month</option>
+			<option value="1">Invoices by period</option>
+			<option value="2">Total profit by period</option>
 			<option value="3">Invoices by customer</option>
 			<option value="4">Total by customer</option>
+			<option value="5">Discount by period</option>
 			</select><br/><br/>
 			<hr>
 	

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.TreeMap;
 import java.text.SimpleDateFormat;
 
@@ -237,15 +238,10 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                         tmap_numb_month.put(d, 1+tmap_numb_month.getOrDefault(d, 0));
                     }
                 }
-                
-                int size = tmap_numb_month.size();
-                for (int i=0;i<size;i++) {
-                    Date d = tmap_numb_month.firstKey();
-                    String month = new SimpleDateFormat("MMMM yyyy").format(d);
+                for (Map.Entry<Date,Integer> entry: tmap_numb_month.entrySet()) {
+                    String month = new SimpleDateFormat("MMMM yyyy").format(entry.getKey());
                     tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
-                    tmap_data.add(tmap_numb_month.get(d).toString());
-                    
-                    tmap_numb_month.remove(d);
+                    tmap_data.add(entry.getValue().toString());
                 }
                 break;
                 case 2:
@@ -257,15 +253,10 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                         tmap_numb_year.put(d, 1+tmap_numb_year.getOrDefault(d, 0));
                     }
                 }
-                
-                int size5 = tmap_numb_year.size();
-                for (int i=0;i<size5;i++) {
-                    Date d = tmap_numb_year.firstKey();
-                    String year = new SimpleDateFormat("yyyy").format(d);
+                for (Map.Entry<Date,Integer> entry: tmap_numb_year.entrySet()) {
+                    String year = new SimpleDateFormat("yyyy").format(entry.getKey());
                     tmap_labels.add(year);
-                    tmap_data.add(tmap_numb_year.get(d).toString());
-                    
-                    tmap_numb_year.remove(d);
+                    tmap_data.add(entry.getValue().toString());
                 }
                 break;
                 case 3:
@@ -277,36 +268,61 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                         tmap_numb_day.put(d, 1+tmap_numb_day.getOrDefault(d, 0));
                     }
                 }
-                
-                int size6 = tmap_numb_day.size();
-                for (int i=0;i<size6;i++) {
-                    Date d = tmap_numb_day.firstKey();
-                    String day = new SimpleDateFormat("d/MM/yyyy").format(d);
+                for (Map.Entry<Date,Integer> entry: tmap_numb_day.entrySet()) {
+                    String day = new SimpleDateFormat("d/MM/yyyy").format(entry.getKey());
                     tmap_labels.add(day);
-                    tmap_data.add(tmap_numb_day.get(d).toString());
-                    
-                    tmap_numb_day.remove(d);
+                    tmap_data.add(entry.getValue().toString());
                 }
                 break;
             }
             break;
             case 2:
-            //TOTAL BY DATE (MONTH)
-            TreeMap<Date,Double> tmap_total_month = new TreeMap<>();
-            for (Invoice i: el){
-                if(i.getInvoice_date()!=null){
-                    Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
-                    tmap_total_month.put(d, i.getTotal()+tmap_total_month.getOrDefault(d, 0.0));
+            switch(chart_period){
+                case 1:
+                //TOTAL BY DATE (MONTH)
+                TreeMap<Date,Double> tmap_total_month = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                        tmap_total_month.put(d, i.getTotal()+tmap_total_month.getOrDefault(d, 0.0));
+                    }
                 }
-            }
-            int size2 = tmap_total_month.size();
-            for (int i=0;i<size2;i++) {
-                Date d = tmap_total_month.firstKey();
-                String month = new SimpleDateFormat("MMMM yyyy").format(d);
-                tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
-                tmap_data.add(tmap_total_month.get(d).toString());
-                
-                tmap_total_month.remove(d);
+                for (Map.Entry<Date,Double> entry: tmap_total_month.entrySet()) {
+                    String month = new SimpleDateFormat("MMMM yyyy").format(entry.getKey());
+                    tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
+                    tmap_data.add(entry.getValue().toString());
+                }
+                break;
+                case 2:
+                //TOTAL BY DATE (YEAR)
+                TreeMap<Date,Double> tmap_total_year = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),0,1);
+                        tmap_total_year.put(d, i.getTotal()+tmap_total_year.getOrDefault(d, 0.0));
+                    }
+                }
+                for (Map.Entry<Date,Double> entry: tmap_total_year.entrySet()) {
+                    String year = new SimpleDateFormat("yyyy").format(entry.getKey());
+                    tmap_labels.add(year);
+                    tmap_data.add(entry.getValue().toString());
+                }
+                break;
+                case 3:
+                //TOTAL BY DATE (DAY)
+                TreeMap<Date,Double> tmap_total_day = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),i.getInvoice_date().getDay());
+                        tmap_total_day.put(d, i.getTotal()+tmap_total_day.getOrDefault(d, 0.0));
+                    }
+                }
+                for (Map.Entry<Date,Double> entry: tmap_total_day.entrySet()) {
+                    String day = new SimpleDateFormat("d/MM/yyyy").format(entry.getKey());
+                    tmap_labels.add(day);
+                    tmap_data.add(entry.getValue().toString());
+                }
+                break;
             }
             break;
             case 3:
@@ -318,14 +334,9 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                 1+tmap_numb_customer.getOrDefault(i.getCustomer_id(),0));
 
             }
-            int size3 = tmap_numb_customer.size();
-            for (int i=0;i<size3;i++) {
-                int d = tmap_numb_customer.firstKey();
-                
-                tmap_labels.add(d+"");
-                tmap_data.add(tmap_numb_customer.get(d).toString());
-                
-                tmap_numb_customer.remove(d);
+            for (Map.Entry<Integer,Integer> entry: tmap_numb_customer.entrySet()) {
+                tmap_labels.add(entry.getKey()+"");
+                tmap_data.add(entry.getValue().toString());
             }
             break;
             case 4:
@@ -337,14 +348,80 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                 i.getTotal()+tmap_total_customer.getOrDefault(i.getCustomer_id(),0.0));
 
             }
-            int size4 = tmap_total_customer.size();
-            for (int i=0;i<size4;i++) {
-                int d = tmap_total_customer.firstKey();
+            for (Map.Entry<Integer,Double> entry: tmap_total_customer.entrySet()) {
                 
-                tmap_labels.add(d+"");
-                tmap_data.add(tmap_total_customer.get(d).toString());
-                
-                tmap_total_customer.remove(d);
+                tmap_labels.add(entry.getKey()+"");
+                tmap_data.add(entry.getValue().toString());
+            }
+            break;
+            case 5:
+            switch(chart_period){
+                case 1:
+                //DISCOUNT BY DATE (MONTH)
+                TreeMap<Date,Double> tmap_discount_month_total = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                        tmap_discount_month_total.put(d, i.getTotal()+tmap_discount_month_total.getOrDefault(d, 0.0));
+                    }
+                }
+                TreeMap<Date,Integer> tmap_discount_month_numb = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),1);
+                        tmap_discount_month_numb.put(d, 1+tmap_discount_month_numb.getOrDefault(d, 0));
+                    }
+                }
+                for (Map.Entry<Date,Double> entry: tmap_discount_month_total.entrySet()) {
+                    String month = new SimpleDateFormat("MMMM yyyy").format(entry.getKey());
+                    tmap_labels.add(month.substring(0,1).toUpperCase()+month.substring(1));
+                    tmap_data.add(String.valueOf(entry.getValue()/tmap_discount_month_numb.get(entry.getKey())));
+                }
+                break;
+                case 2:
+                //DISCOUNT BY DATE (YEAR)
+                TreeMap<Date,Double> tmap_discount_year_total = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),0,1);
+                        tmap_discount_year_total.put(d, i.getTotal()+tmap_discount_year_total.getOrDefault(d, 0.0));
+                    }
+                }
+                TreeMap<Date,Integer> tmap_discount_year_numb = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),0,1);
+                        tmap_discount_year_numb.put(d, 1+tmap_discount_year_numb.getOrDefault(d, 0));
+                    }
+                }
+                for (Map.Entry<Date,Double> entry: tmap_discount_year_total.entrySet()) {
+                    String year = new SimpleDateFormat("yyyy").format(entry.getKey());
+                    tmap_labels.add(year);
+                    tmap_data.add(String.valueOf(entry.getValue()/tmap_discount_year_numb.get(entry.getKey())));
+                }
+                break;
+                case 3:
+                //DISCOUNT BY DATE (DAY)
+                TreeMap<Date,Double> tmap_discount_day_total = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),i.getInvoice_date().getDay());
+                        tmap_discount_day_total.put(d, i.getTotal()+tmap_discount_day_total.getOrDefault(d, 0.0));
+                    }
+                }
+                TreeMap<Date,Integer> tmap_discount_day_numb = new TreeMap<>();
+                for (Invoice i: el){
+                    if(i.getInvoice_date()!=null){
+                        Date d = new Date(i.getInvoice_date().getYear(),i.getInvoice_date().getMonth(),i.getInvoice_date().getDay());
+                        tmap_discount_day_numb.put(d, 1+tmap_discount_day_numb.getOrDefault(d, 0));
+                    }
+                }
+                for (Map.Entry<Date,Double> entry: tmap_discount_day_total.entrySet()) {
+                    String day = new SimpleDateFormat("d/MM/yyyy").format(entry.getKey());
+                    tmap_labels.add(day);
+                    tmap_data.add(String.valueOf(entry.getValue()/tmap_discount_day_numb.get(entry.getKey())));
+                }
+                break;
             }
             break;
         }
