@@ -27,35 +27,64 @@ import java.sql.*;
  * @since 1.00
  */
 public class CreateCompanyDAO extends AbstractDAO<Company> {
+
+    // number of companies that the owner can create
     private final String CAN_CREATE_COMPANIES = "can_create_more_companies";
+
+    /**
+     * The SQL statements to be executed
+     * count the number of companies of the owner and check if the owner can create more companies
+     * insert the new company in the database
+     */
     private static final String CHECK_STATEMENT = "SELECT Count(*) < (SELECT \"Owner\".number_of_companies FROM bitsei_schema.\"Owner\" WHERE \"Owner\".owner_id = ?) As can_create_more_companies FROM bitsei_schema.\"Company\" WHERE \"Company\".owner_id = ?";
-    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company2\" (title, owner_id, logo, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
+    private static final String CREATE_STATEMENT = "INSERT INTO bitsei_schema.\"Company\" (title, owner_id, logo, business_name, vat_number, tax_code, address, city, province, postal_code, unique_code, has_mail_notifications, has_telegram_notifications) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)  RETURNING *";
 
 
+    // the owner of the company
     private final int owner_id;
 
+    // the title of the company to create
     private final String title;
+
+    // the logo of the company to create
     private final byte[] logo;
 
+    // the business name of the company to create
     private final String business_name;
 
+    // the vat number of the company to create
     private final String vat_number;
+
+    // the tax code of the company to create
     private final String tax_code;
+
+    // the address of the company to create
     private final String address;
+
+    // the province of the company to create
     private final String province;
+
+    // the city of the company to create
     private final String city;
+
+    // the postal code of the company to create
     private final String postal_code;
 
+    // the unique code of the company to create
     private final String unique_code;
 
+    // the mail notifications of the company to create
     private final boolean has_mail_notifications;
+
+    // the telegram notifications of the company to create
     private final boolean has_telegram_notifications;
 
     /**
      * Creates a new object for getting one user.
      *
-     * @param con     the connection to the database.
-     * @param company the company of the user
+     * @param con      the connection to the database.
+     * @param owner_id the owner of the company
+     * @param company  the company of the user
      */
     public CreateCompanyDAO(final Connection con, final int owner_id, final Company company) {
         super(con);
@@ -92,7 +121,7 @@ public class CreateCompanyDAO extends AbstractDAO<Company> {
             if (!rs.next()) {
                 return;
             }
-            LOGGER.info("Rest Password Token successfully stored in the database." + rs.getBoolean(CAN_CREATE_COMPANIES));
+
             if (rs.getBoolean(CAN_CREATE_COMPANIES)) {
                 pstmt = con.prepareStatement(CREATE_STATEMENT);
                 pstmt.setString(1, title);

@@ -41,7 +41,7 @@ public final class DeleteCompanyRR extends AbstractRR {
      * @param con the connection to the database.
      */
     public DeleteCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.GET_COMPANIES, req, res, con);
+        super(Actions.DELETE_COMPANY, req, res, con);
     }
 
 
