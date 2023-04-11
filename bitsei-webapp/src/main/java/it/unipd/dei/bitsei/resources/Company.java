@@ -33,25 +33,68 @@ import java.util.Collection;
  */
 public class Company extends AbstractResource {
     /**
-     * The id of the user
+     * The id of the company
      */
     private int company_id;
 
+    /**
+     * The title of the company
+     */
     private final String title;
+
+    /**
+     * The logo of the company
+     */
     private final byte[] logo;
 
+    /**
+     * The business name of the company
+     */
     private final String business_name;
 
+    /**
+     * The vat number of the company
+     */
     private final String vat_number;
+
+    /**
+     * The tax code of the company
+     */
     private final String tax_code;
+
+    /**
+     * The address of the company
+     */
     private final String address;
+
+    /**
+     * The province of the company
+     */
     private final String province;
+
+    /**
+     * The city of the company
+     */
     private final String city;
+
+    /**
+     * The postal code of the company
+     */
     private final String postal_code;
 
+    /**
+     * The unique code of the company
+     */
     private final String unique_code;
 
+    /**
+     * is the owner wants to receive notifications by email or not
+     */
     private final Boolean has_mail_notifications;
+
+    /**
+     * is the owner wants to receive notifications by telegram or not
+     */
     private final Boolean has_telegram_notifications;
 
 
@@ -102,6 +145,7 @@ public class Company extends AbstractResource {
         this.has_mail_notifications = has_mail_notifications;
         this.has_telegram_notifications = has_telegram_notifications;
     }
+
 
     public void setCompany_id(int company_id) {
         this.company_id = company_id;
@@ -163,7 +207,12 @@ public class Company extends AbstractResource {
         return has_telegram_notifications;
     }
 
-
+    /**
+     * Writes the JSON representation of this object to the given output stream.
+     *
+     * @param out the output stream
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {
 
@@ -189,21 +238,29 @@ public class Company extends AbstractResource {
         jg.flush();
     }
 
-
+    /**
+     * Creates a new company instance from the given HTTP request.
+     * The request must be a multipart request.
+     *
+     * @param req the HTTP request
+     * @return the company instance
+     * @throws IOException      if an I/O error occurs
+     * @throws ServletException if the request is not a multipart request
+     */
     public static Company fromMultiPart(final HttpServletRequest req) throws IOException, ServletException {
-        String jTitle = null;
-        byte[] jLogo = null;
+        String mTitle = null;
+        byte[] mLogo = null;
         String photoMediaType = null;
-        String jBusiness_name = null;
-        String jVat_number = null;
-        String jTax_code = null;
-        String jAddress = null;
-        String jProvince = null;
-        String jCity = null;
-        String jPostal_code = null;
-        String jUnique_code = null;
-        Boolean jHas_mail_notifications = null;
-        Boolean jHas_telegram_notifications = null;
+        String mBusiness_name = null;
+        String mVat_number = null;
+        String mTax_code = null;
+        String mAddress = null;
+        String mProvince = null;
+        String mCity = null;
+        String mPostal_code = null;
+        String mUnique_code = null;
+        Boolean mHas_mail_notifications = null;
+        Boolean mHas_telegram_notifications = null;
 
         try {
             Collection<Part> parts = req.getParts();
@@ -211,7 +268,7 @@ public class Company extends AbstractResource {
             for (Part part : parts) {
                 switch (part.getName()) {
                     case "title" -> {
-                        jTitle = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mTitle = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "logo" -> {
                         photoMediaType = part.getContentType();
@@ -223,37 +280,37 @@ public class Company extends AbstractResource {
                             default:
                                 throw new ServletException("Invalid image type");
                         }
-                        jLogo = part.getInputStream().readAllBytes();
+                        mLogo = part.getInputStream().readAllBytes();
                     }
                     case "business_name" -> {
-                        jBusiness_name = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mBusiness_name = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "vat_number" -> {
-                        jVat_number = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mVat_number = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "tax_code" -> {
-                        jTax_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mTax_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "address" -> {
-                        jAddress = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mAddress = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "province" -> {
-                        jProvince = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mProvince = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "city" -> {
-                        jCity = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mCity = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "postal_code" -> {
-                        jPostal_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mPostal_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "unique_code" -> {
-                        jUnique_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+                        mUnique_code = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
                     }
                     case "has_mail_notifications" -> {
-                        jHas_mail_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
+                        mHas_mail_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
                     }
                     case "has_telegram_notifications" -> {
-                        jHas_telegram_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
+                        mHas_telegram_notifications = Boolean.parseBoolean(new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim());
                     }
 
                 }
@@ -263,6 +320,6 @@ public class Company extends AbstractResource {
             throw e;
         }
 
-        return new Company(jTitle, jLogo, jBusiness_name, jVat_number, jTax_code, jAddress, jProvince, jCity, jPostal_code, jUnique_code, jHas_mail_notifications, jHas_telegram_notifications);
+        return new Company(mTitle, mLogo, mBusiness_name, mVat_number, mTax_code, mAddress, mProvince, mCity, mPostal_code, mUnique_code, mHas_mail_notifications, mHas_telegram_notifications);
     }
 }
