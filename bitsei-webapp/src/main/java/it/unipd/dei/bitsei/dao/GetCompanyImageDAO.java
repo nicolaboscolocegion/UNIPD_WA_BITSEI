@@ -36,7 +36,7 @@ public final class GetCompanyImageDAO extends AbstractDAO<byte[]> {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT logo FROM bitsei_schema.\"Company2\" WHERE owner_id = ? AND company_id = ?";
+    private static final String STATEMENT = "SELECT logo FROM bitsei_schema.\"Company\" WHERE owner_id = ? AND company_id = ?";
 
     // the id of the owner
     private final int owner_id;

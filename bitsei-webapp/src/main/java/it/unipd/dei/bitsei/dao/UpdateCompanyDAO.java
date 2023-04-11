@@ -32,7 +32,7 @@ public class UpdateCompanyDAO extends AbstractDAO<Boolean> {
     }
 
     private static String GetStatement(Company company) {
-        String sql = "UPDATE bitsei_schema.\"Company2\" SET ";
+        String sql = "UPDATE bitsei_schema.\"Company\" SET ";
 
         List<String> setClauses = new ArrayList<>();
         for (Field f : company.getClass().getDeclaredFields()) {
