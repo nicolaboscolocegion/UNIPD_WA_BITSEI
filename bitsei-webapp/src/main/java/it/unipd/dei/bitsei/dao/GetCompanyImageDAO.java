@@ -15,17 +15,13 @@
  */
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.Company;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Lists all the companies in the database.
+ * Get the company image (LOGO) by id from the database.
  *
  * @author BITSEI GROUP
  * @version 1.00
@@ -35,18 +31,23 @@ public final class GetCompanyImageDAO extends AbstractDAO<byte[]> {
 
     /**
      * The SQL statement to be executed
+     * get the company image (LOGO) from the database with the id of the owner and the id of the company
      */
     private static final String STATEMENT = "SELECT logo FROM bitsei_schema.\"Company\" WHERE owner_id = ? AND company_id = ?";
 
     // the id of the owner
     private final int owner_id;
+
+    // the id of the company
     private final int company_id;
 
 
     /**
      * Creates a new object for listing all the users.
      *
-     * @param con the connection to the database.
+     * @param con        the connection to the database.
+     * @param company_id the id of the company to delete
+     * @param owner_id   the id of the owner
      */
     public GetCompanyImageDAO(final Connection con, final int company_id, final int owner_id) {
         super(con);

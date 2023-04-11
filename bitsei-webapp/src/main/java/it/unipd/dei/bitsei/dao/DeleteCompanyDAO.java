@@ -15,17 +15,14 @@
  */
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.Company;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
- * Lists all the companies in the database.
+ * TODO: Remove the related tables to company in the transaction mode.
+ * Delete the companies in the database.
  *
  * @author BITSEI GROUP
  * @version 1.00
@@ -35,6 +32,7 @@ public final class DeleteCompanyDAO extends AbstractDAO<Boolean> {
 
     /**
      * The SQL statement to be executed
+     * delete the company from the database
      */
     private static final String STATEMENT = "DELETE FROM bitsei_schema.\"Company\" WHERE owner_id = ? AND company_id = ?";
 
@@ -46,12 +44,15 @@ public final class DeleteCompanyDAO extends AbstractDAO<Boolean> {
     /**
      * Creates a new object for listing all the users.
      *
-     * @param con the connection to the database.
+     * @param con        the connection to the database.
+     * @param company_id the id of the company to delete
+     * @param owner_id   the id of the owner
      */
     public DeleteCompanyDAO(final Connection con, final int company_id, final int owner_id) {
         super(con);
         this.owner_id = owner_id;
         this.company_id = company_id;
+
         this.outputParam = false;
     }
 
