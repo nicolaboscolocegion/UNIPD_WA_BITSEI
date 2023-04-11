@@ -104,7 +104,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 //                    new CreateUserRR(req, res, getConnection()).serve();
                     break;
                 default:
-                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
 
                     m = new Message("Unsupported operation for URI /user.", "E4A5",
                             String.format("Requested operation %s.", method));
