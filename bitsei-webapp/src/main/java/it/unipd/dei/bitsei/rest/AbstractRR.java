@@ -106,9 +106,9 @@ public abstract class AbstractRR implements RestResource {
         try {
             // if the request method and/or the MIME media type are not allowed, return.
             // Appropriate error message sent by {@code checkMethodMediaType}
-//            if (!checkMethodMediaType(req, res)) {
-//                return;
-//            }
+            if (!checkMethodMediaType(req, res)) {
+                return;
+            }
 
             doServe();
         } catch (Throwable t) {
