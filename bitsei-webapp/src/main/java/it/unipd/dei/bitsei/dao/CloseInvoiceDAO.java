@@ -1,9 +1,6 @@
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.Customer;
-import it.unipd.dei.bitsei.resources.Invoice;
-import it.unipd.dei.bitsei.resources.InvoiceProduct;
-import it.unipd.dei.bitsei.resources.Product;
+import it.unipd.dei.bitsei.resources.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,14 +26,26 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ? WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_CUSTOMER = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
-    private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT * FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
+    private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
+    private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT bitsei_schema.\"Product\".title, bitsei_schema.\"Product\".description, bitsei_schema.\"Invoice_Product\".quantity, bitsei_schema.\"Product\".measurement_unit, bitsei_schema.\"Invoice_Product\".unit_price, bitsei_schema.\"Invoice_Product\".related_price, bitsei_schema.\"Invoice_Product\".related_price_description,  bitsei_schema.\"Invoice_Product\".purchase_date FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
 
     private int invoice_id;
 
     private Customer c;
     private Invoice i;
-    private List<Product> lp = new ArrayList<>();
-    private List<InvoiceProduct> lip = new ArrayList<>();
+
+    private String company_name;
+    private String company_address;
+    private String company_city_postalcode_prov;
+    private String company_mail;
+    private String company_vat;
+    private String company_tax;
+    private String company_pec;
+    private String company_unique_code;
+    private Integer fiscal_company_type;
+
+
+    private List<DetailRow> ldr = new ArrayList<>();
     private List<Object> output = new ArrayList<>();
 
     /**
@@ -64,7 +73,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt = con.prepareStatement(STATEMENT_UPDATE);
             pstmt.setInt(1, 1);
             pstmt.setInt(2, this.invoice_id);
-            rs = pstmt.executeQuery();
+            pstmt.executeUpdate();
             LOGGER.info("Invoice status successfully set to 1.");
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);
@@ -97,6 +106,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt = con.prepareStatement(STATEMENT_SELECT_CUSTOMER);
             pstmt.setInt(1, customer_id);
             rs = pstmt.executeQuery();
+            int company_id = 0;
             while (rs.next()) {
                 c = new Customer(
                         rs.getInt("customer_id"),
@@ -112,22 +122,48 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
                         rs.getString("unique_code"),
                         rs.getInt("company_id")
                         );
+                company_id = rs.getInt("company_id");
             }
             LOGGER.info("Customer data successfully fetched.");
+
+
+            pstmt = con.prepareStatement(STATEMENT_SELECT_COMPANY);
+            pstmt.setInt(1, company_id);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                this.company_name = rs.getString("business_name");
+                this.company_address = rs.getString("address");
+                this.company_city_postalcode_prov = rs.getString("city") + " " + rs.getString("postal_code") + " (" + rs.getString("province") + ")";
+                this.company_mail = "todo@gmail.com";
+                this.company_vat = rs.getString("vat_number");
+                this.company_tax = rs.getString("tax_code");
+                this.company_pec = "todo@pec.it";
+                this.company_unique_code = rs.getString("unique_code");
+                this.fiscal_company_type = rs.getInt("fiscal_company_type");
+            }
+            LOGGER.info("Customer data successfully fetched.");
+
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE_PRODUCT);
             pstmt.setInt(1, this.invoice_id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                lp.add(new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description")));
-                lip.add(new InvoiceProduct(rs.getInt("invoice_id"), rs.getInt("product_id"), rs.getInt("quantity"), rs.getFloat("unit_price"), rs.getFloat("related_price"), rs.getString("related_price_description")));
+                 ldr.add(new DetailRow(rs.getString("title") + " - " + rs.getString("description"), rs.getString("purchase_date") , rs.getInt("quantity"), rs.getString("measurement_unit"), rs.getFloat("unit_price"), rs.getFloat("related_price"), rs.getString("related_price_description")));
             }
 
-
+            output.add(ldr);
             output.add(c);
             output.add(i);
-            output.add(lip);
-            output.add(lp);
+            output.add(this.company_name);
+            output.add(this.company_address);
+            output.add(this.company_city_postalcode_prov);
+            output.add(this.company_mail);
+            output.add(this.company_vat);
+            output.add(this.company_tax);
+            output.add(this.company_pec);
+            output.add(this.company_unique_code);
+            output.add(this.fiscal_company_type);
+
 
         } finally {
             if (rs != null) {

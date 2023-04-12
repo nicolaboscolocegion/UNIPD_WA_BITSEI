@@ -36,6 +36,9 @@ public class InvoiceProduct {
      */
     private final String related_price_description;
 
+    private final String purchase_date = "01/01/1971";
+    private final Double total;
+
 
     /**
      * Creates a new Product.
@@ -59,6 +62,7 @@ public class InvoiceProduct {
         this.unit_price = unit_price;
         this.related_price = related_price;
         this.related_price_description = related_price_description;
+        this.total = this.quantity * this.unit_price;
     }
 
     public Integer getInvoice_id() {
@@ -83,5 +87,13 @@ public class InvoiceProduct {
 
     public String getRelated_price_description() {
         return related_price_description;
+    }
+
+    public String getPurchase_date() {
+        return purchase_date;
+    }
+
+    public Double getTotal() {
+        return total;
     }
 }

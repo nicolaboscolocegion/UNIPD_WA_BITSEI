@@ -160,6 +160,17 @@
         <url-pattern>/chart-form</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>CloseInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CloseInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CloseInvoiceServlet</servlet-name>
+        <url-pattern>/closeinvoice</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection pool to the database</description>
         <res-ref-name>jdbc/bitsei</res-ref-name>
