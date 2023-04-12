@@ -191,9 +191,6 @@ CREATE TABLE bitsei_schema."Product" (
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
 
 
-
-
-
 --
 -- TOC entry 3936 (class 2606 OID 16796)
 -- Name: BankAccount Account_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
