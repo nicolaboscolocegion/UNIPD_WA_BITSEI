@@ -15,6 +15,9 @@ import net.sf.jasperreports.engine.JRException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +64,10 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
             invoice_id = Integer.parseInt(req.getParameter("invoice_id"));
 
             // creates a new object for accessing the database and stores the customer
-            out = new CloseInvoiceDAO(getConnection(), invoice_id).access().getOutputParam();
+            //String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            java.util.Date utilToday = new Date();
+            java.sql.Date today = new java.sql.Date(utilToday.getTime());
+            out = new CloseInvoiceDAO(getConnection(), invoice_id, today).access().getOutputParam();
             m = new Message(String.format("Data for invoice warning fetched"));
             LOGGER.info("Data for invoice warning fetched");
 
