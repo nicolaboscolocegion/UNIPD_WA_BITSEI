@@ -68,7 +68,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
 
             LOGGER.info("query: " + pstmt.toString());
 
-            LOGGER.info("Customer %s successfully stored in the database.", customer.getBusinessName());
+            LOGGER.info("Customer %s successfully updated in the database.", customer.getBusinessName());
         } finally {
             if (pstmt != null) {
                 pstmt.close();
