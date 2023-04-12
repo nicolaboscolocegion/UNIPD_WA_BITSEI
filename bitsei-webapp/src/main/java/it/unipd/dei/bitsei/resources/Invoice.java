@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 
 /**
@@ -159,6 +158,28 @@ public class Invoice extends AbstractResource {
         this.discount = discount;
         this.pension_fund_refund = pension_fund_refund;
         this.has_stamp = has_stamp;
+    }
+
+    /**
+     * Constructor used to delete an existing invoice.
+     *
+     * @param invoice_id the invoice_id (primary key).
+     */
+    public Invoice(int invoice_id) {
+        this.invoice_id = invoice_id;
+        this.customer_id = -1;
+        this.status = -1;
+        this.warning_number = -1;
+        this.warning_date = null;
+        this.warning_pdf_file = null;
+        this.invoice_number = null;
+        this.invoice_date = null;
+        this.invoice_pdf_file = null;
+        this.invoice_xml_file = null;
+        this.total = -1;
+        this.discount = -1;
+        this.pension_fund_refund = -1;
+        this.has_stamp = false;
     }
 
     /**

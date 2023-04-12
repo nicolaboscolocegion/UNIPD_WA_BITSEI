@@ -1,9 +1,9 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.DeleteProductDAO;
+import it.unipd.dei.bitsei.dao.DeleteInvoiceDAO;
+import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,16 +12,16 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Deletes a product from the database.
+ * Deletes an invoice from the database.
  *
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
-public final class DeleteProductServlet extends AbstractDatabaseServlet {
+public final class DeleteInvoiceServlet extends AbstractDatabaseServlet {
 
     /**
-     * Deletes a product from the database.
+     * Deletes an invoice from the database.
      *
      * @param req the HTTP request from the client.
      * @param res the HTTP response from the server.
@@ -35,40 +35,40 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
         LogContext.setIPAddress(req.getRemoteAddr());
 
         // model
-        Product p = null;
+        Invoice i = null;
         Message m = null;
 
-        int product_id = -1;
+        int invoice_id = -1;
 
         try {
 
             // retrieves the request parameters
-            product_id = Integer.parseInt(req.getParameter("product_id"));
+            invoice_id = Integer.parseInt(req.getParameter("invoice_id"));
 
 
-            // creates a new product
-            p = new Product(product_id);
+            // creates a new invoice
+            i = new Invoice(invoice_id);
 
-            // creates a new object for accessing the database and delete the product
-            new DeleteProductDAO(getConnection(), p).access();
+            // creates a new object for accessing the database and delete the invoice
+            new DeleteInvoiceDAO(getConnection(), i).access();
 
-            m = new Message(String.format("Product successfully deleted."));
-            LOGGER.info("Product successfully removed from the database.");
+            m = new Message(String.format("Invoice successfully deleted."));
+            LOGGER.info("Invoice successfully removed from the database.");
 
         } catch (NumberFormatException ex) {
             m = new Message(
-                    "Cannot delete the product. Invalid input parameters: product_id must be integer.",
+                    "Cannot delete the invoice. Invalid input parameters: invoice_id must be integer.",
                     "E100", ex.getMessage());
 
             LOGGER.error(
-                    "Cannot delete the product. Invalid input parameters: product_id must be integer.",
+                    "Cannot delete the invoice. Invalid input parameters: invoice_id must be integer.",
                     ex);
         } catch (SQLException ex) {
 
-            m = new Message("Cannot delete the product: unexpected error while accessing the database.", "E200",
+            m = new Message("Cannot delete the invoice: unexpected error while accessing the database.", "E200",
                     ex.getMessage());
 
-            LOGGER.error("Cannot delete the product: unexpected error while accessing the database.", ex);
+            LOGGER.error("Cannot delete the invoice: unexpected error while accessing the database.", ex);
 
         }  catch (IllegalArgumentException ex) {
             m = new Message(
