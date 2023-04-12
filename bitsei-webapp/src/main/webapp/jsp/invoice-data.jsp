@@ -24,30 +24,34 @@ Since: 1.0
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Search Product</title>
+    <title>Search Invoice</title>
 </head>
 
 <body>
-<h1>Search Product</h1>
+<h1>Search Invoice</h1>
 <hr/>
 
 <!-- display the message -->
 <c:import url="/jsp/include/show-message.jsp"/>
 
-<!-- display the found product, if any -->
+<!-- display the found invoice, if any -->
     <table>
         <thead>
         <tr>
-            <th>TITLE</th><th>COMPANY</th><th>DESCRIPTION</th>
+            <th>CUSTOMER</th><th>STATUS</th><th>WARNING NUMBER</th><th>WARNING DATE</th><th>WARNING PDF FILE</th><th>INVOICE NUMBER</th><th>INVOICE DATE</th>
         </tr>
         </thead>
 
         <tbody>
 
             <tr>
-                <td><c:out value="${product.title}"/></td>
-                <td><c:out value="${product.company_id}"/></td>
-                <td><c:out value="${product.description}"/></td>
+                <td><c:out value="${invoice.customer_id}"/></td>
+                <td><c:out value="${invoice.status}"/></td>
+                <td><c:out value="${invoice.warning_number}"/></td>
+                <td><c:out value="${invoice.warning_date}"/></td>
+                <td><c:out value="${invoice.warning_pdf_file}"/></td>
+                <td><c:out value="${invoice.invoice_number}"/></td>
+                <td><c:out value="${invoice.invoice_date}"/></td>
             </tr>
         </tbody>
     </table>

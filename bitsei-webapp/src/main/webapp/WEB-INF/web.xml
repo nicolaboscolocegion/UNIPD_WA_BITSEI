@@ -131,6 +131,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.LoadInvoiceForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
+        <url-pattern>/loadinvoice</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>GenerateCustomersReportServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.GenerateCustomersReportServlet</servlet-class>
     </servlet>
