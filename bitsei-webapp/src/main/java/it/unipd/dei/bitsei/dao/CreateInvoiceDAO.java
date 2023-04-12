@@ -13,24 +13,7 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class CreateInvoiceDAO extends AbstractDAO {
-    /*
-    CREATE TABLE bitsei_schema."Invoice" (
-                                         invoice_id serial NOT NULL,
-                                         customer_id integer NOT NULL,
-                                         status smallint DEFAULT 0 NOT NULL,
-                                         warning_number character(255),
-                                         warning_date date,
-                                         warning_pdf_file character(255),
-                                         invoice_number character(255),
-                                         invoice_date date,
-                                         invoice_pdf_file character(255),
-                                         invoice_xml_file character(255),  -- relative file path, extension must be xml
-                                         total double precision,   -- must be positive
-                                         discount double precision,  -- must be positive
-                                         pension_fund_refund double precision NOT NULL, -- must be within 0 and 4 (%)
-                                         has_stamp boolean DEFAULT false
-);
-    */
+
     /**
      * SQL statement to be executed.
      */
