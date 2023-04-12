@@ -44,8 +44,8 @@
 		<c:choose>
 			<c:when test="${chart_type == 1}">
 			<script>
-				const ctx = document.getElementById('myChart');
-				
+				ctx = document.getElementById('myChart');
+
 				new Chart(ctx, {
 					type: 'bar',
 					data: {
@@ -69,7 +69,7 @@
 			
 			<c:when test="${chart_type == 2}">
 			<script>
-				const ctx = document.getElementById('myChart');
+				ctx = document.getElementById('myChart');
 				
 				new Chart(ctx, {
 					type: 'line',
@@ -95,7 +95,7 @@
 
 			<c:when test="${chart_type == 3}">
 			<script>
-				const ctx = document.getElementById('myChart');
+				ctx = document.getElementById('myChart');
 				
 				new Chart(ctx, {
 					type: 'doughnut',
@@ -121,7 +121,7 @@
 
 			<c:when test="${chart_type == 4}">
 			<script>
-				const ctx = document.getElementById('myChart');
+				ctx = document.getElementById('myChart');
 				
 				new Chart(ctx, {
 					type: 'doughnut',
@@ -147,7 +147,7 @@
 
 			<c:when test="${chart_type == 5}">
 			<script>
-				const ctx = document.getElementById('myChart');
+				ctx = document.getElementById('myChart');
 				
 				new Chart(ctx, {
 					type: 'line',
@@ -176,10 +176,10 @@
 		<form method="POST" action="./chart-form">
 			
 			<label for="chartPeriodID">Period of chart:  </label>
-			<select id="chartPeriodID" name="chartPeriod">
-			<option value="1">Month</option>
-			<option value="2">Year</option>
-			<option value="3">Day</option>
+			<select id="chartPeriodID" name="chartPeriod" onchange="this.form.submit()">
+			<option value="1"<c:if test="${chart_period==1}"><c:out value=" selected"/></c:if>>Month</option>
+			<option value="2"<c:if test="${chart_period==2}"><c:out value=" selected"/></c:if>>Year</option>
+			<option value="3"<c:if test="${chart_period==3}"><c:out value=" selected"/></c:if>>Day</option>
 			</select><br/><br/>
 			<hr>
 
@@ -239,12 +239,12 @@
 			<hr>
 	
 			<label for="chartTypeID">Type of chart:</label><br/><br/>
-			<select id="chartTypeID" name="chartType">
-			<option value="1">Invoices by period</option>
-			<option value="2">Total profit by period</option>
-			<option value="3">Invoices by customer</option>
-			<option value="4">Total by customer</option>
-			<option value="5">Discount by period</option>
+			<select id="chartTypeID" name="chartType" onchange="this.form.submit()">
+			<option value="1"<c:if test="${chart_type==1}"><c:out value=" selected"/></c:if>>Invoices by period</option>
+			<option value="2"<c:if test="${chart_type==2}"><c:out value=" selected"/></c:if>>Total profit by period</option>
+			<option value="3"<c:if test="${chart_type==3}"><c:out value=" selected"/></c:if>>Invoices by customer</option>
+			<option value="4"<c:if test="${chart_type==4}"><c:out value=" selected"/></c:if>>Total by customer</option>
+			<option value="5"<c:if test="${chart_type==5}"><c:out value=" selected"/></c:if>>Discount by period</option>
 			</select><br/><br/>
 			<hr>
 	

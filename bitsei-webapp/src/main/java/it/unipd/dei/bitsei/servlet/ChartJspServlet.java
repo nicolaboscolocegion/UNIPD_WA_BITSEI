@@ -46,7 +46,7 @@ import org.eclipse.tags.shaded.org.apache.xalan.templates.ElemSort;
 import javax.sql.DataSource;
 
 /**
- * Searches employees by their salary.
+ * Plots charts about invoices.
 * 
 * @author Nicola Ferro (ferro@dei.unipd.it)
 * @version 1.00
@@ -55,7 +55,7 @@ import javax.sql.DataSource;
 public final class ChartJspServlet extends AbstractDatabaseServlet {
 
     /**
-     * Searches employees by their salary.
+     * Plots charts about invoices.
     * 
     * @param req
     *            the HTTP request from the client.
@@ -207,9 +207,9 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
                     filterByInvoiceDate, startInvoiceDate, endInvoiceDate,
                     filterByWarningDate, startWarningDate, endWarningDate).access().getOutputParam();
 
-            m = new Message("Invoices succesfully searched");
+            m = new Message("Invoices succesfully searched for charts");
 
-			LOGGER.info("## SERVLET: Invoices successfully searched ##");
+			LOGGER.info("## SERVLET: Invoices successfully searched for charts ##");
 
         } catch (NumberFormatException ex) {
             m = new Message("Cannot search for invoices. Invalid input parameters: totals must be double.", "E100",
@@ -427,18 +427,19 @@ public final class ChartJspServlet extends AbstractDatabaseServlet {
         }
 
         try {
-            // stores the employee list and the message as a request attribute
-            req.setAttribute("invoiceList", el);
+            // stores the labels and the data for charts, stores also the message as a request attribute
+            //req.setAttribute("invoiceList", el);
             req.setAttribute("tmap_labels", tmap_labels);
             req.setAttribute("tmap_data", tmap_data);
             req.setAttribute("chart_type", chart_type);
+            req.setAttribute("chart_period", chart_period);
             req.setAttribute("message", m);
 
-            // forwards the control to the search-employee-result JSP
+            // forwards the control to the chart-results JSP
             req.getRequestDispatcher("/jsp/chart-results.jsp").forward(req, res);
 
         } catch(Exception ex) {
-            LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoices."), ex);
+            LOGGER.error(new StringFormattedMessage("Unable to send response when creating charts."), ex);
             throw ex;
         } finally {
             LogContext.removeIPAddress();
