@@ -57,7 +57,7 @@ CREATE TABLE bitsei_schema."Company" (
                                          company_id serial NOT NULL,
                                          title character(255) NOT NULL,
                                          owner_id integer NOT NULL,
-                                         logo character(255),
+                                         logo bytea,
                                          business_name character(255) NOT NULL,
                                          vat_number character(13),
                                          tax_code character(16),
@@ -166,7 +166,8 @@ CREATE TABLE bitsei_schema."Owner" (
                                        username character varying NOT NULL,
                                        password character varying NOT NULL,
                                        email character(255) NOT NULL,
-                                       telegram_chat_id character(32)
+                                       telegram_chat_id character(32),
+                                       number_of_companies integer NOT NULL DEFAULT 3
 );
 
 
@@ -189,6 +190,20 @@ CREATE TABLE bitsei_schema."Product" (
 
 
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
+
+--
+-- TOC entry 223 (class 1259 OID 16785)
+-- Name: Password_Reset_Token; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+CREATE TABLE bitsei_schema."Password_Reset_Token" (
+                                       owner_id integer NOT NULL,
+                                       token VARCHAR(128) NOT NULL UNIQUE,
+                                       token_expiry TIMESTAMP NOT NULL,
+                                       PRIMARY KEY (owner_id, token)
+);
+
+ALTER TABLE bitsei_schema."Password_Reset_Token" OWNER TO bitsei_user;
 
 
 --

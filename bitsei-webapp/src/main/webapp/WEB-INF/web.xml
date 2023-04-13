@@ -2,18 +2,27 @@
 
 
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-
-    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
     <display-name>BITSEI Rest Api</display-name>
-
     <description>Business Integrated System for Electronic Invoicing.</description>
 
     <servlet>
         <servlet-name>RestManagerServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
+        <multipart-config>
+            <location>/Users/farzad/Projects</location>
+            <max-file-size>2097152</max-file-size>
+            <max-request-size>4194304</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
     </servlet>
+
+<!--    <servlet>-->
+<!--        <servlet-name>LoginServlet</servlet-name>-->
+<!--        <servlet-class>it.unipd.dei.bitsei.servlet.LoginServlet</servlet-class>-->
+<!--    </servlet>-->
 
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
@@ -160,6 +169,23 @@
         <servlet-name>CloseInvoiceServlet</servlet-name>
         <url-pattern>/closeinvoice</url-pattern>
     </servlet-mapping>
+
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>LoginServlet</servlet-name>-->
+<!--        <url-pattern>/login</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+<!--    Authentication filter-->
+
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>it.unipd.dei.bitsei.filter.JwtAuthenticationFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/rest/company/*</url-pattern>
+    </filter-mapping>
 
     <resource-ref>
         <description>Connection pool to the database</description>
