@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A REST resource for listing {@link Customer}s.
  */
-public final class ListCustomerRR_old extends AbstractRR {
+public final class ListCustomerRR extends AbstractRR {
     private final int companyId;
     /**
      * Creates a new REST resource for listing {@code Customer}s.
@@ -22,7 +22,7 @@ public final class ListCustomerRR_old extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListCustomerRR_old(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
+    public ListCustomerRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
         super(Actions.LIST_CUSTOMERS_BY_COMPANY_ID, req, res, con);
         this.companyId = companyId;
     }
@@ -39,21 +39,21 @@ public final class ListCustomerRR_old extends AbstractRR {
             el = new ListCustomerDAO(con, "listAll", companyId).access().getOutputParam();
 
             if (el != null) {
-                LOGGER.info("## ListCustomerRR_old: Customer(s) successfully listed. ##");
+                LOGGER.info("## ListCustomerRR: Customer(s) successfully listed. ##");
 
                 res.setStatus(HttpServletResponse.SC_OK);
                 new ResourceList(el).toJSON(res.getOutputStream());
             } else { // it should not happen
-                LOGGER.error("## ListCustomerRR_old: Fatal error while listing customer(s). ##");
+                LOGGER.error("## ListCustomerRR: Fatal error while listing customer(s). ##");
 
-                m = new Message("## ListCustomerRR_old: Cannot list customer(s): unexpected error. ##", "E5A1", null);
+                m = new Message("## ListCustomerRR: Cannot list customer(s): unexpected error. ##", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("## ListCustomerRR_old: Cannot list customer(s): unexpected database error. ##", ex);
+            LOGGER.error("## ListCustomerRR: Cannot list customer(s): unexpected database error. ##", ex);
 
-            m = new Message("## ListCustomerRR_old: Cannot list customer(s): unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListCustomerRR: Cannot list customer(s): unexpected database error. ##", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

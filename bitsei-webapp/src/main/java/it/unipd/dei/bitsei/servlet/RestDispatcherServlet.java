@@ -3,6 +3,10 @@ package it.unipd.dei.bitsei.servlet;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
+import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -177,12 +181,33 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 case "POST":
                     new CreateCustomerRR(req, res, getConnection()).serve();
                     break;
-            /*    case "PUT":
-                    new UpdateCustomerRR(req, res, getConnection()).serve();
+                 /*case "DELETE":
+                    new DeleteCustomerRR(req, res, getConnection()).serve();
+                    break;*/
+                default:
+                    LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /customer.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else if (path.matches("/\\d+")) {
+            switch (method) {
+                case "GET":
+                    new GetCustomerRR(req, res, getConnection()).serve();
                     break;
                 case "DELETE":
                     new DeleteCustomerRR(req, res, getConnection()).serve();
-                    break;*/
+                    break;
+                case "PUT":
+                    new UpdateCustomerRR(req, res, getConnection()).serve();
+                    break;
+
+
                 default:
                     LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
 
@@ -275,7 +300,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         if (path.length() == 0 || path.equals("/")) {
             switch (method) {
                 case "GET":
-                    new ListCustomerRR_old(req, res, getConnection(), companyId).serve();
+                    new ListCustomerRR(req, res, getConnection(), companyId).serve();
                     break;
                 case "POST":
                     //new ListFilteredInvoicesRR(req, res, getConnection()).serve();

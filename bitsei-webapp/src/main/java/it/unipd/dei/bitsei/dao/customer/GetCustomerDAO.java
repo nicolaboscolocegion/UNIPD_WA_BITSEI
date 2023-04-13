@@ -1,6 +1,7 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.customer;
 
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 
 import java.sql.Connection;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class LoadCustomerForUpdateDAO extends AbstractDAO<Customer> {
+public final class GetCustomerDAO extends AbstractDAO<Customer> {
 
     /**
      * The SQL statement to be executed
@@ -34,7 +35,7 @@ public final class LoadCustomerForUpdateDAO extends AbstractDAO<Customer> {
      * @param con    the connection to the database.
      * @param salary the salary of the employee.
      */
-    public LoadCustomerForUpdateDAO(final Connection con, final int customerID) {
+    public GetCustomerDAO(final Connection con, final int customerID) {
         super(con);
         this.customerID = customerID;
     }

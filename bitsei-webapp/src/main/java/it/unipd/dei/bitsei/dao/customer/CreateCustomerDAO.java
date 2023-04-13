@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.customer;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 
 import java.sql.Connection;
@@ -13,12 +14,13 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class UpdateCustomerDAO extends AbstractDAO {
+public final class CreateCustomerDAO extends AbstractDAO {
 
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "UPDATE bitsei_schema.\"Customer\" SET business_name = ?, vat_number = ?, tax_code = ?, address = ?, city = ?, province = ?, postal_code = ?, email = ?, pec = ?, unique_code = ? WHERE customer_id = ?";
+
+    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code, address, city, province, postal_code, email, pec, unique_code, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      /**
@@ -34,7 +36,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
      * @param customer
      *            the customer to be stored into the database.
      */
-    public UpdateCustomerDAO(final Connection con, final Customer customer) {
+    public CreateCustomerDAO(final Connection con, final Customer customer) {
         super(con);
 
         if (customer == null) {
@@ -62,13 +64,11 @@ public final class UpdateCustomerDAO extends AbstractDAO {
             pstmt.setString(8, customer.getEmailAddress());
             pstmt.setString(9, customer.getPec());
             pstmt.setString(10, customer.getUniqueCode());
-            pstmt.setInt(11, customer.getCustomerID());
+            pstmt.setInt(11, customer.getCompanyID());
 
             pstmt.execute();
 
-            LOGGER.info("query: " + pstmt.toString());
-
-            LOGGER.info("Customer %s successfully updated in the database.", customer.getBusinessName());
+            LOGGER.info("Customer %s successfully stored in the database.", customer.getBusinessName());
         } finally {
             if (pstmt != null) {
                 pstmt.close();

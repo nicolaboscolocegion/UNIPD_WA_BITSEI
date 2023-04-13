@@ -21,7 +21,7 @@ public class Customer extends AbstractResource {
     /**
      * The business name of the customer company
      */
-    private final Integer customerID;
+    private Integer customerID;
 
     /**
      * The business name of the customer company
@@ -320,6 +320,8 @@ public class Customer extends AbstractResource {
     public int getCustomerID() {
         return customerID;
     }
+
+    public void setCustomerID(int customerID) {this.customerID = customerID;}
 
 
     @Override

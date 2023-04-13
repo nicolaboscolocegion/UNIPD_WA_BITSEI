@@ -48,6 +48,9 @@ public final class Actions {
     public static final String GET_INVOICES_BY_FILTERS = "GET_INVOICES_BY_FILTERS";
     public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
     public static final String CREATE_CUSTOMER = "CREATE_CUSTOMER";
+    public static final String UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
+    public static final String GET_CUSTOMER = "GET_CUSTOMER";
+    public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
 
     /**
      * This class can be neither instantiated nor sub-classed.

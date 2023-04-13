@@ -21,36 +21,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>CreateCustomerServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CreateCustomerServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CreateCustomerServlet</servlet-name>
-        <url-pattern>/customerinsert</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DeleteCustomerServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteCustomerServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DeleteCustomerServlet</servlet-name>
-        <url-pattern>/customerdelete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>UpdateCustomerServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateCustomerServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>UpdateCustomerServlet</servlet-name>
-        <url-pattern>/customerupdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>CreateProductServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.CreateProductServlet</servlet-class>
     </servlet>
@@ -108,16 +78,6 @@
     <servlet-mapping>
         <servlet-name>UpdateInvoiceServlet</servlet-name>
         <url-pattern>/invoiceupdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LoadCustomerForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.LoadCustomerForUpdateServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoadCustomerForUpdateServlet</servlet-name>
-        <url-pattern>/loadcustomer</url-pattern>
     </servlet-mapping>
 
     <servlet>
