@@ -104,7 +104,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 //                    new CreateUserRR(req, res, getConnection()).serve();
                     break;
                 default:
-                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
 
                     m = new Message("Unsupported operation for URI /user.", "E4A5",
                             String.format("Requested operation %s.", method));
@@ -154,16 +154,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 m.toJSON(res.getOutputStream());
             }
-        } else if (path.equals("/reset-password")){
-            if (method.equals("POST")){
-                new RestPasswordRR(req, res, getConnection()).serve();
-            }
-        } else if (path.equals("/change-password")){
-            if (method.equals("POST")){
-                new ChangePasswordRR(req, res, getConnection()).serve();
-            }
         }
-
 
         return true;
 
@@ -226,6 +217,5 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
         return true;
-
     }
 }
