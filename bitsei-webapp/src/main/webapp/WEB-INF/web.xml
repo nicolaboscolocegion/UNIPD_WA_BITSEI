@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
 
     <display-name>BITSEI Rest Api</display-name>
+
     <description>Business Integrated System for Electronic Invoicing.</description>
 
     <servlet>
@@ -15,6 +18,147 @@
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CreateProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <url-pattern>/productinsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/productdelete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/productupdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CreateInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <url-pattern>/invoiceinsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteInvoiceServlet</servlet-name>
+        <url-pattern>/invoicedelete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateInvoiceServlet</servlet-name>
+        <url-pattern>/invoiceupdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.LoadProductForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <url-pattern>/loadproduct</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.LoadInvoiceForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
+        <url-pattern>/loadinvoice</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GenerateCustomersReportServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateCustomersReportServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenerateCustomersReportServlet</servlet-name>
+        <url-pattern>/generatecreport</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GenerateProductsReportServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateProductsReportServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GenerateProductsReportServlet</servlet-name>
+        <url-pattern>/generatepreport</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersJspServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters-jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ChartJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.ChartJspServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ChartJspServlet</servlet-name>
+        <url-pattern>/chart-form</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>CloseInvoiceServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.CloseInvoiceServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CloseInvoiceServlet</servlet-name>
+        <url-pattern>/closeinvoice</url-pattern>
     </servlet-mapping>
 
     <resource-ref>

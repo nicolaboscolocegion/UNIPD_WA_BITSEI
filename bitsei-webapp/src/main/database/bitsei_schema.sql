@@ -38,7 +38,7 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE bitsei_schema."BankAccount" (
-                                             bankaccount_id integer NOT NULL,
+                                             bankaccount_id serial NOT NULL,
                                              "IBAN" character(34) NOT NULL,
                                              bank_name character(255),
                                              bankaccount_friendly_name character(255) NOT NULL,
@@ -54,18 +54,18 @@ ALTER TABLE bitsei_schema."BankAccount" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Company" (
-                                         company_id integer NOT NULL,
+                                         company_id serial NOT NULL,
                                          title character(255) NOT NULL,
                                          owner_id integer NOT NULL,
                                          logo character(255),
                                          business_name character(255) NOT NULL,
-                                         vat_number character(11),
+                                         vat_number character(13),
                                          tax_code character(16),
                                          address character(255),
                                          city character(255),
                                          province character(2),
                                          postal_code character(5),
-                                         unique_code character(6),
+                                         unique_code character(7),
                                          has_telegram_notifications boolean DEFAULT false,
                                          has_mail_notifications boolean DEFAULT false
 );
@@ -79,9 +79,9 @@ ALTER TABLE bitsei_schema."Company" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Customer" (
-                                          customer_id integer NOT NULL,
+                                          customer_id serial NOT NULL,
                                           business_name character(255) NOT NULL,
-                                          vat_number character(11),
+                                          vat_number character(13),
                                           tax_code character(16),
                                           address character(255),
                                           city character(255),
@@ -89,7 +89,7 @@ CREATE TABLE bitsei_schema."Customer" (
                                           postal_code character(5),
                                           email character(255) NOT NULL,
                                           pec character(255),
-                                          unique_code character(6),
+                                          unique_code character(7),
                                           company_id integer NOT NULL
 );
 
@@ -102,7 +102,7 @@ ALTER TABLE bitsei_schema."Customer" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Invoice" (
-                                         invoice_id integer NOT NULL,
+                                         invoice_id serial NOT NULL,
                                          customer_id integer NOT NULL,
                                          status smallint DEFAULT 0 NOT NULL,
                                          warning_number character(255),
@@ -178,7 +178,7 @@ ALTER TABLE bitsei_schema."Owner" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Product" (
-                                         product_id integer NOT NULL,
+                                         product_id serial NOT NULL,
                                          company_id integer NOT NULL,
                                          title character(255) NOT NULL,
                                          default_price integer NOT NULL,
@@ -189,9 +189,6 @@ CREATE TABLE bitsei_schema."Product" (
 
 
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
-
-
-
 
 
 --
@@ -286,76 +283,47 @@ CREATE INDEX fki_c ON bitsei_schema."BankAccount" USING btree (company_id);
 -- TOC entry 3960 (class 2606 OID 16816)
 -- Name: Product Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Product"
     ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
-
-
 --
 -- TOC entry 3953 (class 2606 OID 16898)
 -- Name: BankAccount Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."BankAccount"
     ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
-
-
 --
 -- TOC entry 3955 (class 2606 OID 16904)
 -- Name: Customer Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Customer"
     ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
-
-
 --
 -- TOC entry 3956 (class 2606 OID 16821)
 -- Name: Invoice Customer; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Invoice"
     ADD CONSTRAINT "Customer" FOREIGN KEY (customer_id) REFERENCES bitsei_schema."Customer"(customer_id);
-
-
 --
 -- TOC entry 3957 (class 2606 OID 16826)
 -- Name: Invoice_Product Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Invoice_Product"
     ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE;
-
-
 --
 -- TOC entry 3959 (class 2606 OID 16831)
 -- Name: Log Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Log"
     ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id);
-
-
 --
 -- TOC entry 3954 (class 2606 OID 16836)
 -- Name: Company Owner; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Company"
     ADD CONSTRAINT "Owner" FOREIGN KEY (owner_id) REFERENCES bitsei_schema."Owner"(owner_id);
-
-
 --
 -- TOC entry 3958 (class 2606 OID 16841)
 -- Name: Invoice_Product Product; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Invoice_Product"
     ADD CONSTRAINT "Product" FOREIGN KEY (product_id) REFERENCES bitsei_schema."Product"(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
--- Completed on 2023-03-27 01:02:45
-
---
--- PostgreSQL database dump complete
---
