@@ -18,12 +18,18 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
-
+/**
+ * Creates a new customer into the database.
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class CreateCustomerRR extends AbstractRR {
 
 
     /**
-     * Control the authentication of the user
+     * Creates a new customer
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -53,8 +59,8 @@ public class CreateCustomerRR extends AbstractRR {
 
             c = Customer.fromJSON(requestStream);
 
-            //filterCompanyOwner(companyID, ownerID)
-            //int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             fieldRegexValidation("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", c.getEmailAddress(), "EMAIL");
             fieldRegexValidation("^(IT)?[0-9]{11}$", c.getVatNumber(), "VAT NUMBER");
@@ -65,7 +71,7 @@ public class CreateCustomerRR extends AbstractRR {
 
 
             // creates a new object for accessing the database and stores the customer
-            new CreateCustomerDAO(con, c).access();
+            new CreateCustomerDAO(con, c, owner_id).access();
 
             m = new Message(String.format("Customer %s successfully inserted.", c.getBusinessName()));
             LOGGER.info("Customer succesfully inserted.");

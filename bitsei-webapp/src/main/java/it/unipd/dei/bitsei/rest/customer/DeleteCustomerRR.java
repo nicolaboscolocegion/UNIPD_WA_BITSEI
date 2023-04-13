@@ -16,12 +16,18 @@ import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
+/**
+ * Deletes a customer from the database.
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class DeleteCustomerRR extends AbstractRR {
 
 
     /**
-     * Control the authentication of the user
+     * Deletes the customer
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -58,10 +64,10 @@ public class DeleteCustomerRR extends AbstractRR {
             int customerID = Integer.parseInt(id);
 
 
-            //filterCompanyOwner(companyID, ownerID)
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             // creates a new object for accessing the database and stores the customer
-            c = (Customer) new DeleteCustomerDAO<Customer>(con, customerID).access().getOutputParam();
+            c = (Customer) new DeleteCustomerDAO<Customer>(con, customerID, owner_id).access().getOutputParam();
 
             m = new Message(String.format("Customer %s successfully deleted.", c.getBusinessName()));
             LOGGER.info("Customer %s deleted updated in the database.", c.getBusinessName());

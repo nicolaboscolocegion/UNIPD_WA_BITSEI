@@ -5,10 +5,11 @@ import it.unipd.dei.bitsei.resources.Customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Creates a new customer into the database.
+ * Updates a customer into the database.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
@@ -19,23 +20,27 @@ public final class UpdateCustomerDAO extends AbstractDAO {
     /**
      * The SQL statement to be executed
      */
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT = "UPDATE bitsei_schema.\"Customer\" SET business_name = ?, vat_number = ?, tax_code = ?, address = ?, city = ?, province = ?, postal_code = ?, email = ?, pec = ?, unique_code = ? WHERE customer_id = ?";
 
     /**
      /**
-     * The customer to be stored into the database
+     * The customer to be updated into the database
      */
     private final Customer customer;
+    private final int owner_id;
 
     /**
-     * Creates a new object for storing a customer into the database.
+     * Creates a new object for updating a customer into the database.
      *
      * @param con
      *            the connection to the database.
      * @param customer
      *            the customer to be stored into the database.
+     * @param owner_id
+     *            the owner of the customer.
      */
-    public UpdateCustomerDAO(final Connection con, final Customer customer) {
+    public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id) {
         super(con);
 
         if (customer == null) {
@@ -44,14 +49,31 @@ public final class UpdateCustomerDAO extends AbstractDAO {
         }
 
         this.customer = customer;
+        this.owner_id = owner_id;
     }
 
     @Override
     protected final void doAccess() throws SQLException {
 
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try {
+
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, customer.getCompanyID());
+            pstmt.setInt(2, owner_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Company selected does not belong to logged user.");
+                throw new IllegalAccessException();
+            }
+
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setString(1, customer.getBusinessName());
             pstmt.setString(2, customer.getVatNumber());
@@ -70,6 +92,8 @@ public final class UpdateCustomerDAO extends AbstractDAO {
             LOGGER.info("query: " + pstmt.toString());
 
             LOGGER.info("Customer %s successfully updated in the database.", customer.getBusinessName());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

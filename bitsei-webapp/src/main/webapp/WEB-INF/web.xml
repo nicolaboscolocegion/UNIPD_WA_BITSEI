@@ -185,6 +185,7 @@
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/rest/company/*</url-pattern>
+        <url-pattern>/rest/customer/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>
