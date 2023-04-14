@@ -34,7 +34,7 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
-    private final static String STATEMENT="select * from \"BankAccount\" where company_id=?";
+    private final static String STATEMENT="SELECT * FROM \"BankAccount\" WHERE company_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
 

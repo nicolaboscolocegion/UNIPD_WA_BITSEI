@@ -32,7 +32,7 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT="DELETE FROM \"BankAccount\"  WHERE \"IBAN\"=? AND company_id=?;";
+    private final static String STATEMENT="DELETE FROM \"BankAccount\"  WHERE bankaccount_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
@@ -103,8 +103,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             //execute the query
             pstmt= con.prepareStatement(STATEMENT);
             
-            pstmt.setString(1, bankAccount.getIban());
-            pstmt.setInt(2, bankAccount.getCompanyId());
+            pstmt.setInt(1, bankAccount.getBankAccountID());
 
             rs = pstmt.executeQuery();
 

@@ -32,8 +32,8 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE bankaccount_id=?;";
-    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE bankaccount_id=?";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE bankaccount_id=?";
 
 
     /**

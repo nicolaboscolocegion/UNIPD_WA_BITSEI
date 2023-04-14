@@ -32,7 +32,7 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?);";
+    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?)";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
