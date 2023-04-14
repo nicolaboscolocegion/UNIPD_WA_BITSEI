@@ -60,15 +60,21 @@ public class DeleteBankAccountRR extends AbstractRR{
         int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
         try{
-            //find if there is a new bank accoount in the response
-            BankAccount bankAccount= BankAccount.fromJSON(requestStream);
             
+            String uri = req.getRequestURI();
+            String id = uri.substring(uri.lastIndexOf('/') + 1);
+            if (id.isEmpty() || id.isBlank()) {
+                throw new IOException("bank can not be empty");
+            }
+
+            int BankAccountID = Integer.parseInt(id);
+
             //try to change the bank accoutn
-            boolean delited = new DeleteBankAccountDAO(con, bankAccount,owner_id).access().getOutputParam();
+            boolean delited = new DeleteBankAccountDAO(con, BankAccountID ,owner_id).access().getOutputParam();
 
             if(delited){
                 res.setStatus(HttpServletResponse.SC_OK);
-                LOGGER.info("delete bank account with iban: " + bankAccount.getIban());
+                LOGGER.info("delete bank account with ID: " + BankAccountID);
             }else{
                 LOGGER.error("Fatal error while creating.");
 

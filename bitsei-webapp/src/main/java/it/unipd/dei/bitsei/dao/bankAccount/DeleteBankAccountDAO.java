@@ -38,7 +38,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
     /**
      * bank account to delete
      */
-    private BankAccount bankAccount;
+    private int bankAccountID;
     /**
      * owner of the company
      */
@@ -48,13 +48,13 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
      * Deletes the bank account
      * 
      * @param con
-     * @param b Bank account to delete
+     * @param baID Bank account ID to delete
      * @param owner_id owner of the company
      */
 
-    public DeleteBankAccountDAO(Connection con, BankAccount b,int owner_id) {
+    public DeleteBankAccountDAO(Connection con, int baID,int owner_id) {
         super(con);
-        this.bankAccount=b;
+        this.bankAccountID=baID;
         this.owner_id=owner_id;
     }
 
@@ -78,7 +78,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, bankAccount.getCompanyId());
+            controll_statemant.setInt(1, bankAccountID);
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -95,7 +95,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             }
         }
         if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + bankAccount.getCompanyId() + " ownerID: " +owner_id);
+            LOGGER.info("owner dosen't own company, companyID: " + bankAccountID + " ownerID: " +owner_id);
             return;
         }
 
@@ -103,7 +103,7 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             //execute the query
             pstmt= con.prepareStatement(STATEMENT);
             
-            pstmt.setInt(1, bankAccount.getBankAccountID());
+            pstmt.setInt(1, bankAccountID);
 
             rs = pstmt.executeQuery();
 

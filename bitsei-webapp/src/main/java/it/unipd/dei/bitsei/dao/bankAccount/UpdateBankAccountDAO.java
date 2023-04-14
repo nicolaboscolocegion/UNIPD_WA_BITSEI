@@ -39,7 +39,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
     /**
      * old bank account
      */
-    private BankAccount oldBankAccount;
+    private int oldBankAccountID;
     /**
      * new bank account
      */
@@ -54,9 +54,9 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * @param oldba the bank account to update
      * @param newBA the new bank account
      */
-    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA, int ownerID) {
+    public UpdateBankAccountDAO(Connection con, int oldBA, BankAccount newBA, int ownerID) {
         super(con);
-        this.oldBankAccount=oldBA;
+        this.oldBankAccountID=oldBA;
         this.newBankAccount=newBA;
         this.owner_id=ownerID;
     }
@@ -83,7 +83,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, oldBankAccount.getCompanyId());
+            controll_statemant.setInt(1, oldBankAccountID);
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -113,7 +113,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             
-            pstmt.setInt(4, oldBankAccount.getBankAccountID());
+            pstmt.setInt(4, oldBankAccountID);
 
             rs = pstmt.executeQuery();
 

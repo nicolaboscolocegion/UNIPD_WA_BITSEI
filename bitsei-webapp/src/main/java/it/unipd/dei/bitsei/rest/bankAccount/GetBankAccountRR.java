@@ -60,7 +60,7 @@ public class GetBankAccountRR extends AbstractRR{
 
         try {
             
-            //TODO rest implemetation 
+            
             String uri = req.getRequestURI();
             String id = uri.substring(uri.lastIndexOf('/') + 1);
             if (id.isEmpty() || id.isBlank()) {
