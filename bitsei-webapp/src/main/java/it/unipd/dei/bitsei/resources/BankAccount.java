@@ -72,6 +72,12 @@ public class BankAccount extends AbstractResource{
     public String getBankAccountFriendlyName() {
         return bankAccountFriendlyName;
     }
+    /**
+     * @return bank account ID
+     */
+    public int getBankAccountID(){
+        return bankAccount_id;
+    }
 
     /**
      * crates a JSON with all the data for the bank account

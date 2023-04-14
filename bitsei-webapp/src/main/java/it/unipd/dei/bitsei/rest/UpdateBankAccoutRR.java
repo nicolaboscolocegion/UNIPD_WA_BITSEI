@@ -55,12 +55,15 @@ public class UpdateBankAccoutRR extends AbstractRR{
         InputStream requestStream = req.getInputStream();
 
         try{
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
             //find the old and the new bank account to update
             BankAccount oldBankAccount= BankAccount.fromJSON(requestStream);
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
 
             //try to change the bank accoutn
-            boolean updated = new UpdateBankAccountDAO(con, oldBankAccount, newBankAccount).access().getOutputParam();
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            boolean updated = new UpdateBankAccountDAO(con, oldBankAccount, newBankAccount, owner_id).access().getOutputParam();
 
             if(updated){
                 res.setStatus(HttpServletResponse.SC_OK);

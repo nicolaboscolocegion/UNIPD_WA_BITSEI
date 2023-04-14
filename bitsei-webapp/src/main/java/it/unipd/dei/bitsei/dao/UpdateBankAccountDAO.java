@@ -31,7 +31,9 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE company_id ='?' and \"IBAN\" ='?';";
+    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE bankaccount_id=?;";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+
 
     /**
      * old bank account
@@ -41,17 +43,21 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * new bank account
      */
     private BankAccount newBankAccount;
-
+    /**
+     * owner id of the company
+     */
+    private int owner_id;
     /**
      * 
      * @param con the connection
      * @param oldba the bank account to update
      * @param newBA the new bank account
      */
-    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA) {
+    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA, int ownerID) {
         super(con);
-        oldBankAccount=oldBA;
-        newBankAccount=newBA;
+        this.oldBankAccount=oldBA;
+        this.newBankAccount=newBA;
+        this.owner_id=ownerID;
     }
 
 
@@ -61,8 +67,41 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
     @Override
     public void doAccess() throws SQLException {
         outputParam = false;
+        //controlls if the owner is correct
+        PreparedStatement controll_statemant = null;
+        ResultSet controll_rs=null;
+        // update statemant
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
+
+        //controlls if the owner owns the company
+        try{
+
+            controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
+            
+            controll_statemant.setInt(1, oldBankAccount.getCompanyId());
+            controll_statemant.setInt(2, owner_id);
+
+            controll_rs = controll_statemant.executeQuery();
+
+            controll_rs.getInt("company_id");
+
+        }catch(SQLException e){
+            LOGGER.warn("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+            return;
+                
+            
+        }finally{
+            if (controll_rs != null) {
+                controll_rs.close();
+            }
+
+            if (controll_statemant != null) {
+                controll_statemant.close();
+            }
+            
+        }
 
         try{
 
@@ -72,8 +111,7 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             
-            pstmt.setInt(4, oldBankAccount.getCompanyId());
-            pstmt.setString(5, oldBankAccount.getIban());
+            pstmt.setInt(4, oldBankAccount.getBankAccountID());
 
             rs = pstmt.executeQuery();
 
