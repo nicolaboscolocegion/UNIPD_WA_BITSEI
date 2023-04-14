@@ -79,7 +79,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_rs = controll_statemant.executeQuery();
 
-            int proof= controll_rs.getInt("company_id");
+            controll_rs.getInt("company_id");
 
         }catch(SQLException e){
             LOGGER.warn("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);

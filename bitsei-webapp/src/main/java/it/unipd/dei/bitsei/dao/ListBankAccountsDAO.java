@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import it.unipd.dei.bitsei.resources.BankAccount;
-import it.unipd.dei.bitsei.resources.Company;
 
 /**
  * List all bank account of a given company
@@ -34,18 +33,24 @@ import it.unipd.dei.bitsei.resources.Company;
  */
 public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
-    private static final String STATEMENT="select * from \"BankAccount\" where company_id=?";
-    private final int companyID;
+    private final static String STATEMENT="select * from \"BankAccount\" where company_id=?";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+
+
+    private final int company_id;
+    private final int owner_id;
 
     /**
      * constructor for: retrives all bank account in a list by givin a certain company
      * @param con connettion of the database
      * @param companyID company id to search
+     * @param ownerID ID of the owner of the company
      */
-    public ListBankAccountsDAO(Connection con, int companyID) {
+    public ListBankAccountsDAO(Connection con, int companyID, int ownerID) {
         super(con);
-        this.companyID = companyID;
-    }
+        this.company_id = companyID;
+        this.owner_id = ownerID;
+    }  
 
     /**
      * retrives all bank account in a list by givin a certain company
@@ -53,15 +58,49 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
     @Override
     public void doAccess() throws SQLException {
         outputParam = null;
+        //controlls if the owner is correct
+        PreparedStatement controll_statemant = null;
+        ResultSet controll_rs=null;
+        //lists all the bank accounts
         List<BankAccount> bankAccountList =new LinkedList<BankAccount>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
+
+        //controlls if the owner owns the company
+        try{
+
+            controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
+            
+            controll_statemant.setInt(1, company_id);
+            controll_statemant.setInt(2, owner_id);
+
+            controll_rs = controll_statemant.executeQuery();
+
+            controll_rs.getInt("company_id");
+
+        }catch(SQLException e){
+            LOGGER.warn("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
+            return;
+                
+            
+        }finally{
+            if (controll_rs != null) {
+                controll_rs.close();
+            }
+
+            if (controll_statemant != null) {
+                controll_statemant.close();
+            }
+            
+        }
+
 
         try{
             //execute the query
             pstmt= con.prepareStatement(STATEMENT);
             
-            pstmt.setInt(1, companyID);
+            pstmt.setInt(1, company_id);
             
 
             rs = pstmt.executeQuery();
@@ -69,6 +108,7 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
             while (rs.next()) {
                 bankAccountList.add(
                     new BankAccount(
+                        rs.getInt("bankaccount_id"),
                         rs.getString("IBAN"), 
                         rs.getString("bank_name"), 
                         rs.getString("bankaccount_friendly_name"), 
