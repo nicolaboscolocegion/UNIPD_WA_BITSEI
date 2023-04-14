@@ -24,6 +24,7 @@ import it.unipd.dei.bitsei.dao.CreateBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.utils.TokenJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -49,13 +50,15 @@ public class CreateBankAccountRR extends AbstractRR{
     protected void doServe() throws IOException {
         Message m;
         InputStream requestStream = req.getInputStream();
+        
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
         try{
             //find if there is a new bank accoount in the response
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
             
             //try to change the bank accoutn
-            boolean created = new CreateBankAccountDAO(con, newBankAccount).access().getOutputParam();
+            boolean created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
 
             if(created){
                 res.setStatus(HttpServletResponse.SC_CREATED);

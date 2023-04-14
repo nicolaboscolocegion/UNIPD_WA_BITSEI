@@ -29,13 +29,19 @@ public class BankAccount extends AbstractResource{
     private int companyId;
 
     /**
+     * database ID of the bankAccount, if -1 the bank account is not in the database
+     */
+    private int bankAccount_id;
+
+    /**
      * create a bank account by having evry entry
      * @param iban
      * @param bankName
      * @param bankAccountFriendlyName
      * @param companyId
      */
-    public BankAccount(String iban, String bankName, String bankAccountFriendlyName, int companyId ){
+    public BankAccount(int bankAccount_id, String iban, String bankName, String bankAccountFriendlyName, int companyId ){
+        this.bankAccount_id = bankAccount_id;
         this.iban = iban;
         this.bankName= bankName;
         this.bankAccountFriendlyName=bankAccountFriendlyName;
@@ -77,6 +83,7 @@ public class BankAccount extends AbstractResource{
 
         jg.writeStartObject();
 
+        jg.writeNumberField("bankaccount_id", bankAccount_id);
         jg.writeStringField("IBAN", iban);
         jg.writeStringField("bank_name", bankName);
         jg.writeStringField("bankaccount_friendly_name", bankAccountFriendlyName);
@@ -91,6 +98,7 @@ public class BankAccount extends AbstractResource{
         String jIban = null;
         String jBankName = null;
         String jBankAccountFriendlyName = null;
+        int jbankaccount_id=-1;
         int jCompanyId = -1;
         
 
@@ -101,7 +109,7 @@ public class BankAccount extends AbstractResource{
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("Not able to fin a bank account");
+                    LOGGER.error("Not able to find a bank account");
                     
                 }
             }
@@ -111,6 +119,10 @@ public class BankAccount extends AbstractResource{
 
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
+                        case "bankaccount_id"->{
+                            jp.nextToken();
+                            jbankaccount_id = jp.getNumberValue().intValue();
+                        }
                         case "IBAN" -> {
                             jp.nextToken();
                             jIban = jp.getText();
@@ -135,7 +147,7 @@ public class BankAccount extends AbstractResource{
             throw e;
         }
 
-        return new BankAccount(jIban, jBankName, jBankAccountFriendlyName, jCompanyId);
+        return new BankAccount(jbankaccount_id,jIban, jBankName, jBankAccountFriendlyName, jCompanyId);
 
     }
     

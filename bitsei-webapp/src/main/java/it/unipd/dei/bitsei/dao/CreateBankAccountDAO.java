@@ -18,6 +18,7 @@ package it.unipd.dei.bitsei.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import it.unipd.dei.bitsei.resources.BankAccount;
 
@@ -30,26 +31,72 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', '?');";
+    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?);";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
      * new bank account for a company
      */
     private BankAccount newBankAccount;
+    /**
+     * owner ID 
+     */
+    private int owner_id;
+    /**
+     * 
+     * @param con
+     * @param ba
+     * @param owner_id
+     */
 
-    public CreateBankAccountDAO(Connection con, BankAccount ba) {
+    public CreateBankAccountDAO(Connection con, BankAccount ba, int owner_id) {
         super(con);
         newBankAccount = ba;
+
     }
 
     /**
      * create a new bank account for a company
      */
     @Override
-    protected void doAccess() throws Exception {
+    protected void doAccess() throws SQLException {
         outputParam = false;
+        //controlls if the owner is correct
+        PreparedStatement controll_statemant = null;
+        ResultSet controll_rs=null;
+
+        //statemant for the insert
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
+        //controlls if the owner owns the company
+        try{
+
+            controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
+            
+            controll_statemant.setInt(1, newBankAccount.getCompanyId());
+            controll_statemant.setInt(2, owner_id);
+
+            controll_rs = controll_statemant.executeQuery();
+
+            int proof= controll_rs.getInt("company_id");
+
+            if(proof!=owner_id){
+                LOGGER.warn("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+                return;
+            }
+                
+            
+        }finally{
+            if (controll_rs != null) {
+                controll_rs.close();
+            }
+
+            if (controll_statemant != null) {
+                controll_statemant.close();
+            }
+            
+        }
 
         try{
             //query
@@ -58,7 +105,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(1, newBankAccount.getIban());
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
-            pstmt.setString(4, String.valueOf(newBankAccount.getCompanyId()));
+            pstmt.setInt(4, newBankAccount.getCompanyId());
 
             rs = pstmt.executeQuery();
 
