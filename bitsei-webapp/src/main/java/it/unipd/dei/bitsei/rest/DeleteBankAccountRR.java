@@ -54,13 +54,15 @@ public class DeleteBankAccountRR extends AbstractRR{
     public void doServe() throws IOException {
         Message m;
         InputStream requestStream = req.getInputStream();
+        
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
         try{
             //find if there is a new bank accoount in the response
             BankAccount bankAccount= BankAccount.fromJSON(requestStream);
             
             //try to change the bank accoutn
-            boolean delited = new DeleteBankAccountDAO(con, bankAccount).access().getOutputParam();
+            boolean delited = new DeleteBankAccountDAO(con, bankAccount,owner_id).access().getOutputParam();
 
             if(delited){
                 res.setStatus(HttpServletResponse.SC_OK);

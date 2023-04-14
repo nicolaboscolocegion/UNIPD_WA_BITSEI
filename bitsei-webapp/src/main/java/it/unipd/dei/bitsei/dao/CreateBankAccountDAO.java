@@ -52,7 +52,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
     public CreateBankAccountDAO(Connection con, BankAccount ba, int owner_id) {
         super(con);
         newBankAccount = ba;
-
+        this.owner_id=owner_id;
     }
 
     /**
@@ -81,10 +81,9 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
             int proof= controll_rs.getInt("company_id");
 
-            if(proof!=owner_id){
-                LOGGER.warn("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
-                return;
-            }
+        }catch(SQLException e){
+            LOGGER.warn("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+            return;
                 
             
         }finally{
