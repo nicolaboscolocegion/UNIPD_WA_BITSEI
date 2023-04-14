@@ -20,7 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import it.unipd.dei.bitsei.dao.customer.ListBankAccountsDAO;
+import it.unipd.dei.bitsei.dao.bankAccount.customer.ListBankAccountsDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Company;

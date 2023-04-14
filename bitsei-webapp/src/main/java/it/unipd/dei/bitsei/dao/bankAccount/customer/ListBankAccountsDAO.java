@@ -13,72 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao.customer;
+package it.unipd.dei.bitsei.dao.bankAccount.customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.BankAccount;
 
 /**
- * Delete bank account
+ * List all bank account of a given company
  *
  * @author Nicola Boscolo
  * @version 1.00
  * @since 1.00
  */
-public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
+public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
-    private final static String STATEMENT="DELETE FROM \"BankAccount\"  WHERE \"IBAN\"=? AND company_id=?;";
+    private final static String STATEMENT="select * from \"BankAccount\" where company_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
-    /**
-     * bank account to delete
-     */
-    private BankAccount bankAccount;
-    /**
-     * owner of the company
-     */
-    private int owner_id;
+
+    private final int company_id;
+    private final int owner_id;
 
     /**
-     * Deletes the bank account
-     * 
-     * @param con
-     * @param b Bank account to delete
-     * @param owner_id owner of the company
+     * constructor for: retrives all bank account in a list by givin a certain company
+     * @param con connettion of the database
+     * @param companyID company id to search
+     * @param ownerID ID of the owner of the company
      */
-
-    public DeleteBankAccountDAO(Connection con, BankAccount b,int owner_id) {
+    public ListBankAccountsDAO(Connection con, int companyID, int ownerID) {
         super(con);
-        this.bankAccount=b;
-        this.owner_id=owner_id;
-    }
+        this.company_id = companyID;
+        this.owner_id = ownerID;
+    }  
 
     /**
-     * delete the bank account 
+     * retrives all bank account in a list by givin a certain company
      */
     @Override
-    protected void doAccess() throws Exception {
-        outputParam = false;
+    public void doAccess() throws SQLException {
+        outputParam = null;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
         //fetched ID of the owner if exist
         int fetchedID=0;
-
+        //lists all the bank accounts
+        List<BankAccount> bankAccountList =new LinkedList<BankAccount>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
 
         //controlls if the owner owns the company
         try{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, bankAccount.getCompanyId());
+            controll_statemant.setInt(1, company_id);
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -93,23 +90,35 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             if (controll_statemant != null) {
                 controll_statemant.close();
             }
+            
         }
         if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + bankAccount.getCompanyId() + " ownerID: " +owner_id);
+            LOGGER.info("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
             return;
         }
+
 
         try{
             //execute the query
             pstmt= con.prepareStatement(STATEMENT);
             
-            pstmt.setString(1, bankAccount.getIban());
-            pstmt.setInt(2, bankAccount.getCompanyId());
+            pstmt.setInt(1, company_id);
+            
 
             rs = pstmt.executeQuery();
 
-            outputParam = true;
+            while (rs.next()) {
+                bankAccountList.add(
+                    new BankAccount(
+                        rs.getInt("bankaccount_id"),
+                        rs.getString("IBAN"), 
+                        rs.getString("bank_name"), 
+                        rs.getString("bankaccount_friendly_name"), 
+                        rs.getInt("company_id"))
+                    );
+            }
 
+            outputParam=bankAccountList;
         }finally{
             if (rs != null) {
                 rs.close();
@@ -119,6 +128,8 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
                 pstmt.close();
             }
         }
-    }
 
+
+    }
+    
 }

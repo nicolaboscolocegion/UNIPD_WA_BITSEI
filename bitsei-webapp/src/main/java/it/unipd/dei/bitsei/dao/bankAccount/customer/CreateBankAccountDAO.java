@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao.customer;
+package it.unipd.dei.bitsei.dao.bankAccount.customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,66 +24,59 @@ import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.BankAccount;
 
 /**
- * Updates bank account 
+ * Create a new bank account
  *
  * @author Nicola Boscolo
  * @version 1.00
  * @since 1.00
  */
-public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
+public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE bankaccount_id=?;";
+    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?);";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
-
     /**
-     * old bank account
-     */
-    private BankAccount oldBankAccount;
-    /**
-     * new bank account
+     * new bank account for a company
      */
     private BankAccount newBankAccount;
     /**
-     * owner id of the company
+     * owner ID 
      */
     private int owner_id;
     /**
      * 
-     * @param con the connection
-     * @param oldba the bank account to update
-     * @param newBA the new bank account
+     * @param con
+     * @param ba
+     * @param owner_id
      */
-    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA, int ownerID) {
+
+    public CreateBankAccountDAO(Connection con, BankAccount ba, int owner_id) {
         super(con);
-        this.oldBankAccount=oldBA;
-        this.newBankAccount=newBA;
-        this.owner_id=ownerID;
+        newBankAccount = ba;
+        this.owner_id=owner_id;
     }
 
-
     /**
-     * updates the old bank account with a new one, if the process is complete will return true 
+     * create a new bank account for a company
      */
     @Override
-    public void doAccess() throws SQLException {
+    protected void doAccess() throws SQLException {
         outputParam = false;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
         //fetched ID of the owner if exist
         int fetchedID=0;
-        // update statemant
+        //statemant for the insert
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
 
         //controlls if the owner owns the company
         try{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, oldBankAccount.getCompanyId());
+            controll_statemant.setInt(1, newBankAccount.getCompanyId());
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -106,14 +99,13 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
         }
 
         try{
-
+            //query
             pstmt= con.prepareStatement(STATEMENT);
 
             pstmt.setString(1, newBankAccount.getIban());
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
-            
-            pstmt.setInt(4, oldBankAccount.getBankAccountID());
+            pstmt.setInt(4, newBankAccount.getCompanyId());
 
             rs = pstmt.executeQuery();
 
