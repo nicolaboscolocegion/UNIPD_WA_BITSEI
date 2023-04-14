@@ -7,6 +7,7 @@ import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
 import it.unipd.dei.bitsei.rest.bankAccount.CreateBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.DeleteBankAccountRR;
+import it.unipd.dei.bitsei.rest.bankAccount.GetBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.ListBankAccountsRR;
 import it.unipd.dei.bitsei.rest.bankAccount.UpdateBankAccoutRR;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +46,9 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             if (processCompany(req, res)) {
                 return;
             }
+            if(processBank(req, res)){
+                return;
+            }
 
             // if none of the above process methods succeeds, it means an unknown resource has been requested
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
@@ -70,6 +74,81 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             LogContext.removeIPAddress();
         }
+    }
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processBank(HttpServletRequest req, HttpServletResponse res) throws Exception{
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a user
+        if (path.lastIndexOf("rest/bankaccount") <= 0) {
+            return false;
+        }
+        // strip everything until after the /bankaccount
+        path = path.substring(path.lastIndexOf("bankaccount") + 11);
+
+        //bank accounts of a company, \\d+ should be a company ID
+        if (path.equals("s/\\d+")) {
+            //removes the 's' from bankaccounts
+            path = path.substring(path.lastIndexOf("s") + 1);
+            /*
+             * GET: gets all the bank accounts of a given company
+             */
+            switch (method) {
+                case "GET":
+                    new ListBankAccountsRR(req, res, getConnection()).serve();
+                break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /bankaccounts: {}.", method);
+
+                    m = new Message("Unsupported operation for URI /bankaccounts.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                break;
+            }
+        }else if(path.length() == 0 || path.equals("/\\d+")){
+            /*
+             * GET: gives a bank account
+             * POST: creates a BANK account
+             * PUT: updates a bank account
+             * DELETE: deletes bank account
+             */
+            switch (method) {
+                case "GET":
+                    new GetBankAccountRR(req, res, getConnection()).serve();
+                break;
+                case "POST":
+                    new CreateBankAccountRR(req, res, getConnection()).serve();
+                break;
+                case "PUT":
+                    new UpdateBankAccoutRR(req, res, getConnection());
+                break;
+                case "DELETE":
+                    new DeleteBankAccountRR(req, res, getConnection());
+                break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /bankaccount: {}.", method);
+
+                    m = new Message("Unsupported operation for URI /bankaccount.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
     }
 
 

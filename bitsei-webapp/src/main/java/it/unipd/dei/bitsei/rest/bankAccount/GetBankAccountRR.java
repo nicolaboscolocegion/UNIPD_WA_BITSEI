@@ -44,7 +44,7 @@ public class GetBankAccountRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    protected GetBankAccountRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public GetBankAccountRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
         super(Actions.GET_BANK_ACCOUNT, req, res, con);
     }
 
