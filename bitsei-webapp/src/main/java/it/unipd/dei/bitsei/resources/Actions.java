@@ -64,6 +64,10 @@ public final class Actions {
      * create new bank account
      */
     public static final String CREATE_BANK_ACCOUNT = "CREATE_BANK_ACCOUNT";
+    /**
+     * get bank account
+     */
+    public static final String GET_BANK_ACCOUNT = "GET_BANK_ACCOUNT";
 
     /**
      * Delete the bank account
