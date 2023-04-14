@@ -62,7 +62,6 @@ public class UpdateBankAccoutRR extends AbstractRR{
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
 
             //try to change the bank accoutn
-        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             boolean updated = new UpdateBankAccountDAO(con, oldBankAccount, newBankAccount, owner_id).access().getOutputParam();
 
             if(updated){
