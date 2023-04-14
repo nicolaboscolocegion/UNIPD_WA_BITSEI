@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import it.unipd.dei.bitsei.dao.bankAccount.customer.DeleteBankAccountDAO;
+import it.unipd.dei.bitsei.dao.bankAccount.DeleteBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;

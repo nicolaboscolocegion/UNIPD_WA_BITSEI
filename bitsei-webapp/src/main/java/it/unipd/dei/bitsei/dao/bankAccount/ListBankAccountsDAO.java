@@ -13,70 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao.bankAccount.customer;
+package it.unipd.dei.bitsei.dao.bankAccount;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.BankAccount;
 
 /**
- * Create a new bank account
+ * List all bank account of a given company
  *
  * @author Nicola Boscolo
  * @version 1.00
  * @since 1.00
  */
-public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
+public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
-    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?);";
+    private final static String STATEMENT="select * from \"BankAccount\" where company_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
-    /**
-     * new bank account for a company
-     */
-    private BankAccount newBankAccount;
-    /**
-     * owner ID 
-     */
-    private int owner_id;
-    /**
-     * 
-     * @param con
-     * @param ba
-     * @param owner_id
-     */
 
-    public CreateBankAccountDAO(Connection con, BankAccount ba, int owner_id) {
+    private final int company_id;
+    private final int owner_id;
+
+    /**
+     * constructor for: retrives all bank account in a list by givin a certain company
+     * @param con connettion of the database
+     * @param companyID company id to search
+     * @param ownerID ID of the owner of the company
+     */
+    public ListBankAccountsDAO(Connection con, int companyID, int ownerID) {
         super(con);
-        newBankAccount = ba;
-        this.owner_id=owner_id;
-    }
+        this.company_id = companyID;
+        this.owner_id = ownerID;
+    }  
 
     /**
-     * create a new bank account for a company
+     * retrives all bank account in a list by givin a certain company
      */
     @Override
-    protected void doAccess() throws SQLException {
-        outputParam = false;
+    public void doAccess() throws SQLException {
+        outputParam = null;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
         //fetched ID of the owner if exist
         int fetchedID=0;
-        //statemant for the insert
+        //lists all the bank accounts
+        List<BankAccount> bankAccountList =new LinkedList<BankAccount>();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
 
         //controlls if the owner owns the company
         try{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, newBankAccount.getCompanyId());
+            controll_statemant.setInt(1, company_id);
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -94,23 +93,32 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             
         }
         if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+            LOGGER.info("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
             return;
         }
 
-        try{
-            //query
-            pstmt= con.prepareStatement(STATEMENT);
 
-            pstmt.setString(1, newBankAccount.getIban());
-            pstmt.setString(2, newBankAccount.getBankName());
-            pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
-            pstmt.setInt(4, newBankAccount.getCompanyId());
+        try{
+            //execute the query
+            pstmt= con.prepareStatement(STATEMENT);
+            
+            pstmt.setInt(1, company_id);
+            
 
             rs = pstmt.executeQuery();
 
-            outputParam = true;
+            while (rs.next()) {
+                bankAccountList.add(
+                    new BankAccount(
+                        rs.getInt("bankaccount_id"),
+                        rs.getString("IBAN"), 
+                        rs.getString("bank_name"), 
+                        rs.getString("bankaccount_friendly_name"), 
+                        rs.getInt("company_id"))
+                    );
+            }
 
+            outputParam=bankAccountList;
         }finally{
             if (rs != null) {
                 rs.close();
@@ -120,6 +128,8 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
                 pstmt.close();
             }
         }
+
+
     }
     
 }

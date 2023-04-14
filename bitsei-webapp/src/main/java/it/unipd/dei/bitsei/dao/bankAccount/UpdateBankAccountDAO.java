@@ -13,59 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao.bankAccount.customer;
+package it.unipd.dei.bitsei.dao.bankAccount;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.BankAccount;
 
 /**
- * List all bank account of a given company
+ * Updates bank account 
  *
  * @author Nicola Boscolo
  * @version 1.00
  * @since 1.00
  */
-public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
+public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT="select * from \"BankAccount\" where company_id=?";
+    private static String STATEMENT ="UPDATE \"BankAccount\" SET \"IBAN\" ='?', bank_name ='?', bankaccount_friendly_name='?' WHERE bankaccount_id=?;";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
 
 
-    private final int company_id;
-    private final int owner_id;
-
     /**
-     * constructor for: retrives all bank account in a list by givin a certain company
-     * @param con connettion of the database
-     * @param companyID company id to search
-     * @param ownerID ID of the owner of the company
+     * old bank account
      */
-    public ListBankAccountsDAO(Connection con, int companyID, int ownerID) {
+    private BankAccount oldBankAccount;
+    /**
+     * new bank account
+     */
+    private BankAccount newBankAccount;
+    /**
+     * owner id of the company
+     */
+    private int owner_id;
+    /**
+     * 
+     * @param con the connection
+     * @param oldba the bank account to update
+     * @param newBA the new bank account
+     */
+    public UpdateBankAccountDAO(Connection con, BankAccount oldBA, BankAccount newBA, int ownerID) {
         super(con);
-        this.company_id = companyID;
-        this.owner_id = ownerID;
-    }  
+        this.oldBankAccount=oldBA;
+        this.newBankAccount=newBA;
+        this.owner_id=ownerID;
+    }
+
 
     /**
-     * retrives all bank account in a list by givin a certain company
+     * updates the old bank account with a new one, if the process is complete will return true 
      */
     @Override
     public void doAccess() throws SQLException {
-        outputParam = null;
+        outputParam = false;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
         //fetched ID of the owner if exist
         int fetchedID=0;
-        //lists all the bank accounts
-        List<BankAccount> bankAccountList =new LinkedList<BankAccount>();
+        // update statemant
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -75,7 +83,7 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
             
-            controll_statemant.setInt(1, company_id);
+            controll_statemant.setInt(1, oldBankAccount.getCompanyId());
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
@@ -93,32 +101,24 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
             
         }
         if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
+            LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
             return;
         }
 
-
         try{
-            //execute the query
+
             pstmt= con.prepareStatement(STATEMENT);
+
+            pstmt.setString(1, newBankAccount.getIban());
+            pstmt.setString(2, newBankAccount.getBankName());
+            pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             
-            pstmt.setInt(1, company_id);
-            
+            pstmt.setInt(4, oldBankAccount.getBankAccountID());
 
             rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                bankAccountList.add(
-                    new BankAccount(
-                        rs.getInt("bankaccount_id"),
-                        rs.getString("IBAN"), 
-                        rs.getString("bank_name"), 
-                        rs.getString("bankaccount_friendly_name"), 
-                        rs.getInt("company_id"))
-                    );
-            }
+            outputParam = true;
 
-            outputParam=bankAccountList;
         }finally{
             if (rs != null) {
                 rs.close();
@@ -128,8 +128,6 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
                 pstmt.close();
             }
         }
-
-
     }
     
 }

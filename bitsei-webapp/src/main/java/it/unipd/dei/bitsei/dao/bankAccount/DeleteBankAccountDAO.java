@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao.bankAccount.customer;
+package it.unipd.dei.bitsei.dao.bankAccount;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
