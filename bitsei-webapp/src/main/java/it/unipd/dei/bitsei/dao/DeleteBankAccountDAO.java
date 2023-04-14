@@ -66,6 +66,8 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
+        //fetched ID of the owner if exist
+        int fetchedID=0;
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -82,10 +84,6 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_rs.getInt("company_id");
 
-        }catch(SQLException e){
-                LOGGER.warn("owner dosen't own company, companyID: " + bankAccount.getCompanyId() + " ownerID: " +owner_id);
-                return;
-
         }finally{
             if (controll_rs != null) {
                 controll_rs.close();
@@ -94,6 +92,10 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
             if (controll_statemant != null) {
                 controll_statemant.close();
             }
+        }
+        if(fetchedID==0){
+            LOGGER.info("owner dosen't own company, companyID: " + bankAccount.getCompanyId() + " ownerID: " +owner_id);
+            return;
         }
 
         try{
