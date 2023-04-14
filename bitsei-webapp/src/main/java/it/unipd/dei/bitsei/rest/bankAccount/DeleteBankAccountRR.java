@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.bankAccount;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import it.unipd.dei.bitsei.dao.DeleteBankAccountDAO;
+
+import it.unipd.dei.bitsei.dao.customer.DeleteBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 /**

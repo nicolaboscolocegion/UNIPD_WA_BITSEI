@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.bankAccount;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import it.unipd.dei.bitsei.dao.UpdateBankAccountDAO;
+
+import it.unipd.dei.bitsei.dao.customer.CreateBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.TokenJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+public class CreateBankAccountRR extends AbstractRR{
 
-/**
- * Update the bank account RR
- *
- * @author Nicola Boscolo
- * @version 1.00
- * @since 1.00
- */
-public class UpdateBankAccoutRR extends AbstractRR{
+    
     /**
      * Control the authentication of the user
      *
@@ -42,45 +39,46 @@ public class UpdateBankAccoutRR extends AbstractRR{
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public UpdateBankAccoutRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.CHANGE_BANK_ACCOUNT, req, res, con);
+    public CreateBankAccountRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
+        super(Actions.CREATE_BANK_ACCOUNT, req, res, con);
     }
 
+
     /**
-     * updates a bank account 
+     * creates bank a new bank account
      */
     @Override
     protected void doServe() throws IOException {
         Message m;
         InputStream requestStream = req.getInputStream();
+        
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
         try{
-            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-
-            //find the old and the new bank account to update
-            BankAccount oldBankAccount= BankAccount.fromJSON(requestStream);
+            //find if there is a new bank accoount in the response
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
-
+            
             //try to change the bank accoutn
-            boolean updated = new UpdateBankAccountDAO(con, oldBankAccount, newBankAccount, owner_id).access().getOutputParam();
+            boolean created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
 
-            if(updated){
-                res.setStatus(HttpServletResponse.SC_OK);
-                LOGGER.info("changed " + oldBankAccount.getIban() +  " to "  + newBankAccount.getIban());
+            if(created){
+                res.setStatus(HttpServletResponse.SC_CREATED);
+                LOGGER.info("created new bank account with iban: " + newBankAccount.getIban());
             }else{
-                LOGGER.error("Fatal error while getting bankaccount.");
+                LOGGER.error("Fatal error while creating.");
 
-                m = new Message("Cannot change the bank account", "E5A1", null);
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                m = new Message("Cannot create the bank account", "E5A1", null);
+                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
-            LOGGER.error("Cannot change bank account: unexpected error while accessing the database.", e);
+            LOGGER.error("Cannot crate bank account: unexpected error while accessing the database.", e);
 
-            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            m = new Message("Cannot create bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
     }
-    
 }
+    
+

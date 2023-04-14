@@ -5,6 +5,10 @@ import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
+import it.unipd.dei.bitsei.rest.bankAccount.CreateBankAccountRR;
+import it.unipd.dei.bitsei.rest.bankAccount.DeleteBankAccountRR;
+import it.unipd.dei.bitsei.rest.bankAccount.ListBankAccountsRR;
+import it.unipd.dei.bitsei.rest.bankAccount.UpdateBankAccoutRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
