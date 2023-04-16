@@ -17,12 +17,14 @@
 package it.unipd.dei.bitsei.rest.bankAccount;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.resources.Resource;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -78,7 +80,7 @@ public class GetBankAccountRR extends AbstractRR{
                 LOGGER.info("bank account(s) successfully listed.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
-                new BankAccount(el.getBankAccountID(), el.getIban(), el.getBankName(), el.getBankAccountFriendlyName(), el.getCompanyId());
+                el.toJSON(res.getOutputStream());
 
             } else { // it should not happen
                 LOGGER.error("Fatal error while listing bank account(s).");
@@ -87,6 +89,9 @@ public class GetBankAccountRR extends AbstractRR{
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
+
+
+
         } catch (SQLException ex) {
             LOGGER.error("Cannot list bank account(s): unexpected database error.", ex);
 

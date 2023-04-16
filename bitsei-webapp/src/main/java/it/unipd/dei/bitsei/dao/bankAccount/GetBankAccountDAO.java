@@ -31,8 +31,8 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
 
-    private final static String STATEMENT="SELECT * FROM \"BankAccount\"  WHERE  bankaccount_id=?";
-    private final static String CONTROLL_STATEMANT = "SELECT \"Company\".owner_id, \"BankAccount\".bankaccount_id  FROM \"BankAccount\" INNER JOIN \"Company\" ON \"BankAccount\".company_id = \"Company\".company_id WHERE owner_id=? AND bankaccount_id=?";
+    private final static String STATEMENT="SELECT * FROM bitsei_schema.\"BankAccount\"  WHERE  bankaccount_id=?";
+    private final static String CONTROLL_STATEMANT = "SELECT bitsei_schema.\"Company\".owner_id, bitsei_schema.\"BankAccount\".bankaccount_id  FROM bitsei_schema.\"BankAccount\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"BankAccount\".company_id = bitsei_schema.\"Company\".company_id WHERE owner_id=? AND bankaccount_id=?";
 
     /**
      * bank account to retrive
@@ -65,8 +65,7 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
-        //fetched ID of the bank if exist
-        int fetchedID=0;
+
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -84,7 +83,12 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
 
             controll_rs = controll_statemant.executeQuery();
 
-            controll_rs.getInt("bankAccount_id");
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own bank account, companyID: " + bankAccount_id + " ownerID: " +owner_id);
+                return;
+            }
+
+            
 
         }finally{
             if (controll_rs != null) {
@@ -96,10 +100,7 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
             }
         }
 
-        if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + bankAccount_id + " ownerID: " +owner_id);
-            return;
-        }
+        
 
         try{
             //execute the query
@@ -108,6 +109,9 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
             pstmt.setInt(1, bankAccount_id);
 
             rs = pstmt.executeQuery();
+
+            if(!rs.next())
+                return;
 
             bankAccount = 
                 new BankAccount(

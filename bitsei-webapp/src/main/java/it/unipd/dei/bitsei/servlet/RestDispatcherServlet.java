@@ -35,7 +35,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         final OutputStream out = res.getOutputStream();
 
         try {
-
             // if the requested resource was a User, delegate its processing and return
             if (processUser(req, res)) {
                 return;
@@ -94,13 +93,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         if (path.lastIndexOf("rest/bankaccount") <= 0) {
             return false;
         }
+        
         // strip everything until after the /bankaccount
         path = path.substring(path.lastIndexOf("bankaccount") + 11);
-
         //bank accounts of a company, \\d+ should be a company ID
-        if (path.equals("s/\\d+")) {
-            //removes the 's' from bankaccounts
-            path = path.substring(path.lastIndexOf("s") + 1);
+        if (path.matches("s/\\d+")) {
             /*
              * GET: gets all the bank accounts of a given company
              */
@@ -117,7 +114,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                 break;
             }
-        }else if(path.length() == 0 || path.equals("/\\d+")){
+        }else if(path.length() == 0 || path.matches("/\\d+")){
+            LOGGER.warn("after if");
             /*
              * GET: gives a bank account
              * POST: creates a BANK account

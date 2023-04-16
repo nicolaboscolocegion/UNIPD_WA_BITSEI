@@ -32,8 +32,8 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT="DELETE FROM \"BankAccount\"  WHERE bankaccount_id=?";
-    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+    private final static String STATEMENT="DELETE FROM bitsei_schema.\"BankAccount\"  WHERE bankaccount_id=?";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
      * bank account to delete

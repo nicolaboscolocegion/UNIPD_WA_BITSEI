@@ -34,8 +34,8 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
-    private final static String STATEMENT="SELECT * FROM \"BankAccount\" WHERE company_id=?";
-    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+    private final static String STATEMENT="SELECT * FROM bitsei_schema.\"BankAccount\" WHERE company_id=?";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id=? AND owner_id=?";
 
 
     private final int company_id;
@@ -80,7 +80,10 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
 
             controll_rs = controll_statemant.executeQuery();
 
-            controll_rs.getInt("company_id");
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
+                return;
+            }
 
         }finally{
             if (controll_rs != null) {
@@ -91,10 +94,6 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
                 controll_statemant.close();
             }
             
-        }
-        if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + company_id + " ownerID: " +owner_id);
-            return;
         }
 
 
@@ -114,7 +113,8 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
                         rs.getString("IBAN"), 
                         rs.getString("bank_name"), 
                         rs.getString("bankaccount_friendly_name"), 
-                        rs.getInt("company_id"))
+                        rs.getInt("company_id")
+                        )
                     );
             }
 

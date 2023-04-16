@@ -32,8 +32,8 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT = "INSERT INTO \"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?)";
-    private final static String CONTROLL_STATEMANT = "SELECT * FROM \"Company\" WHERE company_id=? AND owner_id=?";
+    private final static String STATEMENT = "INSERT INTO bitsei_schema.\"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?)";
+    private final static String CONTROLL_STATEMANT = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
      * new bank account for a company
@@ -83,6 +83,11 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_rs.getInt("company_id");
 
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+                return;
+            }
+
         }finally{
             if (controll_rs != null) {
                 controll_rs.close();
@@ -93,10 +98,7 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             }
             
         }
-        if(fetchedID==0){
-            LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
-            return;
-        }
+        
 
         try{
             //query
@@ -108,6 +110,9 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setInt(4, newBankAccount.getCompanyId());
 
             rs = pstmt.executeQuery();
+
+            if(!rs.next())
+                return;
 
             outputParam = true;
 
