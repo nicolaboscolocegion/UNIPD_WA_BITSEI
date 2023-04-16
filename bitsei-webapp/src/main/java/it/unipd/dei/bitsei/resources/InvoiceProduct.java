@@ -67,14 +67,42 @@ public class InvoiceProduct {
      * @param purchase_date The date of the purchase of the product.
      */
     public InvoiceProduct(final int invoice_id, final int product_id, final int quantity, final double unit_price, final double related_price, final String related_price_description, final Date purchase_date) {
-        this.invoice_id = invoice_id;
-        this.product_id = product_id;
+        if (invoice_id != -1) {
+            this.invoice_id = invoice_id;
+        }
+        else {
+            this.invoice_id = 0;
+        }
+        if (product_id != -1) {
+            this.product_id = product_id;
+        }
+        else {
+            this.product_id = 0;
+        }
         this.quantity = quantity;
         this.unit_price = unit_price;
         this.related_price = related_price;
         this.related_price_description = related_price_description;
         this.purchase_date = purchase_date;
         this.total = this.quantity * this.unit_price;
+    }
+
+    /**
+     * Constructor used to delete an existing invoice product.
+     *
+     * @param invoice_id The id of the invoice referred.
+     *
+     * @param product_id The id of the product referred.
+     */
+    public InvoiceProduct(int invoice_id, int product_id) {
+        this.invoice_id = invoice_id;
+        this.product_id = product_id;
+        this.quantity = -1;
+        this.unit_price = null;
+        this.related_price = null;
+        this.related_price_description = null;
+        this.purchase_date = null;
+        this.total = null;
     }
 
     public Integer getInvoice_id() {
