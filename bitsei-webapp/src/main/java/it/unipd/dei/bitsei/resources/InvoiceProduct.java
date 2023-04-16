@@ -12,29 +12,29 @@ import java.sql.Date;
 public class InvoiceProduct {
 
     /**
-     * The unique id of the product.
+     * The id of the invoice.
      */
     private final Integer invoice_id;
 
     /**
-     * The unique id of the product.
+     * The id of the product.
      */
     private final Integer product_id;
 
     /**
-     * The external key pointing to the id of the company that sells the product.
+     * The quantity of product sold.
      */
     private final Integer quantity;
     /**
-     * The name of the product.
+     * The price per unit of the product sold.
      */
     private final Double unit_price;
     /**
-     * The default price per unit of the product.
+     * The related price of the product sold.
      */
     private final Double related_price;
     /**
-     * A path pointing to the logo/image of the product.
+     * A description for the related price of the product sold.
      */
     private final String related_price_description;
 
@@ -42,6 +42,10 @@ public class InvoiceProduct {
      * Teh date of the purchase of the product.
      */
     private final Date purchase_date;
+
+    /**
+     * The total amount = quantity * unit_price.
+     */
     private final Double total;
 
 
