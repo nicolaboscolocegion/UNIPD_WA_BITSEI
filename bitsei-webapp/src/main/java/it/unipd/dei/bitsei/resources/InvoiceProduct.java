@@ -1,5 +1,7 @@
 package it.unipd.dei.bitsei.resources;
 
+import java.sql.Date;
+
 /**
  * Represents the data about an invoice row of an Invoice.
  *
@@ -36,7 +38,10 @@ public class InvoiceProduct {
      */
     private final String related_price_description;
 
-    private final String purchase_date = "01/01/1971";
+    /**
+     * Teh date of the purchase of the product.
+     */
+    private final Date purchase_date;
     private final Double total;
 
 
@@ -54,14 +59,17 @@ public class InvoiceProduct {
      * @param related_price The (eventual) related_price of the product.
      *
      * @param related_price_description A textual description of the related_price.
+     *
+     * @param purchase_date The date of the purchase of the product.
      */
-    public InvoiceProduct(final int invoice_id, final int product_id, final int quantity, final double unit_price, final double related_price, final String related_price_description) {
+    public InvoiceProduct(final int invoice_id, final int product_id, final int quantity, final double unit_price, final double related_price, final String related_price_description, final Date purchase_date) {
         this.invoice_id = invoice_id;
         this.product_id = product_id;
         this.quantity = quantity;
         this.unit_price = unit_price;
         this.related_price = related_price;
         this.related_price_description = related_price_description;
+        this.purchase_date = purchase_date;
         this.total = this.quantity * this.unit_price;
     }
 
@@ -89,7 +97,7 @@ public class InvoiceProduct {
         return related_price_description;
     }
 
-    public String getPurchase_date() {
+    public Date getPurchase_date() {
         return purchase_date;
     }
 
