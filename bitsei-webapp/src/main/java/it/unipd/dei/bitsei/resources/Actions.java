@@ -47,6 +47,7 @@ public final class Actions {
      */
     public static final String GET_INVOICES_BY_FILTERS = "GET_INVOICES_BY_FILTERS";
     public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
+    public static final String SEND_MAIL_TO_COMPANY = "SEND_MAIL_TO_COMPANY";
 
     /**
      * This class can be neither instantiated nor sub-classed.
