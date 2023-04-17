@@ -64,9 +64,9 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
             //String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             java.util.Date utilToday = new Date();
             java.sql.Date today = new java.sql.Date(utilToday.getTime());
-            String fileName = "warning";
+            String fileName = "warning_" + UUID.randomUUID() + ".pdf";
 
-            out = new CloseInvoiceDAO(getConnection(), invoice_id, today).access().getOutputParam();
+            out = new CloseInvoiceDAO(getConnection(), invoice_id, today, fileName).access().getOutputParam();
             m = new Message(String.format("Data for invoice warning fetched"));
             LOGGER.info("Data for invoice warning fetched");
 
@@ -135,11 +135,8 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
             }
 
 
-
-
-
             //generate invoice
-            exportReport(ldr, absPath, "/jrxml/invoice" + UUID.randomUUID() + ".jrxml", "invoice.pdf", map);
+            exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
 
 
 
