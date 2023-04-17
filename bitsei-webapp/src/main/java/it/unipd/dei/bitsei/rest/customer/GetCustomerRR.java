@@ -16,12 +16,18 @@ import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
+/**
+ * Search customer by his id.
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class GetCustomerRR extends AbstractRR {
 
 
     /**
-     * Control the authentication of the user
+     * Gets a customer from the database by ID
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -33,7 +39,7 @@ public class GetCustomerRR extends AbstractRR {
 
 
     /**
-     * creates a new customer
+     * fetches the customer
      */
     @Override
     protected void doServe() throws IOException {
@@ -57,12 +63,11 @@ public class GetCustomerRR extends AbstractRR {
 
             int customerID = Integer.parseInt(id);
 
-            //filterCompanyOwner(companyID, ownerID)
-            //int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
 
             // creates a new object for accessing the database and stores the customer
-            c = new GetCustomerDAO(con, customerID).access().getOutputParam();
+            c = new GetCustomerDAO(con, customerID, owner_id).access().getOutputParam();
 
             m = new Message(String.format("Customer %s successfully fetched.", c.getBusinessName()));
             LOGGER.info("Customer succesfully fetched.");

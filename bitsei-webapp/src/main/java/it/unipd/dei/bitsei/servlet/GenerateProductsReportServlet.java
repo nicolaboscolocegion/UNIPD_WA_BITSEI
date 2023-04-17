@@ -1,7 +1,7 @@
 package it.unipd.dei.bitsei.servlet;
 
 
-import it.unipd.dei.bitsei.dao.FetchProductsDAO;
+import it.unipd.dei.bitsei.dao.documentation.FetchProductsDAO;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Product;

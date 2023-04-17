@@ -7,6 +7,9 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
+import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
+import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -17,6 +20,7 @@ import it.unipd.dei.bitsei.resources.Product;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -38,8 +42,22 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         try {
 
-            // if the requested resource was an User, delegate its processing and return
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processCustomersReport(req, res)) {
+                return;
+            }
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processProductsReport(req, res)) {
+                return;
+            }
+            // if the requested resource was a User, delegate its processing and return
             if (processUser(req, res)) {
+                return;
+            }
+            if (processLogin(req, res)) {
+                return;
+            }
+            if (processCompany(req, res)) {
                 return;
             }
 
@@ -68,6 +86,13 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processCloseInvoice(req, res)) {
+                return;
+            }
+
+
+
             // if none of the above process methods succeeds, it means an unknown resource has been requested
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
 
@@ -94,6 +119,146 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
     }
 
+    private boolean processCloseInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/closeinvoice") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("closeinvoice") + 12);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else if (path.matches("/\\d+")) {
+            switch (method) {
+
+                case "PUT":
+                    new CloseInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+
+    }
+
+    private boolean processCustomersReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/customerreport") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("customerreport") + 14);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                case "GET":
+
+                    new GenerateCustomersReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /customerreport: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /customerreport.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+
+
+        return true;
+
+
+    }
+
+
+    private boolean processProductsReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/productsreport") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("productsreport") + 14);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                case "GET":
+
+                    new GenerateProductsReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /productsreport: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /productsreport.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+
+
+        return true;
+
+
+    }
+
 
     /**
      * Checks whether the request if for an {@link User} resource and, in case, processes it.
@@ -110,7 +275,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
+        // the requested resource was not a user
         if (path.lastIndexOf("rest/user") <= 0) {
             return false;
         }
@@ -131,7 +296,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 //                    new CreateUserRR(req, res, getConnection()).serve();
                     break;
                 default:
-                    LOGGER.warn("Unsupported operation for URI /user: %s.", method);
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
 
                     m = new Message("Unsupported operation for URI /user.", "E4A5",
                             String.format("Requested operation %s.", method));
@@ -139,8 +304,110 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                     break;
             }
+        } else if (path.equals("/reset-password")) {
+            if (method.equals("POST")) {
+                new RestPasswordRR(req, res, getConnection()).serve();
+            }
+        } else if (path.equals("/change-password")) {
+            if (method.equals("POST")) {
+                new ChangePasswordRR(req, res, getConnection()).serve();
+            }
         }
 
+
+        return true;
+
+    }
+
+    private boolean processLogin(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a login
+        if (path.lastIndexOf("rest/login") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /login
+        path = path.substring(path.lastIndexOf("login") + 5);
+
+        // the request URI is: /login
+        // if method POST, authenticate the user
+        if (path.length() == 0 || path.equals("/")) {
+            if (method.equals("POST")) {
+                new LoginUserRR(req, res, getConnection()).serve();
+            } else {
+                LOGGER.warn("Unsupported operation for URI /user: {}.", method);
+
+                m = new Message("Unsupported operation for URI /user.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+            }
+        }
+
+        return true;
+
+    }
+
+
+    private boolean processCompany(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a company
+        if (path.lastIndexOf("rest/company") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /company
+        path = path.substring(path.lastIndexOf("company") + 7);
+
+        // the request URI is: /company
+        // if method GET, list companies
+        // if method POST, create company
+        if (path.length() == 0 || path.equals("/")) {
+            switch (method) {
+                case "GET" -> new ListCompanyRR(req, res, getConnection()).serve();
+                case "POST" -> new CreateCompanyRR(req, res, getConnection()).serve();
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /user: {}.", method);
+                    m = new Message("Unsupported operation for URI /company.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                }
+            }
+        } else if (path.matches("/image/\\d+")) {
+            // the request URI is: /company/image/{id}
+            // if method GET, get company image
+            if (method.equals("GET")) {
+                new GetCompanyImageRR(req, res, getConnection()).serve();
+            }
+        } else if (path.matches("/\\d+")) {
+            // the request URI is: /company/{id}
+            // if method GET, get company
+            // if method PUT, update company
+            // if method DELETE, delete company
+            switch (method) {
+                case "GET" -> new GetCompanyRR(req, res, getConnection()).serve();
+                case "PUT" -> new UpdateCompanyRR(req, res, getConnection()).serve();
+                // TODO: implement delete company -> as there is a lot of constraints we should delete them first in the right order
+                // after that we can delete the company itself. -> use atomic transactions
+                case "DELETE" -> new DeleteCompanyRR(req, res, getConnection()).serve();
+                default -> {
+                    LOGGER.warn("Unsupported operation for URI /company: {}.", method);
+                    m = new Message("Unsupported operation for URI /company.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                }
+            }
+        }
         return true;
 
     }

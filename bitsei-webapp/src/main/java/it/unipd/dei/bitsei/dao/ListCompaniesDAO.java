@@ -15,7 +15,7 @@
  */
 package it.unipd.dei.bitsei.dao;
 
-import it.unipd.dei.bitsei.resources.User;
+import it.unipd.dei.bitsei.resources.Company;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,26 +25,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Lists all the users in the database.
+ * Lists all the companies in the database.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class ListUserDAO extends AbstractDAO<List<User>> {
+public final class ListCompaniesDAO extends AbstractDAO<List<Company>> {
 
     /**
      * The SQL statement to be executed
+     * list the companies from the database
      */
-    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Owner\"";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Company\" WHERE owner_id = ?";
+
+    // the id of the owner
+    private final int owner_id;
+
 
     /**
      * Creates a new object for listing all the users.
      *
-     * @param con the connection to the database.
+     * @param con      the connection to the database.
+     * @param owner_id the id of the owner
      */
-    public ListUserDAO(final Connection con) {
+    public ListCompaniesDAO(final Connection con, final int owner_id) {
         super(con);
+        this.owner_id = owner_id;
     }
 
     @Override
@@ -54,27 +61,34 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
         ResultSet rs = null;
 
         // the results of the search
-        final List<User> users = new ArrayList<User>();
-        
+        final List<Company> companies = new ArrayList<Company>();
+
         try {
             pstmt = con.prepareStatement(STATEMENT);
+            pstmt.setInt(1, owner_id);
 
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                users.add(
-                        new User(
-                                rs.getInt("owner_id"),
-                                rs.getString("firstname"),
-                                rs.getString("lastname"),
-                                rs.getString("username"),
-                                rs.getString("email"),
-                                rs.getString("telegram_chat_id")
+                companies.add(
+                        new Company(
+                                rs.getInt("company_id"),
+                                rs.getString("title"),
+                                rs.getString("business_name"),
+                                rs.getString("vat_number"),
+                                rs.getString("tax_code"),
+                                rs.getString("address"),
+                                rs.getString("province"),
+                                rs.getString("city"),
+                                rs.getString("postal_code"),
+                                rs.getString("unique_code"),
+                                rs.getBoolean("has_mail_notifications"),
+                                rs.getBoolean("has_telegram_notifications")
                         )
                 );
             }
 
-            LOGGER.info("User(s) successfully listed.");
+            LOGGER.info("Companies successfully listed.");
         } finally {
             if (rs != null) {
                 rs.close();
@@ -86,6 +100,6 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
 
         }
 
-        outputParam = users;
+        outputParam = companies;
     }
 }
