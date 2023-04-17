@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.documentation;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.*;
 
 import java.sql.Connection;
@@ -27,12 +28,14 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     /**
      * The SQL statement to be executed
      */
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ?, warning_pdf_file = ? WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_CUSTOMER = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
     private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT bitsei_schema.\"Product\".title, bitsei_schema.\"Product\".description, bitsei_schema.\"Invoice_Product\".quantity, bitsei_schema.\"Product\".measurement_unit, bitsei_schema.\"Invoice_Product\".unit_price, bitsei_schema.\"Invoice_Product\".related_price, bitsei_schema.\"Invoice_Product\".related_price_description,  bitsei_schema.\"Invoice_Product\".purchase_date FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
 
+    private int owner_id;
     private int invoice_id;
     private Date today;
     private  String fileName;
@@ -51,6 +54,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private Integer fiscal_company_type;
 
 
+
     private List<DetailRow> ldr = new ArrayList<>();
     private List<Object> output = new ArrayList<>();
 
@@ -64,11 +68,12 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
      * @param invoice_id
      *        the id of the invoice to be closed.
      */
-    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName) {
+    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName, int owner_id) {
         super(con);
         this.invoice_id = invoice_id;
         this.today = today;
         this.fileName = fileName;
+        this.owner_id = owner_id;
     }
 
     @Override
@@ -80,13 +85,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
         // the results of the search
 
         try {
-            pstmt = con.prepareStatement(STATEMENT_UPDATE);
-            pstmt.setInt(1, 1);
-            pstmt.setDate(2, (java.sql.Date) today);
-            pstmt.setString(3, this.fileName);
-            pstmt.setInt(4, this.invoice_id);
-            pstmt.executeUpdate();
-            LOGGER.info("Invoice status successfully set to 1.");
+
 
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);
@@ -140,6 +139,30 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             LOGGER.info("Customer data successfully fetched.");
 
 
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, c.getCompanyID());
+            pstmt.setInt(2, owner_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Company selected does not belong to logged user.");
+                throw new IllegalAccessException();
+            }
+
+
+            pstmt = con.prepareStatement(STATEMENT_UPDATE);
+            pstmt.setInt(1, 1);
+            pstmt.setDate(2, (java.sql.Date) today);
+            pstmt.setString(3, this.fileName);
+            pstmt.setInt(4, this.invoice_id);
+            pstmt.executeUpdate();
+            LOGGER.info("Invoice status successfully set to 1.");
+
+
             pstmt = con.prepareStatement(STATEMENT_SELECT_COMPANY);
             pstmt.setInt(1, company_id);
             rs = pstmt.executeQuery();
@@ -182,6 +205,8 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
 
         } catch (ParseException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } finally {
             if (rs != null) {

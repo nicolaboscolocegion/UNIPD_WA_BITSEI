@@ -7,6 +7,7 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -75,6 +76,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processCloseInvoice(req, res)) {
+                return;
+            }
+
             // if none of the above process methods succeeds, it means an unknown resource has been requested
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
 
@@ -99,6 +105,61 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             LogContext.removeIPAddress();
         }
+    }
+
+    private boolean processCloseInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/closeinvoice") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("closeinvoice") + 12);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else if (path.matches("/\\d+")) {
+            switch (method) {
+
+                case "PUT":
+                    new CloseInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+
     }
 
 

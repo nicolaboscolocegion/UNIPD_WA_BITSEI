@@ -1,23 +1,20 @@
-package it.unipd.dei.bitsei.servlet;
+package it.unipd.dei.bitsei.rest.documentation;
 
-import it.unipd.dei.bitsei.dao.CloseInvoiceDAO;
-import it.unipd.dei.bitsei.resources.Customer;
-import it.unipd.dei.bitsei.resources.Invoice;
-import it.unipd.dei.bitsei.resources.DetailRow;
-import it.unipd.dei.bitsei.resources.LogContext;
-import it.unipd.dei.bitsei.resources.Message;
-import jakarta.servlet.ServletException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.FileSystems;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.*;
+
+
+import it.unipd.dei.bitsei.dao.documentation.CloseInvoiceDAO;
+import it.unipd.dei.bitsei.resources.*;
+
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
-
-
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.*;
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
 
@@ -28,49 +25,66 @@ import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
  * @version 1.00
  * @since 1.00
  */
-public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
+public class CloseInvoiceRR extends AbstractRR {
+
+
+    private final String absPath; //String absPath = super.getServletContext().getRealPath("/");
+    private int invoice_id;
+    List<Object> out;
+    /**
+     * Creates a new customer
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @param con the connection to the database.
+     */
+    public CloseInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath) {
+        super(Actions.CLOSE_INVOICE, req, res, con);
+        this.absPath = absPath;
+    }
+
 
     /**
-     * Creates a new customer into the database.
-     *
-     * @param req
-     *            the HTTP request from the client.
-     * @param res
-     *            the HTTP response from the server.
-     *
-     * @throws ServletException
-     *             if any error occurs while executing the servlet.
-     * @throws IOException
-     *             if any error occurs in the client/server communication.
+     * creates a new customer
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    @Override
+    protected void doServe() throws IOException {
+
+        String uri = req.getRequestURI();
+        String id = uri.substring(uri.lastIndexOf('/') + 1);
+        if (id.isEmpty() || id.isBlank()) {
+            throw new IOException("invoice id cannot be empty.");
+        }
+
+        invoice_id = Integer.parseInt(id);
+
+        InputStream requestStream = req.getInputStream();
 
         LogContext.setIPAddress(req.getRemoteAddr());
-
         // model
         int invoice_id = 0;
 
-        List<Object> out;
+
         Message m = null;
+
 
 
         try {
 
             // retrieves the request parameters
-            invoice_id = Integer.parseInt(req.getParameter("invoice_id"));
 
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             // creates a new object for accessing the database and stores the customer
             //String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             java.util.Date utilToday = new Date();
             java.sql.Date today = new java.sql.Date(utilToday.getTime());
             String fileName = "warning_" + UUID.randomUUID() + ".pdf";
 
-            out = new CloseInvoiceDAO(getConnection(), invoice_id, today, fileName).access().getOutputParam();
+            out = new CloseInvoiceDAO(con, this.invoice_id, today, fileName, owner_id).access().getOutputParam();
             m = new Message(String.format("Data for invoice warning fetched"));
             LOGGER.info("Data for invoice warning fetched");
 
-            String absPath = super.getServletContext().getRealPath("/");
+
             String separator = FileSystems.getDefault().getSeparator();
             Map<String, Object> map = new HashMap<>();
             map.put("company_logo", absPath + "company_logos" + separator + "user_logo_sample.png");
@@ -140,41 +154,20 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
 
 
 
-        } catch (NumberFormatException ex) {
-            m = new Message(
-                    "Cannot perform action. Invalid input parameters: invoice id must be integer.",
-                    "E100", ex.getMessage());
 
-            LOGGER.error(
-                    "Cannot perform action. Invalid input parameters: invoice id must be integer.",
-                    ex);
-        } catch (SQLException ex) {
-
-                m = new Message("Cannot perform action: unexpected error while accessing the database.", "E200",
-                        ex.getMessage());
-
-                LOGGER.error("Cannot perform action: unexpected error while accessing the database.", ex);
-
-        }  catch (IllegalArgumentException ex) {
-            m = new Message(
-                    "Invalid input parameters. ",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Invalid input parameters. " + ex.getMessage(), ex);
-        } catch (JRException ex) {
-            m = new Message("Cannot create jasper report: unexpected error.", "E200",
-                    ex.getMessage());
-
-            LOGGER.error("Cannot create jasper report: unexpected error.", ex);
+        }catch(SQLException ex){
+            LOGGER.error("Cannot create customer: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        }catch (NumberFormatException ex) {
+            m = new Message("No company id provided for " +  out.get(3) + ", will be set to null.", "E5A1", ex.getMessage());
+            LOGGER.info("No company id provided for %s, will be set to null.", out.get(3));
+            m.toJSON(res.getOutputStream());
+        } catch (JRException e) {
+            throw new RuntimeException(e);
         }
-
-
-        LogContext.removeIPAddress();
-        LogContext.removeAction();
-        LogContext.removeResource();
-
-
     }
-
 }
+
+

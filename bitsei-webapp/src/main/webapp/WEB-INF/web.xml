@@ -190,16 +190,6 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>CloseInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CloseInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CloseInvoiceServlet</servlet-name>
-        <url-pattern>/closeinvoice</url-pattern>
-    </servlet-mapping>
-
 <!--    <servlet-mapping>-->
 <!--        <servlet-name>LoginServlet</servlet-name>-->
 <!--        <url-pattern>/login</url-pattern>-->
@@ -216,6 +206,7 @@
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
+        <url-pattern>/rest/closeinvoice/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>
