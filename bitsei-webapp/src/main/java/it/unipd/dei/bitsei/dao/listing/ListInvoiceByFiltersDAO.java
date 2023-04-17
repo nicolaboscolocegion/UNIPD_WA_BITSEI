@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.listing;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Invoice;
 
 import java.sql.*;
@@ -120,6 +121,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
     private final Date toWarningDate;
 
     private String FilterBetween(String field_name, boolean enableNull){
+        enableNull = false;
         StringBuilder ret = new StringBuilder();
         ret.append(" AND ((" + field_name + " BETWEEN ? AND ?)");
         if(enableNull)
@@ -218,17 +220,17 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             if(filterByPfr) {
                 pstmt.setDouble(i++, fromPfr);
                 pstmt.setDouble(i++, toPfr);
-                param += "fromPfr: " + fromPfr + "toPfr: " + toPfr + " ";
+                param += "fromPfr: " + fromPfr + " toPfr: " + toPfr + " ";
             }
             if(filterByInvoiceDate) {
                 pstmt.setDate(i++, fromInvoiceDate);
                 pstmt.setDate(i++, toInvoiceDate);
-                param += "fromInvoiceDate: " + fromInvoiceDate + "toInvoiceDate: " + toInvoiceDate + " ";
+                param += "fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " ";
             }
             if(filterByWarningDate) {
                 pstmt.setDate(i++, fromWarningDate);
                 pstmt.setDate(i++, toWarningDate);
-                param += "fromWarningDate: " + fromWarningDate + "toWarningDate: " + toWarningDate + " ";
+                param += "fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " ";
             }
 
             LOGGER.info("## ListInvoiceByFiltersDAO: Submitted query: " + query + " ##");

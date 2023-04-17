@@ -10,6 +10,10 @@ import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
 import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
+import it.unipd.dei.bitsei.rest.listing.ListCustomerRR;
+import it.unipd.dei.bitsei.rest.listing.ListInvoiceByFiltersRR;
+import it.unipd.dei.bitsei.rest.listing.ListInvoiceRR;
+import it.unipd.dei.bitsei.rest.listing.ListProductRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

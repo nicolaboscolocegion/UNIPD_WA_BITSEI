@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.servlet;
+package it.unipd.dei.bitsei.servlet.listing;
 
-import it.unipd.dei.bitsei.dao.FilterInvoiceByTotalDAO;
+import it.unipd.dei.bitsei.dao.listing.FilterInvoiceByDateDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.servlet.AbstractDatabaseServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
@@ -29,19 +30,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.sql.Date;
+import java.time.LocalDate;
 
 /**
- * Searches invoices by their total.
+ * Searches invoices by their period of time.
  *
  * @author Marco Martinelli
  * @version 1.00
  * @since 1.00
  *
  */
-public final class FilterInvoiceByTotalServlet extends AbstractDatabaseServlet {
+public final class FilterInvoiceByDateServlet extends AbstractDatabaseServlet {
 
 	/**
-	 * Searches invoices by their total.
+	 * Searches invoices by their period of time.
 	 *
 	 * @param req the HTTP request from the client.
 	 * @param res the HTTP response from the server.
@@ -51,13 +54,15 @@ public final class FilterInvoiceByTotalServlet extends AbstractDatabaseServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
 		LogContext.setIPAddress(req.getRemoteAddr());
-		LogContext.setAction(Actions.FILTER_INVOICES_BY_TOTAL);
+		LogContext.setAction(Actions.FILTER_INVOICES_BY_PERIOD);
 
-		final double BASE_TOTAL = 0.00;
-		final double MAX_TOTAL = 9E20;
+
+		final Date BASE_DATE = new Date(70, 01, 01);
+		LocalDate currentDate = LocalDate.now();
+		final Date CURRENT_DATE = Date.valueOf(currentDate);
 		// request parameter
-		double startTotal = BASE_TOTAL;
-		double endTotal = MAX_TOTAL;
+		Date startDate = BASE_DATE;
+		Date endDate = BASE_DATE;
 
 		// model
 		List<Invoice> el = null;
@@ -65,33 +70,32 @@ public final class FilterInvoiceByTotalServlet extends AbstractDatabaseServlet {
 
 		try {
 
+			// retrieves the request parameter
 			try {
-				startTotal = Double.parseDouble(req.getParameter("startTotal"));
-				if (startTotal <= 0)
-					startTotal = BASE_TOTAL;
-			} catch (NumberFormatException ex) {
-				startTotal = BASE_TOTAL;
+				startDate = Date.valueOf(req.getParameter("startDate"));
+			} catch (IllegalArgumentException ex) {
+				startDate = BASE_DATE;
 			}
 
 			try {
-				endTotal = Double.parseDouble(req.getParameter("endTotal"));
-			} catch (NumberFormatException ex) {
-				endTotal = MAX_TOTAL;
+				endDate = Date.valueOf(req.getParameter("endDate"));
+			} catch(IllegalArgumentException ex){
+				endDate = CURRENT_DATE;
 			}
 
 			// creates a new object for accessing the database and searching the employees
-			el = new FilterInvoiceByTotalDAO(getConnection(), startTotal, endTotal).access().getOutputParam();
+			el = new FilterInvoiceByDateDAO(getConnection(), startDate, endDate).access().getOutputParam();
 
-			String tmp_string = "Invoices succesfully searched. Start Total: " + startTotal + " End Total: " + endTotal + ".";
+			String tmp_string = "Invoices succesfully searched. Start Date: " + startDate.toString() + " End Date: " + endDate.toString() + ".";
 			m = new Message(tmp_string);
 
-			LOGGER.info("Invoices successfully searched from startTotal %.2f to endTotal %.2f.", startTotal, endTotal);
+			LOGGER.info("Invoices successfully searched by startDate %s and endDate %s.", startDate.toString(), endDate.toString());
 
-		} catch (NumberFormatException ex) {
-			m = new Message("Cannot search for invoices. Invalid input parameters: totals must be double", "E100",
+		} catch (IllegalArgumentException ex) {
+			m = new Message("Cannot search for invoices. Invalid input parameters: date must be in the format yyyy-[m]m-[d]d.", "E100",
 					ex.getMessage());
 
-			LOGGER.error("Cannot search for invoices. Invalid input parameters: totals must be double.", ex);
+			LOGGER.error("Cannot search for invoices. Invalid input parameters: date must be in the format yyyy-[m]m-[d]d.", ex);
 		} catch (SQLException ex) {
 			m = new Message("Cannot search for invoices: unexpected error while accessing the database.", "E200",
 					ex.getMessage());
@@ -112,11 +116,11 @@ public final class FilterInvoiceByTotalServlet extends AbstractDatabaseServlet {
 			out.printf("<html lang=\"en\">%n");
 			out.printf("<head>%n");
 			out.printf("<meta charset=\"utf-8\">%n");
-			out.printf("<title>Filter invoices by total</title>%n");
+			out.printf("<title>Filter invoices by period</title>%n");
 			out.printf("</head>%n");
 
 			out.printf("<body>%n");
-			out.printf("<h1>Filter invoices by total</h1>%n");
+			out.printf("<h1>Filter invoices by period</h1>%n");
 			out.printf("<hr/>%n");
 
 			if (m.isError()) {
@@ -192,7 +196,7 @@ public final class FilterInvoiceByTotalServlet extends AbstractDatabaseServlet {
 			// close the output stream
 			out.close();
 		} catch (IOException ex) {
-			LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoice. StartTotal %.2f , EndTotal %.2f", startTotal, endTotal), ex);
+			LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoice. StartDate %s , EndDate %s.", startDate.toString(), endDate.toString()), ex);
 			throw ex;
 		} finally {
 			LogContext.removeIPAddress();

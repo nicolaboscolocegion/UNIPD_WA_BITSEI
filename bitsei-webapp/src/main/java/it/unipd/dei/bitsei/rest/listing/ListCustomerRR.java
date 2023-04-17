@@ -1,7 +1,8 @@
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.listing;
 
-import it.unipd.dei.bitsei.dao.ListCustomerDAO;
+import it.unipd.dei.bitsei.dao.listing.ListCustomerDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

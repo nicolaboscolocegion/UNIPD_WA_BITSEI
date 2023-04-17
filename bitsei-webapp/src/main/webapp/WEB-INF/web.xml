@@ -152,7 +152,7 @@
 
     <servlet>
         <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -162,7 +162,7 @@
 
     <servlet>
         <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersJspServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersJspServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.listing;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.Product;
@@ -34,7 +35,7 @@ import java.util.List;
  * @version 1.00
  * @since 1.00
  */
-public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
+public class ListProductDAO extends AbstractDAO<List<Product>> {
 
     /**
      * The SQL statement to be executed
@@ -49,7 +50,7 @@ public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
      *
      * @param con           the connection to the database.
      */
-    public ListCustomerDAO(final Connection con, String requestFor, int companyId){
+    public ListProductDAO(final Connection con, String requestFor, int companyId){
         super(con);
         this.requestFor = requestFor;
         this.companyId = companyId;
@@ -60,22 +61,21 @@ public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
      */
     @Override
     protected void doAccess() throws SQLException {
-        final String STATEMENT = "SELECT c.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id WHERE ((cmp.company_id = ?) OR 1=1)";
+        final String STATEMENT = "SELECT p.* FROM bitsei_schema.\"Product\" AS p JOIN bitsei_schema.\"Company\" AS c ON p.company_id = c.company_id WHERE ((c.company_id = ?) OR (1=1))";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         // the results of the search
-        List<Customer> customers = new ArrayList<Customer>();
-
+        List<Product> products = new ArrayList<Product>();
         if(requestFor.equals("listAll")) {
             try {
                 pstmt = con.prepareStatement(STATEMENT);
                 pstmt.setInt(1, companyId);
                 rs = pstmt.executeQuery();
 
-                customers = parseCustomerRS(rs);
+                products = parseProductRS(rs);
 
-                LOGGER.info("## ListCustomerDAO: Customers of companyId: %d succesfully listed ##", companyId);
+                LOGGER.info("## ListProductDAO: Products of companyId: %d succesfully listed ##", companyId);
             } finally {
                 if (rs != null) {
                     rs.close();
@@ -87,31 +87,26 @@ public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
             }
         }
 
-        this.outputParam = customers;
+        this.outputParam = products;
+
     }
 
-    private List<Customer> parseCustomerRS(ResultSet rs) throws SQLException {
-        final List<Customer> customers = new ArrayList<Customer>();
+    private List<Product> parseProductRS(ResultSet rs) throws SQLException {
+        final List<Product> products = new ArrayList<Product>();
 
         while (rs.next()) {
-            customers.add(new Customer(
-                    rs.getInt("customer_id"),
-                    rs.getString("business_name"),
-                    rs.getString("vat_number"),
-                    rs.getString("tax_code"),
-                    rs.getString("address"),
-                    rs.getString("city"),
-                    rs.getString("province"),
-                    rs.getString("postal_code"),
-                    rs.getString("email"),
-                    rs.getString("pec"),
-                    rs.getString("unique_code"),
-                    rs.getInt("company_id"))
+            products.add(new Product(
+                    rs.getInt("product_id"),
+                    rs.getInt("company_id"),
+                    rs.getString("title"),
+                    rs.getInt("default_price"),
+                    rs.getString("logo"),
+                    rs.getString("measurement_unit"),
+                    rs.getString("description"))
             );
         }
 
-        return customers;
+        return products;
     }
-
 
 }

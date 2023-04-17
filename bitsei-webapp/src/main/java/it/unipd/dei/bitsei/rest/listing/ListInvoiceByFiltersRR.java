@@ -1,11 +1,11 @@
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.listing;
 
-import it.unipd.dei.bitsei.dao.ListInvoiceByFiltersDAO;
-import it.unipd.dei.bitsei.dao.ListInvoiceDAO;
+import it.unipd.dei.bitsei.dao.listing.ListInvoiceByFiltersDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A REST resource for listing {@link Invoice}s.
