@@ -55,7 +55,6 @@ public class DeleteBankAccountRR extends AbstractRR{
     @Override
     public void doServe() throws IOException {
         Message m;
-        InputStream requestStream = req.getInputStream();
         
         int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
