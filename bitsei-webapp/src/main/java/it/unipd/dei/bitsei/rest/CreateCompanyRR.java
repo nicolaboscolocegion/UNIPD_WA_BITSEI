@@ -15,27 +15,30 @@
  */
 package it.unipd.dei.bitsei.rest;
 
-import it.unipd.dei.bitsei.dao.ListUserDAO;
-import it.unipd.dei.bitsei.resources.Actions;
-import it.unipd.dei.bitsei.resources.User;
-import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.dao.CreateCompanyDAO;
+import it.unipd.dei.bitsei.resources.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
- * A REST resource for listing {@link User}s.
+ * A REST resource for creating a new {@link Company}.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class ListUserRR extends AbstractRR {
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024, // 10 MB
+        maxFileSize = 1024 * 1024 * 10, // 50 MB
+        maxRequestSize = 1024 * 1024 * 100 // 100 MB
+)
+public final class CreateCompanyRR extends AbstractRR {
 
     /**
      * Creates a new REST resource for listing {@code User}s.
@@ -44,40 +47,44 @@ public final class ListUserRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListUserRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.LIST_USER, req, res, con);
+    public CreateCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.CREATE_COMPANY, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        List<User> el = null;
+        Company c = null;
         Message m = null;
 
         try {
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            // creates a new DAO for accessing the database and creates the company
+            final Company company = Company.fromMultiPart(req);
 
-            // creates a new DAO for accessing the database and lists the user(s)
-            el = new ListUserDAO(con).access().getOutputParam();
+            c = new CreateCompanyDAO(con, owner_id, company).access().getOutputParam();
 
-            if (el != null) {
-                LOGGER.info("User(s) successfully listed.");
+            if (c != null) {
+                LOGGER.info("Company created successfully.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
-                new ResourceList(el).toJSON(res.getOutputStream());
+                c.toJSON(res.getOutputStream());
             } else { // it should not happen
-                LOGGER.error("Fatal error while listing user(s).");
+                LOGGER.error("Fatal error while creating company.");
 
-                m = new Message("Cannot list user(s): unexpected error.", "E5A1", null);
+                m = new Message("Cannot create company: you reach your plan limitations.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("Cannot list user(s): unexpected database error.", ex);
+            LOGGER.error("Cannot create company: unexpected database error.", ex);
 
-            m = new Message("Cannot list user(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot create company: unexpected database error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
         }
     }
 

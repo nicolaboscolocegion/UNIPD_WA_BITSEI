@@ -21,60 +21,61 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Lists all the users in the database.
+ * Retrieves a user from the database with the given email.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class ListUserDAO extends AbstractDAO<List<User>> {
+public class GetUserDAO extends AbstractDAO<User> {
 
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Owner\"";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Owner\" WHERE email = ?";
+
+    private final String email;
 
     /**
-     * Creates a new object for listing all the users.
+     * Creates a new object for getting one user.
      *
-     * @param con the connection to the database.
+     * @param con   the connection to the database.
+     * @param email the email of the user
      */
-    public ListUserDAO(final Connection con) {
+    public GetUserDAO(final Connection con, String email) {
         super(con);
+        this.email = email;
     }
 
     @Override
-    protected void doAccess() throws SQLException {
+    protected final void doAccess() throws SQLException {
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        // the results of the search
-        final List<User> users = new ArrayList<User>();
-        
+        // the result of the search
+        User user = null;
+
         try {
             pstmt = con.prepareStatement(STATEMENT);
+            pstmt.setString(1, email);
 
             rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                users.add(
-                        new User(
-                                rs.getInt("owner_id"),
-                                rs.getString("firstname"),
-                                rs.getString("lastname"),
-                                rs.getString("username"),
-                                rs.getString("email"),
-                                rs.getString("telegram_chat_id")
-                        )
+            if (rs.next()) {
+                user = new User(
+                        rs.getInt("owner_id"),
+                        rs.getString("firstname"),
+                        rs.getString("lastname"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("telegram_chat_id")
                 );
             }
 
-            LOGGER.info("User(s) successfully listed.");
+            LOGGER.info("User successfully fetched.");
         } finally {
             if (rs != null) {
                 rs.close();
@@ -86,6 +87,6 @@ public final class ListUserDAO extends AbstractDAO<List<User>> {
 
         }
 
-        outputParam = users;
+        outputParam = user;
     }
 }

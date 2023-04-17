@@ -18,12 +18,18 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
-
+/**
+ * Updates a customer into the database.
+ *
+ * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class UpdateCustomerRR extends AbstractRR {
 
 
     /**
-     * Control the authentication of the user
+     * Updates the customer from the ID
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -64,7 +70,7 @@ public class UpdateCustomerRR extends AbstractRR {
 
             c.setCustomerID(customerID);
 
-            //filterCompanyOwner(companyID, ownerID)
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             fieldRegexValidation("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", c.getEmailAddress(), "EMAIL");
             fieldRegexValidation("^(IT)?[0-9]{11}$", c.getVatNumber(), "VAT NUMBER");
@@ -75,7 +81,7 @@ public class UpdateCustomerRR extends AbstractRR {
 
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateCustomerDAO(con, c).access();
+            new UpdateCustomerDAO(con, c, owner_id).access();
 
             m = new Message(String.format("Customer %s successfully updated.", c.getBusinessName()));
             LOGGER.info("Customer %s successfully updated in the database.", c.getBusinessName());
