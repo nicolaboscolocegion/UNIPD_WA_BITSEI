@@ -5,7 +5,7 @@
 -- Dumped from database version 15.2
 -- Dumped by pg_dump version 15.2
 
--- Started on 2023-04-12 19:09:46
+-- Started on 2023-03-27 01:02:43
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,11 +19,11 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 6 (class 2615 OID 26023)
+-- TOC entry 6 (class 2615 OID 16718)
 -- Name: bitsei_schema; Type: SCHEMA; Schema: -; Owner: bitsei_user
 --
 
-CREATE SCHEMA bitsei_schema;
+CREATE SCHEMA IF NOT EXISTS bitsei_schema;
 
 
 ALTER SCHEMA bitsei_schema OWNER TO bitsei_user;
@@ -33,12 +33,12 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 231 (class 1259 OID 26112)
+-- TOC entry 215 (class 1259 OID 16757)
 -- Name: BankAccount; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."BankAccount" (
-                                             bankaccount_id integer NOT NULL,
+                                             bankaccount_id serial NOT NULL,
                                              "IBAN" character(34) NOT NULL,
                                              bank_name character(255),
                                              bankaccount_friendly_name character(255) NOT NULL,
@@ -49,132 +49,37 @@ CREATE TABLE bitsei_schema."BankAccount" (
 ALTER TABLE bitsei_schema."BankAccount" OWNER TO bitsei_user;
 
 --
--- TOC entry 215 (class 1259 OID 26024)
--- Name: BankAccount_bankaccount_id_seq; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."BankAccount_bankaccount_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    MAXVALUE 2147483647
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."BankAccount_bankaccount_id_seq" OWNER TO bitsei_user;
-
---
--- TOC entry 230 (class 1259 OID 26111)
--- Name: BankAccount_bankaccount_id_seq1; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."BankAccount_bankaccount_id_seq1"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."BankAccount_bankaccount_id_seq1" OWNER TO bitsei_user;
-
---
--- TOC entry 3413 (class 0 OID 0)
--- Dependencies: 230
--- Name: BankAccount_bankaccount_id_seq1; Type: SEQUENCE OWNED BY; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER SEQUENCE bitsei_schema."BankAccount_bankaccount_id_seq1" OWNED BY bitsei_schema."BankAccount".bankaccount_id;
-
-
---
--- TOC entry 222 (class 1259 OID 26037)
+-- TOC entry 216 (class 1259 OID 16760)
 -- Name: Company; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Company" (
-                                         company_id integer NOT NULL,
+                                         company_id serial NOT NULL,
                                          title character(255) NOT NULL,
                                          owner_id integer NOT NULL,
                                          logo character(255),
                                          business_name character(255) NOT NULL,
-                                         vat_number character(13) NOT NULL,
-                                         tax_code character(16) NOT NULL,
+                                         vat_number character(13),
+                                         tax_code character(16),
                                          address character(255),
                                          city character(255),
                                          province character(2),
                                          postal_code character(5),
                                          unique_code character(7),
                                          has_telegram_notifications boolean DEFAULT false,
-                                         has_mail_notifications boolean DEFAULT false,
-                                         fiscal_company_type integer DEFAULT 0,
-                                         pec character(255)
+                                         has_mail_notifications boolean DEFAULT false
 );
 
 
 ALTER TABLE bitsei_schema."Company" OWNER TO bitsei_user;
 
 --
--- TOC entry 3414 (class 0 OID 0)
--- Dependencies: 222
--- Name: COLUMN "Company".fiscal_company_type; Type: COMMENT; Schema: bitsei_schema; Owner: bitsei_user
---
-
-COMMENT ON COLUMN bitsei_schema."Company".fiscal_company_type IS '0 - Ditta individuale, Regime forfettario
-1 - Ditta individuale, Regime ordinario, con ritenuta
-2 - Ditta individuale, Regime ordinario
-3 - Societá di persone
-4 - Societá di capitali';
-
-
---
--- TOC entry 216 (class 1259 OID 26025)
--- Name: Company_company_id_seq; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Company_company_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    MAXVALUE 2147483647
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Company_company_id_seq" OWNER TO bitsei_user;
-
---
--- TOC entry 221 (class 1259 OID 26036)
--- Name: Company_company_id_seq1; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Company_company_id_seq1"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Company_company_id_seq1" OWNER TO bitsei_user;
-
---
--- TOC entry 3415 (class 0 OID 0)
--- Dependencies: 221
--- Name: Company_company_id_seq1; Type: SEQUENCE OWNED BY; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER SEQUENCE bitsei_schema."Company_company_id_seq1" OWNED BY bitsei_schema."Company".company_id;
-
-
---
--- TOC entry 224 (class 1259 OID 26054)
+-- TOC entry 217 (class 1259 OID 16765)
 -- Name: Customer; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Customer" (
-                                          customer_id integer NOT NULL,
+                                          customer_id serial NOT NULL,
                                           business_name character(255) NOT NULL,
                                           vat_number character(13),
                                           tax_code character(16),
@@ -192,52 +97,12 @@ CREATE TABLE bitsei_schema."Customer" (
 ALTER TABLE bitsei_schema."Customer" OWNER TO bitsei_user;
 
 --
--- TOC entry 217 (class 1259 OID 26026)
--- Name: Customer_customer_id_seq; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Customer_customer_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    MAXVALUE 2147483647
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Customer_customer_id_seq" OWNER TO bitsei_user;
-
---
--- TOC entry 223 (class 1259 OID 26053)
--- Name: Customer_customer_id_seq1; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Customer_customer_id_seq1"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Customer_customer_id_seq1" OWNER TO bitsei_user;
-
---
--- TOC entry 3416 (class 0 OID 0)
--- Dependencies: 223
--- Name: Customer_customer_id_seq1; Type: SEQUENCE OWNED BY; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER SEQUENCE bitsei_schema."Customer_customer_id_seq1" OWNED BY bitsei_schema."Customer".customer_id;
-
-
---
--- TOC entry 226 (class 1259 OID 26069)
+-- TOC entry 218 (class 1259 OID 16770)
 -- Name: Invoice; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Invoice" (
-                                         invoice_id integer NOT NULL,
+                                         invoice_id serial NOT NULL,
                                          customer_id integer NOT NULL,
                                          status smallint DEFAULT 0 NOT NULL,
                                          warning_number character(255),
@@ -246,10 +111,10 @@ CREATE TABLE bitsei_schema."Invoice" (
                                          invoice_number character(255),
                                          invoice_date date,
                                          invoice_pdf_file character(255),
-                                         invoice_xml_file character(255),
-                                         total double precision,
-                                         discount double precision,
-                                         pension_fund_refund double precision NOT NULL,
+                                         invoice_xml_file character(255),  -- relative file path, extension must be xml
+                                         total double precision,   -- must be positive
+                                         discount double precision,  -- must be positive
+                                         pension_fund_refund double precision NOT NULL, -- must be within 0 and 4 (%)
                                          has_stamp boolean DEFAULT false
 );
 
@@ -257,7 +122,7 @@ CREATE TABLE bitsei_schema."Invoice" (
 ALTER TABLE bitsei_schema."Invoice" OWNER TO bitsei_user;
 
 --
--- TOC entry 232 (class 1259 OID 26126)
+-- TOC entry 219 (class 1259 OID 16774)
 -- Name: Invoice_Product; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
@@ -267,61 +132,20 @@ CREATE TABLE bitsei_schema."Invoice_Product" (
                                                  quantity integer NOT NULL,
                                                  unit_price double precision NOT NULL,
                                                  related_price double precision,
-                                                 related_price_description character(1024),
-                                                 purchase_date date
+                                                 related_price_description character(1024)
 );
 
 
 ALTER TABLE bitsei_schema."Invoice_Product" OWNER TO bitsei_user;
 
 --
--- TOC entry 218 (class 1259 OID 26027)
--- Name: Invoice_invoice_id_seq; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Invoice_invoice_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    MAXVALUE 2147483647
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Invoice_invoice_id_seq" OWNER TO bitsei_user;
-
---
--- TOC entry 225 (class 1259 OID 26068)
--- Name: Invoice_invoice_id_seq1; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Invoice_invoice_id_seq1"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Invoice_invoice_id_seq1" OWNER TO bitsei_user;
-
---
--- TOC entry 3417 (class 0 OID 0)
--- Dependencies: 225
--- Name: Invoice_invoice_id_seq1; Type: SEQUENCE OWNED BY; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER SEQUENCE bitsei_schema."Invoice_invoice_id_seq1" OWNED BY bitsei_schema."Invoice".invoice_id;
-
-
---
--- TOC entry 227 (class 1259 OID 26084)
+-- TOC entry 220 (class 1259 OID 16779)
 -- Name: Log; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Log" (
                                      is_send boolean DEFAULT false,
-                                     log_id integer NOT NULL,
+                                     log_id serial NOT NULL,
                                      log_state character(255),
                                      message character(255),
                                      invoice_id integer
@@ -331,12 +155,12 @@ CREATE TABLE bitsei_schema."Log" (
 ALTER TABLE bitsei_schema."Log" OWNER TO bitsei_user;
 
 --
--- TOC entry 220 (class 1259 OID 26029)
+-- TOC entry 221 (class 1259 OID 16785)
 -- Name: Owner; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Owner" (
-                                       owner_id integer NOT NULL,
+                                       owner_id serial NOT NULL,
                                        firstname character(50),
                                        lastname character(50),
                                        username character varying NOT NULL,
@@ -349,12 +173,12 @@ CREATE TABLE bitsei_schema."Owner" (
 ALTER TABLE bitsei_schema."Owner" OWNER TO bitsei_user;
 
 --
--- TOC entry 229 (class 1259 OID 26098)
+-- TOC entry 222 (class 1259 OID 16790)
 -- Name: Product; Type: TABLE; Schema: bitsei_schema; Owner: bitsei_user
 --
 
 CREATE TABLE bitsei_schema."Product" (
-                                         product_id integer NOT NULL,
+                                         product_id serial NOT NULL,
                                          company_id integer NOT NULL,
                                          title character(255) NOT NULL,
                                          default_price integer NOT NULL,
@@ -366,84 +190,143 @@ CREATE TABLE bitsei_schema."Product" (
 
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
 
---
--- TOC entry 219 (class 1259 OID 26028)
--- Name: Product_product_id_seq; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
---
-
-CREATE SEQUENCE bitsei_schema."Product_product_id_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    MAXVALUE 2147483647
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Product_product_id_seq" OWNER TO bitsei_user;
 
 --
--- TOC entry 228 (class 1259 OID 26097)
--- Name: Product_product_id_seq1; Type: SEQUENCE; Schema: bitsei_schema; Owner: bitsei_user
+-- TOC entry 3936 (class 2606 OID 16796)
+-- Name: BankAccount Account_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
 
-CREATE SEQUENCE bitsei_schema."Product_product_id_seq1"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE bitsei_schema."Product_product_id_seq1" OWNER TO bitsei_user;
-
---
--- TOC entry 3418 (class 0 OID 0)
--- Dependencies: 228
--- Name: Product_product_id_seq1; Type: SEQUENCE OWNED BY; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER SEQUENCE bitsei_schema."Product_product_id_seq1" OWNED BY bitsei_schema."Product".product_id;
+ALTER TABLE ONLY bitsei_schema."BankAccount"
+    ADD CONSTRAINT "Account_pkey" PRIMARY KEY (bankaccount_id);
 
 
 --
--- TOC entry 3221 (class 2604 OID 26115)
--- Name: BankAccount bankaccount_id; Type: DEFAULT; Schema: bitsei_schema; Owner: bitsei_user
+-- TOC entry 3939 (class 2606 OID 16798)
+-- Name: Company Company_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
 
-ALTER TABLE ONLY bitsei_schema."BankAccount" ALTER COLUMN bankaccount_id SET DEFAULT nextval('bitsei_schema."BankAccount_bankaccount_id_seq1"'::regclass);
-
-
---
--- TOC entry 3211 (class 2604 OID 26040)
--- Name: Company company_id; Type: DEFAULT; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER TABLE ONLY bitsei_schema."Company" ALTER COLUMN company_id SET DEFAULT nextval('bitsei_schema."Company_company_id_seq1"'::regclass);
+ALTER TABLE ONLY bitsei_schema."Company"
+    ADD CONSTRAINT "Company_pkey" PRIMARY KEY (company_id);
 
 
 --
--- TOC entry 3215 (class 2604 OID 26057)
--- Name: Customer customer_id; Type: DEFAULT; Schema: bitsei_schema; Owner: bitsei_user
+-- TOC entry 3941 (class 2606 OID 16800)
+-- Name: Customer Customer_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
 
-ALTER TABLE ONLY bitsei_schema."Customer" ALTER COLUMN customer_id SET DEFAULT nextval('bitsei_schema."Customer_customer_id_seq1"'::regclass);
-
-
---
--- TOC entry 3216 (class 2604 OID 26072)
--- Name: Invoice invoice_id; Type: DEFAULT; Schema: bitsei_schema; Owner: bitsei_user
---
-
-ALTER TABLE ONLY bitsei_schema."Invoice" ALTER COLUMN invoice_id SET DEFAULT nextval('bitsei_schema."Invoice_invoice_id_seq1"'::regclass);
+ALTER TABLE ONLY bitsei_schema."Customer"
+    ADD CONSTRAINT "Customer_pkey" PRIMARY KEY (customer_id);
 
 
 --
--- TOC entry 3220 (class 2604 OID 26101)
--- Name: Product product_id; Type: DEFAULT; Schema: bitsei_schema; Owner: bitsei_user
+-- TOC entry 3946 (class 2606 OID 16802)
+-- Name: Invoice_Product Invoice_Product_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
 
-ALTER TABLE ONLY bitsei_schema."Product" ALTER COLUMN product_id SET DEFAULT nextval('bitsei_schema."Product_product_id_seq1"'::regclass);
+ALTER TABLE ONLY bitsei_schema."Invoice_Product"
+    ADD CONSTRAINT "Invoice_Product_pkey" PRIMARY KEY (invoice_id, product_id);
+
+
+--
+-- TOC entry 3944 (class 2606 OID 16804)
+-- Name: Invoice Invoice_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+ALTER TABLE ONLY bitsei_schema."Invoice"
+    ADD CONSTRAINT "Invoice_pkey" PRIMARY KEY (invoice_id);
+
+
+--
+-- TOC entry 3948 (class 2606 OID 16806)
+-- Name: Log Log_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+ALTER TABLE ONLY bitsei_schema."Log"
+    ADD CONSTRAINT "Log_pkey" PRIMARY KEY (log_id);
+
+
+--
+-- TOC entry 3950 (class 2606 OID 16808)
+-- Name: Owner Owner_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+ALTER TABLE ONLY bitsei_schema."Owner"
+    ADD CONSTRAINT "Owner_pkey" PRIMARY KEY (owner_id);
+
+
+--
+-- TOC entry 3952 (class 2606 OID 16810)
+-- Name: Product Product_pkey; Type: CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+ALTER TABLE ONLY bitsei_schema."Product"
+    ADD CONSTRAINT "Product_pkey" PRIMARY KEY (product_id);
+
+
+--
+-- TOC entry 3942 (class 1259 OID 16909)
+-- Name: fki_Company; Type: INDEX; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+CREATE INDEX "fki_Company" ON bitsei_schema."Customer" USING btree (company_id);
+
+
+--
+-- TOC entry 3937 (class 1259 OID 16903)
+-- Name: fki_c; Type: INDEX; Schema: bitsei_schema; Owner: bitsei_user
+--
+
+CREATE INDEX fki_c ON bitsei_schema."BankAccount" USING btree (company_id);
+
+
+--
+-- TOC entry 3960 (class 2606 OID 16816)
+-- Name: Product Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Product"
+    ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
+--
+-- TOC entry 3953 (class 2606 OID 16898)
+-- Name: BankAccount Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."BankAccount"
+    ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
+--
+-- TOC entry 3955 (class 2606 OID 16904)
+-- Name: Customer Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Customer"
+    ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
+--
+-- TOC entry 3956 (class 2606 OID 16821)
+-- Name: Invoice Customer; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice"
+    ADD CONSTRAINT "Customer" FOREIGN KEY (customer_id) REFERENCES bitsei_schema."Customer"(customer_id);
+--
+-- TOC entry 3957 (class 2606 OID 16826)
+-- Name: Invoice_Product Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice_Product"
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE;
+--
+-- TOC entry 3959 (class 2606 OID 16831)
+-- Name: Log Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Log"
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id);
+--
+-- TOC entry 3954 (class 2606 OID 16836)
+-- Name: Company Owner; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Company"
+    ADD CONSTRAINT "Owner" FOREIGN KEY (owner_id) REFERENCES bitsei_schema."Owner"(owner_id);
+--
+-- TOC entry 3958 (class 2606 OID 16841)
+-- Name: Invoice_Product Product; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice_Product"
+    ADD CONSTRAINT "Product" FOREIGN KEY (product_id) REFERENCES bitsei_schema."Product"(product_id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
