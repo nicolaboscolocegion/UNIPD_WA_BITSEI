@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.documentation;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 
 import java.sql.Connection;
@@ -22,7 +23,11 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
     /**
      * The SQL statement to be executed
      */
+
+    //private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Customer\";";
+
+    private final int owner_id;
 
 
     /**
@@ -30,8 +35,9 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
      *
      * @param con    the connection to the database.
      */
-    public FetchCustomersDAO(final Connection con) {
+    public FetchCustomersDAO(final Connection con, int owner_id) {
         super(con);
+        this.owner_id = owner_id;
     }
 
     @Override

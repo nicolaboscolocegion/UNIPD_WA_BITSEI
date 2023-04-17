@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.documentation;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
@@ -22,6 +23,7 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
     /**
      * The SQL statement to be executed
      */
+    //private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Product\";";
 
 
