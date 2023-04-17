@@ -145,7 +145,7 @@ ALTER TABLE bitsei_schema."Invoice_Product" OWNER TO bitsei_user;
 
 CREATE TABLE bitsei_schema."Log" (
                                      is_send boolean DEFAULT false,
-                                     log_id integer NOT NULL,
+                                     log_id serial NOT NULL,
                                      log_state character(255),
                                      message character(255),
                                      invoice_id integer
@@ -160,7 +160,7 @@ ALTER TABLE bitsei_schema."Log" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Owner" (
-                                       owner_id integer NOT NULL,
+                                       owner_id serial NOT NULL,
                                        firstname character(50),
                                        lastname character(50),
                                        username character varying NOT NULL,
@@ -189,9 +189,6 @@ CREATE TABLE bitsei_schema."Product" (
 
 
 ALTER TABLE bitsei_schema."Product" OWNER TO bitsei_user;
-
-
-
 
 
 --
@@ -286,7 +283,47 @@ CREATE INDEX fki_c ON bitsei_schema."BankAccount" USING btree (company_id);
 -- TOC entry 3960 (class 2606 OID 16816)
 -- Name: Product Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
 --
-
 ALTER TABLE ONLY bitsei_schema."Product"
     ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
-
+--
+-- TOC entry 3953 (class 2606 OID 16898)
+-- Name: BankAccount Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."BankAccount"
+    ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
+--
+-- TOC entry 3955 (class 2606 OID 16904)
+-- Name: Customer Company; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Customer"
+    ADD CONSTRAINT "Company" FOREIGN KEY (company_id) REFERENCES bitsei_schema."Company"(company_id);
+--
+-- TOC entry 3956 (class 2606 OID 16821)
+-- Name: Invoice Customer; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice"
+    ADD CONSTRAINT "Customer" FOREIGN KEY (customer_id) REFERENCES bitsei_schema."Customer"(customer_id);
+--
+-- TOC entry 3957 (class 2606 OID 16826)
+-- Name: Invoice_Product Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice_Product"
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE;
+--
+-- TOC entry 3959 (class 2606 OID 16831)
+-- Name: Log Invoice; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Log"
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id);
+--
+-- TOC entry 3954 (class 2606 OID 16836)
+-- Name: Company Owner; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Company"
+    ADD CONSTRAINT "Owner" FOREIGN KEY (owner_id) REFERENCES bitsei_schema."Owner"(owner_id);
+--
+-- TOC entry 3958 (class 2606 OID 16841)
+-- Name: Invoice_Product Product; Type: FK CONSTRAINT; Schema: bitsei_schema; Owner: bitsei_user
+--
+ALTER TABLE ONLY bitsei_schema."Invoice_Product"
+    ADD CONSTRAINT "Product" FOREIGN KEY (product_id) REFERENCES bitsei_schema."Product"(product_id) ON UPDATE CASCADE ON DELETE CASCADE;

@@ -1,5 +1,7 @@
 package it.unipd.dei.bitsei.resources;
 
+import java.sql.Date;
+
 /**
  * Represents the data about an invoice row of an Invoice.
  *
@@ -10,31 +12,41 @@ package it.unipd.dei.bitsei.resources;
 public class InvoiceProduct {
 
     /**
-     * The unique id of the product.
+     * The id of the invoice.
      */
     private final Integer invoice_id;
 
     /**
-     * The unique id of the product.
+     * The id of the product.
      */
     private final Integer product_id;
 
     /**
-     * The external key pointing to the id of the company that sells the product.
+     * The quantity of product sold.
      */
     private final Integer quantity;
     /**
-     * The name of the product.
+     * The price per unit of the product sold.
      */
     private final Double unit_price;
     /**
-     * The default price per unit of the product.
+     * The related price of the product sold.
      */
     private final Double related_price;
     /**
-     * A path pointing to the logo/image of the product.
+     * A description for the related price of the product sold.
      */
     private final String related_price_description;
+
+    /**
+     * Teh date of the purchase of the product.
+     */
+    private final Date purchase_date;
+
+    /**
+     * The total amount = quantity * unit_price.
+     */
+    private final Double total;
 
 
     /**
@@ -51,14 +63,46 @@ public class InvoiceProduct {
      * @param related_price The (eventual) related_price of the product.
      *
      * @param related_price_description A textual description of the related_price.
+     *
+     * @param purchase_date The date of the purchase of the product.
      */
-    public InvoiceProduct(final int invoice_id, final int product_id, final int quantity, final double unit_price, final double related_price, final String related_price_description) {
-        this.invoice_id = invoice_id;
-        this.product_id = product_id;
+    public InvoiceProduct(final int invoice_id, final int product_id, final int quantity, final double unit_price, final double related_price, final String related_price_description, final Date purchase_date) {
+        if (invoice_id != -1) {
+            this.invoice_id = invoice_id;
+        }
+        else {
+            this.invoice_id = 0;
+        }
+        if (product_id != -1) {
+            this.product_id = product_id;
+        }
+        else {
+            this.product_id = 0;
+        }
         this.quantity = quantity;
         this.unit_price = unit_price;
         this.related_price = related_price;
         this.related_price_description = related_price_description;
+        this.purchase_date = purchase_date;
+        this.total = this.quantity * this.unit_price;
+    }
+
+    /**
+     * Constructor used to delete an existing invoice product.
+     *
+     * @param invoice_id The id of the invoice referred.
+     *
+     * @param product_id The id of the product referred.
+     */
+    public InvoiceProduct(int invoice_id, int product_id) {
+        this.invoice_id = invoice_id;
+        this.product_id = product_id;
+        this.quantity = -1;
+        this.unit_price = null;
+        this.related_price = null;
+        this.related_price_description = null;
+        this.purchase_date = null;
+        this.total = null;
     }
 
     public Integer getInvoice_id() {
@@ -83,5 +127,13 @@ public class InvoiceProduct {
 
     public String getRelated_price_description() {
         return related_price_description;
+    }
+
+    public Date getPurchase_date() {
+        return purchase_date;
+    }
+
+    public Double getTotal() {
+        return total;
     }
 }

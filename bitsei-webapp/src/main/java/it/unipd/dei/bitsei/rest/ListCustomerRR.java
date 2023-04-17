@@ -1,8 +1,6 @@
 package it.unipd.dei.bitsei.rest;
 
 import it.unipd.dei.bitsei.dao.ListCustomerDAO;
-import it.unipd.dei.bitsei.dao.ListInvoiceDAO;
-import it.unipd.dei.bitsei.dao.ListProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +9,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A REST resource for listing {@link Customer}s.

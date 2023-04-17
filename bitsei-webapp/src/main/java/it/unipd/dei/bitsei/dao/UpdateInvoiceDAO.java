@@ -1,37 +1,37 @@
 package it.unipd.dei.bitsei.dao;
 
 import it.unipd.dei.bitsei.resources.Invoice;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Creates a new invoice inside the database.
+ * Updates an invoice present in the database.
  *
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
-public final class CreateInvoiceDAO extends AbstractDAO {
+public final class UpdateInvoiceDAO extends AbstractDAO {
 
     /**
-     * SQL statement to be executed.
+     * The SQL statement to be executed.
      */
-    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Invoice\" (customer_id, status, warning_number, warning_date, warning_pdf_file, invoice_number, invoice_date, invoice_pdf_file, invoice_xml_file, total, discount, pension_fund_refund, has_stamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET customer_id = ?, status = ?, warning_number = ?, warning_date = ?, warning_pdf_file = ?, invoice_number = ?, invoice_date = ?, invoice_pdf_file = ?, invoice_xml_file = ?, total = ?, discount = ?, pension_fund_refund = ?, has_stamp = ? WHERE invoice_id = ?";
 
     /**
-     * The invoice to be stored into the database.
+     * The invoice to be updated.
      */
     private final Invoice invoice;
 
     /**
-     * Creates a new object for storing an invoice into the database.
+     * Creates a new object for updating an invoice present in the database.
      *
      * @param con the connection to the database.
-     *
-     * @param invoice the invoice to be stored into the database.
+     * @param invoice the invoice to be updated.
      */
-    public CreateInvoiceDAO(final Connection con, final Invoice invoice) {
+    public UpdateInvoiceDAO(final Connection con, final Invoice invoice) {
         super(con);
 
         if (invoice == null) {
@@ -62,13 +62,19 @@ public final class CreateInvoiceDAO extends AbstractDAO {
             pstmt.setDouble(11, invoice.getDiscount());
             pstmt.setDouble(12, invoice.getPension_fund_refund());
             pstmt.setBoolean(13, invoice.hasStamp());
+            pstmt.setInt(14, invoice.getInvoice_id());
+
             pstmt.execute();
 
-            LOGGER.info("Invoice successfully stored in the database.");
+            LOGGER.info("query: " + pstmt.toString());
+
+            LOGGER.info("Invoice successfully updated in the database.");
         } finally {
             if (pstmt != null) {
                 pstmt.close();
             }
         }
+
     }
+
 }

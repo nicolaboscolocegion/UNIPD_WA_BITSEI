@@ -3,6 +3,10 @@ package it.unipd.dei.bitsei.servlet;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
+import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -13,9 +17,7 @@ import it.unipd.dei.bitsei.resources.Product;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Dispatches the request to the proper REST resource.
@@ -38,6 +40,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an User, delegate its processing and return
             if (processUser(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an User, delegate its processing and return
+            if (processCustomer(req, res)) {
                 return;
             }
 
@@ -127,6 +134,84 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     LOGGER.warn("Unsupported operation for URI /user: %s.", method);
 
                     m = new Message("Unsupported operation for URI /user.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/customer") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("customer") + 8);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                /*case "GET":
+                    new ListCustomerRR(req, res, getConnection()).serve();
+                    break;*/
+                case "POST":
+                    new CreateCustomerRR(req, res, getConnection()).serve();
+                    break;
+                 /*case "DELETE":
+                    new DeleteCustomerRR(req, res, getConnection()).serve();
+                    break;*/
+                default:
+                    LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /customer.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else if (path.matches("/\\d+")) {
+            switch (method) {
+                case "GET":
+                    new GetCustomerRR(req, res, getConnection()).serve();
+                    break;
+                case "DELETE":
+                    new DeleteCustomerRR(req, res, getConnection()).serve();
+                    break;
+                case "PUT":
+                    new UpdateCustomerRR(req, res, getConnection()).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /customer.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());

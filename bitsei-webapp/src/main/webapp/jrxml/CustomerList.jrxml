@@ -7,25 +7,15 @@
     <style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
     <style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
     <style name="Detail" fontName="Arial" fontSize="6"/>
-
-    <parameter name="banner" class="java.lang.String">
-    </parameter>
-
-    <field name="businessName" class="java.lang.String">
-    </field>
-    <field name="vatNumber" class="java.lang.String">
-    </field>
-    <field name="taxCode" class="java.lang.String">
-    </field>
-    <field name="fullAddress" class="java.lang.String">
-    </field>
-    <field name="emailAddress" class="java.lang.String">
-    </field>
-    <field name="pec" class="java.lang.String">
-    </field>
-    <field name="uniqueCode" class="java.lang.String">
-    </field>
-
+    <parameter name="banner" class="java.lang.String"/>
+    <parameter name="bitsei_logo" class="java.lang.String"/>
+    <field name="businessName" class="java.lang.String"/>
+    <field name="vatNumber" class="java.lang.String"/>
+    <field name="taxCode" class="java.lang.String"/>
+    <field name="fullAddress" class="java.lang.String"/>
+    <field name="emailAddress" class="java.lang.String"/>
+    <field name="pec" class="java.lang.String"/>
+    <field name="uniqueCode" class="java.lang.String"/>
     <background>
         <band splitType="Stretch"/>
     </background>
@@ -182,13 +172,17 @@
         </band>
     </detail>
     <columnFooter>
-        <band height="45" splitType="Stretch">
+        <band height="95" splitType="Stretch">
             <line>
                 <reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="02519f40-8679-4e40-a1f1-699bc025a206"/>
                 <graphicElement>
                     <pen lineWidth="0.5" lineColor="#999999"/>
                 </graphicElement>
             </line>
+            <image hAlign="Right" vAlign="Bottom">
+                <reportElement positionType="FixRelativeToBottom" x="500" y="60" width="55" height="35" uuid="1a685120-4549-48e6-9b4a-a4b49238b60d"/>
+                <imageExpression><![CDATA[$P{bitsei_logo}]]></imageExpression>
+            </image>
         </band>
     </columnFooter>
     <pageFooter>
@@ -202,7 +196,7 @@
             </textField>
             <textField evaluationTime="Report">
                 <reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="6857db7e-824a-4cda-b8dc-fe5c95aca145"/>
-                <textElement>
+                <textElement textAlignment="Right">
                     <font size="10" isBold="false"/>
                 </textElement>
                 <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>

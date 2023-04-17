@@ -32,7 +32,7 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
      * Creates a new object for searching product by id.
      *
      * @param con    the connection to the database.
-     * @param product_id the salary of the employee.
+     * @param product_id the id of the product.
      */
     public LoadProductForUpdateDAO(final Connection con, final int product_id) {
         super(con);

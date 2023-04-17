@@ -58,6 +58,7 @@ public class GenerateCustomersReportServlet extends AbstractDatabaseServlet{
             Map<String, Object> map = new HashMap<>();
             map.put("proudlyCreatedBy", "Dott. Mirco CAZZARO");
             map.put("banner", absPath + "jrxml" + separator + "customer_report_header.png");
+            map.put("bitsei_logo", absPath + "company_logos" + separator + "bitsei_1024_gray_multi.png");
 
             //exportCustomerReport(lc, super.getServletContext().getRealPath("/")); //old style
             exportReport(lc, absPath, "/jrxml/CustomerList.jrxml", "customer_reports.pdf", map);

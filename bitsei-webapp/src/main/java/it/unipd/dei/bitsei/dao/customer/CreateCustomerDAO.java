@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.customer;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 
 import java.sql.Connection;
@@ -18,7 +19,8 @@ public final class CreateCustomerDAO extends AbstractDAO {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code, address, city, province, postal_code, email, pec, unique_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code, address, city, province, postal_code, email, pec, unique_code, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      /**
@@ -62,6 +64,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
             pstmt.setString(8, customer.getEmailAddress());
             pstmt.setString(9, customer.getPec());
             pstmt.setString(10, customer.getUniqueCode());
+            pstmt.setInt(11, customer.getCompanyID());
 
             pstmt.execute();
 

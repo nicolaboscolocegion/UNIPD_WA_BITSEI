@@ -65,6 +65,7 @@ public class GenerateProductsReportServlet extends AbstractDatabaseServlet{
             map.put("company_name", "TEST NAME");
             map.put("company_logo", absPath + "company_logos" + separator + "user_logo_sample.png");
             map.put("box", absPath + "jrxml" + separator + "box.png");
+            map.put("bitsei_logo", absPath + "company_logos" + separator + "bitsei_1024_gray_multi.png");
 
             //exportProductReport(lp, super.getServletContext().getRealPath("/"));
             exportReport(lp, absPath, "/jrxml/ProductList.jrxml", "product_reports.pdf", map);

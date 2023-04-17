@@ -79,7 +79,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
 
             fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", logo, "LOGO");
 
-            // creates a new foo customer
+            // creates a new foo product
             p = new Product(product_id, company_id, title, default_price, logo, measurement_unit, description);
 
             // creates a new object for accessing the database and stores the customer
