@@ -17,10 +17,7 @@ import java.nio.file.FileSystems;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
 
@@ -67,7 +64,9 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
             //String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             java.util.Date utilToday = new Date();
             java.sql.Date today = new java.sql.Date(utilToday.getTime());
-            out = new CloseInvoiceDAO(getConnection(), invoice_id, today).access().getOutputParam();
+            String fileName = "warning_" + UUID.randomUUID() + ".pdf";
+
+            out = new CloseInvoiceDAO(getConnection(), invoice_id, today, fileName).access().getOutputParam();
             m = new Message(String.format("Data for invoice warning fetched"));
             LOGGER.info("Data for invoice warning fetched");
 
@@ -136,11 +135,8 @@ public final class CloseInvoiceServlet extends AbstractDatabaseServlet {
             }
 
 
-
-
-
             //generate invoice
-            exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", "invoice.pdf", map);
+            exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
 
 
 

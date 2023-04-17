@@ -145,7 +145,7 @@ ALTER TABLE bitsei_schema."Invoice_Product" OWNER TO bitsei_user;
 
 CREATE TABLE bitsei_schema."Log" (
                                      is_send boolean DEFAULT false,
-                                     log_id integer NOT NULL,
+                                     log_id serial NOT NULL,
                                      log_state character(255),
                                      message character(255),
                                      invoice_id integer
@@ -160,7 +160,7 @@ ALTER TABLE bitsei_schema."Log" OWNER TO bitsei_user;
 --
 
 CREATE TABLE bitsei_schema."Owner" (
-                                       owner_id integer NOT NULL,
+                                       owner_id serial NOT NULL,
                                        firstname character(50),
                                        lastname character(50),
                                        username character varying NOT NULL,

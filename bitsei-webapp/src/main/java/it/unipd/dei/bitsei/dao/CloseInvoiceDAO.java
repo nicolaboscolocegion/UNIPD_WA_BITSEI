@@ -27,7 +27,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ? WHERE invoice_id = ?;";
+    private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ?, warning_pdf_file = ? WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_CUSTOMER = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
     private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
@@ -35,6 +35,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
     private int invoice_id;
     private Date today;
+    private  String fileName;
 
     private Customer c;
     private Invoice i;
@@ -63,10 +64,11 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
      * @param invoice_id
      *        the id of the invoice to be closed.
      */
-    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today) {
+    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName) {
         super(con);
         this.invoice_id = invoice_id;
         this.today = today;
+        this.fileName = fileName;
     }
 
     @Override
@@ -81,9 +83,11 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt = con.prepareStatement(STATEMENT_UPDATE);
             pstmt.setInt(1, 1);
             pstmt.setDate(2, (java.sql.Date) today);
-            pstmt.setInt(3, this.invoice_id);
+            pstmt.setString(3, this.fileName);
+            pstmt.setInt(4, this.invoice_id);
             pstmt.executeUpdate();
             LOGGER.info("Invoice status successfully set to 1.");
+
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);
             pstmt.setInt(1, this.invoice_id);

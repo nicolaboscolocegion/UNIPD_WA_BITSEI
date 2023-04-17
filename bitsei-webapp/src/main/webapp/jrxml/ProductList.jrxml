@@ -16,17 +16,12 @@
     <parameter name="company_logo" class="java.lang.String"/>
     <parameter name="box" class="java.lang.String"/>
     <parameter name="company_name" class="java.lang.String"/>
-
-    <field name="title" class="java.lang.String">
-    </field>
-    <field name="description" class="java.lang.String">
-    </field>
-    <field name="measurement_unit" class="java.lang.String">
-    </field>
-    <field name="default_price" class="java.lang.Integer">
-    </field>
-    <field name="logo" class="java.lang.String">
-    </field>
+    <parameter name="bitsei_logo" class="java.lang.String"/>
+    <field name="title" class="java.lang.String"/>
+    <field name="description" class="java.lang.String"/>
+    <field name="measurement_unit" class="java.lang.String"/>
+    <field name="default_price" class="java.lang.Integer"/>
+    <field name="logo" class="java.lang.String"/>
     <background>
         <band splitType="Stretch"/>
     </background>
@@ -142,13 +137,17 @@
         </band>
     </detail>
     <columnFooter>
-        <band height="6" splitType="Stretch">
+        <band height="77" splitType="Stretch">
             <line>
                 <reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="fa5e88d5-a011-4e32-8f12-ce923f903111"/>
                 <graphicElement>
                     <pen lineWidth="0.5" lineColor="#999999"/>
                 </graphicElement>
             </line>
+            <image>
+                <reportElement x="750" y="50" width="52" height="27" uuid="5dc2315b-3ab2-446f-9f1d-894fd2f9e38b"/>
+                <imageExpression><![CDATA[$P{bitsei_logo}]]></imageExpression>
+            </image>
         </band>
     </columnFooter>
     <pageFooter>
@@ -157,7 +156,7 @@
                 <reportElement mode="Opaque" x="-21" y="1" width="843" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
                 <textField evaluationTime="Report">
                     <reportElement style="Column header" x="783" y="1" width="40" height="20" forecolor="#736343" uuid="e5e27efa-b599-499b-9ca3-848cb511cb7b"/>
-                    <textElement verticalAlignment="Middle">
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
                         <font size="10" isBold="false"/>
                     </textElement>
                     <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
