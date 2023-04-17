@@ -403,12 +403,27 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
         if (!checkFilters) {
+            /*
             LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
             m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
                     String.format("Requested URI: %s.", req.getRequestURI()));
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-        }
+            */
+            switch (method) {
+                case "GET":
+                    new ListInvoiceRR(req, res, getConnection(), companyId).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+                }
+            }
         else {
             switch (method) {
                 case "GET":

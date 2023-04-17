@@ -90,13 +90,6 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
 
     }
 
-    /**
-     * List the products associated to the company_id passed as argument
-     */
-    public List<Product> listAllProductsByCompanyId(int companyId) throws SQLException {
-        return null; //TODO
-    }
-
     private List<Product> parseProductRS(ResultSet rs) throws SQLException {
         final List<Product> products = new ArrayList<Product>();
 

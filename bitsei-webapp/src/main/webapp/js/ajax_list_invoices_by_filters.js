@@ -20,7 +20,7 @@ Since: 1.0
 
 // Add an event listener to the button,
 // to invoke the function making the AJAX call
-document.getElementById("listInvoicesByFiltersButton")
+document.getElementById("listInvoicesByFilters-button")
     .addEventListener("click", listInvoicesByFilters);
 console.log("Event listener added to listInvoicesByFilters ajaxButton.")
 
@@ -31,35 +31,64 @@ console.log("Event listener added to listInvoicesByFilters ajaxButton.")
 function listInvoicesByFilters() {
 
     // get the values of the filters from the form field
-    const filterByTotal = document.getElementById("filterByTotalID").value;
-    const fromTotal = document.getElementById("fromTotalID").value;
-    const toTotal = document.getElementById("toTotalID").value;
+    const filterByTotal = document.getElementById("filterByTotalID").checked;
+    let fromTotal = document.getElementById("fromTotalID").value;
+    let toTotal = document.getElementById("toTotalID").value;
 
-    const filterByDiscount = document.getElementById("filterByDiscountID").value;
-    const fromDiscount = document.getElementById("fromDiscountID").value;
-    const toDiscount = document.getElementById("toDiscountID").value;
+    const filterByDiscount = document.getElementById("filterByDiscountID").checked;
+    let fromDiscount = document.getElementById("fromDiscountID").value;
+    let toDiscount = document.getElementById("toDiscountID").value;
 
-    const filterByPfr = document.getElementById("filterByPfrID").value;
-    const fromPfr = document.getElementById("fromPfrID").value;
-    const toPfr = document.getElementById("toPfrID").value;
+    const filterByPfr = document.getElementById("filterByPfrID").checked;
+    let fromPfr = document.getElementById("fromPfrID").value;
+    let toPfr = document.getElementById("toPfrID").value;
 
-    const filterByInvoiceDate = document.getElementById("filterByInvoiceDateID").value;
-    const fromInvoiceDate = document.getElementById("fromInvoiceDateID").value;
-    const toInvoiceDate = document.getElementById("toInvoiceDateID").value;
+    const filterByInvoiceDate = document.getElementById("filterByInvoiceDateID").checked;
+    let fromInvoiceDate = document.getElementById("fromInvoiceDateID").value;
+    let toInvoiceDate = document.getElementById("toInvoiceDateID").value;
 
-    const filterByWarningDate = document.getElementById("filterByWarningDateID").value;
-    const fromWarningDate = document.getElementById("fromWarningDateID").value;
-    const toWarningDate = document.getElementById("toWarningDateID").value;
+    const filterByWarningDate = document.getElementById("filterByWarningDateID").checked;
+    let fromWarningDate = document.getElementById("fromWarningDateID").value;
+    let toWarningDate = document.getElementById("toWarningDateID").value;
 
-    console.log("## ajax_list-invoices-by-filters.js: Filters parsed ##");
+    console.log("## ajax_list_invoices_by_filters.js: Filters parsed ##");
 
     let url = "http://localhost:8080/bitsei-1.0/rest/filter-invoices/with-filters/";
-    url += "filterByTotal/" + filterByTotal + "/fromTotal/" + fromTotal + "/toTotal/" + toTotal + "/";
-    url += "filterByDiscount/" + filterByDiscount + "/fromDiscount/" + fromDiscount + "/toDiscount/" + toDiscount + "/";
-    url += "filterByPfr/" + filterByPfr + "/fromPfr/" + fromPfr + "/toPfr/" + toPfr + "/"
-    url += "filterByInvoiceDate/" + filterByInvoiceDate + "/fromInvoiceDate/" + fromInvoiceDate + "/toInvoiceDate/" + toInvoiceDate + "/";
-    url += "filterByWarningDate/" + filterByWarningDate + "/fromWarningDate/" + fromWarningDate + "/toWarningDate/" + toWarningDate;
-
+    if(filterByTotal) {
+        if(fromTotal.length === 0)
+            fromTotal = 0.00;
+        if(toTotal.length === 0)
+            toTotal = 10E9;
+        url += "filterByTotal/" + filterByTotal + "/fromTotal/" + fromTotal + "/toTotal/" + toTotal + "/";
+    }
+    if(filterByDiscount) {
+        if(fromDiscount.length === 0)
+            fromDiscount = 0.00;
+        if(toDiscount.length === 0)
+            toDiscount = 10E9;
+        url += "filterByDiscount/" + filterByDiscount + "/fromDiscount/" + fromDiscount + "/toDiscount/" + toDiscount + "/";
+    }
+    if(filterByPfr) {
+        if(fromPfr.length === 0)
+            fromPfr = 0.00;
+        if(toPfr.length === 0)
+            toPfr = 10E9;
+        url += "filterByPfr/" + filterByPfr + "/fromPfr/" + fromPfr + "/toPfr/" + toPfr + "/"
+    }
+    if(filterByInvoiceDate) {
+        if(fromInvoiceDate.length === 0)
+            fromInvoiceDate = new Date("1970-01-01");
+        if(toInvoiceDate.length === 0)
+            toInvoiceDate = new Date().toJSON().slice(0, 10);
+        url += "filterByInvoiceDate/" + filterByInvoiceDate + "/fromInvoiceDate/" + fromInvoiceDate + "/toInvoiceDate/" + toInvoiceDate + "/";
+    }
+    if(filterByWarningDate) {
+        if(fromWarningDate.length === 0)
+            fromWarningDate = new Date("1970-01-01");
+        if(toWarningDate.length === 0)
+            toWarningDate = new Date().toJSON().slice(0, 10);
+        url += "filterByWarningDate/" + filterByWarningDate + "/fromWarningDate/" + fromWarningDate + "/toWarningDate/" + toWarningDate;
+    }
     console.log("Request URL: %s.", url)
 
     // the XMLHttpRequest object
@@ -74,7 +103,7 @@ function listInvoicesByFilters() {
 
     // set up the call back for handling the request
     xhr.onreadystatechange = function () {
-        processResponse(this);
+        processResponseListInvoicesByFilters(this);
     };
 
     // perform the request
@@ -91,7 +120,7 @@ function listInvoicesByFilters() {
  *
  * @param xhr the XMLHttpRequest object performing the request.
  */
-function processResponse(xhr) {
+function processResponseListInvoicesByFilters(xhr) {
 
     // not finished yet
     if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -100,7 +129,119 @@ function processResponse(xhr) {
         return;
     }
 
-    const div = document.getElementById("listInvoicesByFilters-results");
+    const div = document.getElementById("listInvoicesByFilters-div");
+
+    // remove all the children of the result div, appended by a previous call, if any
+    div.replaceChildren();
+
+    if (xhr.status !== 200) {
+        console.log("Request unsuccessful: HTTP status = %d.", xhr.status);
+        console.log(xhr.response);
+
+        div.appendChild(document.createTextNode("Unable to perform the AJAX request."));
+
+        return;
+    }
+
+    // generate the table, appending node-by-node
+    const table = document.createElement("table");
+    div.appendChild(table)
+
+    // placeholders for generic DOM nodes
+    let e, ee, eee;
+
+
+    // table header
+    e = document.createElement("thead");
+    table.appendChild(e); // append the table header to the table
+
+    // the row in the table header
+    ee = document.createElement("tr");
+    e.appendChild(ee); // append the row to the table header
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Invoice Number"));
+    ee.appendChild(eee); // append the cell to the row
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Warning Date"));
+    ee.appendChild(eee); // append the cell to the row
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Invoice Date"));
+    ee.appendChild(eee); // append the cell to the row
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Total"));
+    ee.appendChild(eee); // append the cell to the row
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Discount"));
+    ee.appendChild(eee); // append the cell to the row
+
+    eee = document.createElement("th");
+    eee.appendChild(document.createTextNode("Pension Fund Refund"));
+    ee.appendChild(eee); // append the cell to the row
+
+    // table body
+    e = document.createElement("tbody");
+    table.appendChild(e); // append the table body to the table
+
+    // parse the response as JSON and extract the resource-list array
+    const resourceList = JSON.parse(xhr.responseText)["resource-list"];
+
+    for (let i = 0; i < resourceList.length; i++) {
+
+        // extract the i-th invoice and create a table row for it
+        let invoice = resourceList[i].invoice;
+
+        ee = document.createElement("tr");
+        e.appendChild(ee); // append the row to the table body
+
+        // create a cell for the invoice_number of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["invoice_number"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        // create a cell for the warning_date of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["warning_date"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        // create a cell for the invoice_date of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["invoice_date"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        // create a cell for the total of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["total"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        // create a cell for the discount of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["discount"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        // create a cell for the pension_fund_refund of the invoice
+        eee = document.createElement("td");
+        eee.appendChild(document.createTextNode(invoice["pension_fund_refund"]));
+        ee.appendChild(eee); // append the cell to the row
+
+        console.log("HTTP GET request successfully performed and processed.");
+    }
+
+/*
+function processResponseListInvoicesByFilters(xhr) {
+
+    // not finished yet
+    if (xhr.readyState !== XMLHttpRequest.DONE) {
+        console.log("Request state: %d. [0 = UNSENT; 1 = OPENED; 2 = HEADERS_RECEIVED; 3 = LOADING]",
+            xhr.readyState);
+        return;
+    }
+
+    const div = document.getElementById("listInvoicesByFilters-div");
 
     // remove all the children of the result div, appended by a previous call, if any
     div.replaceChildren();
@@ -238,5 +379,6 @@ function processResponse(xhr) {
 
         console.log("HTTP GET request successfully performed and processed.");
     }
+*/
 
 }
