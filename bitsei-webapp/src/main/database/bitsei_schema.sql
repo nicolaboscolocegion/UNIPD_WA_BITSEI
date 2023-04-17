@@ -132,7 +132,8 @@ CREATE TABLE bitsei_schema."Invoice_Product" (
                                                  quantity integer NOT NULL,
                                                  unit_price double precision NOT NULL,
                                                  related_price double precision,
-                                                 related_price_description character(1024)
+                                                 related_price_description character(1024),
+                                                 purchase_date date
 );
 
 

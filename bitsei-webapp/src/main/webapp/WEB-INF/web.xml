@@ -31,7 +31,7 @@
 
     <servlet>
         <servlet-name>CreateProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CreateProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.CreateProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -41,7 +41,7 @@
 
     <servlet>
         <servlet-name>DeleteProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.DeleteProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -51,7 +51,7 @@
 
     <servlet>
         <servlet-name>UpdateProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.UpdateProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -61,7 +61,7 @@
 
     <servlet>
         <servlet-name>CreateInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CreateInvoiceServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.CreateInvoiceServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -71,7 +71,7 @@
 
     <servlet>
         <servlet-name>DeleteInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteInvoiceServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.DeleteInvoiceServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -81,7 +81,7 @@
 
     <servlet>
         <servlet-name>UpdateInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateInvoiceServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.UpdateInvoiceServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -91,7 +91,7 @@
 
     <servlet>
         <servlet-name>CreateInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CreateInvoiceProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.CreateInvoiceProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -101,7 +101,7 @@
 
     <servlet>
         <servlet-name>DeleteInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.DeleteInvoiceProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.DeleteInvoiceProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -111,7 +111,7 @@
 
     <servlet>
         <servlet-name>UpdateInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.UpdateInvoiceProductServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.UpdateInvoiceProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -121,7 +121,7 @@
 
     <servlet>
         <servlet-name>LoadProductForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.LoadProductForUpdateServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.LoadProductForUpdateServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -131,12 +131,22 @@
 
     <servlet>
         <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.LoadInvoiceForUpdateServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.LoadInvoiceForUpdateServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
         <url-pattern>/loadinvoice</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.LoadInvoiceProductForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
+        <url-pattern>/loadinvoiceproduct</url-pattern>
     </servlet-mapping>
 
     <servlet>
