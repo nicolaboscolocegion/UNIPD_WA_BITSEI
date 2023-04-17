@@ -32,7 +32,7 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  */
 public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
-    private final static String STATEMENT = "INSERT INTO bitsei_schema.\"BankAccount\"  (\"IBAN\" , bank_name , bankaccount_friendly_name ,company_id) VALUES ('?', '?', '?', ?)";
+    private final static String STATEMENT = "INSERT INTO bitsei_schema.\"BankAccount\"  (\"IBAN\", bank_name, bankaccount_friendly_name, company_id) VALUES (?, ?, ?, ?)";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id=? AND owner_id=?";
 
     /**
@@ -65,11 +65,10 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
-        //fetched ID of the owner if exist
-        int fetchedID=0;
         //statemant for the insert
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        int execution;
 
         //controlls if the owner owns the company
         try{
@@ -81,12 +80,12 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
 
             controll_rs = controll_statemant.executeQuery();
 
-            controll_rs.getInt("company_id");
-
-            if (!controll_rs.next()) {
+            if(!controll_rs.next()){
                 LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
                 return;
             }
+
+            
 
         }finally{
             if (controll_rs != null) {
@@ -109,17 +108,12 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             pstmt.setInt(4, newBankAccount.getCompanyId());
 
-            rs = pstmt.executeQuery();
+            execution= pstmt.executeUpdate();
 
-            if(!rs.next())
-                return;
-
-            outputParam = true;
+            if(execution==1)
+                outputParam = true;
 
         }finally{
-            if (rs != null) {
-                rs.close();
-            }
 
             if (pstmt != null) {
                 pstmt.close();

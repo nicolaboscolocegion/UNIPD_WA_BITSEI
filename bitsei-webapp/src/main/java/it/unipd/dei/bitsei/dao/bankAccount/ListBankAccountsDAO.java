@@ -62,8 +62,6 @@ public class ListBankAccountsDAO extends AbstractDAO<List<BankAccount>>{
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
         ResultSet controll_rs=null;
-        //fetched ID of the owner if exist
-        int fetchedID=0;
         //lists all the bank accounts
         List<BankAccount> bankAccountList =new LinkedList<BankAccount>();
         PreparedStatement pstmt = null;

@@ -110,7 +110,7 @@ public class BankAccount extends AbstractResource{
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
-
+            /*
             while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"bankAccout".equals(jp.getCurrentName())) {
 
                 // there are no more events
@@ -119,7 +119,7 @@ public class BankAccount extends AbstractResource{
                     
                 }
             }
-
+            */
 
             while (jp.nextToken() != JsonToken.END_OBJECT) {
 
