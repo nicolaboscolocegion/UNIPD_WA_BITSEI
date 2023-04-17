@@ -97,7 +97,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         // strip everything until after the /bankaccount
         path = path.substring(path.lastIndexOf("bankaccount") + 11);
         //bank accounts of a company, \\d+ should be a company ID
-        if (path.matches("s/\\d+")) {
+        if (path.matches("s/\\d*")) {
             /*
              * GET: gets all the bank accounts of a given company
              */
@@ -114,7 +114,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                 break;
             }
-        }else if(path.length() == 0 || path.matches("/\\d+")){
+        }else if(path.length() == 0 || path.matches("/\\d*")){
             LOGGER.warn("after if");
             /*
              * GET: gives a bank account
@@ -130,10 +130,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     new CreateBankAccountRR(req, res, getConnection()).serve();
                 break;
                 case "PUT":
-                    new UpdateBankAccoutRR(req, res, getConnection());
+                    new UpdateBankAccoutRR(req, res, getConnection()).serve();
                 break;
                 case "DELETE":
-                    new DeleteBankAccountRR(req, res, getConnection());
+                    new DeleteBankAccountRR(req, res, getConnection()).serve();
                 break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /bankaccount: {}.", method);

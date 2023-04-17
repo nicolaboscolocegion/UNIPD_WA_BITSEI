@@ -55,7 +55,7 @@ public class UpdateBankAccoutRR extends AbstractRR{
     protected void doServe() throws IOException {
         Message m;
         InputStream requestStream = req.getInputStream();
-
+        
         try{
 
             String uri = req.getRequestURI();
@@ -63,12 +63,11 @@ public class UpdateBankAccoutRR extends AbstractRR{
             if (id.isEmpty() || id.isBlank()) {
                 throw new IOException("bank can not be empty");
             }
+            LOGGER.warn("old bank account id: " + id);
 
             int oldBankAccountID = Integer.parseInt(id);
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
-            //find the old and the new bank account to update
-            BankAccount oldBankAccount= BankAccount.fromJSON(requestStream);
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
 
             //try to change the bank accoutn
@@ -76,7 +75,7 @@ public class UpdateBankAccoutRR extends AbstractRR{
 
             if(updated){
                 res.setStatus(HttpServletResponse.SC_OK);
-                LOGGER.info("changed " + oldBankAccount.getIban() +  " to "  + newBankAccount.getIban());
+                LOGGER.info("changed " + oldBankAccountID +  " to "  + newBankAccount.getIban());
             }else{
                 LOGGER.error("Fatal error while getting bankaccount.");
 

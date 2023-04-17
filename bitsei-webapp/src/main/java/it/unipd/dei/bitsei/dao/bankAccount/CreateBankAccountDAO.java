@@ -67,7 +67,6 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
         ResultSet controll_rs=null;
         //statemant for the insert
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
         int execution;
 
         //controlls if the owner owns the company
