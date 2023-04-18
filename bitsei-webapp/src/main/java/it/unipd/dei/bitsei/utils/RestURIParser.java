@@ -14,11 +14,10 @@ public class RestURIParser {
     private String resource;
     private int resourceID;
     private int companyID;
-    private RestURIParser() {
-        this.URI = URI;
+    protected RestURIParser() {
     }
 
-    public RestURIParser parseURI(String URI) {
+    public RestURIParser createParsedURI(String URI) {
         String[] parts = URI.split("/");
         if (parts[0] != "rest") {
             throw new IllegalArgumentException("URI NOT RESTFUL");
