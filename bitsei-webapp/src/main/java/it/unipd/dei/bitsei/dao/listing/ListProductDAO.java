@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.listing;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.Product;
@@ -88,13 +89,6 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
 
         this.outputParam = products;
 
-    }
-
-    /**
-     * List the products associated to the company_id passed as argument
-     */
-    public List<Product> listAllProductsByCompanyId(int companyId) throws SQLException {
-        return null; //TODO
     }
 
     private List<Product> parseProductRS(ResultSet rs) throws SQLException {

@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.servlet;
+package it.unipd.dei.bitsei.servlet.listing;
 
-import it.unipd.dei.bitsei.dao.FilterInvoiceByTotalDAO;
-import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersDAO;
+import it.unipd.dei.bitsei.dao.listing.GetInvoicesByFiltersJspDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.servlet.AbstractDatabaseServlet;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.sql.Date;
 
 /**
  * Searches invoices by their total.
@@ -41,7 +41,7 @@ import java.sql.Date;
  * @since 1.00
  *
  */
-public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
+public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServlet {
 
 	/**
 	 * Searches invoices by their total.
@@ -51,7 +51,7 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 	 *
 	 * @throws IOException if any error occurs in the client/server communication.
 	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		LogContext.setIPAddress(req.getRemoteAddr());
 		LogContext.setAction(Actions.GET_INVOICES_BY_FILTERS);
@@ -68,18 +68,23 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 		final Date END_DATE = Date.valueOf(currentDate);
 
 		// request parameters
+		boolean filterByTotal = false;
 		double startTotal = START_TOTAL;
 		double endTotal = END_TOTAL;
 
+		boolean filterByDiscount = false;
 		double startDiscount = START_TOTAL;
 		double endDiscount = END_TOTAL;
-		
+
+		boolean filterByPfr = false;
 		double startPfr = START_TOTAL;
 		double endPfr = END_TOTAL;
 
+		boolean filterByInvoiceDate = false;
 		Date startInvoiceDate = START_DATE;
 		Date endInvoiceDate = END_DATE;
-		
+
+		boolean filterByWarningDate = false;
 		Date startWarningDate = START_DATE;
 		Date endWarningDate = END_DATE;
 
@@ -88,6 +93,20 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 		Message m = null;
 
 		try {
+			if(req.getParameter("filterByTotal") != null)
+				filterByTotal = true;
+
+			if(req.getParameter("filterByDiscount") != null)
+				filterByDiscount = true;
+
+			if(req.getParameter("filterByPfr") != null)
+				filterByPfr = true;
+
+			if(req.getParameter("filterByInvoiceDate") != null)
+				filterByInvoiceDate = true;
+
+			if(req.getParameter("filterByWarningDate") != null)
+				filterByWarningDate = true;
 
 			try {
 				startTotal = Double.parseDouble(req.getParameter("startTotal"));
@@ -130,7 +149,7 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 			} catch (NumberFormatException ex) {
 				endPfr = END_TOTAL;
 			}
-			
+
 			try {
 				startInvoiceDate = Date.valueOf(req.getParameter("startInvoiceDate"));
 			} catch (IllegalArgumentException ex) {
@@ -156,12 +175,18 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 			}
 
 			// creates a new object for accessing the database and searching the employees
-			el = new GetInvoicesByFiltersDAO(getConnection(), startTotal, endTotal, startDiscount, endDiscount, startPfr, endPfr, startInvoiceDate, endInvoiceDate, startWarningDate, endWarningDate).access().getOutputParam();
+			el = new GetInvoicesByFiltersJspDAO(getConnection(),
+					filterByTotal, startTotal, endTotal,
+					filterByDiscount, startDiscount, endDiscount,
+					filterByPfr, startPfr, endPfr,
+					filterByInvoiceDate, startInvoiceDate, endInvoiceDate,
+					filterByWarningDate, startWarningDate, endWarningDate).access().getOutputParam();
 
 			//String tmp_string = "Invoices succesfully searched. Start Total: " + startTotal + " End Total: " + endTotal + " startDiscount: " + startDiscount + " endDiscount: " + endDiscount + " startPfr: " + startPfr + " endPfr: " + endPfr + " startInvoiceDate: " + startInvoiceDate.toString() + " endInvoiceDate: " + endInvoiceDate.toString() + " startWarningDate: " + startWarningDate + " endWarningDate: " + endWarningDate + ".";
 			m = new Message("Invoices succesfully searched");
 
 			LOGGER.info("## SERVLET: Invoices successfully searched ##");
+			LOGGER.info("## FilterByTotal: " + filterByTotal + " FilterByDiscount: " + filterByDiscount + " FilterByPfr: " + filterByPfr + " FilterByInvoiceDate: " + filterByInvoiceDate + " FilterByWarningDate: " + filterByWarningDate + " ##");
 
 		} catch (NumberFormatException ex) {
 			m = new Message("Cannot search for invoices. Invalid input parameters: totals must be double", "E100",
@@ -176,110 +201,15 @@ public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
 		}
 
 		try {
-			// set the MIME media type of the response
-			res.setContentType("text/html; charset=utf-8");
+			// stores the invoice list and the message as a request attribute
+			req.setAttribute("invoiceList", el);
+			req.setAttribute("message", m);
 
-			// get a stream to write the response
-			PrintWriter out = res.getWriter();
+			// forwards the control to the search-employee-result JSP
+			req.getRequestDispatcher("/jsp/get-invoices-by-filters-result.jsp").forward(req, res);
 
-			// write the HTML page
-			out.printf("<!DOCTYPE html>%n");
-
-			out.printf("<html lang=\"en\">%n");
-			out.printf("<head>%n");
-			out.printf("<meta charset=\"utf-8\">%n");
-			out.printf("<title>Invoices Get By Filters</title>%n");
-			out.printf("</head>%n");
-
-			out.printf("<body>%n");
-			out.printf("<h1>Invoices Get By Filters</h1>%n");
-			out.printf("<hr/>%n");
-			// Shows the filters applied in this query
-			out.printf("<p>### PARSED FILTERS ###</p>%n");
-			out.printf("<p>Start Total: %.2f -- End Total: %.2f</p>%n", startTotal, endTotal);
-			out.printf("<p>Start Discount: %.2f -- End Discount: %.2f</p>%n", startDiscount, endDiscount);
-			out.printf("<p>Start Pfr: %.2f -- End Pfr: %.2f</p>%n", startPfr, endPfr);
-			out.printf("<p>Start Invoice Date: %s -- End Invoice Date: %s</p>%n", startInvoiceDate.toString(), endInvoiceDate.toString());
-			out.printf("<p>Start Warning Date: %s -- End Warning Date: %s</p>%n", startWarningDate.toString(), endWarningDate.toString());
-			out.printf("<hr/>%n");
-
-			if (m.isError()) {
-				out.printf("<ul>%n");
-				out.printf("<li>error code: %s</li>%n", m.getErrorCode());
-				out.printf("<li>message: %s</li>%n", m.getMessage());
-				out.printf("<li>details: %s</li>%n", m.getErrorDetails());
-				out.printf("</ul>%n");
-			} else {
-				out.printf("<p>%s</p>%n", m.getMessage());
-
-			/* THIS PART UNCOMMENTED SHOWS EVERY SINGLE DETAIL ABOUT AN INVOICE
-				out.printf("<table>%n");
-				out.printf("<tr>%n");
-				out.printf("<td>Invoice id</td><td>Customer id</td><td>Status</td><td>Warning date</td><td>Warning pdf file</td><td>Invoice number</td><td>Invoice date</td><td>Invoice pdf file</td><td>Invoice xml file</td><td>Total</td><td>Discount</td><td>Pension fund refund</td><td>Has stamp</td><%n");
-				out.printf("</tr>%n");
-
-
-				for (Invoice e : el) {
-					out.printf("<tr>%n");
-					out.printf("<td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%s</td>%n",
-							e.getInvoice_id(),
-							e.getCustomer_id(),
-							e.getStatus(),
-							e.getWarning_number(),
-							e.getWarning_date().toString(),
-							e.getWarning_pdf_file(),
-							e.getInvoice_number(),
-							e.getInvoice_date().toString(),
-							e.getInvoice_pdf_file(),
-							e.getInvoice_xml_file(),
-							e.getTotal(),
-							e.getDiscount(),
-							e.getPension_fund_refund(),
-							e.hasStamp()
-							);
-					out.printf("</tr>%n");
-				}
-				out.printf("</table>%n");
-			}
-			*/
-				
-			out.printf("<table>%n");
-			out.printf("<tr>%n");
-			out.printf("<td>Invoice id</td><td>Customer id</td><td>Status</td><td>Invoice number</td><td>Invoice date</td><td>Warning date</td><td>Total</td><td>Discount</td><td>Pension fund refund</td>%n");
-			out.printf("</tr>%n");
-
-
-			for (Invoice e : el) {
-				out.printf("<tr>%n");
-				out.printf("<td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td>%n",
-						e.getInvoice_id(),
-						e.getCustomer_id(),
-						e.getStatus(),
-						e.getInvoice_number(),
-						e.getInvoice_date(),
-						e.getWarning_date(),
-						e.getTotal(),
-						e.getDiscount(),
-						e.getPension_fund_refund()
-
-
-				);
-				out.printf("</tr>%n");
-			}
-			out.printf("</table>%n");
-		}
-
-			out.printf("</body>%n");
-
-			out.printf("</html>%n");
-
-			// flush the output stream buffer
-			out.flush();
-
-			// close the output stream
-			out.close();
-		} catch (IOException ex) {
-			LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoice. StartTotal %.2f , EndTotal %.2f", startTotal, endTotal), ex);
+		} catch(Exception ex) {
+			LOGGER.error(new StringFormattedMessage("Unable to send response when creating invoices."), ex);
 			throw ex;
 		} finally {
 			LogContext.removeIPAddress();

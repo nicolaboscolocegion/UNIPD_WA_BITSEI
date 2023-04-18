@@ -1,11 +1,11 @@
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.listing;
 
-import it.unipd.dei.bitsei.dao.ListInvoiceByFiltersDAO;
-import it.unipd.dei.bitsei.dao.ListInvoiceDAO;
+import it.unipd.dei.bitsei.dao.listing.ListInvoiceByFiltersDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A REST resource for listing {@link Invoice}s.
@@ -66,42 +64,44 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             String path = req.getRequestURI();
             String[] parsePath = path.split("/");
             
-            for(int i=0; i<parsePath.length-1; i+=2) {
+            for(int i=0; i<parsePath.length-1; i++) {
                 if(parsePath[i].equals("filterByTotal"))
                     filterByTotal = true;
                 if(parsePath[i].equals("fromTotal"))
-                    fromTotal = Double.parseDouble(parsePath[i+1]);
+                    fromTotal = Double.parseDouble(parsePath[++i]);
                 if(parsePath[i].equals("toTotal"))
-                    toTotal = Double.parseDouble(parsePath[i+1]);
+                    toTotal = Double.parseDouble(parsePath[++i]);
                 
                 if(parsePath[i].equals("filterByDiscount"))
                     filterByDiscount = true;
                 if(parsePath[i].equals("fromDiscount"))
-                    fromDiscount = Double.parseDouble(parsePath[i+1]);
+                    fromDiscount = Double.parseDouble(parsePath[++i]);
                 if(parsePath[i].equals("toDiscount"))
-                    toDiscount = Double.parseDouble(parsePath[i+1]);
+                    toDiscount = Double.parseDouble(parsePath[++i]);
                 
                 if(parsePath[i].equals("filterByPfr"))
                     filterByPfr = true;
                 if(parsePath[i].equals("fromPfr"))
-                    fromPfr = Double.parseDouble(parsePath[i+1]);
+                    fromPfr = Double.parseDouble(parsePath[++i]);
                 if(parsePath[i].equals("toPfr"))
-                    toPfr = Double.parseDouble(parsePath[i+1]);
+                    toPfr = Double.parseDouble(parsePath[++i]);
                 
                 if(parsePath[i].equals("filterByInvoiceDate"))
                     filterByInvoiceDate = true;
                 if(parsePath[i].equals("fromInvoiceDate"))
-                    fromInvoiceDate = Date.valueOf(parsePath[i+1]);
+                    fromInvoiceDate = Date.valueOf(parsePath[++i]);
                 if(parsePath[i].equals("toInvoiceDate"))
-                    toInvoiceDate = Date.valueOf(parsePath[i+1]);
+                    toInvoiceDate = Date.valueOf(parsePath[++i]);
 
                 if(parsePath[i].equals("filterByWarningDate"))
                     filterByTotal = true;
                 if(parsePath[i].equals("fromWarningDate"))
-                    fromWarningDate = Date.valueOf(parsePath[i+1]);
+                    fromWarningDate = Date.valueOf(parsePath[++i]);
                 if(parsePath[i].equals("toWarningDate"))
-                    toWarningDate = Date.valueOf(parsePath[i+1]);
+                    toWarningDate = Date.valueOf(parsePath[++i]);
             }
+
+            LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
             el = new ListInvoiceByFiltersDAO(con, companyId,

@@ -16,7 +16,7 @@
 
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.FilterInvoiceByDateDAO;
+import it.unipd.dei.bitsei.dao.listing.FilterInvoiceByDateDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
@@ -31,10 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.HashMap;
-import java.util.AbstractMap;
-import java.util.Map;
 import java.util.TreeMap;
 import java.text.SimpleDateFormat;
 

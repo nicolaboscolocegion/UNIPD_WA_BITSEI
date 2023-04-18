@@ -20,21 +20,21 @@ Since: 1.0
 
 // Add an event listener to the button,
 // to invoke the function making the AJAX call
-document.getElementById("listProductsByCompanyIdButton")
+document.getElementById("listProductsByCompanyID-button")
     .addEventListener("click", listProductsByCompanyId);
 console.log("Event listener added to listProductsByCompanyId ajaxButton.")
 
 /**
- * List invoices associated to the specified company Id
+ * List products associated to the specified company Id
  * @returns {boolean} true if the HTTP request was successful; false otherwise.
  */
 function listProductsByCompanyId() {
 
     // get the values of the filters from the form field
 
-    console.log("## ajax_list-products-by-companyId.js: Filters parsed ##");
+    console.log("## ajax_list_products_by_companyId.js: Filters parsed ##");
 
-    let url = "http://localhost:8080/bitsei-1.0/rest/filter-invoices/list-products";
+    const url = "http://localhost:8080/bitsei-1.0/rest/list-product";
 
     console.log("Request URL: %s.", url)
 
@@ -50,7 +50,7 @@ function listProductsByCompanyId() {
 
     // set up the call back for handling the request
     xhr.onreadystatechange = function () {
-        processResponse(this);
+        processResponseListProductsByCompanyId(this);
     };
 
     // perform the request
@@ -67,7 +67,7 @@ function listProductsByCompanyId() {
  *
  * @param xhr the XMLHttpRequest object performing the request.
  */
-function processResponse(xhr) {
+function processResponseListProductsByCompanyId(xhr) {
 
     // not finished yet
     if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -76,7 +76,7 @@ function processResponse(xhr) {
         return;
     }
 
-    const div = document.getElementById("listProductsByCompanyId-results");
+    const div = document.getElementById("listProductsByCompanyID-div");
 
     // remove all the children of the result div, appended by a previous call, if any
     div.replaceChildren();
@@ -90,14 +90,18 @@ function processResponse(xhr) {
         return;
     }
 
+    const header = document.createElement("h3");
+    header.appendChild(document.createTextNode("Filter Invoices By Product(s)"));
+    div.appendChild(header);
+    const hr = document.createElement("hr");
+    div.appendChild(hr);
+
     // generate the table, appending node-by-node
     const table = document.createElement("table");
     div.appendChild(table)
 
     // placeholders for generic DOM nodes
     let e, ee, eee;
-
-
     // table header
     e = document.createElement("thead");
     table.appendChild(e); // append the table header to the table
@@ -106,33 +110,12 @@ function processResponse(xhr) {
     ee = document.createElement("tr");
     e.appendChild(ee); // append the row to the table header
 
-    // a generic element of the table header row
-    eee = document.createElement("th");
-    eee.appendChild(document.createTextNode("Product ID"));
-    ee.appendChild(eee); // append the cell to the row
-
-    eee = document.createElement("th");
-    eee.appendChild(document.createTextNode("Company ID"));
-    ee.appendChild(eee); // append the cell to the row
-
     eee = document.createElement("th");
     eee.appendChild(document.createTextNode("Title"));
     ee.appendChild(eee); // append the cell to the row
 
     eee = document.createElement("th");
     eee.appendChild(document.createTextNode("Default Price"));
-    ee.appendChild(eee); // append the cell to the row
-
-    eee = document.createElement("th");
-    eee.appendChild(document.createTextNode("Logo"));
-    ee.appendChild(eee); // append the cell to the row
-
-    eee = document.createElement("th");
-    eee.appendChild(document.createTextNode("Measurement Unit"));
-    ee.appendChild(eee); // append the cell to the row
-
-    eee = document.createElement("th");
-    eee.appendChild(document.createTextNode("Description"));
     ee.appendChild(eee); // append the cell to the row
 
     // table body
@@ -144,45 +127,20 @@ function processResponse(xhr) {
 
     for (let i = 0; i < resourceList.length; i++) {
 
-        // extract the i-th product and create a table row for it
+        // extract the i-th customer and create a table row for it
         let product = resourceList[i].product;
 
         ee = document.createElement("tr");
         e.appendChild(ee); // append the row to the table body
 
-        // create a cell for the product_id of the product
-        eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["product_id"]));
-        ee.appendChild(eee); // append the cell to the row
-
-        // create a cell for the customer_id of the product
-        eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["company_id"]));
-        ee.appendChild(eee); // append the cell to the row
-
-        // create a cell for the title of the product
+        // create a cell for the businessName of the customer
         eee = document.createElement("td");
         eee.appendChild(document.createTextNode(product["title"]));
         ee.appendChild(eee); // append the cell to the row
 
-        // create a cell for the default_price of the product
+        // create a cell for the emailAddress of the customer
         eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["default_price"]));
-        ee.appendChild(eee); // append the cell to the row
-
-        // create a cell for the logo of the product
-        eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["logo"]));
-        ee.appendChild(eee); // append the cell to the row
-
-        // create a cell for the measurement_unit of the product
-        eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["measurement_unit"]));
-        ee.appendChild(eee); // append the cell to the row
-
-        // create a cell for the description of the product
-        eee = document.createElement("td");
-        eee.appendChild(document.createTextNode(product["description"]));
+        eee.appendChild(document.createTextNode(product["default_price"].toString()));
         ee.appendChild(eee); // append the cell to the row
 
         console.log("HTTP GET request successfully performed and processed.");

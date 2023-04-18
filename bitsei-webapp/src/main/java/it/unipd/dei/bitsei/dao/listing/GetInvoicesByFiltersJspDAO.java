@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.listing;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Invoice;
 
 import java.sql.Connection;
