@@ -1,10 +1,7 @@
 package it.unipd.dei.bitsei.rest.listing;
 
 import it.unipd.dei.bitsei.dao.listing.ListInvoiceByFiltersDAO;
-import it.unipd.dei.bitsei.resources.Actions;
-import it.unipd.dei.bitsei.resources.Invoice;
-import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +10,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
-     * @param
+     * @param companyId the companyId of the user currently accessing
      */
     public ListInvoiceByFiltersRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
         super(Actions.LIST_INVOICES_BY_FILTERS, req, res, con);
@@ -60,7 +58,12 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             Date fromWarningDate = null;
             Date toWarningDate = null;
 
+            boolean filterByBusinessName = false;
+            List<String> fromBusinessName = new ArrayList<String>();
 
+            boolean filterByProductTitle = false;
+            List<String> fromProductTitle = new ArrayList<String>();
+            
             String path = req.getRequestURI();
             String[] parsePath = path.split("/");
             
@@ -99,6 +102,16 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                     fromWarningDate = Date.valueOf(parsePath[++i]);
                 if(parsePath[i].equals("toWarningDate"))
                     toWarningDate = Date.valueOf(parsePath[++i]);
+
+                if(parsePath[i].equals("filterByBusinessName"))
+                    filterByBusinessName = true;
+                if(parsePath[i].equals("fromBusinessName"))
+                    fromBusinessName.add(parsePath[++i]);
+                
+                if(parsePath[i].equals("filterByProductTitle"))
+                    filterByProductTitle = true;
+                if(parsePath[i].equals("fromProductTitle"))
+                    fromProductTitle.add(parsePath[++i]);
             }
 
             LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate);
@@ -109,7 +122,9 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                     filterByDiscount, fromDiscount, toDiscount,
                     filterByPfr, fromPfr, toPfr,
                     filterByInvoiceDate, fromInvoiceDate, toInvoiceDate,
-                    filterByWarningDate, fromWarningDate, toWarningDate
+                    filterByWarningDate, fromWarningDate, toWarningDate,
+                    filterByBusinessName, fromBusinessName,
+                    filterByProductTitle, fromProductTitle
                     ).access().getOutputParam();
 
             if (el != null) {

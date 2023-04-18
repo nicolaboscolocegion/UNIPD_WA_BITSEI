@@ -662,7 +662,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         // strip everything until after the /filter-invoices
         path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
 
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate");
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle");
         // the request URI contains filter(s)
         boolean checkFilters = false;
         for(String filter : filterList) {
