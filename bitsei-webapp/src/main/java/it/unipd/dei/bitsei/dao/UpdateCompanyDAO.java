@@ -8,6 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Partial Update the company by id in the database.
+ *
+ * @author BITSEI GROUP
+ * @version 1.00
+ * @since 1.00
+ */
 public class UpdateCompanyDAO extends AbstractDAO<Boolean> {
 
     private final int owner_id;
@@ -28,9 +35,17 @@ public class UpdateCompanyDAO extends AbstractDAO<Boolean> {
         outputParam = false;
     }
 
+    /**
+     * Returns the SQL Statement based on given data.
+     *
+     * @param company the company to update
+     * @return the SQL Statement.
+     */
     private static String GetStatement(Company company) {
-        String sql = "UPDATE bitsei_schema.\"Company2\" SET ";
+        // main query
+        String sql = "UPDATE bitsei_schema.\"Company\" SET ";
 
+        // set clause over all the fields
         List<String> setClauses = new ArrayList<>();
         for (Field f : company.getClass().getDeclaredFields()) {
             f.setAccessible(true);
@@ -59,6 +74,7 @@ public class UpdateCompanyDAO extends AbstractDAO<Boolean> {
         PreparedStatement pstmt = null;
 
         try {
+            // set all the parameters
             int i = 1;
             pstmt = con.prepareStatement(GetStatement(company));
             for (Field f : company.getClass().getDeclaredFields()) {

@@ -25,9 +25,6 @@ package it.unipd.dei.bitsei.resources;
  */
 public final class Actions {
 
-    /**
-     * The list of the users
-     */
     public static final String LIST_USER = "LIST_USER";
 
     /**
@@ -51,10 +48,52 @@ public final class Actions {
     public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
 
     public static final String LIST_COMPANIES = "LIST_COMPANIES";
-
-    public static final String GET_COMPANIES = "GET_COMPANIES";
+    public static final String GET_COMPANY = "GET_COMPANY";
+    public static final String DELETE_COMPANY = "DELETE_COMPANY";
 
     public static final String GET_COMPANY_IMAGE = "GET_COMPANY_IMAGE";
+
+    /**
+     * The list of the invoices filtered by Company ID
+     */
+    public static final String LIST_INVOICES_BY_COMPANY_ID = "LIST_INVOICES_BY_COMPANY_ID";
+
+    /**
+     * The list of the products filtered by Company ID
+     */
+    public static final String LIST_PRODUCTS_BY_COMPANY_ID = "LIST_PRODUCTS_BY_COMPANY_ID";
+
+    /**
+     * The list of the customers filtered by Company ID
+     */
+    public static final String LIST_CUSTOMERS_BY_COMPANY_ID = "LIST_CUSTOMERS_BY_COMPANY_ID";
+
+    /**
+     * The filter of invoices by their period of time
+     */
+    public static final String FILTER_INVOICES_BY_PERIOD = "FILTER_INVOICES_BY_PERIOD";
+
+    /**
+     * The filter of invoices by their total
+     */
+    public static final String FILTER_INVOICES_BY_TOTAL = "FILTER_INVOICES_BY_TOTAL";
+
+    /**
+     * The chart of amount of invoices ordered by date
+     */
+    public static final String INVOICES_BY_DATE = "INVOICES_BY_DATE";
+
+
+    /**
+     * The invoices get by filters
+     */
+    public static final String GET_INVOICES_BY_FILTERS = "GET_INVOICES_BY_FILTERS";
+    public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
+    public static final String CREATE_CUSTOMER = "CREATE_CUSTOMER";
+    public static final String UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
+    public static final String GET_CUSTOMER = "GET_CUSTOMER";
+    public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
+
     /**
      * change bank account
      */

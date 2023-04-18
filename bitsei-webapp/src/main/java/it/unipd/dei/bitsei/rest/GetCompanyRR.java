@@ -41,7 +41,7 @@ public final class GetCompanyRR extends AbstractRR {
      * @param con the connection to the database.
      */
     public GetCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.GET_COMPANIES, req, res, con);
+        super(Actions.GET_COMPANY, req, res, con);
     }
 
 

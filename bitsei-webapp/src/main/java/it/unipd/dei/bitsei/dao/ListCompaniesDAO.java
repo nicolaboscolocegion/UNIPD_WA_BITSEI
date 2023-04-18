@@ -35,6 +35,7 @@ public final class ListCompaniesDAO extends AbstractDAO<List<Company>> {
 
     /**
      * The SQL statement to be executed
+     * list the companies from the database
      */
     private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Company\" WHERE owner_id = ?";
 
@@ -45,7 +46,8 @@ public final class ListCompaniesDAO extends AbstractDAO<List<Company>> {
     /**
      * Creates a new object for listing all the users.
      *
-     * @param con the connection to the database.
+     * @param con      the connection to the database.
+     * @param owner_id the id of the owner
      */
     public ListCompaniesDAO(final Connection con, final int owner_id) {
         super(con);

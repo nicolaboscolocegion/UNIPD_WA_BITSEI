@@ -39,6 +39,7 @@ public abstract class AbstractDatabaseServlet extends HttpServlet {
      */
     public void init(ServletConfig config) throws ServletException {
 
+        super.init(config);
         // the JNDI lookup context
         InitialContext cxt;
 
