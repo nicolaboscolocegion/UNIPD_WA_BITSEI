@@ -25,7 +25,7 @@ there are parts that we should decide who is gonna do it:
     here we will add how the site is organized and show the mockups for the website 
 
 ./sections/BusinessLogicLayer.tex 
-    here we should say how the classes are arranged and say how they works, here whe should add the Sequence diagram 
+    here we should say how the classes are arranged and say how they works, here we should add the Sequence diagram 
 
 
 
