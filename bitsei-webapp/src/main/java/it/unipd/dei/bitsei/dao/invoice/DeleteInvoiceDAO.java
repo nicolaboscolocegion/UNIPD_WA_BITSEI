@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.invoice;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Invoice;
 
 import java.sql.Connection;

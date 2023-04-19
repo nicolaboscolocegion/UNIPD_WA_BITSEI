@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.product;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
@@ -7,31 +8,31 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Updates a product present in the database.
+ * Creates a new product inside the database
  *
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
-public final class UpdateProductDAO extends AbstractDAO {
-
+public final class CreateProductDAO extends AbstractDAO {
     /**
-     * The SQL statement to be executed.
+     * SQL statement to be executed.
      */
-    private static final String STATEMENT = "UPDATE bitsei_schema.\"Product\" SET company_id = ?, title = ?, default_price = ?, logo = ?, measurement_unit = ?, description = ? WHERE product_id = ?";
+    private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Product\" (company_id, title, default_price, logo, measurement_unit, description) VALUES (?, ?, ?, ?, ?, ?)";
 
     /**
-     * The product to be updated.
+     * The product to be stored into the database.
      */
     private final Product product;
 
     /**
-     * Creates a new object for updating a product present in the database.
+     * Creates a new object for storing a product into the database.
      *
      * @param con the connection to the database.
-     * @param product the product to be updated.
+     *
+     * @param product the product to be stored into the database.
      */
-    public UpdateProductDAO(final Connection con, final Product product) {
+    public CreateProductDAO(final Connection con, final Product product) {
         super(con);
 
         if (product == null) {
@@ -55,19 +56,14 @@ public final class UpdateProductDAO extends AbstractDAO {
             pstmt.setString(4, product.getLogo());
             pstmt.setString(5, product.getMeasurement_unit());
             pstmt.setString(6, product.getDescription());
-            pstmt.setInt(7, product.getProduct_id());
 
             pstmt.execute();
 
-            LOGGER.info("query: " + pstmt.toString());
-
-            LOGGER.info("Product %s successfully updated in the database.", product.getTitle());
+            LOGGER.info("Product %s successfully stored in the database.", product.getTitle());
         } finally {
             if (pstmt != null) {
                 pstmt.close();
             }
         }
-
     }
-
 }
