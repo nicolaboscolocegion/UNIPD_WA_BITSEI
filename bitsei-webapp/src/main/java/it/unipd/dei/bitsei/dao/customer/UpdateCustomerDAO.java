@@ -29,6 +29,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
      */
     private final Customer customer;
     private final int owner_id;
+    private final int company_id;
 
     /**
      * Creates a new object for updating a customer into the database.
@@ -40,7 +41,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
      * @param owner_id
      *            the owner of the customer.
      */
-    public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id) {
+    public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id, final int company_id) {
         super(con);
 
         if (customer == null) {
@@ -50,6 +51,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
 
         this.customer = customer;
         this.owner_id = owner_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -61,7 +63,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
         try {
 
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, customer.getCompanyID());
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {
