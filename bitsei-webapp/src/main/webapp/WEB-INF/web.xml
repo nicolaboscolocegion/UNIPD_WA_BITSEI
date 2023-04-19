@@ -139,6 +139,16 @@
         <url-pattern>/loadinvoice</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.LoadInvoiceProductForUpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
+        <url-pattern>/loadinvoiceproduct</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>GenerateProductsReportServlet</servlet-name>
