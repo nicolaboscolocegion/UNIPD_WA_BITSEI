@@ -11,10 +11,7 @@ import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
-import it.unipd.dei.bitsei.rest.listing.ListCustomerRR;
-import it.unipd.dei.bitsei.rest.listing.ListInvoiceByFiltersRR;
-import it.unipd.dei.bitsei.rest.listing.ListInvoiceRR;
-import it.unipd.dei.bitsei.rest.listing.ListProductRR;
+import it.unipd.dei.bitsei.rest.listing.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -99,8 +96,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             if(processGenerateInvoice(req, res)) {
                 return;
             }
-
-
 
             // if none of the above process methods succeeds, it means an unknown resource has been requested
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
@@ -722,7 +717,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         // strip everything until after the /filter-invoices
         path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
 
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate");
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle");
         // the request URI contains filter(s)
         boolean checkFilters = false;
         for(String filter : filterList) {
@@ -773,7 +768,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         return true;
     }
-
 
 
     private boolean checkPath(String path, String filter, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {

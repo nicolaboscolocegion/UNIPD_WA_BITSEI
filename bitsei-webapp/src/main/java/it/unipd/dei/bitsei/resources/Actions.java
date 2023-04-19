@@ -94,6 +94,7 @@ public final class Actions {
     public static final String GET_CUSTOMER = "GET_CUSTOMER";
     public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
     public static final String CLOSE_INVOICE = "CLOSE_INVOICE";
+    public static final String SEND_MAIL = "SEND_MAIL";
 
     /**
      * This class can be neither instantiated nor sub-classed.
