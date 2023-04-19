@@ -60,7 +60,7 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
 
             LOGGER.info("DATA: compID: " + company_id + " title: " + title + " defPrice: " + default_price + " logo: " + logo + " measurUnit: " + measurement_unit + " descr: " + description);
 
-
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", logo, "LOGO");
 
@@ -69,7 +69,7 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
             p = new Product(company_id, title, default_price, logo, measurement_unit,  description);
 
             // creates a new object for accessing the database and stores the product
-            new CreateProductDAO(getConnection(), p).access();
+            new CreateProductDAO(getConnection(), p, owner_id).access();
 
             m = new Message(String.format("Product %s successfully created.", title));
 

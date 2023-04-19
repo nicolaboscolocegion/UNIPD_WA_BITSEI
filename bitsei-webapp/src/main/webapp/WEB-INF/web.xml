@@ -210,6 +210,18 @@
         <url-pattern>/rest/closeinvoice/*</url-pattern>
         <url-pattern>/rest/customerreport/*</url-pattern>
         <url-pattern>/rest/generateinvoice/*</url-pattern>
+        <url-pattern>/productinsert</url-pattern>
+        <url-pattern>/productdelete</url-pattern>
+        <url-pattern>/productupdate</url-pattern>
+        <url-pattern>/invoiceinsert</url-pattern>
+        <url-pattern>/invoicedelete</url-pattern>
+        <url-pattern>/invoiceupdate</url-pattern>
+        <url-pattern>/invoiceproductinsert</url-pattern>
+        <url-pattern>/invoiceproductdelete</url-pattern>
+        <url-pattern>/invoiceproductupdate</url-pattern>
+        <url-pattern>/loadproduct</url-pattern>
+        <url-pattern>/loadinvoice</url-pattern>
+        <url-pattern>/loadinvoiceproduct</url-pattern>
     </filter-mapping>
 
     <resource-ref>
