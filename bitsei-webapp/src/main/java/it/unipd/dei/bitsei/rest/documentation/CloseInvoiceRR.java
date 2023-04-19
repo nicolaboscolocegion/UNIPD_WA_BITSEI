@@ -12,6 +12,7 @@ import it.unipd.dei.bitsei.dao.documentation.CloseInvoiceDAO;
 import it.unipd.dei.bitsei.resources.*;
 
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -31,6 +32,8 @@ public class CloseInvoiceRR extends AbstractRR {
     private final String absPath; //String absPath = super.getServletContext().getRealPath("/");
     private int invoice_id;
     List<Object> out;
+    RestURIParser r;
+
     /**
      * Creates a new customer
      *
@@ -38,9 +41,10 @@ public class CloseInvoiceRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public CloseInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath) {
+    public CloseInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
         this.absPath = absPath;
+        this.r = r;
     }
 
 
@@ -50,13 +54,7 @@ public class CloseInvoiceRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
 
-        String uri = req.getRequestURI();
-        String id = uri.substring(uri.lastIndexOf('/') + 1);
-        if (id.isEmpty() || id.isBlank()) {
-            throw new IOException("invoice id cannot be empty.");
-        }
-
-        invoice_id = Integer.parseInt(id);
+        invoice_id = r.getResourceID();
 
         InputStream requestStream = req.getInputStream();
 
@@ -80,7 +78,7 @@ public class CloseInvoiceRR extends AbstractRR {
             java.sql.Date today = new java.sql.Date(utilToday.getTime());
             String fileName = "warning_" + UUID.randomUUID() + ".pdf";
 
-            out = new CloseInvoiceDAO(con, this.invoice_id, today, fileName, owner_id).access().getOutputParam();
+            out = new CloseInvoiceDAO(con, this.invoice_id, today, fileName, owner_id, r.getCompanyID()).access().getOutputParam();
             m = new Message(String.format("Data for invoice warning fetched"));
             LOGGER.info("Data for invoice warning fetched");
 

@@ -12,6 +12,7 @@ import it.unipd.dei.bitsei.dao.documentation.FetchProductsDAO;
 import it.unipd.dei.bitsei.resources.*;
 
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -29,6 +30,7 @@ public class GenerateProductsReportRR extends AbstractRR {
 
 
     private final String absPath;
+    private final RestURIParser r;
     // model
 
 
@@ -39,9 +41,10 @@ public class GenerateProductsReportRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GenerateProductsReportRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath) {
+    public GenerateProductsReportRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
         this.absPath = absPath;
+        this.r = r;
     }
 
 
@@ -64,7 +67,8 @@ public class GenerateProductsReportRR extends AbstractRR {
 
         try {
             // creates a new object for accessing the database and fetching the products
-            lp = new FetchProductsDAO(con).access().getOutputParam();
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            lp = new FetchProductsDAO(con, owner_id, r.getCompanyID()).access().getOutputParam();
             m = new Message("Products successfully fetched.");
 
             LOGGER.info("Products successfully fetched.");

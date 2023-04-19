@@ -1,5 +1,7 @@
 package it.unipd.dei.bitsei.resources;
 
+import java.util.Locale;
+
 /**
  * Represents the data about an invoice row of an Invoice.
  *
@@ -25,7 +27,7 @@ public class DetailRow {
     /**
      * The name of the product.
      */
-    private final String unit_price;
+    private final Double unit_price;
     /**
      * The default price per unit of the product.
      */
@@ -65,10 +67,10 @@ public class DetailRow {
             this.measurement_unit = "";
         }
         if (unit_price > 0) {
-            this.unit_price = Double.toString(unit_price);
+            this.unit_price = unit_price;
         }
         else {
-            this.unit_price = "";
+            this.unit_price = 0.00;
         }
 
         this.purchase_date = purchase_date;
@@ -106,7 +108,7 @@ public class DetailRow {
         return unit_price + " €";
     }
 
-    public String getNumericUnit_price() {return String.format("%.2f",unit_price);}
+    public String getNumericUnit_price() {return String.format(Locale.UK,"%.2f",unit_price);}
 
     public String getRelated_price() {
         return related_price + " €";

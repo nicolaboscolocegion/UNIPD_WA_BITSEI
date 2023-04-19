@@ -12,6 +12,7 @@ import it.unipd.dei.bitsei.dao.documentation.GenerateInvoiceDAO;
 import it.unipd.dei.bitsei.resources.*;
 
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -22,6 +23,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
+
 
 /**
  * Creates a new customer into the database.
@@ -36,6 +38,8 @@ public class GenerateInvoiceRR extends AbstractRR {
     private final String absPath; //String absPath = super.getServletContext().getRealPath("/");
     private int invoice_id;
     List<Object> out;
+
+    RestURIParser r = null;
     /**
      * Creates a new customer
      *
@@ -43,9 +47,10 @@ public class GenerateInvoiceRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GenerateInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath) {
+    public GenerateInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
         this.absPath = absPath;
+        this.r = r;
     }
 
 
@@ -55,13 +60,7 @@ public class GenerateInvoiceRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
 
-        String uri = req.getRequestURI();
-        String id = uri.substring(uri.lastIndexOf('/') + 1);
-        if (id.isEmpty() || id.isBlank()) {
-            throw new IOException("invoice id cannot be empty.");
-        }
-
-        invoice_id = Integer.parseInt(id);
+        invoice_id = r.getResourceID();
 
         InputStream requestStream = req.getInputStream();
 
@@ -72,8 +71,6 @@ public class GenerateInvoiceRR extends AbstractRR {
 
         Message m = null;
 
-
-
         try {
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
@@ -83,7 +80,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             java.sql.Date today = new java.sql.Date(utilToday.getTime());
             String fileName = "invoice_" + UUID.randomUUID() + ".pdf";
 
-            out = new GenerateInvoiceDAO(con, this.invoice_id, today, fileName, owner_id).access().getOutputParam();
+            out = new GenerateInvoiceDAO(con, this.invoice_id, today, fileName, owner_id, r.getCompanyID()).access().getOutputParam();
 
 
             String separator = FileSystems.getDefault().getSeparator();
@@ -114,7 +111,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             map.put("customer_mail", c.getEmailAddress());
 
             //depends on company fiscal type
-                String riferimentoNormativo = "Operazione senza applicazione dell'IVA ai sensi delle Legge 190 del 23 Dicembre 2014 art. 1 commi da 54 a 89. Operazione effettuata ai sensi dell’art. 1, commi da 54 a 89 della Legge n. 190/2014 – Regime forfettario. Il compenso non è soggetto a ritenute d’acconto ai sensi della legge 190 del 23 Dicembre 2014 art. 1 comma 67.";
+                String riferimentoNormativo = "Operazione senza applicazione dell\'IVA ai sensi delle Legge 190 del 23 Dicembre 2014 art. 1 commi da 54 a 89. Operazione effettuata ai sensi dell\'art. 1, commi da 54 a 89 della Legge n. 190/2014 - Regime forfettario. Il compenso non e\' soggetto a ritenute d\'acconto ai sensi della legge 190 del 23 Dicembre 2014 art. 1 comma 67.";
             //depends on company fiscal type
 
             map.put("footer", riferimentoNormativo);
@@ -129,11 +126,11 @@ public class GenerateInvoiceRR extends AbstractRR {
             int fiscal_company_type = (int) out.get(11);
             if (fiscal_company_type == 0 || fiscal_company_type == 1 || fiscal_company_type == 2) {
                 if (total >= 77.47) {
-                    ldr.add(new DetailRow("Imposta di bollo", "", 1, " €", 2, 0, ""));
+                    ldr.add(new DetailRow("Imposta di bollo", "", 1, "", 2, 0, ""));
                     total += 2;
                 }
                 if (i.getPension_fund_refund() > 0) {
-                    ldr.add(new DetailRow("Rivalsa INPS", "", 1,  "€", Math.round(total*i.getPension_fund_refund())/100, 0, ""));
+                    ldr.add(new DetailRow("Rivalsa INPS", "", 1,  "", Math.round(total*i.getPension_fund_refund())/100, 0, ""));
                     total += Math.round(total*i.getPension_fund_refund()/100);
                 }
             }
@@ -159,6 +156,15 @@ public class GenerateInvoiceRR extends AbstractRR {
 
 
 
+
+            for (Iterator<DetailRow> it = ldr.iterator(); it.hasNext();) {
+                DetailRow dr =it.next();
+                if (dr.getProduct_description().equals("TOTALE") || dr.getProduct_description().equals("Totale imponibile") || dr.getProduct_description().equals("Iva (22%)") || dr.getProduct_description().equals("Totale") || dr.getProduct_description().equals("Ritenuta d'acconto") || dr.getProduct_description().equals("Totale da pagare")) {
+                    it.remove();
+                }
+            }
+            String owner_email = req.getSession().getAttribute("email").toString();
+
             //XML
             Document el_invoice = DocumentHelper.createDocument();
             Element pFatturaElettronica = el_invoice.addElement("p:FatturaElettronica");
@@ -173,11 +179,11 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element idTrasmittente = datiTrasmissione.addElement("IdTrasmittente");
             idTrasmittente.addElement("IdPaese").addText("IT"); //owner piva
             idTrasmittente.addElement("IdCodice").addText((String) map.get("company_vat")); //owner piva
-            datiTrasmissione.addElement("ProgressivoInvio").addText(i.getInvoice_number()); //invoicenumber
+            datiTrasmissione.addElement("ProgressivoInvio").addText(c.getVatNumber()); //invoicenumber
             datiTrasmissione.addElement("FormatoTrasmissione").addText("FPR12"); //formatoinvio
             datiTrasmissione.addElement("CodiceDestinatario").addText((String) map.get("company_unique_code")); //owner uniquecode
             Element contattiTrasmissione = datiTrasmissione.addElement("ContattiTrasmissione");
-            contattiTrasmissione.addElement("Email").addText("formazionesicurezza@marcobarosco.it"); //owner email
+            contattiTrasmissione.addElement("Email").addText(owner_email); //owner email
 
             Element cedentePrestatore = fatturaElettronicaHeader.addElement("CedentePrestatore");
             Element datiAnagrafici = cedentePrestatore.addElement("DatiAnagrafici");
@@ -200,7 +206,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             sede.addElement("Provincia").addText((String) out.get(14)); //company province
             sede.addElement("IT");
             Element contatti = cedentePrestatore.addElement("Contatti");
-            contatti.addElement("Email").addText("formazionesicuezza@marcobarosco.it");//owner email
+            contatti.addElement("Email").addText(owner_email);//owner email
 
             Element cessionarioCommittente = fatturaElettronicaHeader.addElement("CessionarioCommittente");
             Element cDatiAnagrafici = cessionarioCommittente.addElement("DatiAnagrafici");
@@ -246,17 +252,21 @@ public class GenerateInvoiceRR extends AbstractRR {
             //FOREACH INVOICE_PRODUCT ENTRY
             Integer k = 0;
             Double imponibile = 0.0;
+            Double taxes = 0.0;
             for (DetailRow dr : ldr) {
                 k++;
-                datiBeniServizi.addElement("NumeroLinea").addText(k.toString()); //row counter
-                datiBeniServizi.addElement("Descrizione").addText(dr.getProduct_description()); //product description
-                datiBeniServizi.addElement("Quantita").addText(dr.getNumericQuantity()); //invoice_product quantity
-                datiBeniServizi.addElement("UnitaMisura").addText(dr.getMeasurement_unit()); //product measurement unit
-                datiBeniServizi.addElement("PrezzoUnitario").addText(dr.getNumericUnit_price()); //invoice_product unit price4
-                datiBeniServizi.addElement("PrezzoTotale").addText(String.format("%.2f", dr.getTotalD())); //quantity * unit_price
-                datiBeniServizi.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
+                Element dettaglioLinee = datiBeniServizi.addElement("DettaglioLinee");
+                dettaglioLinee.addElement("NumeroLinea").addText(k.toString()); //row counter
+                dettaglioLinee.addElement("Descrizione").addText(dr.getProduct_description()); //product description
+                dettaglioLinee.addElement("Quantita").addText(dr.getNumericQuantity()); //invoice_product quantity
+                if (dr.getMeasurement_unit() != "") {
+                    dettaglioLinee.addElement("UnitaMisura").addText(dr.getMeasurement_unit()); //product measurement unit
+                }
+                dettaglioLinee.addElement("PrezzoUnitario").addText(String.format(dr.getNumericUnit_price())); //invoice_product unit price
+                dettaglioLinee.addElement("PrezzoTotale").addText(String.format(Locale.UK, "%.2f", dr.getTotalD())); //quantity * unit_price
+                dettaglioLinee.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
                 if ((Integer) out.get(11) == 0) {
-                    datiBeniServizi.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
+                    dettaglioLinee.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
                 }
                 imponibile+=dr.getTotalD();
             }
@@ -267,7 +277,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             if ((Integer) out.get(11) == 0) {
                 datiRiepilogo.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
             }
-            datiRiepilogo.addElement("ImponibileImporto").addText(String.format("%.2f", imponibile)); // total of all detail line above
+            datiRiepilogo.addElement("ImponibileImporto").addText(String.format(Locale.UK,"%.2f", imponibile)); // total of all detail line above
             datiRiepilogo.addElement("Imposta").addText("0.00"); // depends on company fiscal type
             datiRiepilogo.addElement("RiferimentoNormativo").addText(riferimentoNormativo); //depends on company fiscal type
 
@@ -275,14 +285,14 @@ public class GenerateInvoiceRR extends AbstractRR {
             datiPagamento.addElement("CondizioniPagamento").addText("TP02"); //standard (immediate payment)
             Element dettaglioPagamento = datiPagamento.addElement("DettaglioPagamento");
             dettaglioPagamento.addElement("ModalitaPagamento").addText("MP05"); //standard: bonifico
-            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format("%.2f", imponibile)); //total of all rows above + taxes
-            dettaglioPagamento.addElement("IBAN").addText("IT51A0306962732100000004512"); //bankaccount iban selected
+            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format(Locale.UK,"%.2f", imponibile+taxes)); //total of all rows above + taxes
+            dettaglioPagamento.addElement("IBAN").addText((String) out.get(15)); //bankaccount iban selected
 
             StringWriter sw = new StringWriter();
             XMLWriter xmlWriter = new XMLWriter(sw, OutputFormat.createPrettyPrint());
             xmlWriter.write(el_invoice);
             xmlWriter.close();
-            FileWriter f = new FileWriter(absPath + "xml" + separator + "IT123456789_1.xml");
+            FileWriter f = new FileWriter(absPath + "xml" + separator + c.getVatNumber() + "_" + c.getVatNumber() + ".xml");
             f.write(sw.getBuffer().toString());
             f.close();
 

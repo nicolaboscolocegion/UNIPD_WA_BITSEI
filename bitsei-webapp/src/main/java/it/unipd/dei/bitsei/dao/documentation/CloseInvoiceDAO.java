@@ -36,6 +36,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT bitsei_schema.\"Product\".title, bitsei_schema.\"Product\".description, bitsei_schema.\"Invoice_Product\".quantity, bitsei_schema.\"Product\".measurement_unit, bitsei_schema.\"Invoice_Product\".unit_price, bitsei_schema.\"Invoice_Product\".related_price, bitsei_schema.\"Invoice_Product\".related_price_description,  bitsei_schema.\"Invoice_Product\".purchase_date FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
 
     private int owner_id;
+    private int company_id;
     private int invoice_id;
     private Date today;
     private  String fileName;
@@ -60,6 +61,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
 
 
+
     /**
      * Closes the invoice.
      *
@@ -68,12 +70,13 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
      * @param invoice_id
      *        the id of the invoice to be closed.
      */
-    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName, int owner_id) {
+    public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName, int owner_id, int company_id) {
         super(con);
         this.invoice_id = invoice_id;
         this.today = today;
         this.fileName = fileName;
         this.owner_id = owner_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -86,6 +89,19 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
         try {
 
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, company_id);
+            pstmt.setInt(2, owner_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Company selected does not belong to logged user.");
+                throw new IllegalAccessException();
+            }
 
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);
@@ -138,20 +154,6 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             }
             LOGGER.info("Customer data successfully fetched.");
 
-
-            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, c.getCompanyID());
-            pstmt.setInt(2, owner_id);
-            rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                LOGGER.error("Error on fetching data from database");
-                throw new SQLException();
-            }
-
-            if (rs.getInt("c") == 0) {
-                LOGGER.error("Company selected does not belong to logged user.");
-                throw new IllegalAccessException();
-            }
 
 
             pstmt = con.prepareStatement(STATEMENT_UPDATE);

@@ -141,16 +141,6 @@
 
 
     <servlet>
-        <servlet-name>GenerateProductsReportServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateProductsReportServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>GenerateProductsReportServlet</servlet-name>
-        <url-pattern>/generatepreport</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersServlet</servlet-class>
     </servlet>
@@ -199,6 +189,7 @@
         <url-pattern>/rest/customer/*</url-pattern>
         <url-pattern>/rest/closeinvoice/*</url-pattern>
         <url-pattern>/rest/customerreport/*</url-pattern>
+        <url-pattern>/rest/productsreport/*</url-pattern>
         <url-pattern>/rest/generateinvoice/*</url-pattern>
     </filter-mapping>
 

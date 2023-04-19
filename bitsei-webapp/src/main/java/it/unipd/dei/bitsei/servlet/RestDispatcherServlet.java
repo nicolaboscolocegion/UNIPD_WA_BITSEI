@@ -12,6 +12,7 @@ import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
 import it.unipd.dei.bitsei.rest.listing.*;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -124,23 +125,24 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
     private boolean processCloseInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/closeinvoice") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("closeinvoice") + 12);
-
+        if (!r.getResource().equals("closeinvoice")) {
+            return false;
+        }
         // the request URI is: /user
         // if method GET, list users
         // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
 
             switch (method) {
                 default:
@@ -154,11 +156,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
 
-        else if (path.matches("/\\d+")) {
+        else {
             switch (method) {
 
                 case "PUT":
-                    new CloseInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    new CloseInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
                     break;
 
 
@@ -179,23 +181,26 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
     private boolean processGenerateInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/generateinvoice") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("generateinvoice") + 15);
-
+        if (!r.getResource().equals("generateinvoice")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
         // the request URI is: /user
         // if method GET, list users
         // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
 
             switch (method) {
                 default:
@@ -209,11 +214,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
 
-        else if (path.matches("/\\d+")) {
+        else {
             switch (method) {
 
                 case "PUT":
-                    new GenerateInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    new GenerateInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
                     break;
 
 
@@ -234,28 +239,32 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
     private boolean processCustomersReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/customerreport") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("customerreport") + 14);
 
-        // the request URI is: /user
-        // if method GET, list users
-        // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+
+        if (!r.getResource().equals("customerreport")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
 
             switch (method) {
                 case "GET":
-
-                    new GenerateCustomersReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    LOGGER.info("qui" + r.toString());
+                    new GenerateCustomersReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /customerreport: %s.", method);
@@ -277,28 +286,31 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
 
     private boolean processProductsReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/productsreport") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("productsreport") + 14);
 
-        // the request URI is: /user
-        // if method GET, list users
-        // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+
+        if (!r.getResource().equals("productsreport")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
 
             switch (method) {
                 case "GET":
-
-                    new GenerateProductsReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    new GenerateProductsReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /productsreport: %s.", method);
@@ -482,34 +494,33 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
 
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/customer") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("customer") + 8);
 
-        // the request URI is: /user
-        // if method GET, list users
-        // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+
+        if (!r.getResource().equals("productsreport")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
 
             switch (method) {
-                /*case "GET":
-                    new ListCustomerRR(req, res, getConnection()).serve();
-                    break;*/
+
                 case "POST":
                     new CreateCustomerRR(req, res, getConnection()).serve();
                     break;
-                 /*case "DELETE":
-                    new DeleteCustomerRR(req, res, getConnection()).serve();
-                    break;*/
                 default:
                     LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
 
@@ -521,7 +532,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
 
-        else if (path.matches("/\\d+")) {
+        else {
             switch (method) {
                 case "GET":
                     new GetCustomerRR(req, res, getConnection()).serve();
