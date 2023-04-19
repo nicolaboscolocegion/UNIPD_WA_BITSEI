@@ -1,9 +1,10 @@
-package it.unipd.dei.bitsei.servlet;
+package it.unipd.dei.bitsei.servlet.invoiceproduct;
 
-import it.unipd.dei.bitsei.dao.CreateInvoiceProductDAO;
+import it.unipd.dei.bitsei.dao.invoiceproduct.CreateInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.InvoiceProduct;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.servlet.AbstractDatabaseServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
