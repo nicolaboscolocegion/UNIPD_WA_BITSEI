@@ -95,6 +95,30 @@ public final class Actions {
     public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
 
     /**
+     * change bank account
+     */
+    public static final String CHANGE_BANK_ACCOUNT = "CHANGE_BANK_ACCOUNT";
+
+    /**
+     * create new bank account
+     */
+    public static final String CREATE_BANK_ACCOUNT = "CREATE_BANK_ACCOUNT";
+    /**
+     * get bank account
+     */
+    public static final String GET_BANK_ACCOUNT = "GET_BANK_ACCOUNT";
+
+    /**
+     * Delete the bank account
+     */
+    public static final String DELETE_BANK_ACCOUNT = "DELETE_BANK_ACCOUNT";
+
+    /**
+     * Lists all bank accounts
+     */
+    public static final String LIST_BANK_ACCOUNTS = "LIST_BANK_ACCOUNTS";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {
