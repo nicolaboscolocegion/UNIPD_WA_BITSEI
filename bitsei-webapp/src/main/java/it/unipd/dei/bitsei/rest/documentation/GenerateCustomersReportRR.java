@@ -12,6 +12,7 @@ import it.unipd.dei.bitsei.dao.documentation.FetchCustomersDAO;
 import it.unipd.dei.bitsei.resources.*;
 
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -29,6 +30,7 @@ public class GenerateCustomersReportRR extends AbstractRR {
 
 
     private final String absPath;
+    private final RestURIParser r;
     // model
 
 
@@ -39,9 +41,10 @@ public class GenerateCustomersReportRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GenerateCustomersReportRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath) {
+    public GenerateCustomersReportRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
         this.absPath = absPath;
+        this.r = r;
     }
 
 
@@ -65,7 +68,7 @@ public class GenerateCustomersReportRR extends AbstractRR {
         try {
             // creates a new object for accessing the database and searching the employees
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-            lc = new FetchCustomersDAO(con, owner_id).access().getOutputParam();
+            lc = new FetchCustomersDAO(con, owner_id, r.getCompanyID()).access().getOutputParam();
             m = new Message("Customers successfully fetched.");
             LOGGER.info("Customers successfully fetched.");
 

@@ -23,17 +23,21 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
     /**
      * The SQL statement to be executed
      */
-    //private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Product\";";
 
 
+    private final int owner_id;
+    private final int company_id;
     /**
      * Creates a new object for searching employees by salary.
      *
      * @param con    the connection to the database.
      */
-    public FetchProductsDAO(final Connection con) {
+    public FetchProductsDAO(final Connection con, int owner_id, int company_id) {
         super(con);
+        this.owner_id = owner_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -47,6 +51,22 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
         List<Product> lp = new ArrayList<Product>();
 
         try {
+
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, company_id);
+            pstmt.setInt(2, owner_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Company selected does not belong to logged user.");
+                throw new IllegalAccessException();
+            }
+
+
             pstmt = con.prepareStatement(STATEMENT);
 
             rs = pstmt.executeQuery();
@@ -56,6 +76,8 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
             }
 
             LOGGER.info("Products(s) successfully listed.");
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (rs != null) {
                 rs.close();

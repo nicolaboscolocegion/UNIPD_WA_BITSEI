@@ -14,30 +14,30 @@ public class RestURIParser {
     private String resource;
     private int resourceID;
     private int companyID;
-    protected RestURIParser() {
-    }
+    public RestURIParser(String URI) {
+        this.URI = URI;
 
-    public RestURIParser createParsedURI(String URI) {
         String[] parts = URI.split("/");
-        if (parts[0] != "rest") {
+
+        if (!parts[2].equals("rest")) {
             throw new IllegalArgumentException("URI NOT RESTFUL");
         }
 
-        if (parts.length < 2) {
-            throw new IllegalArgumentException("URI WITHOUT RESOURCE SPECIFIED");
+        if (parts.length < 6) {
+            throw new IllegalArgumentException("TOO FEW ARGUMENTS IN URI");
         }
         else {
-            this.resource = parts[1];
+            resource = parts[3];
         }
 
         try {
-            resourceID = Integer.parseInt(parts[2]);
-            if (parts[3] != "company") {
+            resourceID = Integer.parseInt(parts[4]);
+            if (!parts[5].equals("company")) {
                 throw new IllegalArgumentException("NO COMPANY PROPERTY FOUND.");
             }
             else {
                 try {
-                    companyID = Integer.parseInt(parts[4]);
+                    companyID = Integer.parseInt(parts[6]);
                 }
                 catch ( NumberFormatException ex) {
                     ex.printStackTrace();
@@ -46,18 +46,22 @@ public class RestURIParser {
 
 
         } catch (NumberFormatException ex) {
-            if (parts[2] != "company") {
+            resourceID = -1;
+            if (!parts[4].equals("company")) {
                 throw new IllegalArgumentException("NO COMPANY PROPERTY FOUND.");
             }
             else  try {
-                companyID = Integer.parseInt(parts[3]);
+                companyID = Integer.parseInt(parts[5]);
             }
             catch ( NumberFormatException exx) {
                 exx.printStackTrace();
             }
         }
+    }
 
-        return this;
+
+    public String getURI() {
+        return URI;
     }
 
     public String getResource() {
@@ -70,5 +74,10 @@ public class RestURIParser {
 
     public int getCompanyID() {
         return companyID;
+    }
+
+    @Override
+    public String toString(){
+        return "URL: res:" + this.getResource() + " -  res_id:" + getResourceID() + " -  com_id:" + getCompanyID();
     }
 }
