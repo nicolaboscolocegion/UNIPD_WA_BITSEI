@@ -9,6 +9,7 @@ import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
 import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
+import it.unipd.dei.bitsei.rest.documentation.GenerateInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
 import it.unipd.dei.bitsei.rest.listing.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -91,6 +92,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             if(processCloseInvoice(req, res)) {
                 return;
             }
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processGenerateInvoice(req, res)) {
+                return;
+            }
 
             // if none of the above process methods succeeds, it means an unknown resource has been requested
             LOGGER.warn("Unknown resource requested: %s.", req.getRequestURI());
@@ -161,6 +166,61 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
 
                     m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+
+    }
+
+    private boolean processGenerateInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not an user
+        if (path.lastIndexOf("rest/generateinvoice") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /user
+        path = path.substring(path.lastIndexOf("generateinvoice") + 15);
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (path.length() == 0 || path.equals("/")) {
+
+            switch (method) {
+                default:
+                    LOGGER.warn("Unsupported operation for URI /generateinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /generateinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else if (path.matches("/\\d+")) {
+            switch (method) {
+
+                case "PUT":
+                    new GenerateInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/")).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /generateinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /generateinvoice.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
@@ -688,8 +748,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
                     break;
-                }
             }
+        }
         else {
             switch (method) {
                 case "GET":

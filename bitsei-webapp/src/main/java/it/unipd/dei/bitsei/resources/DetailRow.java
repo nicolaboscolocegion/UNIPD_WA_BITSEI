@@ -94,9 +94,19 @@ public class DetailRow {
         return quantity + " " + this.measurement_unit + ".";
     }
 
+    public String getNumericQuantity() {
+        return quantity + ".00";
+    }
+
+    public String getMeasurement_unit() {
+        return measurement_unit;
+    }
+
     public String getUnit_price() {
         return unit_price + " €";
     }
+
+    public String getNumericUnit_price() {return String.format("%.2f",unit_price);}
 
     public String getRelated_price() {
         return related_price + " €";
