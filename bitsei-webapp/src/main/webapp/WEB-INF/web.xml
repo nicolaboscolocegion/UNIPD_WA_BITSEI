@@ -199,6 +199,7 @@
         <url-pattern>/rest/customer/*</url-pattern>
         <url-pattern>/rest/closeinvoice/*</url-pattern>
         <url-pattern>/rest/customerreport/*</url-pattern>
+        <url-pattern>/rest/generateinvoice/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>

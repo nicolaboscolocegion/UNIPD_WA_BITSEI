@@ -59,7 +59,9 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
 
     private List<DetailRow> ldr = new ArrayList<>();
     private List<Object> output = new ArrayList<>();
-
+    private String company_postal_code;
+    private String company_city;
+    private String company_province;
 
 
     /**
@@ -102,22 +104,6 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
                 throw new IllegalAccessException();
             }
 */
-            int invoiceNumber = 0;
-            pstmt = con.prepareStatement(COUNT_INVOICES);
-            pstmt.setInt(1, c.getCompanyID());
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                invoiceNumber = rs.getInt("c");
-            }
-
-
-            pstmt = con.prepareStatement(STATEMENT_UPDATE);
-            pstmt.setInt(1, 2);
-            pstmt.setDate(2, (java.sql.Date) today);
-            pstmt.setString(3, this.fileName);
-            pstmt.setInt(4, this.invoice_id);
-            pstmt.executeUpdate();
-            LOGGER.info("Invoice status successfully set to 1.");
 
 
 
@@ -126,23 +112,6 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             rs = pstmt.executeQuery();
             int customer_id = 0;
             while (rs.next()) {
-                i = new Invoice(
-                        rs.getInt("invoice_id"),
-                        rs.getInt("customer_id"),
-                        rs.getInt("status"),
-                        rs.getInt("warning_number"),
-                        rs.getDate("warning_date"),
-                        rs.getString("warning_pdf_file"),
-                        rs.getString("invoice_number"),
-                        rs.getDate("invoice_date"),
-                        rs.getString("invoice_pdf_file"),
-                        rs.getString("invoice_xml_file"),
-                        rs.getDouble("total"),
-                        rs.getDouble("discount"),
-                        rs.getDouble("pension_fund_refund"),
-                        rs.getBoolean("has_stamp")
-                );
-
                 customer_id =  rs.getInt("customer_id");
             }
             LOGGER.info("Invoice data successfully fetched.");
@@ -172,6 +141,53 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             LOGGER.info("Customer data successfully fetched.");
 
 
+            int invoiceNumber = 0;
+            pstmt = con.prepareStatement(COUNT_INVOICES);
+            pstmt.setInt(1, c.getCompanyID());
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                invoiceNumber = rs.getInt("c");
+            }
+
+
+            invoiceNumber++;
+            pstmt = con.prepareStatement(STATEMENT_UPDATE);
+            pstmt.setInt(1, 2);
+            pstmt.setDate(2, (java.sql.Date) today);
+            pstmt.setString(3, this.fileName);
+            pstmt.setInt(4, invoiceNumber);
+            pstmt.setInt(5, this.invoice_id);
+            LOGGER.info("QUERY: " + pstmt.toString());
+            pstmt.executeUpdate();
+            LOGGER.info("Invoice status successfully set to 1.");
+
+
+            pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);
+            pstmt.setInt(1, this.invoice_id);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                i = new Invoice(
+                        rs.getInt("invoice_id"),
+                        rs.getInt("customer_id"),
+                        rs.getInt("status"),
+                        rs.getInt("warning_number"),
+                        rs.getDate("warning_date"),
+                        rs.getString("warning_pdf_file"),
+                        rs.getString("invoice_number"),
+                        rs.getDate("invoice_date"),
+                        rs.getString("invoice_pdf_file"),
+                        rs.getString("invoice_xml_file"),
+                        rs.getDouble("total"),
+                        rs.getDouble("discount"),
+                        rs.getDouble("pension_fund_refund"),
+                        rs.getBoolean("has_stamp")
+                );
+
+             }
+            LOGGER.info("Invoice data successfully fetched.");
+
+
+
             pstmt = con.prepareStatement(STATEMENT_SELECT_COMPANY);
             pstmt.setInt(1, company_id);
             rs = pstmt.executeQuery();
@@ -185,6 +201,9 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
                 this.company_pec = "todo@pec.it";
                 this.company_unique_code = rs.getString("unique_code");
                 this.fiscal_company_type = rs.getInt("fiscal_company_type");
+                this.company_postal_code = rs.getString("postal_code");
+                this.company_city = rs.getString("city");
+                this.company_province = rs.getString("province");
             }
             LOGGER.info("Customer data successfully fetched.");
 
@@ -211,7 +230,9 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             output.add(this.company_pec);
             output.add(this.company_unique_code);
             output.add(this.fiscal_company_type);
-
+            output.add(this.company_postal_code);
+            output.add(this.company_city);
+            output.add(this.company_province);
 
         } catch (ParseException e) {
             throw new RuntimeException(e);

@@ -153,24 +153,29 @@ public class GenerateInvoiceRR extends AbstractRR {
                 }
             }
 
-
             //generate invoice
             exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
+
+
 
 
             //XML
             Document el_invoice = DocumentHelper.createDocument();
             Element pFatturaElettronica = el_invoice.addElement("p:FatturaElettronica");
+            pFatturaElettronica.addAttribute("versione", "FPR12");
+            pFatturaElettronica.addAttribute("xmlns:ds", "http://www.w3.org/2000/09/xmldsig#");
+            pFatturaElettronica.addAttribute("xmlns:p", "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2");
+            pFatturaElettronica.addAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            pFatturaElettronica.addAttribute("xsi:schemaLocation", "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd");
 
             Element fatturaElettronicaHeader = pFatturaElettronica.addElement("FatturaElettronicaHeader");
-
             Element datiTrasmissione = fatturaElettronicaHeader.addElement("DatiTrasmissione");
             Element idTrasmittente = datiTrasmissione.addElement("IdTrasmittente");
             idTrasmittente.addElement("IdPaese").addText("IT"); //owner piva
-            idTrasmittente.addElement("IdCodice").addText("05104990287"); //owner piva
-            datiTrasmissione.addElement("ProgressivoInvio").addText("12"); //invoicenumber
-            datiTrasmissione.addElement("FormatoTrasmissione").addText("FPR12"); //CHECK
-            datiTrasmissione.addElement("CodiceDestinatario").addText("SUBM70N"); //owner uniquecode
+            idTrasmittente.addElement("IdCodice").addText((String) map.get("company_vat")); //owner piva
+            datiTrasmissione.addElement("ProgressivoInvio").addText(i.getInvoice_number()); //invoicenumber
+            datiTrasmissione.addElement("FormatoTrasmissione").addText("FPR12"); //formatoinvio
+            datiTrasmissione.addElement("CodiceDestinatario").addText((String) map.get("company_unique_code")); //owner uniquecode
             Element contattiTrasmissione = datiTrasmissione.addElement("ContattiTrasmissione");
             contattiTrasmissione.addElement("Email").addText("formazionesicurezza@marcobarosco.it"); //owner email
 
@@ -178,16 +183,21 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element datiAnagrafici = cedentePrestatore.addElement("DatiAnagrafici");
             Element idFiscaleIVA = datiAnagrafici.addElement("IdFiscaleIVA");
             idFiscaleIVA.addElement("IdPaese").addText("IT"); //owner piva
-            idFiscaleIVA.addElement("IdCodice").addText("05104990287"); //owner piva
-            datiAnagrafici.addElement("CodiceFiscale").addText("BRSMRC71E11L736V"); //owner tax code
+            idFiscaleIVA.addElement("IdCodice").addText((String) map.get("company_vat")); //owner piva
+            datiAnagrafici.addElement("CodiceFiscale").addText((String) map.get("company_tax")); //owner tax code
             Element anagrafica = datiAnagrafici.addElement("Anagrafica");
-            anagrafica.addElement("Denominazione").addText("BAROSCO MARCO"); //company business name
-            datiAnagrafici.addElement("RegimeFiscale").addText("RF19"); //company fiscal type
+            anagrafica.addElement("Denominazione").addText((String) map.get("company_name")); //company business name
+            if ((Integer) out.get(11) == 0) {
+                datiAnagrafici.addElement("RegimeFiscale").addText("RF19"); //company fiscal type
+            }
+            else {
+                datiAnagrafici.addElement("RegimeFiscale").addText("RF01"); //company fiscal type
+            }
             Element sede = cedentePrestatore.addElement("Sede");
-            sede.addElement("Indirizzo").addText("VIA SANT'APOLLONIA N 4"); //company address
-            sede.addElement("CAP").addText("35010"); //company postal code
-            sede.addElement("Comune").addText("Trebaseleghe"); //company city
-            sede.addElement("Provincia").addText("PD"); //company province
+            sede.addElement("Indirizzo").addText((String) map.get("company_address")); //company address
+            sede.addElement("CAP").addText((String) out.get(12)); //company postal code
+            sede.addElement("Comune").addText((String) out.get(13)); //company city
+            sede.addElement("Provincia").addText((String) out.get(14)); //company province
             sede.addElement("IT");
             Element contatti = cedentePrestatore.addElement("Contatti");
             contatti.addElement("Email").addText("formazionesicuezza@marcobarosco.it");//owner email
@@ -196,14 +206,14 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element cDatiAnagrafici = cessionarioCommittente.addElement("DatiAnagrafici");
             Element cIdFiscaleIVA = cDatiAnagrafici.addElement("IdFiscaleIVA");
             cIdFiscaleIVA.addElement("IdPaese").addText("IT"); //customer piva
-            cIdFiscaleIVA.addElement("IdCodice").addText("02315870283"); //customer piva
+            cIdFiscaleIVA.addElement("IdCodice").addText(c.getVatNumber()); //customer piva
             Element cAnagrafica = cDatiAnagrafici.addElement("Anagrafica");
-            cAnagrafica.addElement("Denominazione").addText("ROTALCAR"); //customer businessname
+            cAnagrafica.addElement("Denominazione").addText(c.getBusinessName()); //customer businessname
             Element cSede = cessionarioCommittente.addElement("Sede");
-            cSede.addElement("Indirizzo").addText("Antoniana 328"); //customer address
-            cSede.addElement("CAP").addText("35011"); //customer postal code
-            cSede.addElement("Comune").addText("Campodarsego");//customer city
-            cSede.addElement("Provincia").addText("PD"); //customer province
+            cSede.addElement("Indirizzo").addText(c.getAddress()); //customer address
+            cSede.addElement("CAP").addText(c.getPostalCode()); //customer postal code
+            cSede.addElement("Comune").addText(c.getCity());//customer city
+            cSede.addElement("Provincia").addText(c.getProvince()); //customer province
             cSede.addElement("Nazione").addText("IT");
 
 
@@ -215,32 +225,49 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element datiGeneraliDocumento = datiGenerali.addElement("DatiGeneraliDocumento");
             datiGeneraliDocumento.addElement("TipoDocumento").addText("TD01"); //type document: invoice
             datiGeneraliDocumento.addElement("Divisa").addText("EUR");
-            datiGeneraliDocumento.addElement("Data").addText("2023-03-24"); //invoice date
-            datiGeneraliDocumento.addElement("Numero").addText("12"); // invoice number
+            datiGeneraliDocumento.addElement("Data").addText(i.getInvoice_date().toString()); //invoice date
+            datiGeneraliDocumento.addElement("Numero").addText(i.getInvoice_number()); // invoice number
             Element datiBollo = datiGeneraliDocumento.addElement("DatiBollo");
-            datiBollo.addElement("BolloVirtuale").addText("SI"); //invoice hasstamp
-            datiBollo.addElement("ImportoBollo").addText("2.00"); //stamp: std default price
-            datiGeneraliDocumento.addElement("Causale").addText("N. 12 del 24 marzo 2023 riferita all'avviso n. 193 del 19 marzo 2023"); // built from invoice number + invoice date + warning number + warning date
+            if (i.getTotal() >= 77.47) {
+                datiBollo.addElement("BolloVirtuale").addText("SI"); //invoice hasstamp
+                datiBollo.addElement("ImportoBollo").addText("2.00"); //stamp: std default price
+            }
+            else {
+                datiBollo.addElement("BolloVirtuale").addText("NO"); //invoice hasstamp
+            }
+
+            datiGeneraliDocumento.addElement("Causale").addText("N. " + i.getInvoice_number() + " del " + i.getInvoice_date() + " riferita all'avviso n. " + i.getWarning_number() + " del " + i.getWarning_date()); // built from invoice number + invoice date + warning number + warning date
             Element datiOrdineAcquisto = datiGenerali.addElement("DatiOrdineAcquisto");
-            datiOrdineAcquisto.addElement("RiferimentoNumeroLinee").addText("1"); //CHECK
-            datiOrdineAcquisto.addElement("IdDocumento").addText("12");//invoice number
+            datiOrdineAcquisto.addElement("RiferimentoNumeroLinea").addText("1"); //CHECK
+            datiOrdineAcquisto.addElement("IdDocumento").addText(i.getInvoice_number());//invoice number
             datiOrdineAcquisto.addElement("NumItem").addText("1"); // check
 
             Element datiBeniServizi = fatturaElettronicaBody.addElement("DatiBeniServizi");
             //FOREACH INVOICE_PRODUCT ENTRY
-                datiBeniServizi.addElement("NumeroLinea").addText("1"); //row counter
-                datiBeniServizi.addElement("Descrizione").addText("Aggiornamento Carrelli Elevatori"); //product description
-                datiBeniServizi.addElement("Quantita").addText("4.00"); //invoice_product quantity
-                datiBeniServizi.addElement("UnitaMisura").addText("ore"); //product measurement unit
-                datiBeniServizi.addElement("PrezzoUnitario").addText("60.00"); //invoice_product unit price4
-                datiBeniServizi.addElement("PrezzoTotale").addText("240.00"); //quantity * unit_price
+            Integer k = 0;
+            Double imponibile = 0.0;
+            for (DetailRow dr : ldr) {
+                k++;
+                datiBeniServizi.addElement("NumeroLinea").addText(k.toString()); //row counter
+                datiBeniServizi.addElement("Descrizione").addText(dr.getProduct_description()); //product description
+                datiBeniServizi.addElement("Quantita").addText(dr.getNumericQuantity()); //invoice_product quantity
+                datiBeniServizi.addElement("UnitaMisura").addText(dr.getMeasurement_unit()); //product measurement unit
+                datiBeniServizi.addElement("PrezzoUnitario").addText(dr.getNumericUnit_price()); //invoice_product unit price4
+                datiBeniServizi.addElement("PrezzoTotale").addText(String.format("%.2f", dr.getTotalD())); //quantity * unit_price
                 datiBeniServizi.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
-                datiBeniServizi.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
+                if ((Integer) out.get(11) == 0) {
+                    datiBeniServizi.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
+                }
+                imponibile+=dr.getTotalD();
+            }
+
             //end foreach
             Element datiRiepilogo = datiBeniServizi.addElement("DatiRiepilogo");
             datiRiepilogo.addElement("AliquotaIVA").addText("0.00"); // depends on company fiscal type
-            datiRiepilogo.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
-            datiRiepilogo.addElement("ImponibileImporto").addText("1083.68"); // total of all detail line above
+            if ((Integer) out.get(11) == 0) {
+                datiRiepilogo.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
+            }
+            datiRiepilogo.addElement("ImponibileImporto").addText(String.format("%.2f", imponibile)); // total of all detail line above
             datiRiepilogo.addElement("Imposta").addText("0.00"); // depends on company fiscal type
             datiRiepilogo.addElement("RiferimentoNormativo").addText(riferimentoNormativo); //depends on company fiscal type
 
@@ -248,14 +275,14 @@ public class GenerateInvoiceRR extends AbstractRR {
             datiPagamento.addElement("CondizioniPagamento").addText("TP02"); //standard (immediate payment)
             Element dettaglioPagamento = datiPagamento.addElement("DettaglioPagamento");
             dettaglioPagamento.addElement("ModalitaPagamento").addText("MP05"); //standard: bonifico
-            dettaglioPagamento.addElement("ImportoPagamento").addText("1083.68"); //total of all rows above + taxes
+            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format("%.2f", imponibile)); //total of all rows above + taxes
             dettaglioPagamento.addElement("IBAN").addText("IT51A0306962732100000004512"); //bankaccount iban selected
 
             StringWriter sw = new StringWriter();
             XMLWriter xmlWriter = new XMLWriter(sw, OutputFormat.createPrettyPrint());
             xmlWriter.write(el_invoice);
             xmlWriter.close();
-            FileWriter f = new FileWriter("xml/IT123456789_1.xml");
+            FileWriter f = new FileWriter(absPath + "xml" + separator + "IT123456789_1.xml");
             f.write(sw.getBuffer().toString());
             f.close();
 
