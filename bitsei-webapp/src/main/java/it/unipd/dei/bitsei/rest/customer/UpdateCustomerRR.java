@@ -13,6 +13,7 @@ import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,7 @@ import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidatio
 public class UpdateCustomerRR extends AbstractRR {
 
 
+    private RestURIParser r = null;
     /**
      * Updates the customer from the ID
      *
@@ -35,8 +37,9 @@ public class UpdateCustomerRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public UpdateCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public UpdateCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.UPDATE_CUSTOMER, req, res, con);
+        this.r = r;
     }
 
 
@@ -57,13 +60,7 @@ public class UpdateCustomerRR extends AbstractRR {
 
         try {
 
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("company id cannot be empty.");
-            }
-
-            int customerID = Integer.parseInt(id);
+            int customerID = r.getResourceID();
 
 
             c = Customer.fromJSON(requestStream);
@@ -81,7 +78,7 @@ public class UpdateCustomerRR extends AbstractRR {
 
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateCustomerDAO(con, c, owner_id).access();
+            new UpdateCustomerDAO(con, c, owner_id, r.getCompanyID()).access();
 
             m = new Message(String.format("Customer %s successfully updated.", c.getBusinessName()));
             LOGGER.info("Customer %s successfully updated in the database.", c.getBusinessName());

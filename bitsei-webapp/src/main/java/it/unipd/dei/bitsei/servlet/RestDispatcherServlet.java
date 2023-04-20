@@ -508,7 +508,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
 
 
-        if (!r.getResource().equals("productsreport")) {
+        if (!r.getResource().equals("customer")) {
             LOGGER.info("Risorsa richiesta: " + r.getResource());
             return false;
         }
@@ -519,7 +519,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             switch (method) {
 
                 case "POST":
-                    new CreateCustomerRR(req, res, getConnection()).serve();
+                    new CreateCustomerRR(req, res, getConnection(), r).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
@@ -535,13 +535,13 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         else {
             switch (method) {
                 case "GET":
-                    new GetCustomerRR(req, res, getConnection()).serve();
+                    new GetCustomerRR(req, res, getConnection(), r).serve();
                     break;
                 case "DELETE":
-                    new DeleteCustomerRR(req, res, getConnection()).serve();
+                    new DeleteCustomerRR(req, res, getConnection(), r).serve();
                     break;
                 case "PUT":
-                    new UpdateCustomerRR(req, res, getConnection()).serve();
+                    new UpdateCustomerRR(req, res, getConnection(), r).serve();
                     break;
 
 

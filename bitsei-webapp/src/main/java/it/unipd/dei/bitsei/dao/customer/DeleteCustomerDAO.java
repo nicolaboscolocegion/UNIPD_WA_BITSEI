@@ -22,8 +22,7 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
      * The SQL statement to be executed
      */
     private static final String FETCH = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
-
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Customer\".company_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Customer\".customer_id = ?;";
     private static final String DELETE = "DELETE FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
 
     /**
@@ -32,6 +31,7 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
      */
     private final int customerID;
     private final int owner_id;
+    private final int company_id;
 
     /**
      * Creates a new object for deleting a customer from the database.
@@ -43,11 +43,12 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
      * @param owner_id
      *            the owner of the customer.
      */
-    public DeleteCustomerDAO(final Connection con, final int customerID, final int owner_id) {
+    public DeleteCustomerDAO(final Connection con, final int customerID, final int owner_id, final int company_id) {
         super(con);
 
         this.customerID = customerID;
         this.owner_id = owner_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -57,6 +58,22 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
         PreparedStatement pstmt = null;
 
         try {
+
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, company_id);
+            pstmt.setInt(2, owner_id);
+            pstmt.setInt(3, customerID);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Data access violation");
+                throw new IllegalAccessException();
+            }
+
             pstmt = con.prepareStatement(FETCH);
             pstmt.setInt(1, customerID);
             rs = pstmt.executeQuery();
@@ -66,7 +83,7 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
             }
 
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, c.getCompanyID());
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {
