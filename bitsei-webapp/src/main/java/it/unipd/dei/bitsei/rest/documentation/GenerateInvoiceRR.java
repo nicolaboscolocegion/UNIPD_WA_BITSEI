@@ -67,7 +67,8 @@ public class GenerateInvoiceRR extends AbstractRR {
         LogContext.setIPAddress(req.getRemoteAddr());
         // model
         int invoice_id = 0;
-
+        Double iva = 0.0;
+        Double ritenuta = 0.0;
 
         Message m = null;
 
@@ -139,22 +140,20 @@ public class GenerateInvoiceRR extends AbstractRR {
                 ldr.add(new DetailRow("TOTALE", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
             }
             else {
+                iva = (double) (Math.round(total * 22) / 100);
+
                 ldr.add(new DetailRow("Totale imponibile", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
-                ldr.add(new DetailRow("Iva (22%)", "", 1, "€", Math.round(total * 22) / 100, 0, ""));
-                total += Math.round(total * 22) / 100;
-                ldr.add(new DetailRow("Totale", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
+                ldr.add(new DetailRow("Iva (22%)", "", 1, "€", iva, 0, ""));
+                ldr.add(new DetailRow("Totale fattura", "", 1, "€", (Math.round(total * 100) / 100) + iva, 0, ""));
                 if (fiscal_company_type == 1) {
-                    ldr.add(new DetailRow("Ritenuta d'acconto", "", 1, "€", Math.round(total * 22) / -100, 0, ""));
-                    total += Math.round(total * 22) / -100;
-                    ldr.add(new DetailRow("Totale da pagare", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
+                    ritenuta = (double) Math.round(total * 22) / 100;
+                    ldr.add(new DetailRow("Ritenuta d'acconto (20%)", "", 1, "€", ritenuta*(-1) , 0, ""));
+                    ldr.add(new DetailRow("Totale da pagare", "", 1, "€", (Math.round(total * 100) / 100) + iva - ritenuta, 0, ""));
                 }
             }
 
             //generate invoice
             exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
-
-
-
 
 
             for (Iterator<DetailRow> it = ldr.iterator(); it.hasNext();) {
@@ -194,10 +193,10 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element anagrafica = datiAnagrafici.addElement("Anagrafica");
             anagrafica.addElement("Denominazione").addText((String) map.get("company_name")); //company business name
             if ((Integer) out.get(11) == 0) {
-                datiAnagrafici.addElement("RegimeFiscale").addText("RF19"); //company fiscal type
+                datiAnagrafici.addElement("RegimeFiscale").addText("RF19"); //company fiscal type (forfettario)
             }
             else {
-                datiAnagrafici.addElement("RegimeFiscale").addText("RF01"); //company fiscal type
+                datiAnagrafici.addElement("RegimeFiscale").addText("RF01"); //company fiscal type (ordinario con/senza ritenuta)
             }
             Element sede = cedentePrestatore.addElement("Sede");
             sede.addElement("Indirizzo").addText((String) map.get("company_address")); //company address
@@ -233,15 +232,24 @@ public class GenerateInvoiceRR extends AbstractRR {
             datiGeneraliDocumento.addElement("Divisa").addText("EUR");
             datiGeneraliDocumento.addElement("Data").addText(i.getInvoice_date().toString()); //invoice date
             datiGeneraliDocumento.addElement("Numero").addText(i.getInvoice_number()); // invoice number
-            Element datiBollo = datiGeneraliDocumento.addElement("DatiBollo");
-            if (i.getTotal() >= 77.47) {
-                datiBollo.addElement("BolloVirtuale").addText("SI"); //invoice hasstamp
-                datiBollo.addElement("ImportoBollo").addText("2.00"); //stamp: std default price
+            if ((Integer) out.get(11) == 0) {
+                Element datiBollo = datiGeneraliDocumento.addElement("DatiBollo");
+                if (i.getTotal() >= 77.47) {
+                    datiBollo.addElement("BolloVirtuale").addText("SI"); //invoice hasstamp
+                    datiBollo.addElement("ImportoBollo").addText("2.00"); //stamp: std default price
+                } else {
+                    datiBollo.addElement("BolloVirtuale").addText("NO"); //invoice hasstamp
+                }
             }
-            else {
-                datiBollo.addElement("BolloVirtuale").addText("NO"); //invoice hasstamp
+            if ((Integer) out.get(11) == 1) {
+                Element datiRitenuta = datiGeneraliDocumento.addElement("DatiRitenuta");
+                datiRitenuta.addElement("TipoRitenuta").addText("RT01");
+                datiRitenuta.addElement("ImportoRitenuta").addText(String.format(Locale.UK, "%.2f", ritenuta));
+                datiRitenuta.addElement("AliquotaRitenuta").addText("20.00");
+                datiRitenuta.addElement("CausalePagamento").addText("A");
             }
 
+            datiGeneraliDocumento.addElement("ImportoTotaleDocumento").addText(String.format(Locale.UK, "%.2f", total + iva));
             datiGeneraliDocumento.addElement("Causale").addText("N. " + i.getInvoice_number() + " del " + i.getInvoice_date() + " riferita all'avviso n. " + i.getWarning_number() + " del " + i.getWarning_date()); // built from invoice number + invoice date + warning number + warning date
             Element datiOrdineAcquisto = datiGenerali.addElement("DatiOrdineAcquisto");
             datiOrdineAcquisto.addElement("RiferimentoNumeroLinea").addText("1"); //CHECK
@@ -251,8 +259,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element datiBeniServizi = fatturaElettronicaBody.addElement("DatiBeniServizi");
             //FOREACH INVOICE_PRODUCT ENTRY
             Integer k = 0;
-            Double imponibile = 0.0;
-            Double taxes = 0.0;
+
             for (DetailRow dr : ldr) {
                 k++;
                 Element dettaglioLinee = datiBeniServizi.addElement("DettaglioLinee");
@@ -264,28 +271,41 @@ public class GenerateInvoiceRR extends AbstractRR {
                 }
                 dettaglioLinee.addElement("PrezzoUnitario").addText(String.format(dr.getNumericUnit_price())); //invoice_product unit price
                 dettaglioLinee.addElement("PrezzoTotale").addText(String.format(Locale.UK, "%.2f", dr.getTotalD())); //quantity * unit_price
-                dettaglioLinee.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
                 if ((Integer) out.get(11) == 0) {
+                    dettaglioLinee.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
                     dettaglioLinee.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
                 }
-                imponibile+=dr.getTotalD();
+                else {
+                    dettaglioLinee.addElement("AliquotaIVA").addText("22.00"); //depends on company fiscal type
+                }
+
             }
 
             //end foreach
             Element datiRiepilogo = datiBeniServizi.addElement("DatiRiepilogo");
-            datiRiepilogo.addElement("AliquotaIVA").addText("0.00"); // depends on company fiscal type
             if ((Integer) out.get(11) == 0) {
+                datiRiepilogo.addElement("AliquotaIVA").addText("0.00"); // depends on company fiscal type
                 datiRiepilogo.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
             }
-            datiRiepilogo.addElement("ImponibileImporto").addText(String.format(Locale.UK,"%.2f", imponibile)); // total of all detail line above
-            datiRiepilogo.addElement("Imposta").addText("0.00"); // depends on company fiscal type
-            datiRiepilogo.addElement("RiferimentoNormativo").addText(riferimentoNormativo); //depends on company fiscal type
+            else {
+                datiRiepilogo.addElement("AliquotaIVA").addText("22.00"); // depends on company fiscal type
+            }
+            datiRiepilogo.addElement("ImponibileImporto").addText(String.format(Locale.UK,"%.2f", total)); // total of all detail line above
+            if ((Integer) out.get(11) == 0) {
+                datiRiepilogo.addElement("Imposta").addText("0.00"); // depends on company fiscal type
+                datiRiepilogo.addElement("RiferimentoNormativo").addText(riferimentoNormativo); //depends on company fiscal type
+            }
+            else {
+                datiRiepilogo.addElement("Imposta").addText(String.format(Locale.UK,"%.2f", iva)); // depends on company fiscal type
+                datiRiepilogo.addElement("EsigibilitaIVA").addText("I");
+            }
+
 
             Element datiPagamento = fatturaElettronicaBody.addElement("DatiPagamento");
             datiPagamento.addElement("CondizioniPagamento").addText("TP02"); //standard (immediate payment)
             Element dettaglioPagamento = datiPagamento.addElement("DettaglioPagamento");
             dettaglioPagamento.addElement("ModalitaPagamento").addText("MP05"); //standard: bonifico
-            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format(Locale.UK,"%.2f", imponibile+taxes)); //total of all rows above + taxes
+            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format(Locale.UK,"%.2f", total+iva-ritenuta)); //total of all rows above + taxes
             dettaglioPagamento.addElement("IBAN").addText((String) out.get(15)); //bankaccount iban selected
 
             StringWriter sw = new StringWriter();
