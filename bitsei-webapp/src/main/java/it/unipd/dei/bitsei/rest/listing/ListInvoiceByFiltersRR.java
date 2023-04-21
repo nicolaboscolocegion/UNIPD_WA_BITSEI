@@ -76,47 +76,97 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             boolean filterByProductTitle = false;
             List<String> fromProductTitle = new ArrayList<String>();
 
-            //TODO: add checks on "Double.parseDouble" and on "Date.valueOf"
             for(String filter : requestData.keySet()) {
                 if(filter.equals("fromTotal")) {
                     filterByTotal = true;
-                    fromTotal = Double.parseDouble(requestData.get(filter));
+                    try {
+                        fromTotal = Double.parseDouble(requestData.get(filter));
+                    }
+                    catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        fromTotal = FROM_DOUBLE;
+                    }
                 }
                 if(filter.equals("toTotal")) {
                     filterByTotal = true;
-                    toTotal = Double.parseDouble(requestData.get(filter));
+                    try {
+                        toTotal = Double.parseDouble(requestData.get(filter));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        toTotal = TO_DOUBLE;
+                    }
                 }
                 if(filter.equals("fromDiscount")) {
                     filterByDiscount = true;
-                    fromDiscount = Double.parseDouble(requestData.get(filter));
+                    try {
+                        fromDiscount = Double.parseDouble(requestData.get(filter));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        fromDiscount = FROM_DOUBLE;
+                    }
                 }
                 if(filter.equals("toDiscount")) {
                     filterByDiscount = true;
-                    toDiscount = Double.parseDouble(requestData.get(filter));
+                    try {
+                        toDiscount = Double.parseDouble(requestData.get(filter));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        toDiscount = TO_DOUBLE;
+                    }
                 }
                 if(filter.equals("fromPfr")) {
                     filterByPfr = true;
-                    fromPfr = Double.parseDouble(requestData.get(filter));
+                    try {
+                        fromPfr = Double.parseDouble(requestData.get(filter));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        fromPfr = FROM_DOUBLE;
+                    }
                 }
                 if(filter.equals("toPfr")) {
                     filterByPfr = true;
-                    toPfr = Double.parseDouble(requestData.get(filter));
+                    try {
+                        toPfr = Double.parseDouble(requestData.get(filter));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        toPfr = TO_DOUBLE;
+                    }
                 }
                 if(filter.equals("fromInvoiceDate")) {
                     filterByInvoiceDate = true;
-                    fromInvoiceDate = Date.valueOf(requestData.get(filter));
+                    try {
+                        fromInvoiceDate = Date.valueOf(requestData.get(filter));
+                    } catch(Exception e) {
+                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        fromInvoiceDate = FROM_DATE;
+                    }
                 }
                 if(filter.equals("toInvoiceDate")) {
                     filterByInvoiceDate = true;
-                    toInvoiceDate = Date.valueOf(requestData.get(filter));
+                    try {
+                        toInvoiceDate = Date.valueOf(requestData.get(filter));
+                    } catch(Exception e) {
+                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    toInvoiceDate = TO_DATE;
+                    }
                 }
                 if(filter.equals("fromWarningDate")) {
                     filterByWarningDate = true;
-                    fromWarningDate = Date.valueOf(requestData.get(filter));
+                    try {
+                        fromWarningDate = Date.valueOf(requestData.get(filter));
+                    } catch(Exception e) {
+                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    fromWarningDate = FROM_DATE;
+                    }
                 }
                 if(filter.equals("toWarningDate")) {
                     filterByWarningDate = true;
-                    toWarningDate = Date.valueOf(requestData.get(filter));
+                    try {
+                        toWarningDate = Date.valueOf(requestData.get(filter));
+                    } catch(Exception e) {
+                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    toWarningDate = TO_DATE;
+                    }
                 }
                 if(filter.equals("fromBusinessName")) {
                     filterByBusinessName = true;
