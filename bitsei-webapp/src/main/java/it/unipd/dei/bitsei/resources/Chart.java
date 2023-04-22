@@ -9,47 +9,37 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 /**
- * Represents the data about an invoice.
+ * Represents the data about a chart.
  */
 public class Chart extends AbstractResource {
     /**
-     * The id of the invoice
+     * The array of labels
      */
     private final ArrayList<String> label;
 
     /**
-     * The id of the customer
+     * The array of data
      */
     private final ArrayList<String> data;
     
     /**
-     * The id of the invoice
+     * The chart type
      */
     private final int chart_type;
 
     /**
-     * The id of the customer
+     * The chart period
      */
     private final int chart_period;
 
 
     /**
-     * Creates a new invoice
+     * Creates a new chart
      *
-     * @param invoice_id        the id of the invoice
-     * @param customer_id       the id of the customer
-     * @param status            the status of the invoice
-     * @param warning_number    the warning number of the invoice
-     * @param warning_date      the warning date of the invoice
-     * @param warning_pdf_file  the warning pdf file of the invoice
-     * @param invoice_number    the invoice number of the invoice
-     * @param invoice_date      the invoice date of the invoice
-     * @param invoice_pdf_file  the invoice pdf file of the invoice
-     * @param invoice_xml_file  the invoice xml file of the invoice
-     * @param total             the total of the invoice
-     * @param discount          the discount of the invoice
-     * @param pension_fund_refund   the pension fund refund of the invoice
-     * @param has_stamp         the stamp of the invoice
+     * @param label         the array of labels
+     * @param data          the array of data
+     * @param chart_type    the chart type
+     * @param chart_period  the chart period
      */
     public Chart(final ArrayList<String> label, final ArrayList<String> data, final int chart_type, final int chart_period) {
         this.label = label;
@@ -57,38 +47,38 @@ public class Chart extends AbstractResource {
         this.chart_type = chart_type;
         this.chart_period = chart_period;
     }
-    
+
     /**
-     * Returns the id of the invoice.
+     * Returns the array of labels.
      *
-     * @return the id of the invoice
+     * @return the array of labels
      */
     public final ArrayList<String> getLabel() {
         return label;
     }
 
     /**
-     * Returns the id of the customer.
+     * Returns the array of data.
      *
-     * @return the id of the customer
+     * @return the array of data
      */
     public final ArrayList<String> getData() {
         return data;
     }
 
     /**
-     * Returns the id of the customer.
+     * Returns the chart type.
      *
-     * @return the id of the customer
+     * @return the chart type
      */
     public final int getChartType() {
         return chart_type;
     }
 
     /**
-     * Returns the id of the customer.
+     * Returns the chart period.
      *
-     * @return the id of the customer
+     * @return the chart period
      */
     public final int getChartPeriod() {
         return chart_period;
@@ -129,7 +119,7 @@ public class Chart extends AbstractResource {
     }
 
     /**
-     * Creates a {@code Invoice} from its JSON representation.
+     * Creates a {@code Chart} from its JSON representation.
      *
      * @param in the input stream containing the JSON document.
      * @return the {@code Invoice} created from the JSON representation.
@@ -193,7 +183,7 @@ public class Chart extends AbstractResource {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("Unable to parse an User object from JSON.", e);
+            LOGGER.error("Unable to parse a Chart object from JSON.", e);
             throw e;
         }
 

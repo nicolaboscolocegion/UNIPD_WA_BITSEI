@@ -900,11 +900,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
 
     /**
-     * Checks whether the request is for a chart of filtered {@link Invoice}s resource and, in case, processes it.
+     * Checks whether the request is for plot a filtered chart and, in case, processes it.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
-     * @return {@code true} if the request was for a filtered chart of {@code Invoice}s; {@code false} otherwise.
+     * @return {@code true} if the request was for plot a filtered chart; {@code false} otherwise.
      * @throws Exception if any error occurs.
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
@@ -915,7 +915,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not a filter-invoices
+        // the requested resource was not a chart/filter-invoices
         if (path.lastIndexOf("rest/chart/filter-invoices") <= 0) {
             return false;
         }
@@ -924,7 +924,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
         
         List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "chart_period");
-        
+        // the request URI contains filters or the chart type/period
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);
         
         switch (method) {
@@ -932,9 +932,9 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 new PlotChartRR(req, res, getConnection(), ownerId, requestData).serve();
                 break;
             default:
-                LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
+                LOGGER.warn("Unsupported operation for URI chart/filter-invoices %s.", method);
 
-                m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                m = new Message("Unsupported operation for URI chart/filter-invoices.", "E4A5",
                         String.format("Requested operation %s.", method));
                 res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 m.toJSON(res.getOutputStream());

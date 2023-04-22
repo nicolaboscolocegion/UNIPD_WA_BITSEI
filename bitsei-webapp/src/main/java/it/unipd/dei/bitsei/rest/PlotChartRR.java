@@ -37,7 +37,7 @@ public final class PlotChartRR extends AbstractRR {
     private final int ownerId;
     private final Map<String, String> requestData;
     /**
-     * Creates a new REST resource for listing {@code Invoice}s.
+     * Creates a new REST resource for plotting charts.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
@@ -92,7 +92,7 @@ public final class PlotChartRR extends AbstractRR {
                         fromTotal = Double.parseDouble(requestData.get(filter));
                     }
                     catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         fromTotal = FROM_DOUBLE;
                     }
                 }
@@ -101,7 +101,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         toTotal = Double.parseDouble(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         toTotal = TO_DOUBLE;
                     }
                 }
@@ -110,7 +110,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         fromDiscount = Double.parseDouble(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         fromDiscount = FROM_DOUBLE;
                     }
                 }
@@ -119,7 +119,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         toDiscount = Double.parseDouble(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         toDiscount = TO_DOUBLE;
                     }
                 }
@@ -128,7 +128,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         fromPfr = Double.parseDouble(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         fromPfr = FROM_DOUBLE;
                     }
                 }
@@ -137,7 +137,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         toPfr = Double.parseDouble(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         toPfr = TO_DOUBLE;
                     }
                 }
@@ -146,7 +146,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         fromInvoiceDate = Date.valueOf(requestData.get(filter));
                     } catch(Exception e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                         fromInvoiceDate = FROM_DATE;
                     }
                 }
@@ -155,7 +155,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         toInvoiceDate = Date.valueOf(requestData.get(filter));
                     } catch(Exception e) {
-                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                     toInvoiceDate = TO_DATE;
                     }
                 }
@@ -164,7 +164,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         fromWarningDate = Date.valueOf(requestData.get(filter));
                     } catch(Exception e) {
-                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                     fromWarningDate = FROM_DATE;
                     }
                 }
@@ -173,7 +173,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         toWarningDate = Date.valueOf(requestData.get(filter));
                     } catch(Exception e) {
-                    LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                    LOGGER.warn("## PlotChartRR: Illegal value for filter {" + filter + "}; setted at default value");
                     toWarningDate = TO_DATE;
                     }
                 }
@@ -195,7 +195,7 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         chart_type = Integer.parseInt(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for chart type {" + filter + "}; setted at default value");
                         chart_type = CHART_TYPE;
                     }
                 }
@@ -203,13 +203,13 @@ public final class PlotChartRR extends AbstractRR {
                     try {
                         chart_period = Integer.parseInt(requestData.get(filter));
                     } catch (NumberFormatException e) {
-                        LOGGER.warn("## ListInvoiceByFilterRR: Illegal value for filter {" + filter + "}; setted at default value");
+                        LOGGER.warn("## PlotChartRR: Illegal value for chart period {" + filter + "}; setted at default value");
                         chart_period = CHART_PERIOD;
                     }
                 }
             }
 
-            LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle);
+            LOGGER.info("## PlotChartRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle + " chartType: " + chart_type + " chartType: " + chart_period);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
             el = new ListInvoiceByFiltersDAO(con, ownerId,
@@ -427,22 +427,22 @@ public final class PlotChartRR extends AbstractRR {
                 }
                 
                 
-                LOGGER.info("## ListInvoiceByFiltersRR: Invoice(s) successfully listed. ##");
+                LOGGER.info("## PlotChartRR: Chart successfully plotted. ##");
 
                 res.setStatus(HttpServletResponse.SC_OK);
 
                 new Chart(tmap_labels, tmap_data, chart_type, chart_period).toJSON(res.getOutputStream());
             } else { // it should not happen
-                LOGGER.error("## ListInvoiceByFiltersRR: Fatal error while listing invoice(s). ##");
+                LOGGER.error("## PlotChartRR: Fatal error while plotting chart. ##");
 
-                m = new Message("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected error. ##", "E5A1", null);
+                m = new Message("## PlotChartRR: Cannot plot chart: unexpected error. ##", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected database error. ##", ex);
+            LOGGER.error("## PlotChartRR: Cannot plot chart: unexpected database error. ##", ex);
 
-            m = new Message("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
