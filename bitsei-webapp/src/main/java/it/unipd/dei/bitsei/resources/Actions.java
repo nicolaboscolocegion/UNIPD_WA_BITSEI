@@ -97,6 +97,11 @@ public final class Actions {
     public static final String SEND_MAIL = "SEND_MAIL";
 
     /**
+     * Creation of new invoice.
+     */
+    public static final String CREATE_INVOICE = "CREATE_CUSTOMER";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {

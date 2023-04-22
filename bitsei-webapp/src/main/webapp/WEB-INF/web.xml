@@ -60,16 +60,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>CreateInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.CreateInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CreateInvoiceServlet</servlet-name>
-        <url-pattern>/invoiceinsert</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>DeleteInvoiceServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.invoice.DeleteInvoiceServlet</servlet-class>
     </servlet>
@@ -197,6 +187,7 @@
         <filter-name>AuthenticationFilter</filter-name>
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
+        <url-pattern>/rest/invoice/*</url-pattern>
         <url-pattern>/rest/closeinvoice/*</url-pattern>
         <url-pattern>/rest/customerreport/*</url-pattern>
         <url-pattern>/rest/productsreport/*</url-pattern>
@@ -204,7 +195,6 @@
         <url-pattern>/productinsert</url-pattern>
         <url-pattern>/productdelete</url-pattern>
         <url-pattern>/productupdate</url-pattern>
-        <url-pattern>/invoiceinsert</url-pattern>
         <url-pattern>/invoicedelete</url-pattern>
         <url-pattern>/invoiceupdate</url-pattern>
         <url-pattern>/invoiceproductinsert</url-pattern>
