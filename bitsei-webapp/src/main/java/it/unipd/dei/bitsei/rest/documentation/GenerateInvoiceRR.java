@@ -23,6 +23,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
+import static org.apache.taglibs.standard.functions.Functions.trim;
 
 
 /**
@@ -112,7 +113,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             map.put("customer_mail", c.getEmailAddress());
 
             //depends on company fiscal type
-                String riferimentoNormativo = "Operazione senza applicazione dell\'IVA ai sensi delle Legge 190 del 23 Dicembre 2014 art. 1 commi da 54 a 89. Operazione effettuata ai sensi dell\'art. 1, commi da 54 a 89 della Legge n. 190/2014 - Regime forfettario. Il compenso non e\' soggetto a ritenute d\'acconto ai sensi della legge 190 del 23 Dicembre 2014 art. 1 comma 67.";
+                String riferimentoNormativo = "Operazione effettuata ai sensi dell'art. 1 commi da 54 a 89 Legge n. 190/2014 - Regime forfettario";
             //depends on company fiscal type
 
             map.put("footer", riferimentoNormativo);
@@ -178,11 +179,11 @@ public class GenerateInvoiceRR extends AbstractRR {
             Element idTrasmittente = datiTrasmissione.addElement("IdTrasmittente");
             idTrasmittente.addElement("IdPaese").addText("IT"); //owner piva
             idTrasmittente.addElement("IdCodice").addText((String) map.get("company_vat")); //owner piva
-            datiTrasmissione.addElement("ProgressivoInvio").addText(c.getVatNumber()); //invoicenumber
+            datiTrasmissione.addElement("ProgressivoInvio").addText(i.getInvoice_number()); //invoicenumber
             datiTrasmissione.addElement("FormatoTrasmissione").addText("FPR12"); //formatoinvio
             datiTrasmissione.addElement("CodiceDestinatario").addText((String) map.get("company_unique_code")); //owner uniquecode
-            Element contattiTrasmissione = datiTrasmissione.addElement("ContattiTrasmissione");
-            contattiTrasmissione.addElement("Email").addText(owner_email); //owner email
+            Element contattiTrasmittente = datiTrasmissione.addElement("ContattiTrasmittente");
+            contattiTrasmittente.addElement("Email").addText(owner_email); //owner email
 
             Element cedentePrestatore = fatturaElettronicaHeader.addElement("CedentePrestatore");
             Element datiAnagrafici = cedentePrestatore.addElement("DatiAnagrafici");
@@ -203,7 +204,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             sede.addElement("CAP").addText((String) out.get(12)); //company postal code
             sede.addElement("Comune").addText((String) out.get(13)); //company city
             sede.addElement("Provincia").addText((String) out.get(14)); //company province
-            sede.addElement("IT");
+            sede.addElement("Nazione").addText("IT");
             Element contatti = cedentePrestatore.addElement("Contatti");
             contatti.addElement("Email").addText(owner_email);//owner email
 
@@ -233,12 +234,10 @@ public class GenerateInvoiceRR extends AbstractRR {
             datiGeneraliDocumento.addElement("Data").addText(i.getInvoice_date().toString()); //invoice date
             datiGeneraliDocumento.addElement("Numero").addText(i.getInvoice_number()); // invoice number
             if ((Integer) out.get(11) == 0) {
-                Element datiBollo = datiGeneraliDocumento.addElement("DatiBollo");
                 if (i.getTotal() >= 77.47) {
+                    Element datiBollo = datiGeneraliDocumento.addElement("DatiBollo");
                     datiBollo.addElement("BolloVirtuale").addText("SI"); //invoice hasstamp
                     datiBollo.addElement("ImportoBollo").addText("2.00"); //stamp: std default price
-                } else {
-                    datiBollo.addElement("BolloVirtuale").addText("NO"); //invoice hasstamp
                 }
             }
             if ((Integer) out.get(11) == 1) {
@@ -312,7 +311,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             XMLWriter xmlWriter = new XMLWriter(sw, OutputFormat.createPrettyPrint());
             xmlWriter.write(el_invoice);
             xmlWriter.close();
-            FileWriter f = new FileWriter(absPath + "xml" + separator + c.getVatNumber() + "_" + c.getVatNumber() + ".xml");
+            FileWriter f = new FileWriter(absPath + "xml" + separator + "IT" + c.getVatNumber() + "_" + trim(i.getInvoice_number().toString()) + ".xml");
             f.write(sw.getBuffer().toString());
             f.close();
 

@@ -144,6 +144,11 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
                 if (vat_number == null) {
                     vat_number = "";
                 }
+
+                if (vat_number.contains("IT")) {
+                    vat_number = vat_number.substring(2, vat_number.length());
+                }
+
                 String tax_code = rs.getString("tax_code");
                 if (tax_code == null) {
                     tax_code = "";
@@ -196,7 +201,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt.setInt(1, this.invoice_id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("warning_number") == 0) {
+                if (rs.getInt("status") == 0) {
                     LOGGER.error("Invoice has not been warned");
                     throw new IllegalAccessException();
                 }
@@ -353,7 +358,13 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             output.add(this.company_address);
             output.add(this.company_city_postalcode_prov);
             output.add(this.company_mail);
-            output.add(this.company_vat);
+            if (this.company_vat.contains("IT")) {
+                String parsedVAT = this.company_vat.substring(2, this.company_vat.length());
+                output.add(this.company_vat);
+            }
+            else {
+                output.add(this.company_vat);
+            }
             output.add(this.company_tax);
             output.add(this.company_pec);
             output.add(this.company_unique_code);

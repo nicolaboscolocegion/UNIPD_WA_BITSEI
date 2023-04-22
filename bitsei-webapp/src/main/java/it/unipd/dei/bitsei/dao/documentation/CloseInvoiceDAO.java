@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +31,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
      * The SQL statement to be executed
      */
     private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
-    private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ?, warning_pdf_file = ? WHERE invoice_id = ?;";
+    private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ?, warning_pdf_file = ?, warning_number = ? WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     private static final String STATEMENT_SELECT_CUSTOMER = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
     private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
@@ -155,12 +157,17 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             LOGGER.info("Customer data successfully fetched.");
 
 
+            Date date = new Date();
+            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Integer month = localDate.getMonthValue();
+            Integer day = localDate.getDayOfMonth();
 
             pstmt = con.prepareStatement(STATEMENT_UPDATE);
             pstmt.setInt(1, 1);
             pstmt.setDate(2, (java.sql.Date) today);
             pstmt.setString(3, this.fileName);
-            pstmt.setInt(4, this.invoice_id);
+            pstmt.setString(4, (month.toString() + day.toString()));
+            pstmt.setInt(5, this.invoice_id);
             pstmt.executeUpdate();
             LOGGER.info("Invoice status successfully set to 1.");
 
