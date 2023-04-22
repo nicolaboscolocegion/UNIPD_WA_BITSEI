@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class DeleteInvoiceDAO<I extends AbstractResource> extends AbstractDAO {
+public final class DeleteInvoiceDAO<I extends AbstractResource> extends AbstractDAO<Invoice> {
     private static final String FETCH = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     /**
      * SQL statement to be executed to check ownership for security reasons.

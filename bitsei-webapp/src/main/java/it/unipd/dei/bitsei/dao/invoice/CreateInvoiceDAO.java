@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class CreateInvoiceDAO extends AbstractDAO {
+public final class CreateInvoiceDAO extends AbstractDAO<Invoice> {
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */

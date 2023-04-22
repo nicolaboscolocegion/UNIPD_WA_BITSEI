@@ -85,7 +85,6 @@ public class DeleteInvoiceRR extends AbstractRR {
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
-            m.toJSON(res.getOutputStream());
         }
     }
 }
