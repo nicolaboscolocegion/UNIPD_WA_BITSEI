@@ -1,6 +1,44 @@
 \subsection{REST API Details}
 
 %List here a few resources retrievable via REST API
+\subsubsection*{List the users registered in the system}
+
+% the description of the resource
+The following endpoint allows to get a list of all the users registered in the system.
+
+\begin{itemize}
+    \item URL: \texttt{/rest/user}
+    \item Method: \texttt{GET}
+    \item URL Parameters: \texttt{No URL parameters required}
+    \item Data Parameters: \texttt{No Data parameters required}
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content: 
+        \begin{lstlisting}
+{"resource-list":
+[
+{"user":{"firstname":"Burr","lastname":"Mycah","username":"mmcclosh0","email":"mchaudret0@dailymail.co.uk","telegram_chat_id":null}},
+{"user":{firstname":"Daffy","lastname":"Lisette","username":"ldinningtont","email":"lgianettinit@wp.com","telegram_chat_id":null}}
+]} 
+        \end{lstlisting}
+        
+    \end{itemize}
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+
 
 \subsubsection*{A resource}
 
