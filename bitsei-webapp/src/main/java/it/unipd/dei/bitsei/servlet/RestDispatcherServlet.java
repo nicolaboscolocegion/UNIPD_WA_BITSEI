@@ -802,8 +802,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        //final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
 
         String path = req.getRequestURI();
@@ -817,36 +817,32 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         // strip everything until after the /filter-invoices
         path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
 
-        // if no filter is specified
-        if(path.equals("/") || path.equals("")) {
+
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id");
+        // the request URI contains filter(s)
+        Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
+
+        // it enters here if the user parsed illegal filters
+        if (requestData == null) {
+            // instead of throwing error list all the invoices
             new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
         }
         else {
-            List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id");
-            // the request URI contains filter(s)
-            Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
+            switch (method) {
+                case "POST":
+                    new ListInvoiceByFiltersRR(req, res, getConnection(), ownerId, requestData).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
 
-            // it enters here if the user parsed illegal filters
-            if (requestData == null) {
-                // instead of throwing error list all the invoices
-                new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
-            }
-            else {
-                switch (method) {
-                    case "POST":
-                        new ListInvoiceByFiltersRR(req, res, getConnection(), ownerId, requestData).serve();
-                        break;
-                    default:
-                        LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
-
-                        m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
-                                String.format("Requested operation %s.", method));
-                        res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                        m.toJSON(res.getOutputStream());
-                        break;
-                }
+                    m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
             }
         }
+
 
         return true;
     }
