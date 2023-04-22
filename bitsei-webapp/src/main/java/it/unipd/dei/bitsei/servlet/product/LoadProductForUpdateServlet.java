@@ -46,8 +46,10 @@ public final class LoadProductForUpdateServlet extends AbstractDatabaseServlet {
             // retrieves the request parameter
             product_id = Integer.parseInt(req.getParameter("product_id"));
 
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
             // creates a new object for accessing the database and searching the product
-            product = new LoadProductForUpdateDAO(getConnection(), product_id).access().getOutputParam();
+            product = new LoadProductForUpdateDAO(getConnection(), product_id, owner_id).access().getOutputParam();
 
             m = new Message("Product successfully searched.");
 
