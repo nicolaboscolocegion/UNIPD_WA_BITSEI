@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  * Represents the data about an invoice.
@@ -14,12 +15,12 @@ public class Chart extends AbstractResource {
     /**
      * The id of the invoice
      */
-    private final String label;
+    private final ArrayList<String> label;
 
     /**
      * The id of the customer
      */
-    private final String data;
+    private final ArrayList<String> data;
     
     /**
      * The id of the invoice
@@ -50,19 +51,19 @@ public class Chart extends AbstractResource {
      * @param pension_fund_refund   the pension fund refund of the invoice
      * @param has_stamp         the stamp of the invoice
      */
-    public Chart(final String label, final String data, final int chart_type, final int chart_period) {
+    public Chart(final ArrayList<String> label, final ArrayList<String> data, final int chart_type, final int chart_period) {
         this.label = label;
         this.data = data;
         this.chart_type = chart_type;
         this.chart_period = chart_period;
     }
-
+    
     /**
      * Returns the id of the invoice.
      *
      * @return the id of the invoice
      */
-    public final String getLabel() {
+    public final ArrayList<String> getLabel() {
         return label;
     }
 
@@ -71,7 +72,7 @@ public class Chart extends AbstractResource {
      *
      * @return the id of the customer
      */
-    public final String getData() {
+    public final ArrayList<String> getData() {
         return data;
     }
 
@@ -104,8 +105,18 @@ public class Chart extends AbstractResource {
         jg.writeStartObject();
 
         try {
-            jg.writeStringField("label", label);
-            jg.writeStringField("data", data);
+            jg.writeArrayFieldStart("label");
+            for(String a : label){
+                jg.writeString(a);
+            }
+            jg.writeEndArray();
+
+            jg.writeArrayFieldStart("data");
+            for(String a : data){
+                jg.writeString(a);
+            }
+            jg.writeEndArray();
+
             jg.writeNumberField("chart_type", chart_type);
             jg.writeNumberField("chart_period", chart_period);
         } catch (Throwable T) {
@@ -127,8 +138,8 @@ public class Chart extends AbstractResource {
     public static Chart fromJSON(final InputStream in) throws IOException {
 
         // the fields read from JSON
-        String jLabel = null;
-        String jData = null;
+        ArrayList<String> jLabel = new ArrayList<String>();
+        ArrayList<String> jData = new ArrayList<String>();
         int jChartType = -1;
         int jChartPeriod = -1;
 
@@ -152,11 +163,23 @@ public class Chart extends AbstractResource {
                     switch (jp.getCurrentName()) {
                         case "label":
                             jp.nextToken();
-                            jLabel = jp.getText();
+                            if (jp.currentToken() == JsonToken.START_ARRAY) {
+                                jp.nextToken();
+                                while (jp.currentToken() != JsonToken.END_ARRAY) {
+                                    jLabel.add(jp.getText());
+                                    jp.nextToken();
+                                }
+                            }
                             break;
                         case "data":
                             jp.nextToken();
-                            jData = jp.getText();
+                            if (jp.currentToken() == JsonToken.START_ARRAY) {
+                                jp.nextToken();
+                                while (jp.currentToken() != JsonToken.END_ARRAY) {
+                                    jData.add(jp.getText());
+                                    jp.nextToken();
+                                }
+                            }
                             break;
                         case "chart_type":
                             jp.nextToken();

@@ -5,9 +5,9 @@ import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jersey.repackaged.org.objectweb.asm.Label;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -425,26 +425,13 @@ public final class PlotChartRR extends AbstractRR {
                     }
                     break;
                 }
-                StringBuilder label = new StringBuilder();
-                label.append("[");
-                for(String a:tmap_labels){
-                    label.append(a);
-                }
-                label.append("]");
-
-                StringBuilder data = new StringBuilder();
-                data.append("[");
-                for(String a:tmap_data){
-                    data.append(a);
-                }
-                data.append("]");
                 
                 
                 LOGGER.info("## ListInvoiceByFiltersRR: Invoice(s) successfully listed. ##");
 
                 res.setStatus(HttpServletResponse.SC_OK);
 
-                new Chart(label.toString(), data.toString(), chart_type, chart_period).toJSON(res.getOutputStream());
+                new Chart(tmap_labels, tmap_data, chart_type, chart_period).toJSON(res.getOutputStream());
             } else { // it should not happen
                 LOGGER.error("## ListInvoiceByFiltersRR: Fatal error while listing invoice(s). ##");
 
