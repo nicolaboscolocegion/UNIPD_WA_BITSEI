@@ -5,6 +5,26 @@
 \begin{longtable}{|p{.375\columnwidth}|p{.1\columnwidth} |p{.35\columnwidth}|p{.1\columnwidth}|} 
 \hline
 \textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
+rest/user & GET & Get the list of all the users that are inserted as ``company owner'' in the database \\\hline
+rest/user/reset-password & POST & Send an email to the user with a link to reset the password \\\hline
+rest/user/change-password & POST & Change the user password with the one passed in the request body \\\hline
+rest/login & POST & Authenticate the user using the JSON passed in the request body\\\hline
+rest/company & GET & Get the list of all the companies associated to the current user \\\hline
+rest/company & POST & Create a new company and associate it to the current user \\\hline
+rest/company/image/\{id\} & GET & Get the company image \\\hline
+rest/company/\{id\} & GET & Get the company associated to the companyId passed through the URL \\\hline
+rest/company/\{id\} & PUT & Update the company associated to the companyId passed through the URL with the parameters passed in the request body \\\hline
+rest/company/\{id\} & DELETE & Delete the company associated to the companyId passed through the URL \\\hline
+rest/customer & POST & Create a new customer using the JSON passed in the request body \\\hline
+rest/customer/\{id\} & GET & Get the customer associated to the customerId passed through the URL \\\hline
+rest/customer/\{id\} & DELETE & Delete the customer associated to the customerId passed through the URL \\\hline
+rest/customer/\{id\} & PUT & Update the customer associated to the customerId passed through the URL with the parameters passed in the request body\\\hline
+rest/list-invoice/\{id\} & GET & Get the list of all the invoices associated to the companyId passed through the URL \\\hline
+rest/list-customer/\{id\} & GET & Get the list of all the customers associated to the companyId passed through the URL \\\hline
+rest/list-product/\{id\} & GET & Get the list of all the products associated to the companyId passed through the URL \\\hline
+rest/filter-invoices & POST & Get the list of all the invoices filtered with the parameters passed in the request body in JSON format \\\hline
+\\\hline
+
 What is the URI? & What HTTP method uses? &  Describe briefly the result of calling the URI & is it behind a filter?\\\hline
 \caption{Describe in this table your REST API}
 \label{tab:termGlossary}
