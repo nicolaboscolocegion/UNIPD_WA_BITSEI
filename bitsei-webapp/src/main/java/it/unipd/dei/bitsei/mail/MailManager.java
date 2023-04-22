@@ -28,6 +28,8 @@ import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 
@@ -291,6 +293,17 @@ public final class MailManager {
 
 		LOGGER.debug("E-mail with subject %s and attachment %s successfully sent to %s.", subject, attachmentFileName,
 				to);
+	}
+
+	public static void sendAttachmentMail(final String to, final String subject, final String message, final String messageMIME, final String attachmentUrl, final String attachmentMIME, final String attachmentFileName) throws
+			IOException, MessagingException {
+		if(attachmentUrl == null || attachmentUrl.isBlank()) {
+			LOGGER.error("URL of the attachment to the email missing.");
+			throw new MessagingException("URL of the attachment to the email missing.");
+		}
+		byte[] attachment = Files.readAllBytes(Paths.get(attachmentUrl));
+		sendAttachmentMail(to, subject, message, messageMIME, attachment, attachmentMIME, attachmentFileName);
+
 	}
 
 
