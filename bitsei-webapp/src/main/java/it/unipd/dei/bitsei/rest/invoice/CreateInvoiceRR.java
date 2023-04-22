@@ -84,13 +84,8 @@ public class CreateInvoiceRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message(
-                    "Cannot create the invoice. Invalid input parameters: customer_id, status and warning_number must be integers; warning_pdf_file, invoice_number, invoice_pdf_file and invoice_pdf_file must be string; total, discount and pension_fund_refund must be double; has_stamp must be boolean; warning_date and invoice_date must be date.",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Cannot create the invoice. Invalid input parameters: customer_id, status and warning_number must be integers; warning_pdf_file, invoice_number, invoice_pdf_file and invoice_pdf_file must be string; total, discount and pension_fund_refund must be double; has_stamp must be boolean; warning_date and invoice_date must be date.",
-                    ex);
+            m = new Message("No company id provided.", "E5A1", ex.getMessage());
+            LOGGER.info("No company id provided.");
             m.toJSON(res.getOutputStream());
         }catch (DateTimeException ex) {
             m = new Message(

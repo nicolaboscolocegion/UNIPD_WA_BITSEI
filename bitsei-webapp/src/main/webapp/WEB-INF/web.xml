@@ -60,16 +60,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>DeleteInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.DeleteInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DeleteInvoiceServlet</servlet-name>
-        <url-pattern>/invoicedelete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>UpdateInvoiceServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.invoice.UpdateInvoiceServlet</servlet-class>
     </servlet>
