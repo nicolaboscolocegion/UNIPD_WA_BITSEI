@@ -37,13 +37,18 @@ public final class CreateProductDAO extends AbstractDAO {
     private final int owner_id;
 
     /**
+     * The company_id of this session, to be checked for security reasons.
+     */
+    private final int company_id;
+
+    /**
      * Creates a new object for storing a product into the database.
      *
      * @param con the connection to the database.
      *
      * @param product the product to be stored into the database.
      */
-    public CreateProductDAO(final Connection con, final Product product, final int owner_id) {
+    public CreateProductDAO(final Connection con, final Product product, final int owner_id, final int company_id) {
         super(con);
 
         if (product == null) {
@@ -51,7 +56,7 @@ public final class CreateProductDAO extends AbstractDAO {
             throw new NullPointerException("The product cannot be null.");
         }
         this.owner_id = owner_id;
-
+        this.company_id = company_id;
         this.product = product;
     }
 
@@ -63,7 +68,7 @@ public final class CreateProductDAO extends AbstractDAO {
 
         try {
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, product.getCompany_id());
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {

@@ -19,7 +19,7 @@ public final class UpdateProductDAO extends AbstractDAO {
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Product\".company_id WHERE company_id = ? and owner_id = ? AND product_id = ?";
 
     /**
      * The SQL statement to be executed.
