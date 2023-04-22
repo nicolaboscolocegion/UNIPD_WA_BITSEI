@@ -24,7 +24,8 @@ import it.unipd.dei.bitsei.resources.Product;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Dispatches the request to the proper REST resource.
@@ -714,7 +715,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
 
         String path = req.getRequestURI();
@@ -728,52 +730,34 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         // strip everything until after the /filter-invoices
         path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
 
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle");
-        // the request URI contains filter(s)
-        boolean checkFilters = false;
-        for(String filter : filterList) {
-            boolean tmp = checkPath(path, filter, req, res, m);
-            if(tmp)
-                path = path.substring(path.lastIndexOf(filter) + filter.length());
-            checkFilters = checkFilters || tmp;
-        }
-
-        // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
-        if (!checkFilters) {
-            /*
-            LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
-            m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
-                    String.format("Requested URI: %s.", req.getRequestURI()));
-            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            m.toJSON(res.getOutputStream());
-            */
-            switch (method) {
-                case "GET":
-                    new ListInvoiceRR(req, res, getConnection(), companyId).serve();
-                    break;
-                default:
-                    LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
-
-                    m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
-                            String.format("Requested operation %s.", method));
-                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                    m.toJSON(res.getOutputStream());
-                    break;
-            }
+        // if no filter is specified
+        if(path.equals("/") || path.equals("")) {
+            new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
         }
         else {
-            switch (method) {
-                case "GET":
-                    new ListInvoiceByFiltersRR(req, res, getConnection(), companyId).serve();
-                    break;
-                default:
-                    LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+            List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id");
+            // the request URI contains filter(s)
+            Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
 
-                    m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
-                            String.format("Requested operation %s.", method));
-                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                    m.toJSON(res.getOutputStream());
-                    break;
+            // it enters here if the user parsed illegal filters
+            if (requestData == null) {
+                // instead of throwing error list all the invoices
+                new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
+            }
+            else {
+                switch (method) {
+                    case "POST":
+                        new ListInvoiceByFiltersRR(req, res, getConnection(), ownerId, requestData).serve();
+                        break;
+                    default:
+                        LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
+
+                        m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                                String.format("Requested operation %s.", method));
+                        res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                        m.toJSON(res.getOutputStream());
+                        break;
+                }
             }
         }
 
@@ -781,87 +765,60 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
 
-    private boolean checkPath(String path, String filter, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {
+    private Map<String, String> checkFilterPath(List<String> filterList, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {
+        String request = req.getReader().lines().collect(Collectors.joining());
+
+        // Remove escape characters from the request
+        request = request.replaceAll("\\\\", "");
+
+        LOGGER.info("## checkPath func: Request: " + request + " ##");
+        Map<String, String> requestData = new HashMap<>();
+
+        // Split the request in a list of key-value pairs
+        String[] requestLines = request.split(",");
+
         try {
-            if(path.contains(filter)) {
-                path = path.substring(path.lastIndexOf(filter) + filter.length() + 1);
-                if(path.indexOf("/") > -1)
-                    path = path.substring(0, path.indexOf("/"));
+            // Parse every key-value pair and add it to the map
+            for(String line : requestLines) {
+                String[] keyValue = line.split(":");
 
-                if (path.length() == 0 || path.equals("/")) {
-                    LOGGER.warn("Wrong format for URI /filter-invoices/" + filter + "/{" + filter + "}: no {" + filter + "} specified. Requested URI: %s.", req.getRequestURI());
+                // Clean the data before parsing
+                String key = keyValue[0].trim().replaceAll("\"", "");
+                key = key.replaceAll("\\s+", "");
+                key = key.replaceAll("[\\[\\](){}]","");
+                String value = keyValue[1].trim().replaceAll("\"", "");
+                value = value.replaceAll("[\\[\\](){}]","");
 
-                    m = new Message("Wrong format for URI /filter-invoices/" + filter + "/{" + filter + "}: no {" + filter + "} specified.", "E4A7",
+                if(!filterList.contains(key)) {
+                    LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+
+                    m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
                             String.format("Requested URI: %s.", req.getRequestURI()));
                     res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     m.toJSON(res.getOutputStream());
-                    return false;
+                    return null;
+                }
+                else {
+                    requestData.put(key, value);
+                    LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
                 }
             }
-            else {
-                return false;
-            }
-        } catch (IOException ex) {
-            LOGGER.error("Unexpected error while processing the checkPath function.");
+        } catch (Exception e) {
+            LOGGER.error("## checkPath func: Unexpected exception thrown: " + e + " ##");
 
-            m = new Message("Unexpected error in function checkPath.", "E5A1",
+            m = new Message("## checkPath func: Unexpected exception thrown: " + e + " ##", "E4A7",
                     String.format("Requested URI: %s.", req.getRequestURI()));
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-            return false;
+            return null;
         }
-        LOGGER.info("##  checkPath func: filter: " + filter + " found! Value: " + path + " ##");
-        return true;
+        return requestData;
     }
+
+
+
+
+
 }
 
-
-/*
-* ListFilteredInvoices
-
-      // the request URI is: /filter-invoices/with-filters/filter1/{value_of_filter1}/filter2/{value_of_filter2}...
-                if(path.contains("with-filters")) {
-                    path = path.substring(path.lastIndexOf("with-filters") + "with-filters".length());
-
-                    Map<String, Object> filtersMap = Map.of("fromTotal", null, "toTotal", null, "fromDiscount", null, "toDiscount", null, "fromPfr", null, "toPfr", null, "fromInvoiceDate", null, "toInvoiceDate", null, "fromWarningDate", null, "toWarningDate", null);
-                    // the request URI contains filter(s)
-                    boolean checkFilters = false;
-                    for(String filter : filtersMap.keySet()) {
-                        boolean tmp = checkPath(path, filter, req, res, m);
-                        if(tmp) {
-                            path = path.substring(path.lastIndexOf(filter) + filter.length());
-                            filtersMap.put(filter, true);
-                        }
-                        checkFilters = checkFilters || tmp;
-                    }
-
-                    // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
-                    if (!checkFilters) {
-                        LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
-                        m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
-                                String.format("Requested URI: %s.", req.getRequestURI()));
-                        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        m.toJSON(res.getOutputStream());
-                    }
-                    else {
-                        switch (method) {
-                            case "GET":
-                                new ListInvoiceRR(req, res, getConnection()).listInvoicesByFilters(companyId, filtersMap);
-
-                                break;
-                            default:
-                                LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
-
-                                m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
-                                        String.format("Requested operation %s.", method));
-                                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                                m.toJSON(res.getOutputStream());
-                                break;
-                        }
-                    }
-                }
-            }
-
-        }
-* */
 
