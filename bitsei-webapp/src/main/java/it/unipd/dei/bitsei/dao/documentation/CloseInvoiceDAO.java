@@ -36,6 +36,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private static final String STATEMENT_SELECT_CUSTOMER = "SELECT * FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
     private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
     private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT bitsei_schema.\"Product\".title, bitsei_schema.\"Product\".description, bitsei_schema.\"Invoice_Product\".quantity, bitsei_schema.\"Product\".measurement_unit, bitsei_schema.\"Invoice_Product\".unit_price, bitsei_schema.\"Invoice_Product\".related_price, bitsei_schema.\"Invoice_Product\".related_price_description,  bitsei_schema.\"Invoice_Product\".purchase_date FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
+    private static final String STATEMENT_SELECT_TELEGRAM_ID = "SELECT bitsei_schema.\"Owner\".telegram_chat_id FROM bitsei_schema.\"Owner\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"Owner\".owner_id = bitsei_schema.\"Company\".owner_id WHERE bitsei_schema.\"Company\".company_id = ?;";
 
     private int owner_id;
     private int company_id;
@@ -195,8 +196,8 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt.setInt(1, this.invoice_id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-             String purchaseDate = italianFormat.format(psqlFormat.parse(rs.getString("purchase_date")));
-                 ldr.add(new DetailRow(trim(rs.getString("title")) + " - " + rs.getString("description"), purchaseDate, rs.getInt("quantity"), rs.getString("measurement_unit"), rs.getFloat("unit_price"), rs.getFloat("related_price"), rs.getString("related_price_description")));
+                String purchaseDate = italianFormat.format(psqlFormat.parse(rs.getString("purchase_date")));
+                ldr.add(new DetailRow(trim(rs.getString("title")) + " - " + rs.getString("description"), purchaseDate, rs.getInt("quantity"), rs.getString("measurement_unit"), rs.getFloat("unit_price"), rs.getFloat("related_price"), rs.getString("related_price_description")));
             }
 
             output.add(ldr);
@@ -211,6 +212,17 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             output.add(this.company_pec);
             output.add(this.company_unique_code);
             output.add(this.fiscal_company_type);
+
+
+            String telegram_chat_id = "";
+            pstmt = con.prepareStatement(STATEMENT_SELECT_TELEGRAM_ID);
+            pstmt.setInt(1, this.company_id);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                telegram_chat_id = rs.getString("telegram_chat_id");
+            }
+
+            output.add(telegram_chat_id);
 
 
         } catch (ParseException e) {

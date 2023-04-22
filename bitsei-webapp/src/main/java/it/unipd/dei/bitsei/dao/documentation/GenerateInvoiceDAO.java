@@ -36,6 +36,8 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
     private static final String STATEMENT_SELECT_COMPANY = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id = ?;";
     private static final String STATEMENT_SELECT_BANKACCOUNT = "SELECT * FROM bitsei_schema.\"BankAccount\" WHERE company_id = ? LIMIT 1;";
     private static final String STATEMENT_SELECT_INVOICE_PRODUCT = "SELECT bitsei_schema.\"Product\".title, bitsei_schema.\"Product\".description, bitsei_schema.\"Invoice_Product\".quantity, bitsei_schema.\"Product\".measurement_unit, bitsei_schema.\"Invoice_Product\".unit_price, bitsei_schema.\"Invoice_Product\".related_price, bitsei_schema.\"Invoice_Product\".related_price_description,  bitsei_schema.\"Invoice_Product\".purchase_date FROM bitsei_schema.\"Invoice_Product\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id WHERE bitsei_schema.\"Invoice_Product\".invoice_id = ?;";
+    private static final String STATEMENT_SELECT_TELEGRAM_ID = "SELECT bitsei_schema.\"Owner\".telegram_chat_id FROM bitsei_schema.\"Owner\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"Owner\".owner_id = bitsei_schema.\"Company\".owner_id WHERE bitsei_schema.\"Company\".company_id = ?;";
+
 
     private String IBAN;
     private int owner_id;
@@ -373,6 +375,16 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             output.add(this.company_city);
             output.add(this.company_province);
             output.add(this.IBAN);
+
+            String telegram_chat_id = "";
+            pstmt = con.prepareStatement(STATEMENT_SELECT_TELEGRAM_ID);
+            pstmt.setInt(1, this.company_id);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                telegram_chat_id = rs.getString("telegram_chat_id");
+            }
+
+            output.add(telegram_chat_id);
 
         } catch (ParseException e) {
             throw new RuntimeException(e);
