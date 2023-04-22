@@ -12,6 +12,8 @@ import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateInvoiceRR;
 import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
 import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoice.DeleteInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoice.GetInvoiceRR;
 import it.unipd.dei.bitsei.rest.listing.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;

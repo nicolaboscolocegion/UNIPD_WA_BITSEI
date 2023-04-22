@@ -110,16 +110,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.LoadInvoiceForUpdateServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
-        <url-pattern>/loadinvoice</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.LoadInvoiceProductForUpdateServlet</servlet-class>
     </servlet>
