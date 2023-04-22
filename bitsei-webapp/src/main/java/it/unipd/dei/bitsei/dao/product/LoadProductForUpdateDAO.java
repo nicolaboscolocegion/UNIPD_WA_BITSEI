@@ -18,6 +18,10 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
+    /**
+     * SQL statement to be executed to check ownership for security reasons.
+     */
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
 
     /**
      * The SQL statement to be executed
@@ -30,13 +34,19 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
     private final int product_id;
 
     /**
+     * The owner_id of this session, to be checked for security reasons.
+     */
+    private final int owner_id;
+
+    /**
      * Creates a new object for searching product by id.
      *
      * @param con    the connection to the database.
      * @param product_id the id of the product.
      */
-    public LoadProductForUpdateDAO(final Connection con, final int product_id) {
+    public LoadProductForUpdateDAO(final Connection con, final int product_id, final int owner_id) {
         super(con);
+        this.owner_id = owner_id;
         this.product_id = product_id;
     }
 
@@ -45,6 +55,7 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        ResultSet rs_check = null;
 
         // the results of the search
         Product p = null;
@@ -55,11 +66,28 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
 
             rs = pstmt.executeQuery();
 
+
             while (rs.next()) {
+                pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+                pstmt.setInt(1, rs.getInt("company_id"));
+                pstmt.setInt(2, owner_id);
+                rs = pstmt.executeQuery();
+                if (!rs.next()) {
+                    LOGGER.error("Error on fetching data from database");
+                    throw new SQLException();
+                }
+
+                if (rs.getInt("c") == 0) {
+                    LOGGER.error("Company selected does not belong to logged user.");
+                    throw new IllegalAccessException();
+                }
+
                 p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
             }
 
             LOGGER.info("Product with product_id above %d successfully listed.", product_id);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (rs != null) {
                 rs.close();

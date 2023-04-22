@@ -5,6 +5,7 @@ import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -15,6 +16,10 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class UpdateProductDAO extends AbstractDAO {
+    /**
+     * SQL statement to be executed to check ownership for security reasons.
+     */
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Product\".company_id WHERE company_id = ? and owner_id = ? AND product_id = ?";
 
     /**
      * The SQL statement to be executed.
@@ -27,18 +32,24 @@ public final class UpdateProductDAO extends AbstractDAO {
     private final Product product;
 
     /**
+     * The owner_id of this session, to be checked for security reasons.
+     */
+    private final int owner_id;
+
+    /**
      * Creates a new object for updating a product present in the database.
      *
      * @param con the connection to the database.
      * @param product the product to be updated.
      */
-    public UpdateProductDAO(final Connection con, final Product product) {
+    public UpdateProductDAO(final Connection con, final Product product, final int owner_id) {
         super(con);
 
         if (product == null) {
             LOGGER.error("The product cannot be null.");
             throw new NullPointerException("The product cannot be null.");
         }
+        this.owner_id = owner_id;
 
         this.product = product;
     }
@@ -47,8 +58,23 @@ public final class UpdateProductDAO extends AbstractDAO {
     protected final void doAccess() throws SQLException {
 
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try {
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, product.getCompany_id());
+            pstmt.setInt(2, owner_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Company selected does not belong to logged user.");
+                throw new IllegalAccessException();
+            }
+
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, product.getCompany_id());
             pstmt.setString(2, product.getTitle());
@@ -63,6 +89,8 @@ public final class UpdateProductDAO extends AbstractDAO {
             LOGGER.info("query: " + pstmt.toString());
 
             LOGGER.info("Product %s successfully updated in the database.", product.getTitle());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();
