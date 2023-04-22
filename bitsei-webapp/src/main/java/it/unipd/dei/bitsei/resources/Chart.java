@@ -29,7 +29,7 @@ public class Chart extends AbstractResource {
     /**
      * The id of the customer
      */
-    private final int period;
+    private final int chart_period;
 
 
     /**
@@ -50,11 +50,11 @@ public class Chart extends AbstractResource {
      * @param pension_fund_refund   the pension fund refund of the invoice
      * @param has_stamp         the stamp of the invoice
      */
-    public Chart(final String label, final String data, final int chart_type, final int period) {
+    public Chart(final String label, final String data, final int chart_type, final int chart_period) {
         this.label = label;
         this.data = data;
         this.chart_type = chart_type;
-        this.period = period;
+        this.chart_period = chart_period;
     }
 
     /**
@@ -89,8 +89,8 @@ public class Chart extends AbstractResource {
      *
      * @return the id of the customer
      */
-    public final int getPeriod() {
-        return period;
+    public final int getChartPeriod() {
+        return chart_period;
     }
 
 
@@ -107,7 +107,7 @@ public class Chart extends AbstractResource {
             jg.writeStringField("label", label);
             jg.writeStringField("data", data);
             jg.writeNumberField("chart_type", chart_type);
-            jg.writeNumberField("period", period);
+            jg.writeNumberField("chart_period", chart_period);
         } catch (Throwable T) {
             //LOGGER.warn("## INVOICE CLASS: Invoice #%d has null field(s).", invoice_id);
         }
@@ -130,14 +130,14 @@ public class Chart extends AbstractResource {
         String jLabel = null;
         String jData = null;
         int jChartType = -1;
-        int jPeriod = -1;
+        int jChartPeriod = -1;
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
 
             // while we are not on the start of an element or the element is not
             // a token element, advance to the next element (if any)
-            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"chart-element".equals(jp.getCurrentName())) {
+            while (jp.getCurrentToken() != JsonToken.FIELD_NAME || !"chart".equals(jp.getCurrentName())) {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
@@ -162,9 +162,9 @@ public class Chart extends AbstractResource {
                             jp.nextToken();
                             jChartType = jp.getIntValue();
                             break;
-                        case "period":
+                        case "chart_period":
                             jp.nextToken();
-                            jPeriod = jp.getIntValue();
+                            jChartPeriod = jp.getIntValue();
                             break;
                     }
                 }
@@ -174,7 +174,7 @@ public class Chart extends AbstractResource {
             throw e;
         }
 
-        return new Chart(jLabel, jData, jChartType, jPeriod);
+        return new Chart(jLabel, jData, jChartType, jChartPeriod);
     }
 
 }
