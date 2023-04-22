@@ -14,7 +14,7 @@ public class Invoice extends AbstractResource {
     /**
      * The id of the invoice
      */
-    private final int invoice_id;
+    private int invoice_id;
 
     /**
      * The id of the customer
@@ -307,6 +307,8 @@ public class Invoice extends AbstractResource {
     public final boolean hasStamp() {
         return has_stamp;
     }
+
+    public void setInvoice_id(int invoice_id) {this.invoice_id = invoice_id;}
 
 
     @Override
