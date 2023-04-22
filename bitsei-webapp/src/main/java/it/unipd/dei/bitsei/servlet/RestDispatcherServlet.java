@@ -908,8 +908,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        //final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
 
         String path = req.getRequestURI();
