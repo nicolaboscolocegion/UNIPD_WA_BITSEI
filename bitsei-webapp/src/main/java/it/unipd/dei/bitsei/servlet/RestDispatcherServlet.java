@@ -93,10 +93,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
+            // if the requested resource was a list of filtered invoices, delegate its processing and return
+            if(processChartInvoiceByFilters(req, res)) {
+                return;
+            }
+
             // if the requested resource was an invoice, delegate its processing and return
             if(processCloseInvoice(req, res)) {
                 return;
             }
+
             // if the requested resource was an invoice, delegate its processing and return
             if(processGenerateInvoice(req, res)) {
                 return;
@@ -895,6 +901,51 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         return requestData;
     }
 
+
+    /**
+     * Checks whether the request is for a chart of filtered {@link Invoice}s resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for a filtered chart of {@code Invoice}s; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
+        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+
+        // the requested resource was not a filter-invoices
+        if (path.lastIndexOf("rest/chart/filter-invoices") <= 0) {
+            return false;
+        }
+
+        // strip everything until after the /filter-invoices
+        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
+        
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "period");
+        
+        Map<String, String> requestData = checkFilterPath(filterList, req, res, m);
+        
+        switch (method) {
+            case "POST":
+                new PlotChartRR(req, res, getConnection(), ownerId, requestData).serve();
+                break;
+            default:
+                LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
+
+                m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+            
+        return true;
+    }
 
 
 
