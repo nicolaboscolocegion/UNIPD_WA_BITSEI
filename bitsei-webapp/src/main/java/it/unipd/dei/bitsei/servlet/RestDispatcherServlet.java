@@ -880,20 +880,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-        //final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
 
-        String path = req.getRequestURI();
-        Message m = null;
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
-        // the requested resource was not a chart/filter-invoices
-        if (path.lastIndexOf("rest/chart/filter-invoices") <= 0) {
+        Message m = null;
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("charts")) {
             return false;
         }
-
-        // strip everything until after the /filter-invoices
-        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
+        final int company_id = r.getCompanyID();
         
         List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "chart_period");
         // the request URI contains filters or the chart type/period
@@ -901,7 +897,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         
         switch (method) {
             case "POST":
-                new PlotChartRR(req, res, getConnection(), ownerId, requestData).serve();
+                new PlotChartRR(req, res, getConnection(), company_id, requestData).serve();
                 break;
             default:
                 LOGGER.warn("Unsupported operation for URI chart/filter-invoices %s.", method);
