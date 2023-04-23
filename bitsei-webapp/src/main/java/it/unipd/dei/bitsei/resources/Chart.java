@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
-import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -122,7 +121,7 @@ public class Chart extends AbstractResource {
      * Creates a {@code Chart} from its JSON representation.
      *
      * @param in the input stream containing the JSON document.
-     * @return the {@code Invoice} created from the JSON representation.
+     * @return the {@code Chart} created from the JSON representation.
      * @throws IOException if something goes wrong while parsing.
      */
     public static Chart fromJSON(final InputStream in) throws IOException {
