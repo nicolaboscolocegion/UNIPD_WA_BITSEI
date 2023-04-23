@@ -42,7 +42,7 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
      */
     private static final String INIT_STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id WHERE ((cmp.company_id = ?) OR 1=1)";
 
-    private final String requestFor;
+    private final int ownerId;
     private final int companyId;
     /**
     /**
@@ -50,9 +50,9 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
      *
      * @param con           the connection to the database.
      */
-    public ListProductDAO(final Connection con, String requestFor, int companyId){
+    public ListProductDAO(final Connection con, int ownerId, int companyId){
         super(con);
-        this.requestFor = requestFor;
+        this.ownerId = ownerId;
         this.companyId = companyId;
     }
 
@@ -61,29 +61,28 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
      */
     @Override
     protected void doAccess() throws SQLException {
-        final String STATEMENT = "SELECT p.* FROM bitsei_schema.\"Product\" AS p JOIN bitsei_schema.\"Company\" AS c ON p.company_id = c.company_id WHERE ((c.company_id = ?) OR (1=1))";
+        final String STATEMENT = "SELECT p.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         // the results of the search
         List<Product> products = new ArrayList<Product>();
-        if(requestFor.equals("listAll")) {
-            try {
-                pstmt = con.prepareStatement(STATEMENT);
-                pstmt.setInt(1, companyId);
-                rs = pstmt.executeQuery();
+        try {
+            pstmt = con.prepareStatement(STATEMENT);
+            pstmt.setInt(1, ownerId);
+            pstmt.setInt(2, companyId);
+            rs = pstmt.executeQuery();
 
-                products = parseProductRS(rs);
+            products = parseProductRS(rs);
 
-                LOGGER.info("## ListProductDAO: Products of companyId: %d succesfully listed ##", companyId);
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
+            LOGGER.info("## ListProductDAO: Products of ownerId: %d and companyId: %d succesfully listed ##", ownerId, companyId);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
 
-                if (pstmt != null) {
-                    pstmt.close();
-                }
+            if (pstmt != null) {
+                pstmt.close();
             }
         }
 
