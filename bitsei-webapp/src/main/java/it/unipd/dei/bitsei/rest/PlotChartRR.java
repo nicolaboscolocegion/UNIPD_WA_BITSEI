@@ -1,5 +1,6 @@
 package it.unipd.dei.bitsei.rest;
 
+import it.unipd.dei.bitsei.dao.customer.GetCustomerDAO;
 import it.unipd.dei.bitsei.dao.listing.ListInvoiceByFiltersDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
@@ -34,7 +35,7 @@ public final class PlotChartRR extends AbstractRR {
     private static final int CHART_TYPE = 1;
     private static final int CHART_PERIOD = 1;
 
-    private final int ownerId;
+    private final int company_id;
     private final Map<String, String> requestData;
     /**
      * Creates a new REST resource for plotting charts.
@@ -43,14 +44,23 @@ public final class PlotChartRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public PlotChartRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int ownerId, Map<String, String> requestData) {
+    public PlotChartRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id, Map<String, String> requestData) {
         super(Actions.LIST_INVOICES_BY_FILTERS, req, res, con);
-        this.ownerId = ownerId;
+        this.company_id = company_id;
         this.requestData = requestData;
     }
 
     @Override
     protected void doServe() throws IOException {
+
+        final int owner_id;
+        try {
+             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        }
+        catch(Exception e) {
+            LOGGER.warn("## PlotChartRR: Illegal value for attribute {owner_id} ##");
+            return;
+        }
 
         List<Invoice> el = null;
         Message m = null;
@@ -212,7 +222,7 @@ public final class PlotChartRR extends AbstractRR {
             LOGGER.info("## PlotChartRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle + " chartType: " + chart_type + " chartType: " + chart_period);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
-            el = new ListInvoiceByFiltersDAO(con, ownerId, -1,
+            el = new ListInvoiceByFiltersDAO(con, owner_id, company_id,
                     filterByTotal, fromTotal, toTotal,
                     filterByDiscount, fromDiscount, toDiscount,
                     filterByPfr, fromPfr, toPfr,
