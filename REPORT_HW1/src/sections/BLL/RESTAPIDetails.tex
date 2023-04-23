@@ -1,16 +1,44 @@
 \subsection{REST API Details}
+At the end of every URI used in the Rest calls below, it's automatically added the following path: 
+\begin{lstlisting}
+    company/{id}
+\end{lstlisting}
+which specifies the id of the company currently logged into the system. \\
+Regarding the authentication aspect, when the user logs into the system a session token containing the owner id and the owner email is setted. \\
+If this token is not setted, every call will be blocked until the user authenticates himself. \\
+This token is particularly useful because it allows to check at every call to a Rest Resource that the user is authorized for the operation he's trying to do. \\
 
 %List here a few resources retrievable via REST API
+
+
+% REST RESOURCE #1
 \subsubsection*{List the users registered in the system}
 
 % the description of the resource
 The following endpoint allows to get a list of all the users registered in the system.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user}
-    \item Method: \texttt{GET}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{No Data parameters required}
+
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/user}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.}
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{No Data parameters required.} 
+    \end{itemize}
+    
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
@@ -21,9 +49,9 @@ The following endpoint allows to get a list of all the users registered in the s
 {"user":{"firstname":"Burr","lastname":"Mycah","username":"mmcclosh0","email":"mchaudret0@dailymail.co.uk","telegram_chat_id":null}},
 {"user":{firstname":"Daffy","lastname":"Lisette","username":"ldinningtont","email":"lgianettinit@wp.com","telegram_chat_id":null}}
 ]} 
-        \end{lstlisting}
-        
+        \end{lstlisting}    
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -34,20 +62,39 @@ The following endpoint allows to get a list of all the users registered in the s
     Error code 2 & When of Error Code 2 \\\hline
     \end{tabular} 
     \end{table} 
-    
+
 \end{itemize}
 
 
+% REST RESOURCE #2
 \subsubsection*{Reset the password of a user registered in the system}
 
 % the description of the resource
 The following endpoint allows to send a link to an user via email to reset its password.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user/reset-password}
-    \item Method: \texttt{POST}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{The JSON representation of the user}
+
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/user/reset-password}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.} 
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerMail = \{String\}} \\
+        The owner mail contained in the authentication token.    
+    \end{itemize}
+    
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
@@ -55,8 +102,8 @@ The following endpoint allows to send a link to an user via email to reset its p
         \begin{lstlisting}
             TODO
         \end{lstlisting}
-        
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -71,16 +118,35 @@ The following endpoint allows to send a link to an user via email to reset its p
 \end{itemize}
 
 
+% REST RESOURCE #3
 \subsubsection*{Change the password of a user registered in the system}
 
 % the description of the resource
 The following endpoint allows to change an user's password from inside the system.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user/change-password}
-    \item Method: \texttt{POST}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{The JSON representation of the user}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/user/change-password}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.} 
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}, ownerMail = \{String\}} \\
+        The owner identifier and the owner mail contained in the authentication token.    
+    \end{itemize}
+    
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
@@ -88,8 +154,8 @@ The following endpoint allows to change an user's password from inside the syste
         \begin{lstlisting}
             TODO
         \end{lstlisting}
-        
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -104,25 +170,43 @@ The following endpoint allows to change an user's password from inside the syste
 \end{itemize}
 
 
+% REST RESOURCE #4
 \subsubsection*{Authenticate an user}
 
 % the description of the resource
 The following endpoint allows to authenticate an user into the system.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user/change-password}
-    \item Method: \texttt{POST}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{The JSON representation of the user}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/login}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.} 
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{The JSON representation of the user email and password.}
+    \end{itemize}
+    
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
         \item Content:
         \begin{lstlisting}
             TODO
-        \end{lstlisting}
-        
+        \end{lstlisting}    
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -137,25 +221,44 @@ The following endpoint allows to authenticate an user into the system.
 \end{itemize}
 
 
+% REST RESOURCE #5
 \subsubsection*{List the companies associated to an user}
 
 % the description of the resource
 The following endpoint allows to list all the companies associated to an user.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user/company}
-    \item Method: \texttt{GET}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{The JSON representation of the user}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/company}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.}
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
         \item Content:
         \begin{lstlisting}
             TODO
-        \end{lstlisting}
-        
+        \end{lstlisting}    
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -170,25 +273,44 @@ The following endpoint allows to list all the companies associated to an user.
 \end{itemize}
 
 
+% REST RESOURCE #6
 \subsubsection*{Create a new company associated to an user}
 
 % the description of the resource
 The following endpoint allows to create a new company and associate it to an user already registered into the system.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/user/company}
-    \item Method: \texttt{POST}
-    \item URL Parameters: \texttt{No URL parameters required}
-    \item Data Parameters: \texttt{The JSON representation of the user}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/company}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{No URL parameters required.}
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.    
+    \end{itemize}
+
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
         \item Content:
         \begin{lstlisting}
             TODO
-        \end{lstlisting}
-        
+        \end{lstlisting} 
     \end{itemize}
+    
     \item Error Response:
     \begin{table}[!h]
     \centering 
@@ -201,6 +323,519 @@ The following endpoint allows to create a new company and associate it to an use
     \end{table} 
     
 \end{itemize}
+
+
+% REST RESOURCE #7
+\subsubsection*{Get the image associated to a company}
+
+% the description of the resource
+The following endpoint allows to get the company image of the company specified in the URL.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/company/image/\{id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company for which to retrieve the image.
+    \end{itemize}
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+            TODO
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #8
+\subsubsection*{Create a new customer associated to a company}
+
+% the description of the resource
+The following endpoint allows to create a new customer and associate it to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customer/}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{companyId = \{int\}} \\
+        The identifier of the company to which associate the new customer.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{The JSON representation of the company to create} 
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+            TODO
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #9
+\subsubsection*{Get a customer associated to a company}
+
+% the description of the resource
+The following endpoint allows to get a customer associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customer/\{id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{customerId = \{int\}} \\
+        The identifier of the customer to retrieve.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.   
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{"resource-list":
+[{"customer":{"customerID":"1","businessName":"AppleLike Inc.","vatNumber":"56479-182","taxCode":"22342-305","address":"Via Venezia 79","city":"Padova","province":"PD","postalCode":null,"emailAddress":"applelike@google.com","pec":"applelike@pec-mac.com","uniqueCode":"1","companyID":"1"}}
+]}
+        \end{lstlisting}        
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #10
+\subsubsection*{Delete a customer associated to a company}
+
+% the description of the resource
+The following endpoint allows to delete a customer associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customer/\{id\}}
+    \end{itemize}
+
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{DELETE}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{customerId = \{int\}} \\
+        The identifier of the customer to delete.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+            TODO
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #11
+\subsubsection*{Update a customer associated to a company}
+
+% the description of the resource
+The following endpoint allows to update a customer associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customer/\{id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{customerId = \{int\}} \\
+        The identifier of the customer to delete.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+            TODO
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #12
+\subsubsection*{List the invoices associated to a company}
+
+% the description of the resource
+The following endpoint allows to list all the invoices associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/list-invoice}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{"resource-list":
+[{"invoice":{"invoice_id":1,"customer_id":1,"status":0,"warning_number":1,"warning_date":"2022-01-05","warning_pdf_file":"warning_pdf_file1.pdf","invoice_number":"1","invoice_date":"2022-02-06","invoice_pdf_file":"invoice_pdf_file1.pdf","invoice_xml_file":"invoice_xml_file1.xml","total":168.3,"discount":15.0,"pension_fund_refund":4.1,"has_stamp":false}},
+{"invoice":{"invoice_id":29,"customer_id":29,"status":0,"warning_number":29,"warning_date":"2022-08-29","warning_pdf_file":"warning_pdf_file29.pdf","invoice_number":"29","invoice_date":"2022-09-14","invoice_pdf_file":"invoice_pdf_file29.pdf","invoice_xml_file":"invoice_xml_file29.xml","total":846.8,"discount":75.4,"pension_fund_refund":1.2,"has_stamp":false}}
+]}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #13
+\subsubsection*{List the customers associated to a company}
+
+% the description of the resource
+The following endpoint allows to list all the customers associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/list-customer}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{"resource-list":
+[{"customer":{"customerID":"1","businessName":"AppleLike Inc.","vatNumber":"56479-182","taxCode":"22342-305","address":"Via Venezia 79","city":"Padova","province":"PD","postalCode":null,"emailAddress":"applelike@google.com","pec":"applelike@pec-mac.com","uniqueCode":"1","companyID":"1"}},
+{"customer":{"customerID":"2","businessName":"Reinger Group","vatNumber":"49631-182","taxCode":"14783-305","address":"4 Mockingbird Junction","city":"Rovigo","province":"RO","postalCode":45100,"emailAddress":"rfrankum1@google.nl","pec":"plyster1@pec-mac.com","uniqueCode":"2","companyID":"2"}}
+]}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #14
+\subsubsection*{List the products associated to a company}
+
+% the description of the resource
+The following endpoint allows to list all the products associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/list-product}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{"resource-list":
+[{"product":{"product_id":1,"company_id":1,"title":"ETHANOL","default_price":29,"logo":"http://dummyimage.com/222x224.png/5fa2dd/ffffff","measurement_unit":"Kg","description":"Pre-emptive upward-trending analyzer"}},
+{"product":{"product_id":2,"company_id":2,"title":"Antimoium crud, Benzoic ac, Ledum, Nux vom, Quercus, Rhododendron, Silicea","default_price":24,"logo":"http://dummyimage.com/225x208.png/5fa2dd/ffffff","measurement_unit":"Kg","description":"Ameliorated mission-critical adapter"}}
+]}
+        \end{lstlisting}    
+    \end{itemize}
+
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #15
+\subsubsection*{List the filtered invoices associated to a company}
+
+% the description of the resource
+The following endpoint allows to filter and list the invoices associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/filter-invoices}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+        \item the user can set one, many or all the filters defined below: 
+        \begin{itemize}
+            \item \texttt{fromTotal = \{Double\}} - the lower bound for the \textit{Total},
+            \item \texttt{toTotal = \{Double\}} - the upper bound for the \textit{Total},
+            \item \texttt{fromDiscount = \{Double\}} - the lower bound for the \textit{Discount}, 
+            \item \texttt{toDiscount = \{Double\}} - the upper bound for the \textit{Discount},
+            \item \texttt{fromPfr = \{Double\}} - the lower bound for the \textit{Pension Fund Refund}, 
+            \item \texttt{toPfr = \{Double\}} - the upper bound for the \textit{Pension Fund Refund},
+            \item \texttt{fromInvoiceDate = \{Date\}} - the lower bound for the \textit{Invoice Date}, 
+            \item \texttt{toInvoiceDate = \{Date\}} - the upper bound for the \textit{Invoice Date},
+            \item \texttt{fromWarningDate = \{Date\}} - the lower bound for the \textit{Warning Date}, 
+            \item \texttt{toWarningDate = \{Date\}} - the upper bound for the \textit{Warning Date},
+            \item \texttt{fromBusinessName = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Customer Names} to filter the invoices,
+            \item \texttt{fromProductTitle = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Product Titles} to filter the invoices,
+        \end{itemize}     
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{"resource-list":
+[{"invoice":{"invoice_id":1,"customer_id":1,"status":0,"warning_number":1,"warning_date":"2022-01-05","warning_pdf_file":"warning_pdf_file1.pdf","invoice_number":"1","invoice_date":"2022-02-06","invoice_pdf_file":"invoice_pdf_file1.pdf","invoice_xml_file":"invoice_xml_file1.xml","total":168.3,"discount":15.0,"pension_fund_refund":4.1,"has_stamp":false}},
+{"invoice":{"invoice_id":20,"customer_id":20,"status":0,"warning_number":20,"warning_date":"2022-09-17","warning_pdf_file":"warning_pdf_file20.pdf","invoice_number":"20","invoice_date":"2022-09-20","invoice_pdf_file":"invoice_pdf_file20.pdf","invoice_xml_file":"invoice_xml_file20.xml","total":71.2,"discount":46.8,"pension_fund_refund":3.2,"has_stamp":false}}
+]}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
 
 \subsubsection*{A resource}
 
