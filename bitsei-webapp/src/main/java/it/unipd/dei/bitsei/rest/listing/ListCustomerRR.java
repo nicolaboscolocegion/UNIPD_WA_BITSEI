@@ -15,7 +15,7 @@ import java.util.List;
  * A REST resource for listing {@link Customer}s.
  */
 public final class ListCustomerRR extends AbstractRR {
-    private final int companyId;
+    private final int company_id;
     /**
      * Creates a new REST resource for listing {@code Customer}s.
      *
@@ -23,13 +23,21 @@ public final class ListCustomerRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListCustomerRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
+    public ListCustomerRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id) {
         super(Actions.LIST_CUSTOMERS_BY_COMPANY_ID, req, res, con);
-        this.companyId = companyId;
+        this.company_id = company_id;
     }
 
     @Override
     protected void doServe() throws IOException {
+        final int owner_id;
+        try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        }
+        catch(Exception e) {
+            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
+            return;
+        }
 
         List<Customer> el = null;
         Message m = null;
@@ -37,7 +45,7 @@ public final class ListCustomerRR extends AbstractRR {
         try {
 
             // creates a new DAO for accessing the database and lists the customer(s)
-            el = new ListCustomerDAO(con, "listAll", companyId).access().getOutputParam();
+            el = new ListCustomerDAO(con, owner_id, company_id).access().getOutputParam();
 
             if (el != null) {
                 LOGGER.info("## ListCustomerRR: Customer(s) successfully listed. ##");

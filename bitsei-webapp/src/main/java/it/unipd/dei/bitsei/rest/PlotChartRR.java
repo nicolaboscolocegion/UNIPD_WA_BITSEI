@@ -212,7 +212,7 @@ public final class PlotChartRR extends AbstractRR {
             LOGGER.info("## PlotChartRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle + " chartType: " + chart_type + " chartType: " + chart_period);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
-            el = new ListInvoiceByFiltersDAO(con, ownerId,
+            el = new ListInvoiceByFiltersDAO(con, ownerId, -1,
                     filterByTotal, fromTotal, toTotal,
                     filterByDiscount, fromDiscount, toDiscount,
                     filterByPfr, fromPfr, toPfr,

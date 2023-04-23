@@ -15,7 +15,7 @@ import java.util.List;
  * A REST resource for listing {@link Invoice}s.
  */
 public final class ListInvoiceRR extends AbstractRR {
-    private final int companyId;
+    private final int company_id;
     /**
      * Creates a new REST resource for listing {@code Invoice}s.
      *
@@ -24,21 +24,28 @@ public final class ListInvoiceRR extends AbstractRR {
      * @param con the connection to the database.
      * @param
      */
-    public ListInvoiceRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
+    public ListInvoiceRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id) {
         super(Actions.LIST_INVOICES_BY_COMPANY_ID, req, res, con);
-        this.companyId = companyId;
+        this.company_id = company_id;
     }
 
     @Override
     protected void doServe() throws IOException {
+        final int owner_id;
+        try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        }
+        catch(Exception e) {
+            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
+            return;
+        }
 
         List<Invoice> el = null;
         Message m = null;
 
         try {
-
             // creates a new DAO for accessing the database and lists the invoice(s)
-            el = new ListInvoiceDAO(con, "listAll", companyId).access().getOutputParam();
+            el = new ListInvoiceDAO(con, owner_id, company_id).access().getOutputParam();
 
             if (el != null) {
                 LOGGER.info("## ListInvoiceRR: Invoice(s) successfully listed. ##");
@@ -61,43 +68,5 @@ public final class ListInvoiceRR extends AbstractRR {
         }
     }
 
-    /*
-    public void listInvoicesByFilters(int companyId, Map<String, Object> filtersMap) throws IOException {
-        List<Invoice> el = null;
-        Message m = null;
-
-        try {
-            String path = req.getRequestURI();
-            path = path.substring(path.lastIndexOf("with-filters") + "with-filters".length());
-            String[] filtersInPath = path.split("/");
-            for(int i=0; i<filtersInPath.length-1; i+=2) {
-                filtersMap.put(filtersInPath[i], filtersInPath[i+1]);
-            }
-
-
-            // creates a new DAO for accessing the database and lists the invoice(s)
-            el = new ListInvoiceDAO(con, "listAll", companyId).getOutputParam(); //TODO
-
-            if (el != null) {
-                LOGGER.info("## CLASS -> ListInvoicesRR ; FUNC -> listInvoicesByCompanyId ; Invoice(s) successfully listed ##");
-
-                res.setStatus(HttpServletResponse.SC_OK);
-                new ResourceList(el).toJSON(res.getOutputStream());
-            } else { // it should not happen
-                LOGGER.error("## CLASS -> ListInvoicesRR ; FUNC -> listInvoicesByCompanyId ; Fatal error while listing invoice(s).");
-
-                m = new Message("## CLASS -> ListInvoicesRR ; FUNC -> listInvoicesByCompanyId ; Cannot list invoice(s): unexpected error. ##", "E5A1", null);
-                res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                m.toJSON(res.getOutputStream());
-            }
-        } catch (Throwable ex) {
-            LOGGER.error("## CLASS -> ListInvoicesRR ; FUNC -> listInvoicesByCompanyId ; Cannot list invoice(s): unexpected database error. ##", ex);
-
-            m = new Message("## CLASS -> ListInvoicesRR ; FUNC -> listInvoicesByCompanyId ; Cannot list invoice(s): unexpected database error. ##", "E5A1", ex.getMessage());
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            m.toJSON(res.getOutputStream());
-        }
-    }
-    */
 
 }

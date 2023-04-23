@@ -28,7 +28,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
     LocalDate currentDate = LocalDate.now();
     final Date TO_DATE = Date.valueOf(currentDate);
 
-    private final int ownerId;
+    private final int company_id;
     private final Map<String, String> requestData;
     /**
      * Creates a new REST resource for listing {@code Invoice}s.
@@ -37,14 +37,22 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListInvoiceByFiltersRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int ownerId, Map<String, String> requestData) {
+    public ListInvoiceByFiltersRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id, Map<String, String> requestData) {
         super(Actions.LIST_INVOICES_BY_FILTERS, req, res, con);
-        this.ownerId = ownerId;
+        this.company_id = company_id;
         this.requestData = requestData;
     }
 
     @Override
     protected void doServe() throws IOException {
+        final int owner_id;
+        try {
+             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        }
+        catch(Exception e) {
+            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
+            return;
+        }
 
         List<Invoice> el = null;
         Message m = null;
@@ -187,7 +195,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
-            el = new ListInvoiceByFiltersDAO(con, ownerId,
+            el = new ListInvoiceByFiltersDAO(con, owner_id, company_id,
                     filterByTotal, fromTotal, toTotal,
                     filterByDiscount, fromDiscount, toDiscount,
                     filterByPfr, fromPfr, toPfr,
