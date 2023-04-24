@@ -15,6 +15,10 @@ import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
 import it.unipd.dei.bitsei.rest.invoice.DeleteInvoiceRR;
 import it.unipd.dei.bitsei.rest.invoice.GetInvoiceRR;
 import it.unipd.dei.bitsei.rest.invoice.UpdateInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.CreateInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.DeleteInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.GetInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.UpdateInvoiceProductRR;
 import it.unipd.dei.bitsei.rest.listing.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,6 +75,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an User, delegate its processing and return
             if (processCustomer(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if (processInvoice(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if (processInvoiceProduct(req, res)) {
                 return;
             }
 
@@ -636,6 +650,83 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     LOGGER.warn("Unsupported operation for URI /invoice: %s.", method);
 
                     m = new Message("Unsupported operation for URI /invoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processInvoiceProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("invoiceproduct")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+
+                case "POST":
+                    new CreateInvoiceProductRR(req, res, getConnection(), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+                case "GET":
+                    new GetInvoiceProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "DELETE":
+                    new DeleteInvoiceProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "PUT":
+                    new UpdateInvoiceProductRR(req, res, getConnection(), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
