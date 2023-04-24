@@ -114,6 +114,12 @@ public class UpdateInvoiceRR extends AbstractRR {
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
             m.toJSON(res.getOutputStream());
+        }catch (IllegalCallerException e) {
+            m = new Message(
+                    "Error: unexpected call to UpdateInvoice after invoice has been closed or emitted.");
+
+            LOGGER.error(
+                    "Error: unexpected call to UpdateInvoice after invoice has been closed or emitted.");
         }
     }
 }

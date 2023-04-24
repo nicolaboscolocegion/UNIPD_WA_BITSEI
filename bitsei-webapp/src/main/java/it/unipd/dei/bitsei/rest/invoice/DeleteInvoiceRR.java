@@ -60,7 +60,9 @@ public class DeleteInvoiceRR extends AbstractRR {
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             // creates a new object for accessing the database and delete the invoice
+
             i = (Invoice) new DeleteInvoiceDAO<Invoice>(con, invoice_id, owner_id, r.getCompanyID()).access().getOutputParam();
+
 
             m = new Message(String.format("Invoice successfully deleted."));
             LOGGER.info("Invoice deleted in the database.");
@@ -85,6 +87,12 @@ public class DeleteInvoiceRR extends AbstractRR {
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
+        }  catch (IllegalCallerException e) {
+            m = new Message(
+                    "Error: unexpected call to DeleteInvoice after invoice has been closed or emitted.");
+
+            LOGGER.error(
+                    "Error: unexpected call to DeleteInvoice after invoice has been closed or emitted.");
         }
     }
 }

@@ -21,7 +21,7 @@ public final class UpdateInvoiceDAO extends AbstractDAO<Invoice> {
      */
     private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Customer\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Customer\".company_id INNER JOIN bitsei_schema.\"Invoice\" ON bitsei_schema.\"Customer\".customer_id = bitsei_schema.\"Invoice\".customer_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Customer\".customer_id = ? AND bitsei_schema.\"Invoice\".invoice_id = ?;";
 
-
+    private static final String FETCH = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     /**
      * The SQL statement to be executed.
      */
@@ -73,6 +73,21 @@ public final class UpdateInvoiceDAO extends AbstractDAO<Invoice> {
             if (rs.getInt("c") == 0) {
                 LOGGER.error("Data access violation");
                 throw new IllegalAccessException();
+            }
+
+
+            pstmt = con.prepareStatement(FETCH);
+            pstmt.setInt(1, invoice.getInvoice_id());
+            rs = pstmt.executeQuery();
+            Invoice i = null;
+
+            while (rs.next()) {
+                i = new Invoice(rs.getInt("invoice_id"), rs.getInt("customer_id"), rs.getInt("status"), rs.getInt("warning_number"), rs.getDate("warning_date"), rs.getString("warning_pdf_file"), rs.getString("invoice_number"), rs.getDate("invoice_date"), rs.getString("invoice_pdf_file"), rs.getString("invoice_xml_file"), rs.getDouble("total"), rs.getDouble("discount"), rs.getDouble("pension_fund_refund"), rs.getBoolean("has_stamp"));
+            }
+
+            if (i.getStatus() != 0) {
+                LOGGER.error("Update after closure not allowed.");
+                throw new IllegalCallerException();
             }
 
             pstmt = con.prepareStatement(STATEMENT);

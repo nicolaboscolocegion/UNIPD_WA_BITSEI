@@ -89,7 +89,12 @@ public final class DeleteInvoiceDAO<I extends AbstractResource> extends Abstract
                 i = new Invoice(rs.getInt("invoice_id"), rs.getInt("customer_id"), rs.getInt("status"), rs.getInt("warning_number"), rs.getDate("warning_date"), rs.getString("warning_pdf_file"), rs.getString("invoice_number"), rs.getDate("invoice_date"), rs.getString("invoice_pdf_file"), rs.getString("invoice_xml_file"), rs.getDouble("total"), rs.getDouble("discount"), rs.getDouble("pension_fund_refund"), rs.getBoolean("has_stamp"));
             }
 
-            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            if (i.getStatus() != 0) {
+                LOGGER.error("Deletion after closure not allowed.");
+                throw new IllegalCallerException();
+            }
+
+           /* pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
             pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             rs = pstmt.executeQuery();
@@ -101,7 +106,7 @@ public final class DeleteInvoiceDAO<I extends AbstractResource> extends Abstract
             if (rs.getInt("c") == 0) {
                 LOGGER.error("Company selected does not belong to logged user.");
                 throw new IllegalAccessException();
-            }
+            }*/
 
             pstmt = con.prepareStatement(DELETE);
             pstmt.setInt(1, invoice_id);
