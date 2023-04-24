@@ -83,6 +83,11 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
         }
 
 
+        // Send message as a request attribute
+        req.setAttribute("message", m);
+
+        // forwards the control to the product-data JSP
+        req.getRequestDispatcher("/jsp/delete-product.jsp").forward(req, res);
         LogContext.removeIPAddress();
         LogContext.removeAction();
         LogContext.removeResource();
