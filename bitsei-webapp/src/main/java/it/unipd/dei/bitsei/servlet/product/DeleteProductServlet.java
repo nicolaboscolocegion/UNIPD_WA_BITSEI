@@ -46,14 +46,12 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
             // retrieves the request parameters
             product_id = Integer.parseInt(req.getParameter("product_id"));
 
-            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-
 
             // creates a new product
             p = new Product(product_id);
 
             // creates a new object for accessing the database and delete the product
-            new DeleteProductDAO(getConnection(), p, owner_id).access();
+            new DeleteProductDAO(getConnection(), p).access();
 
             m = new Message(String.format("Product successfully deleted."));
             LOGGER.info("Product successfully removed from the database.");
@@ -82,12 +80,12 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
                     "Invalid input parameters. " + ex.getMessage(), ex);
         }
 
-
         // Send message as a request attribute
         req.setAttribute("message", m);
 
         // forwards the control to the delete-product JSP
         req.getRequestDispatcher("/jsp/delete-product.jsp").forward(req, res);
+
         LogContext.removeIPAddress();
         LogContext.removeAction();
         LogContext.removeResource();
@@ -95,4 +93,16 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
 
     }
 
-}
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+
+        //LogContext.setIPAddress(req.getRemoteAddr());
+
+        if(req.getParameter("method").contains("delete")) {
+            this.doDelete(req,res);
+        }
+
+    }
+
+
+    }

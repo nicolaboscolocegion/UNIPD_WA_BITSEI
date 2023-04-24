@@ -33,20 +33,16 @@ Since: 1.0
 
 <!-- display the message -->
 <c:import url="/jsp/include/show-message.jsp"/>
+<br>
 
-<c:if test = "${message != null}">
-    <p>Response:</p>
-    <p><c:out value = "${message}"/></p>
-    <hr>
-</c:if>
-
-<form method="POST" action="<c:url value="/productdelete"/>">
+<form method="post" action="<c:url value="/productdelete"/>">
+    <input type="hidden" name="method" value="delete"/>
 
     <label for="product_ID">ID Product:</label>
     <input id="product_ID" name="product_id" type="number"/><br/><br/>
     <hr>
 
-    <button type="submit">Submit</button><br/>
+    <button type="submit" value="delete">Submit</button><br/>
     <button type="reset">Reset the form</button>
 </form>
 

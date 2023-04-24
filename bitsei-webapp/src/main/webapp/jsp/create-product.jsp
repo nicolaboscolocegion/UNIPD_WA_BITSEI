@@ -33,12 +33,7 @@ Since: 1.0
 
 <!-- display the message -->
 <c:import url="/jsp/include/show-message.jsp"/>
-
-<c:if test = "${message != null}">
-    <p>Response:</p>
-    <p><c:out value = "${message}"/></p>
-    <hr>
-</c:if>
+<br>
 
 <form method="POST" action="<c:url value="/productinsert"/>">
 
