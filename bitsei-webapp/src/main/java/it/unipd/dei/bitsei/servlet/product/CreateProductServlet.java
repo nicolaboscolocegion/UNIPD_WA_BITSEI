@@ -110,7 +110,7 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
         req.setAttribute("message", m);
 
         // forwards the control to the create-product JSP
-        req.getRequestDispatcher("/jsp/create-product.jsp").forward(req, res);
+        req.getRequestDispatcher("/jsp/product-create.jsp").forward(req, res);
 
         LogContext.removeIPAddress();
         LogContext.removeAction();

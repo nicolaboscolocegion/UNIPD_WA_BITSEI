@@ -125,7 +125,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
         req.setAttribute("message", m);
 
         // forwards the control to the update-product JSP
-        req.getRequestDispatcher("/jsp/update-product.jsp").forward(req, res);
+        req.getRequestDispatcher("/jsp/product-update.jsp").forward(req, res);
 
         LogContext.removeIPAddress();
         LogContext.removeAction();
