@@ -9,6 +9,7 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.bankAccount.CreateBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.DeleteBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.GetBankAccountRR;
@@ -123,22 +124,31 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         String path = req.getRequestURI();
         Message m = null;
+        RestURIParser uri;
 
-        // the requested resource was not a user
-        if (path.lastIndexOf("rest/bankaccount") <= 0) {
+        LOGGER.info(path);
+        try{
+            uri = new RestURIParser(path);
+
+        }catch(Exception e){
             return false;
         }
 
-        // strip everything until after the /bankaccount
-        path = path.substring(path.lastIndexOf("bankaccount") + 11);
-        //bank accounts of a company, \\d+ should be a company ID
-        if (path.matches("s/\\d*")) {
+        if(!uri.getResource().equals("bankaccount")){
+            return false;
+        }
+
+        if(uri.getResourceID()==-1){
             /*
-             * GET: gets all the bank accounts of a given company
-             */
+            * GET: gets all the bank accounts of a given company
+            * POST: creates a BANK account
+            */
             switch (method) {
                 case "GET":
                     new ListBankAccountsRR(req, res, getConnection()).serve();
+                break;
+                case "POST":
+                    new CreateBankAccountRR(req, res, getConnection()).serve();
                 break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /bankaccounts: {}.", method);
@@ -149,20 +159,15 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m.toJSON(res.getOutputStream());
                 break;
             }
-        }else if(path.length() == 0 || path.matches("/\\d*")){
-            LOGGER.warn("after if");
-            /*
-             * GET: gives a bank account
-             * POST: creates a BANK account
-             * PUT: updates a bank account
-             * DELETE: deletes bank account
-             */
+        }else{
             switch (method) {
+                /*
+                * GET: gives a bank account
+                * PUT: updates a bank account
+                * DELETE: deletes bank account
+                */
                 case "GET":
                     new GetBankAccountRR(req, res, getConnection()).serve();
-                break;
-                case "POST":
-                    new CreateBankAccountRR(req, res, getConnection()).serve();
                 break;
                 case "PUT":
                     new UpdateBankAccoutRR(req, res, getConnection()).serve();

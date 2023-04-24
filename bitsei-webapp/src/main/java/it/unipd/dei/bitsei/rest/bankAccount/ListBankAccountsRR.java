@@ -27,6 +27,7 @@ import it.unipd.dei.bitsei.resources.Company;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.ResourceList;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -65,13 +66,10 @@ public class ListBankAccountsRR extends AbstractRR{
 
         try {
             
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("company id cannot be empty.");
-            }
+            RestURIParser uri = new RestURIParser(req.getRequestURI());
 
-            int company_id = Integer.parseInt(id);
+
+            int company_id = uri.getCompanyID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             
 

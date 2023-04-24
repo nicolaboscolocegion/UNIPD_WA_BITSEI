@@ -20,11 +20,14 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.tags.shaded.org.apache.regexp.RE;
+
 import it.unipd.dei.bitsei.dao.bankAccount.UpdateBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -58,14 +61,10 @@ public class UpdateBankAccoutRR extends AbstractRR{
         
         try{
 
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("bank can not be empty");
-            }
-            LOGGER.warn("old bank account id: " + id);
+            RestURIParser uri = new RestURIParser(req.getRequestURI());
+            
 
-            int oldBankAccountID = Integer.parseInt(id);
+            int oldBankAccountID = uri.getResourceID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
