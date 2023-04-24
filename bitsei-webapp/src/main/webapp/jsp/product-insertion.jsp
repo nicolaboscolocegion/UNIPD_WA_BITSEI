@@ -24,17 +24,47 @@ Since: 1.0
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Product Insertion</title>
+    <title>Insert new Product</title>
 </head>
 
 <body>
-<h1>Product Insertion</h1>
+<h1>Insert new Product</h1>
 <hr/>
 
 <!-- display the message -->
 <c:import url="/jsp/include/show-message.jsp"/>
 
-<p>Work in progress</p>
+<c:if test = "${message != null}">
+    <p>Response:</p>
+    <p><c:out value = "${message}"/></p>
+    <hr>
+</c:if>
+
+<form method="POST" action="<c:url value="/productinsert"/>">
+
+    <label for="company_ID">ID Company:</label>
+    <input id="company_ID" name="company_id" type="number"/><br/><br/>
+
+    <label for="title_ID">Title:</label>
+    <input id="title_ID" name="title" type="text"/><br/><br/>
+
+    <label for="defaultPrice_ID">Default Price:</label>
+    <input id="defaultPrice_ID" name="default_price" type="number"/><br/><br/>
+
+    <label for="logo_ID">Logo:</label>
+    <input id="logo_ID" name="logo" type="text"/><br/><br/>
+
+    <label for="measurement_unit_ID">Measurement Unit:</label>
+    <input id="measurement_unit_ID" name="measurement_unit" type="text"/><br/><br/>
+
+    <label for="description_ID">Description:</label>
+    <input id="description_ID" name="description" type="text"/><br/><br/>
+    <hr>
+
+    <button type="submit">Submit</button><br/>
+    <button type="reset">Reset the form</button>
+</form>
+
 
 </body>
 </html>
