@@ -18,7 +18,7 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class LoadInvoiceProductForUpdateDAO extends AbstractDAO<InvoiceProduct> {
+public final class GetInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
 
     /**
      * The SQL statement to be executed.
@@ -42,7 +42,7 @@ public final class LoadInvoiceProductForUpdateDAO extends AbstractDAO<InvoicePro
      * @param invoice_id the id of the invoice.
      * @param product_id the id of the product.
      */
-    public LoadInvoiceProductForUpdateDAO(final Connection con, final int invoice_id, final int product_id) {
+    public GetInvoiceProductDAO(final Connection con, final int invoice_id, final int product_id) {
         super(con);
         this.invoice_id = invoice_id;
         this.product_id = product_id;

@@ -1,6 +1,7 @@
-package it.unipd.dei.bitsei.rest.invoice;
+package it.unipd.dei.bitsei.rest.invoiceproduct;
 
 import it.unipd.dei.bitsei.dao.invoice.DeleteInvoiceDAO;
+import it.unipd.dei.bitsei.dao.invoiceproduct.DeleteInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import it.unipd.dei.bitsei.utils.RestURIParser;
@@ -13,32 +14,30 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Deletes an invoice from the database.
+ * Deletes an invoice product from the database.
  *
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
  */
-public class DeleteInvoiceRR extends AbstractRR {
-
-
+public class DeleteInvoiceProductRR extends AbstractRR {
     private RestURIParser r = null;
 
     /**
-     * Deletes the invoice.
+     * Deletes the invoice product.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public DeleteInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
-        super(Actions.DELETE_INVOICE, req, res, con);
+    public DeleteInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
+        super(Actions.DELETE_INVOICE_PRODUCT, req, res, con);
         this.r = r;
     }
 
 
     /**
-     * Deletes an invoice.
+     * Deletes an invoice product.
      */
     @Override
     protected void doServe() throws IOException {
@@ -48,30 +47,31 @@ public class DeleteInvoiceRR extends AbstractRR {
         LogContext.setIPAddress(req.getRemoteAddr());
 
         // model
-        Invoice i = null;
+        InvoiceProduct ip = null;
         Message m = null;
 
 
         try {
 
-            int invoice_id = r.getResourceID();
+            int invoice_id = r.getResourceID(); //ATTENZIONE
+            int product_id = r.getResourceID(); //ATTENZIONE
 
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             // creates a new object for accessing the database and delete the invoice
-            i = (Invoice) new DeleteInvoiceDAO<Invoice>(con, invoice_id, owner_id, r.getCompanyID()).access().getOutputParam();
+            ip = (InvoiceProduct) new DeleteInvoiceProductDAO<InvoiceProduct>(con, invoice_id, product_id, owner_id, r.getCompanyID()).access().getOutputParam();
 
-            m = new Message(String.format("Invoice successfully deleted."));
-            LOGGER.info("Invoice deleted in the database.");
+            m = new Message(String.format("Invoice product successfully deleted."));
+            LOGGER.info("Invoice product deleted in the database.");
 
             res.setStatus(HttpServletResponse.SC_OK);
-            i.toJSON(res.getOutputStream());
+            ip.toJSON(res.getOutputStream());
 
 
         }catch(SQLException ex){
-            LOGGER.error("Cannot delete invoice: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot delete invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot delete invoice product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot delete invoice product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {

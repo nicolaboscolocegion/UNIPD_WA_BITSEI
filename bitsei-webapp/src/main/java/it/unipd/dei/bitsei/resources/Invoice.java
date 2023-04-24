@@ -308,6 +308,10 @@ public class Invoice extends AbstractResource {
         return has_stamp;
     }
 
+    /**
+     * Sets the invoice ID of this object to the ID passed as parameter.
+     * @param invoice_id The value for the invoice ID we want to set.
+     */
     public void setInvoice_id(int invoice_id) {this.invoice_id = invoice_id;}
 
 

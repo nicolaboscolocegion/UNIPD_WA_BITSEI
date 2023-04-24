@@ -114,6 +114,23 @@ public final class Actions {
     public static final String DELETE_INVOICE = "DELETE_INVOICE";
 
     /**
+     * Creation of new invoice.
+     */
+    public static final String CREATE_INVOICE_PRODUCT = "CREATE_INVOICE_PRODUCT";
+    /**
+     * Update of invoice.
+     */
+    public static final String UPDATE_INVOICE_PRODUCT = "UPDATE_INVOICE_PRODUCT";
+    /**
+     * Get of invoice.
+     */
+    public static final String GET_INVOICE_PRODUCT = "GET_INVOICE_PRODUCT";
+    /**
+     * Deletion of invoice.
+     */
+    public static final String DELETE_INVOICE_PRODUCT = "DELETE_INVOICE_PRODUCT";
+
+    /**
      * This class can be neither instantiated nor sub-classed.
      */
     private Actions() {

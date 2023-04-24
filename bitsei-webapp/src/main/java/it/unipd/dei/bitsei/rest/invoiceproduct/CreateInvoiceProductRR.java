@@ -1,0 +1,108 @@
+package it.unipd.dei.bitsei.rest.invoiceproduct;
+
+import it.unipd.dei.bitsei.dao.invoice.CreateInvoiceDAO;
+import it.unipd.dei.bitsei.dao.invoiceproduct.CreateInvoiceProductDAO;
+import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.DateTimeException;
+
+import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
+
+/**
+ * Creates a new invoice product into the database.
+ *
+ * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
+public class CreateInvoiceProductRR extends AbstractRR {
+    private RestURIParser r = null;
+    /**
+     * Creates a new invoice product.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @param con the connection to the database.
+     */
+    public CreateInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
+        super(Actions.CREATE_INVOICE_PRODUCT, req, res, con);
+        this.r = r;
+    }
+
+    /**
+     * creates a new invoice product.
+     */
+    @Override
+    protected void doServe() throws IOException {
+
+        InputStream requestStream = req.getInputStream();
+
+        LogContext.setIPAddress(req.getRemoteAddr());
+
+        // model
+        InvoiceProduct ip = null;
+        Message m = null;
+
+
+        try {
+
+            ip = InvoiceProduct.fromJSON(requestStream);
+
+
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
+            if(ip.getQuantity()<0) throw  new IllegalArgumentException(("ERROR. Quantity cannot be negative."));
+            if(ip.getUnit_price()<0) throw  new IllegalArgumentException(("ERROR. Unit price cannot be negative."));
+            if(ip.getRelated_price()<0) throw  new IllegalArgumentException(("ERROR. Related price cannot be negative."));
+            long millis=System.currentTimeMillis();
+            Date curr_date = new java.sql.Date(millis);
+            if(ip.getPurchase_date().compareTo(curr_date) > 0) throw new DateTimeException("ERROR, INVALID DATE. Purchase date after current date.");
+
+
+            // creates a new object for accessing the database and store the invoice product
+            new CreateInvoiceProductDAO(con, ip, owner_id, r.getCompanyID()).access();
+
+            m = new Message(String.format("InvoiceProduct successfully inserted."));
+            LOGGER.info("InvoiceProduct successfully inserted.");
+            res.setStatus(HttpServletResponse.SC_OK);
+            ip.toJSON(res.getOutputStream());
+
+
+        }catch(SQLException ex){
+            LOGGER.error("Cannot create invoice product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot create invoice product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        }catch (NumberFormatException ex) {
+            m = new Message("No company id provided.", "E5A1", ex.getMessage());
+            LOGGER.info("No company id provided.");
+            m.toJSON(res.getOutputStream());
+        }catch (DateTimeException ex) {
+            m = new Message(
+                    "Cannot create the invoice product. Invalid input parameters: invalid date",
+                    "E100", ex.getMessage());
+
+            LOGGER.error(
+                    "Cannot create the invoice product. Invalid input parameters: invalid date",
+                    ex);
+            m.toJSON(res.getOutputStream());
+        }catch (IllegalArgumentException ex) {
+            m = new Message(
+                    "Invalid input parameters. ",
+                    "E100", ex.getMessage());
+
+            LOGGER.error(
+                    "Invalid input parameters. " + ex.getMessage(), ex);
+            m.toJSON(res.getOutputStream());
+        }
+    }
+}
