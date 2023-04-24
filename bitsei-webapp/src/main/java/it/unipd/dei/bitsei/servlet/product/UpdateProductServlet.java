@@ -123,6 +123,12 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
                     "Invalid input parameters. " + ex.getMessage(), ex);
         }
 
+        // Send message as a request attribute
+        req.setAttribute("message", m);
+
+        // forwards the control to the update-product JSP
+        req.getRequestDispatcher("/jsp/update-product.jsp").forward(req, res);
+
 
         LogContext.removeIPAddress();
         LogContext.removeAction();

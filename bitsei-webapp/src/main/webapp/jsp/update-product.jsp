@@ -24,11 +24,11 @@ Since: 1.0
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Delete Product by Id</title>
+    <title>Update Product</title>
 </head>
 
 <body>
-<h1>Delete Product by Id</h1>
+<h1>Update Product</h1>
 <hr/>
 
 <!-- display the message -->
@@ -40,10 +40,28 @@ Since: 1.0
     <hr>
 </c:if>
 
-<form method="POST" action="<c:url value="/productdelete"/>">
+<form method="POST" action="<c:url value="/productupdate"/>">
 
     <label for="product_ID">ID Product:</label>
     <input id="product_ID" name="product_id" type="number"/><br/><br/>
+
+    <label for="company_ID">ID Company:</label>
+    <input id="company_ID" name="company_id" type="number"/><br/><br/>
+
+    <label for="title_ID">Title:</label>
+    <input id="title_ID" name="title" type="text"/><br/><br/>
+
+    <label for="defaultPrice_ID">Default Price:</label>
+    <input id="defaultPrice_ID" name="default_price" type="number"/><br/><br/>
+
+    <label for="logo_ID">Logo:</label>
+    <input id="logo_ID" name="logo" type="text"/><br/><br/>
+
+    <label for="measurement_unit_ID">Measurement Unit:</label>
+    <input id="measurement_unit_ID" name="measurement_unit" type="text"/><br/><br/>
+
+    <label for="description_ID">Description:</label>
+    <input id="description_ID" name="description" type="text"/><br/><br/>
     <hr>
 
     <button type="submit">Submit</button><br/>
