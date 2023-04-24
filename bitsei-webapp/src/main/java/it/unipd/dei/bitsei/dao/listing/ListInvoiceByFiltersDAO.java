@@ -63,7 +63,8 @@ class Filter {
 public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
 
     private final int ownerId;
-    
+    private final int companyId;
+
     private final boolean filterByTotal;
     /**
      * Start total for the interval to be considered
@@ -161,7 +162,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
      * @param fromTotal     the total from which to start the filtering
      * @param toTotal       the total from which to end the filtering
      */
-    public ListInvoiceByFiltersDAO(final Connection con, int ownerId,
+    public ListInvoiceByFiltersDAO(final Connection con, int ownerId, int companyId,
                                     final boolean filterByTotal, final double fromTotal, final double toTotal,
                                     final boolean filterByDiscount, final double fromDiscount, final double toDiscount,
                                     final boolean filterByPfr, final double fromPfr, final double toPfr,
@@ -172,7 +173,8 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
         super(con);
 
         this.ownerId = ownerId;
-        
+        this.companyId = companyId;
+
         this.filterByTotal = filterByTotal;
         this.fromTotal = fromTotal;
         this.toTotal = toTotal;
@@ -216,7 +218,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             StringBuilder query = new StringBuilder();
             boolean firstFilter = true;
 
-            String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1)";
+            String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
             query.append(init_query);
 
             if(filterByTotal)
@@ -243,7 +245,9 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             pstmt = con.prepareStatement(query.toString());
             String param = "";
             pstmt.setInt(1, ownerId);
-            int i = 2;
+            pstmt.setInt(2, companyId);
+            param += "ownerId: " + ownerId + " companyId: " + companyId + " ";
+            int i = 3;
             if(filterByTotal) {
                 pstmt.setDouble(i++, fromTotal);
                 pstmt.setDouble(i++, toTotal);

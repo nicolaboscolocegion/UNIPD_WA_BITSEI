@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 public class BitseiBot {
@@ -85,7 +86,8 @@ public class BitseiBot {
     }
 
     public boolean sendMessageWithAttachments(String chatId, String body, final String attachmentUrl) {
-        SendDocument request = new SendDocument(chatId, attachmentUrl).caption(body);
+        File attachment = new File(attachmentUrl);
+        SendDocument request = new SendDocument(chatId, attachment).caption(body);
         // sync
         SendResponse response = bot.execute(request);
         boolean ok = response.isOk();

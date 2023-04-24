@@ -15,7 +15,7 @@ import java.util.List;
  * A REST resource for listing {@link Product}s.
  */
 public final class ListProductRR extends AbstractRR {
-    private final int companyId;
+    private final int company_id;
     /**
      * Creates a new REST resource for listing {@code Product}s.
      *
@@ -23,13 +23,21 @@ public final class ListProductRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int companyId) {
+    public ListProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id) {
         super(Actions.LIST_PRODUCTS_BY_COMPANY_ID, req, res, con);
-        this.companyId = companyId;
+        this.company_id = company_id;
     }
 
     @Override
     protected void doServe() throws IOException {
+        final int owner_id;
+        try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        }
+        catch(Exception e) {
+            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
+            return;
+        }
 
         List<Product> el = null;
         Message m = null;
@@ -37,7 +45,7 @@ public final class ListProductRR extends AbstractRR {
         try {
 
             // creates a new DAO for accessing the database and lists the product(s)
-            el = new ListProductDAO(con, "listAll", companyId).access().getOutputParam();
+            el = new ListProductDAO(con, owner_id, company_id).access().getOutputParam();
 
             if (el != null) {
                 LOGGER.info("## ListProductRR: Product(s) successfully listed. ##");

@@ -748,30 +748,24 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoice(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not a list-invoice
-        if (path.lastIndexOf("rest/list-invoice") <= 0) {
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("list-invoice")) {
             return false;
         }
-
-        // strip everything until after the /list-invoice
-        path = path.substring(path.lastIndexOf("list-invoice") + "list-invoice".length());
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-invoice
         // if method GET, list all invoices where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListInvoiceRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListInvoiceRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-invoice: %s.", method);
@@ -796,30 +790,22 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
-        String path = req.getRequestURI();
         Message m = null;
-
-        // the requested resource was not a list-customer
-        if (path.lastIndexOf("rest/list-customer") <= 0) {
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("list-customer")) {
             return false;
         }
-
-        // strip everything until after the /list-customer
-        path = path.substring(path.lastIndexOf("list-customer") + "list-customer".length());
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-customer
         // if method GET, list all customers where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListCustomerRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListCustomerRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-customer: %s.", method);
@@ -844,30 +830,22 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
-        String path = req.getRequestURI();
         Message m = null;
-
-        // the requested resource was not a list-product
-        if (path.lastIndexOf("rest/list-product") <= 0) {
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("list-product")) {
             return false;
         }
-
-        // strip everything until after the /list-product
-        path = path.substring(path.lastIndexOf("list-product") + "list-product".length());
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-product
         // if method GET, list all products where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListProductRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListProductRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-product: %s.", method);
@@ -893,51 +871,41 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
-        String path = req.getRequestURI();
         Message m = null;
-
-        // the requested resource was not a filter-invoices
-        if (path.lastIndexOf("rest/filter-invoices") <= 0) {
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("filter-invoices")) {
             return false;
         }
+        final int company_id = r.getCompanyID();
 
-        // strip everything until after the /filter-invoices
-        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "startPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromBusinessName", "fromProductTitle");
+        // the request URI contains filter(s)
+        Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
 
-        // if no filter is specified
-        if(path.equals("/") || path.equals("")) {
-            new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
+        // it enters here if the user parsed illegal filters
+        if (requestData == null) {
+            // instead of throwing error list all the invoices
+            new ListInvoiceRR(req, res, getConnection(), company_id).serve();
         }
         else {
-            List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id");
-            // the request URI contains filter(s)
-            Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
+            switch (method) {
+                case "POST":
+                    new ListInvoiceByFiltersRR(req, res, getConnection(), company_id, requestData).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
 
-            // it enters here if the user parsed illegal filters
-            if (requestData == null) {
-                // instead of throwing error list all the invoices
-                new ListInvoiceRR(req, res, getConnection(), ownerId).serve();
-            }
-            else {
-                switch (method) {
-                    case "POST":
-                        new ListInvoiceByFiltersRR(req, res, getConnection(), ownerId, requestData).serve();
-                        break;
-                    default:
-                        LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
-
-                        m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
-                                String.format("Requested operation %s.", method));
-                        res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                        m.toJSON(res.getOutputStream());
-                        break;
-                }
+                    m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
             }
         }
+
 
         return true;
     }
@@ -995,41 +963,37 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
 
     /**
-     * Checks whether the request is for a chart of filtered {@link Invoice}s resource and, in case, processes it.
+     * Checks whether the request is for plot a filtered chart and, in case, processes it.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
-     * @return {@code true} if the request was for a filtered chart of {@code Invoice}s; {@code false} otherwise.
+     * @return {@code true} if the request was for plot a filtered chart; {@code false} otherwise.
      * @throws Exception if any error occurs.
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        //final int ownerId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
-        final int ownerId = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         final String method = req.getMethod();
 
-        String path = req.getRequestURI();
-        Message m = null;
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
-        // the requested resource was not a filter-invoices
-        if (path.lastIndexOf("rest/chart/filter-invoices") <= 0) {
+        Message m = null;
+        RestURIParser r = new RestURIParser(req.getRequestURI());
+        if(!r.getResource().equals("charts")) {
             return false;
         }
-
-        // strip everything until after the /filter-invoices
-        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
+        final int company_id = r.getCompanyID();
         
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "period");
-        
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "chart_period");
+        // the request URI contains filters or the chart type/period
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);
         
         switch (method) {
             case "POST":
-                new PlotChartRR(req, res, getConnection(), ownerId, requestData).serve();
+                new PlotChartRR(req, res, getConnection(), company_id, requestData).serve();
                 break;
             default:
-                LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
+                LOGGER.warn("Unsupported operation for URI chart/filter-invoices %s.", method);
 
-                m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
+                m = new Message("Unsupported operation for URI chart/filter-invoices.", "E4A5",
                         String.format("Requested operation %s.", method));
                 res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 m.toJSON(res.getOutputStream());
