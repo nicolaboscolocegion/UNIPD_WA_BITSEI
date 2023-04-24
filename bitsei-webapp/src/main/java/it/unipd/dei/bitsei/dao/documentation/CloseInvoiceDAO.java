@@ -2,6 +2,7 @@ package it.unipd.dei.bitsei.dao.documentation;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.*;
+import net.sf.jasperreports.engine.util.JRStyledText;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -225,11 +226,10 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             output.add(telegram_chat_id);
 
 
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } finally {
+        } catch (Exception e) {
+            throw new SQLException();
+        }
+        finally {
             if (rs != null) {
                 rs.close();
             }

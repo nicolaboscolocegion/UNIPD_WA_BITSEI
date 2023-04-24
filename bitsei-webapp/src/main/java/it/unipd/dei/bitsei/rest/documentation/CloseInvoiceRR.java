@@ -65,11 +65,7 @@ public class CloseInvoiceRR extends AbstractRR {
         LogContext.setIPAddress(req.getRemoteAddr());
         // model
         int invoice_id = 0;
-
-
         Message m = null;
-
-
 
         try {
 
@@ -176,19 +172,31 @@ public class CloseInvoiceRR extends AbstractRR {
                 bt.sendMessageWithAttachments((String) out.get(12), "New invoice warning for " + map.get("customer_name") + "\n\nAttention: the invoice warning " + fileName + " has been sent to " + c.getBusinessName() + "(" + trim(c.getEmailAddress()) + ").", absPath + "/pdf/" + fileName);
             }
 
+            res.setStatus(HttpServletResponse.SC_OK);
+
         }catch(SQLException ex){
-            LOGGER.error("Cannot create customer: unexpected error while accessing the database.", ex);
+            LOGGER.error("Cannot create customer: unexpected error while accessing the database." + ex.getStackTrace());
             m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided for " +  out.get(3) + ", will be set to null.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided for %s, will be set to null.", out.get(3));
+            m = new Message("Owner id in token not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner id in token not parsable.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (JRException e) {
-            throw new RuntimeException(e);
+            m = new Message("Error on generating Invoice warning PDF file.");
+            LOGGER.info("Error on generating Invoice warning PDF file. " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            m = new Message("Error on sending email.");
+            LOGGER.info("Error on sending email. " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

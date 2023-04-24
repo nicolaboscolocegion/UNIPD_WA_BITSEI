@@ -747,7 +747,15 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         String path = req.getRequestURI();
         Message m = null;
 
-        RestURIParser r = new RestURIParser(req.getRequestURI());
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
         if(!r.getResource().equals("list-invoice")) {
             return false;
         }
@@ -787,7 +795,14 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         Message m = null;
-        RestURIParser r = new RestURIParser(req.getRequestURI());
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
         if(!r.getResource().equals("list-customer")) {
             return false;
         }
@@ -827,7 +842,14 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         Message m = null;
-        RestURIParser r = new RestURIParser(req.getRequestURI());
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
         if(!r.getResource().equals("list-product")) {
             return false;
         }
@@ -868,7 +890,14 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         Message m = null;
-        RestURIParser r = new RestURIParser(req.getRequestURI());
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
         if(!r.getResource().equals("filter-invoices")) {
             return false;
         }
@@ -969,7 +998,14 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         Message m = null;
-        RestURIParser r = new RestURIParser(req.getRequestURI());
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
         if(!r.getResource().equals("charts")) {
             return false;
         }
