@@ -227,7 +227,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
 
         } catch (Exception e) {
-            throw new SQLException();
+            throw new SQLException(e);
         }
         finally {
             if (rs != null) {

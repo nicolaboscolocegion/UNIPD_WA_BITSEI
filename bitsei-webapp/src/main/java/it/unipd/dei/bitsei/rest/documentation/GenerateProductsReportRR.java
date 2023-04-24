@@ -82,21 +82,28 @@ public class GenerateProductsReportRR extends AbstractRR {
             map.put("box", absPath + "jrxml" + separator + "box.png");
             map.put("bitsei_logo", absPath + "company_logos" + separator + "bitsei_1024_gray_multi.png");
 
-            //exportProductReport(lp, super.getServletContext().getRealPath("/"));
+
             exportReport(lp, absPath, "/jrxml/ProductList.jrxml", "product_reports.pdf", map);
 
 
         }catch(SQLException ex){
-            LOGGER.error("Products report:  unexpected error while accessing the database.", ex);
+            LOGGER.error("Products report: unexpected error while accessing the database.", ex);
             m = new Message("Products report: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided.");
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (JRException e) {
-            throw new RuntimeException(e);
+            m = new Message("Error on generating products report PDF file.");
+            LOGGER.info("Error on generating products report PDF file. " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

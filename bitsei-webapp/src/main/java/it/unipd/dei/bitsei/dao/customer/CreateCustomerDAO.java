@@ -93,8 +93,8 @@ public final class CreateCustomerDAO extends AbstractDAO {
 
 
 
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

@@ -88,8 +88,10 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
             pstmt.executeUpdate();
 
             LOGGER.info("Customer %s successfully deleted from the database.", c.getBusinessName());
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+
+
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();

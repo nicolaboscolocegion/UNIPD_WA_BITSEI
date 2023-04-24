@@ -342,21 +342,31 @@ public class GenerateInvoiceRR extends AbstractRR {
             }
 
 
-
+            res.setStatus(HttpServletResponse.SC_OK);
 
         }catch(SQLException ex){
-            LOGGER.error("Cannot create customer: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot generate invoice: unexpected error while accessing the database." + ex.getStackTrace());
+            m = new Message("Cannot generate invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided for " +  out.get(3) + ", will be set to null.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided for %s, will be set to null.", out.get(3));
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (JRException e) {
-            throw new RuntimeException(e);
+            m = new Message("Error on generating Invoice PDF file.");
+            LOGGER.info("Error on generating Invoice PDF file. " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            m = new Message("Error on sending email.");
+            LOGGER.info("Error on sending email. " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

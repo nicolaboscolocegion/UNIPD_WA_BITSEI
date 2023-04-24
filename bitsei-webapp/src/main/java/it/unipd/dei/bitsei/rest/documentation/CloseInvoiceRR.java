@@ -175,12 +175,12 @@ public class CloseInvoiceRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_OK);
 
         }catch(SQLException ex){
-            LOGGER.error("Cannot create customer: unexpected error while accessing the database." + ex.getStackTrace());
-            m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot close invoice: unexpected error while accessing the database." + ex.getStackTrace());
+            m = new Message("Cannot close invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("Owner id in token not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner id in token not parsable.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

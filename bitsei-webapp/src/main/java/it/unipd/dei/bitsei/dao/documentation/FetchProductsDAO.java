@@ -76,8 +76,8 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
             }
 
             LOGGER.info("Products(s) successfully listed.");
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();

@@ -80,8 +80,8 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
             }
 
             LOGGER.info("Customer(s) successfully listed.");
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();

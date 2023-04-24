@@ -78,8 +78,9 @@ public class GetCustomerRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided.");
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }
     }

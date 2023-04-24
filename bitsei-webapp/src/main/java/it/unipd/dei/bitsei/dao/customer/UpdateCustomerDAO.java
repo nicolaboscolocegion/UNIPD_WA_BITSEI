@@ -94,8 +94,8 @@ public final class UpdateCustomerDAO extends AbstractDAO {
 
 
             LOGGER.info("Customer %s successfully updated in the database.", customer.getBusinessName());
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

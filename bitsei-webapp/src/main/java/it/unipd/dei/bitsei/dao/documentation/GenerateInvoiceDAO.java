@@ -386,10 +386,8 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
 
             output.add(telegram_chat_id);
 
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();

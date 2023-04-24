@@ -85,8 +85,8 @@ public final class GetCustomerDAO extends AbstractDAO<Customer> {
             }
 
             LOGGER.info("Customer with customerID above %d successfully listed.", customerID);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();
