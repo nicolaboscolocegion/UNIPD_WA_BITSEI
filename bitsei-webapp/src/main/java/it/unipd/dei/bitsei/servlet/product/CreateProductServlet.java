@@ -69,7 +69,7 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
             p = new Product(company_id, title, default_price, logo, measurement_unit,  description);
 
             // creates a new object for accessing the database and stores the product
-            new CreateProductDAO(getConnection(), p).access();
+            new CreateProductDAO(getConnection(), p,1,1).access();
 
             m = new Message(String.format("Product %s successfully created.", title));
 

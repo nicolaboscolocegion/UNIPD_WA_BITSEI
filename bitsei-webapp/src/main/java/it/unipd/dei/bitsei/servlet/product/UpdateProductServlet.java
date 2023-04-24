@@ -84,7 +84,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
             p = new Product(product_id, company_id, title, default_price, logo, measurement_unit, description);
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateProductDAO(getConnection(), p).access();
+            new UpdateProductDAO(getConnection(), p,1).access();
 
             m = new Message(String.format("Product %s successfully updated.", title));
 

@@ -51,7 +51,7 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
             p = new Product(product_id);
 
             // creates a new object for accessing the database and delete the product
-            new DeleteProductDAO(getConnection(), p).access();
+            new DeleteProductDAO(getConnection(), p,1).access();
 
             m = new Message(String.format("Product successfully deleted."));
             LOGGER.info("Product successfully removed from the database.");
