@@ -1,10 +1,8 @@
 package it.unipd.dei.bitsei.rest.invoiceproduct;
 
-import it.unipd.dei.bitsei.dao.invoice.GetInvoiceDAO;
 import it.unipd.dei.bitsei.dao.invoiceproduct.GetInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
-import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

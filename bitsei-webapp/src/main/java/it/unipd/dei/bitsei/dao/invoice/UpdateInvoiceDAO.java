@@ -39,6 +39,8 @@ public final class UpdateInvoiceDAO extends AbstractDAO<Invoice> {
      *
      * @param con the connection to the database.
      * @param invoice the invoice to be updated.
+     * @param owner_id the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public UpdateInvoiceDAO(final Connection con, final Invoice invoice, final int owner_id, final int company_id) {
         super(con);
