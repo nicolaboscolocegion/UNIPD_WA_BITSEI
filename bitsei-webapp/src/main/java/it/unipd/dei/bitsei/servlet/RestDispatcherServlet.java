@@ -32,6 +32,7 @@ import it.unipd.dei.bitsei.resources.Product;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -675,64 +676,56 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
 
         final String method = req.getMethod();
-        RestURIParser r = null;
+        String [] parts = req.getRequestURI().split("/");   ///    /rest/invoiceproduct/1/10/company/1
+        String resource = parts[2];
 
-        try {
-            r = new RestURIParser(req.getRequestURI());
-        } catch (IllegalArgumentException ex) {
-            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+        if (!resource.equals("invoiceproduct")) {
+            LOGGER.info("Risorsa richiesta: " + resource);
             return false;
         }
 
+        Integer companyID = null;
+        Integer invoiceID = null;
+        Integer productID = null;
 
 
-        if (!r.getResource().equals("invoiceproduct")) {
-            LOGGER.info("Risorsa richiesta: " + r.getResource());
+        invoiceID = Integer.parseInt(parts[3]);
+        productID = Integer.parseInt(parts[4]);
+
+        if (!parts[5].equals("company")) {
+            LOGGER.error("Bad URI format for invoiceproduct (company tag not specified)");
             return false;
         }
 
+        productID = Integer.parseInt(parts[6]);
 
-        if (r.getResourceID() == -1) {
 
-            switch (method) {
 
-                case "POST":
-                    new CreateInvoiceProductRR(req, res, getConnection(), r).serve();
-                    break;
-                default:
-                    LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
+        switch (method) {
+            case "GET":
+                new GetInvoiceProductRR(req, res, getConnection()).serve();
+                break;
+            case "POST":
+                new CreateInvoiceProductRR(req, res, getConnection()).serve();
+                break;
+            case "DELETE":
+                new DeleteInvoiceProductRR(req, res, getConnection()).serve();
+                break;
+            case "PUT":
+                new UpdateInvoiceProductRR(req, res, getConnection()).serve();
+                break;
 
-                    m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
-                            String.format("Requested operation %s.", method));
-                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                    m.toJSON(res.getOutputStream());
-                    break;
-            }
+
+            default:
+                LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
+
+                m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
         }
 
-        else {
-            switch (method) {
-                case "GET":
-                    new GetInvoiceProductRR(req, res, getConnection(), r).serve();
-                    break;
-                case "DELETE":
-                    new DeleteInvoiceProductRR(req, res, getConnection(), r).serve();
-                    break;
-                case "PUT":
-                    new UpdateInvoiceProductRR(req, res, getConnection(), r).serve();
-                    break;
-
-
-                default:
-                    LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
-
-                    m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
-                            String.format("Requested operation %s.", method));
-                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                    m.toJSON(res.getOutputStream());
-                    break;
-            }
-        }
 
         return true;
 
