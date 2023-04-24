@@ -5,7 +5,14 @@
 \begin{longtable}{|p{.15\columnwidth}|p{.2\columnwidth} |p{.6\columnwidth}|} 
 \hline
 \textbf{Error Code} & \textbf{HTTP Status Code} & \textbf{Description} \\\hline
-Error Code Identifier & Corresponding HTTP Status Code &  Description of the error \\\hline
-\caption{Describe in this table your REST API}
-\label{tab:termGlossary}
+200  & OK &  Standard response if there aren't any errors \\\hline
+201  & CREATED &  Resoruce created \\\hline
+400  & BAD REQUEST &  Request bad formatted\\\hline
+401  & UNAUTHORIZED &  Fallied authentication\\\hline
+404  & NOT FOUND &  Resorce not found\\\hline
+405  & METHOD NOT ALLOWED &  HTTP method not allowed \\\hline
+406  & NOT ACCEPTABLE &  MIME not correct \\\hline
+500  & INTERNAL SERVER ERROR &  Standard response for errors of the server, but expecially database relete ones \\\hline
+\caption{Error codes generated from the web application}
+\label{tab:errorcodes}
 \end{longtable}
