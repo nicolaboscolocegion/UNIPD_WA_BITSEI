@@ -51,7 +51,7 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
             p = new Product(product_id);
 
             // creates a new object for accessing the database and delete the product
-            new DeleteProductDAO(getConnection(), p).access();
+            new DeleteProductDAO(getConnection(), p,1).access();
 
             m = new Message(String.format("Product successfully deleted."));
             LOGGER.info("Product successfully removed from the database.");
@@ -84,7 +84,7 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
         req.setAttribute("message", m);
 
         // forwards the control to the delete-product JSP
-        req.getRequestDispatcher("/jsp/delete-product.jsp").forward(req, res);
+        req.getRequestDispatcher("/jsp/product-delete.jsp").forward(req, res);
 
         LogContext.removeIPAddress();
         LogContext.removeAction();

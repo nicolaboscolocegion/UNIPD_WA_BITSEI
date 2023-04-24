@@ -74,7 +74,7 @@ public final class LoadProductForUpdateServlet extends AbstractDatabaseServlet {
             req.setAttribute("message", m);
 
             // forwards the control to the product-data JSP
-            req.getRequestDispatcher("/jsp/product-data.jsp").forward(req, res);
+            req.getRequestDispatcher("/jsp/get-product-by-id.jsp").forward(req, res);
 
         } catch(Exception ex) {
             LOGGER.error(new StringFormattedMessage("Unable to send response after searching for product %d.", product_id), ex);

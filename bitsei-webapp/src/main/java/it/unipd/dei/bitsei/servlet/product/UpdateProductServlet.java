@@ -84,7 +84,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
             p = new Product(product_id, company_id, title, default_price, logo, measurement_unit, description);
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateProductDAO(getConnection(), p).access();
+            new UpdateProductDAO(getConnection(), p,1).access();
 
             m = new Message(String.format("Product %s successfully updated.", title));
 
@@ -125,7 +125,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
         req.setAttribute("message", m);
 
         // forwards the control to the update-product JSP
-        req.getRequestDispatcher("/jsp/update-product.jsp").forward(req, res);
+        req.getRequestDispatcher("/jsp/product-update.jsp").forward(req, res);
 
         LogContext.removeIPAddress();
         LogContext.removeAction();

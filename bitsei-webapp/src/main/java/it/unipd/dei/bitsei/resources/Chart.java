@@ -14,7 +14,7 @@ public class Chart extends AbstractResource {
     /**
      * The array of labels
      */
-    private final ArrayList<String> label;
+    private final ArrayList<String> labels;
 
     /**
      * The array of data
@@ -24,27 +24,27 @@ public class Chart extends AbstractResource {
     /**
      * The chart type
      */
-    private final int chart_type;
+    private final int type;
 
     /**
      * The chart period
      */
-    private final int chart_period;
+    private final int period;
 
 
     /**
      * Creates a new chart
      *
-     * @param label         the array of labels
-     * @param data          the array of data
-     * @param chart_type    the chart type
-     * @param chart_period  the chart period
+     * @param labels  the array of labels
+     * @param data    the array of data
+     * @param type    the chart type
+     * @param period  the chart period
      */
-    public Chart(final ArrayList<String> label, final ArrayList<String> data, final int chart_type, final int chart_period) {
-        this.label = label;
+    public Chart(final ArrayList<String> labels, final ArrayList<String> data, final int type, final int period) {
+        this.labels = labels;
         this.data = data;
-        this.chart_type = chart_type;
-        this.chart_period = chart_period;
+        this.type = type;
+        this.period = period;
     }
 
     /**
@@ -52,8 +52,8 @@ public class Chart extends AbstractResource {
      *
      * @return the array of labels
      */
-    public final ArrayList<String> getLabel() {
-        return label;
+    public final ArrayList<String> getLabels() {
+        return labels;
     }
 
     /**
@@ -70,8 +70,8 @@ public class Chart extends AbstractResource {
      *
      * @return the chart type
      */
-    public final int getChartType() {
-        return chart_type;
+    public final int getType() {
+        return type;
     }
 
     /**
@@ -79,8 +79,8 @@ public class Chart extends AbstractResource {
      *
      * @return the chart period
      */
-    public final int getChartPeriod() {
-        return chart_period;
+    public final int getPeriod() {
+        return period;
     }
 
 
@@ -94,8 +94,8 @@ public class Chart extends AbstractResource {
         jg.writeStartObject();
 
         try {
-            jg.writeArrayFieldStart("label");
-            for(String a : label){
+            jg.writeArrayFieldStart("labels");
+            for(String a : labels){
                 jg.writeString(a);
             }
             jg.writeEndArray();
@@ -106,8 +106,8 @@ public class Chart extends AbstractResource {
             }
             jg.writeEndArray();
 
-            jg.writeNumberField("chart_type", chart_type);
-            jg.writeNumberField("chart_period", chart_period);
+            jg.writeNumberField("type", type);
+            jg.writeNumberField("period", period);
         } catch (Throwable T) {
             //LOGGER.warn("## INVOICE CLASS: Invoice #%d has null field(s).", invoice_id);
         }
@@ -127,10 +127,10 @@ public class Chart extends AbstractResource {
     public static Chart fromJSON(final InputStream in) throws IOException {
 
         // the fields read from JSON
-        ArrayList<String> jLabel = new ArrayList<String>();
+        ArrayList<String> jLabels = new ArrayList<String>();
         ArrayList<String> jData = new ArrayList<String>();
-        int jChartType = -1;
-        int jChartPeriod = -1;
+        int jType = -1;
+        int jPeriod = -1;
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
@@ -150,12 +150,12 @@ public class Chart extends AbstractResource {
 
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
-                        case "label":
+                        case "labels":
                             jp.nextToken();
                             if (jp.currentToken() == JsonToken.START_ARRAY) {
                                 jp.nextToken();
                                 while (jp.currentToken() != JsonToken.END_ARRAY) {
-                                    jLabel.add(jp.getText());
+                                    jLabels.add(jp.getText());
                                     jp.nextToken();
                                 }
                             }
@@ -170,13 +170,13 @@ public class Chart extends AbstractResource {
                                 }
                             }
                             break;
-                        case "chart_type":
+                        case "type":
                             jp.nextToken();
-                            jChartType = jp.getIntValue();
+                            jType = jp.getIntValue();
                             break;
-                        case "chart_period":
+                        case "period":
                             jp.nextToken();
-                            jChartPeriod = jp.getIntValue();
+                            jPeriod = jp.getIntValue();
                             break;
                     }
                 }
@@ -186,7 +186,7 @@ public class Chart extends AbstractResource {
             throw e;
         }
 
-        return new Chart(jLabel, jData, jChartType, jChartPeriod);
+        return new Chart(jLabels, jData, jType, jPeriod);
     }
 
 }
