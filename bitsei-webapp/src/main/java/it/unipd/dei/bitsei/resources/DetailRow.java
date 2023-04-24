@@ -32,6 +32,11 @@ public class DetailRow {
      * The default price per unit of the product.
      */
     private final String related_price;
+
+    /**
+     * The default price per unit of the product.
+     */
+    private final Double related_price_numeric;
     /**
      * A path pointing to the logo/image of the product.
      */
@@ -76,10 +81,12 @@ public class DetailRow {
         this.purchase_date = purchase_date;
         if (related_price > 0) {
             this.related_price = Double.toString(related_price);
+            this.related_price_numeric = related_price;
             this.related_price_description = related_price_description;
         }
         else {
             this.related_price = "";
+            this.related_price_numeric = 0.0;
             this.related_price_description = "";
         }
 
@@ -112,6 +119,10 @@ public class DetailRow {
 
     public String getRelated_price() {
         return related_price + " €";
+    }
+
+    public Double getRelated_price_numeric() {
+        return related_price_numeric;
     }
 
     public String getRelated_price_description() {
