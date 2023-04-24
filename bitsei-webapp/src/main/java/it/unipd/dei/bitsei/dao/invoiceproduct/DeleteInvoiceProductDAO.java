@@ -17,12 +17,12 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class DeleteInvoiceProductDAO<IP extends AbstractResource> extends AbstractDAO<InvoiceProduct> extends AbstractDAO {
+public final class DeleteInvoiceProductDAO<IP extends AbstractResource> extends AbstractDAO<InvoiceProduct> {
     private static final String FETCH = "SELECT * FROM bitsei_schema.\"InvoiceProduct\" WHERE invoice_id = ? AND product_id;";
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Customer\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Customer\".company_id INNER JOIN bitsei_schema.\"Invoice\" ON bitsei_schema.\"Customer\".customer_id = bitsei_schema.\"Invoice\".customer_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Customer\".customer_id = ? AND bitsei_schema.\"Invoice\".invoice_id = ?;";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Product\".company_id INNER JOIN bitsei_schema.\"Invoice_Product\" ON bitsei_schema.\"Product\".product_id = bitsei_schema.\"Invoice_Product\".product_id INNER JOIN bitsei_schema.\"Invoice\" ON bitsei_schema.\"Invoice_Product\".invoice_id = bitsei_schema.\"Invoice\".invoice_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Invoice\".invoice_id = ? AND bitsei_schema.\"Product\".product_id = ?;";
 
     /**
      * The SQL statement to be executed.
