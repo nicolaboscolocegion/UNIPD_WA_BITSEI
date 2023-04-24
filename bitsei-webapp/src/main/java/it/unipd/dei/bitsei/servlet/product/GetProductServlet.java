@@ -1,6 +1,6 @@
 package it.unipd.dei.bitsei.servlet.product;
 
-import it.unipd.dei.bitsei.dao.product.LoadProductForUpdateDAO;
+import it.unipd.dei.bitsei.dao.product.GetProductDAO;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Product;
@@ -21,7 +21,7 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class LoadProductForUpdateServlet extends AbstractDatabaseServlet {
+public final class GetProductServlet extends AbstractDatabaseServlet {
 
     /**
      * Searches product by his id.
@@ -43,28 +43,31 @@ public final class LoadProductForUpdateServlet extends AbstractDatabaseServlet {
 
         try {
 
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             // retrieves the request parameter
             product_id = Integer.parseInt(req.getParameter("product_id"));
-
-            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            int company_id = Integer.parseInt(req.getParameter("company"));
 
             // creates a new object for accessing the database and searching the product
-            product = new LoadProductForUpdateDAO(getConnection(), product_id, owner_id).access().getOutputParam();
+            product = new GetProductDAO(getConnection(), product_id, owner_id, company_id).access().getOutputParam();
 
             m = new Message("Product successfully searched.");
 
             LOGGER.info("Product successfully searched by product_id %d.", product_id);
 
+        }catch(SQLException ex){
+            LOGGER.error("Cannot fetch product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot fetch product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("Cannot search for product. Invalid input parameters: product_id must be integer.", "E100",
-                    ex.getMessage());
-
-            LOGGER.error("Cannot search for product. Invalid input parameters: product_id must be integer.", ex);
-        } catch (SQLException ex) {
-            m = new Message("Cannot search for product: unexpected error while accessing the database.", "E200",
-                    ex.getMessage());
-
-            LOGGER.error("Cannot search for product: unexpected error while accessing the database.", ex);
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
 
@@ -78,6 +81,7 @@ public final class LoadProductForUpdateServlet extends AbstractDatabaseServlet {
 
         } catch(Exception ex) {
             LOGGER.error(new StringFormattedMessage("Unable to send response after searching for product %d.", product_id), ex);
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw ex;
         } finally {
             LogContext.removeIPAddress();

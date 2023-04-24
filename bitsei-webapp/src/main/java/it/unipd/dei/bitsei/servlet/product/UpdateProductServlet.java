@@ -53,6 +53,7 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
 
         try {
 
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             // retrieves the request parameters
             String company_id_raw = req.getParameter("company_id");
             try {
@@ -84,41 +85,25 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
             p = new Product(product_id, company_id, title, default_price, logo, measurement_unit, description);
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateProductDAO(getConnection(), p,1).access();
+            new UpdateProductDAO(getConnection(), p, owner_id, company_id).access();
 
             m = new Message(String.format("Product %s successfully updated.", title));
 
             LOGGER.info("Product %s successfully updated.", title);
 
+        } catch(SQLException ex){
+            LOGGER.error("Cannot update product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot update product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message(
-                    "Cannot update the product. Invalid input parameters: company_id and default_price must be integers, and title, logo, measurement_unit and description must be string.",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Cannot update the product. Invalid input parameters: company_id and default_price must be integers, and title, logo, measurement_unit and description must be string.",
-                    ex);
-        } catch (SQLException ex) {
-            if ("23505".equals(ex.getSQLState())) {
-                m = new Message(String.format("Cannot update the product: product %s already exists.", title), "E300",
-                        ex.getMessage());
-
-                LOGGER.error(
-                        new StringFormattedMessage("Cannot update the product: product %s already exists.", title),
-                        ex);
-            } else {
-                m = new Message("Cannot update the product: unexpected error while accessing the database.", "E200",
-                        ex.getMessage());
-
-                LOGGER.error("Cannot update the product: unexpected error while accessing the database.", ex);
-            }
-        }  catch (IllegalArgumentException ex) {
-            m = new Message(
-                    "Invalid input parameters. ",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Invalid input parameters. " + ex.getMessage(), ex);
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         // Send message as a request attribute
@@ -135,15 +120,5 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
     }
 
 
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-
-        //LogContext.setIPAddress(req.getRemoteAddr());
-
-        if(req.getParameter("method").contains("put")) {
-            this.doPut(req,res);
-        }
-
-    }
 
 }

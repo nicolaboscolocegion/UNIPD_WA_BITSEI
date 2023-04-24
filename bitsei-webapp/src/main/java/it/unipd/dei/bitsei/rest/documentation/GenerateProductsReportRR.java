@@ -85,6 +85,7 @@ public class GenerateProductsReportRR extends AbstractRR {
 
             exportReport(lp, absPath, "/jrxml/ProductList.jrxml", "product_reports.pdf", map);
 
+            res.setStatus(HttpServletResponse.SC_OK);
 
         }catch(SQLException ex){
             LOGGER.error("Products report: unexpected error while accessing the database.", ex);

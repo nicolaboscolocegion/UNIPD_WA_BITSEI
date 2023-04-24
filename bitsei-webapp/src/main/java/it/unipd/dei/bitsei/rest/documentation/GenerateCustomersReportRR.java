@@ -81,7 +81,7 @@ public class GenerateCustomersReportRR extends AbstractRR {
             //exportCustomerReport(lc, super.getServletContext().getRealPath("/")); //old style
             exportReport(lc, absPath, "/jrxml/CustomerList.jrxml", "customer_reports.pdf", map);
 
-
+            res.setStatus(HttpServletResponse.SC_OK);
 
         }catch(SQLException ex){
             LOGGER.error("Customers report: unexpected error while accessing the database.", ex);

@@ -77,7 +77,7 @@ public final class CreateProductDAO extends AbstractDAO {
             }
 
             if (rs.getInt("c") == 0) {
-                LOGGER.error("Company selected does not belong to logged user.");
+                LOGGER.error("Product selected does not belong to logged user.");
                 throw new IllegalAccessException();
             }
 
@@ -92,8 +92,8 @@ public final class CreateProductDAO extends AbstractDAO {
             pstmt.execute();
 
             LOGGER.info("Product %s successfully stored in the database.", product.getTitle());
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

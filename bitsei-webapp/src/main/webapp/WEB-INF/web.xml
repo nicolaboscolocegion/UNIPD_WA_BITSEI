@@ -61,7 +61,7 @@
 
     <servlet>
         <servlet-name>LoadProductForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.LoadProductForUpdateServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.GetProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

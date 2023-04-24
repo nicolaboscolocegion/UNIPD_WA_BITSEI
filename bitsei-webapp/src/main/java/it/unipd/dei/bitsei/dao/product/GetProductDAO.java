@@ -17,11 +17,11 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
+public final class GetProductDAO extends AbstractDAO<Product> {
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".company_id = bitsei_schema.\"Company\".company_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Product\".product_id = ?;";
 
     /**
      * The SQL statement to be executed
@@ -39,15 +39,21 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
     private final int owner_id;
 
     /**
+     * The company_id currently used, to be checked for security reasons.
+     */
+    private final int company_id;
+
+    /**
      * Creates a new object for searching product by id.
      *
      * @param con    the connection to the database.
      * @param product_id the id of the product.
      */
-    public LoadProductForUpdateDAO(final Connection con, final int product_id, final int owner_id) {
+    public GetProductDAO(final Connection con, final int product_id, final int owner_id, final int company_id) {
         super(con);
         this.owner_id = owner_id;
         this.product_id = product_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -61,33 +67,33 @@ public final class LoadProductForUpdateDAO extends AbstractDAO<Product> {
         Product p = null;
 
         try {
+
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, company_id);
+            pstmt.setInt(2, owner_id);
+            pstmt.setInt(3, product_id);
+            rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                LOGGER.error("Error on fetching data from database");
+                throw new SQLException();
+            }
+
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, product_id);
 
             rs = pstmt.executeQuery();
 
-
-            while (rs.next()) {
-                pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-                pstmt.setInt(1, rs.getInt("company_id"));
-                pstmt.setInt(2, owner_id);
-                rs = pstmt.executeQuery();
-                if (!rs.next()) {
-                    LOGGER.error("Error on fetching data from database");
-                    throw new SQLException();
-                }
-
-                if (rs.getInt("c") == 0) {
-                    LOGGER.error("Company selected does not belong to logged user.");
-                    throw new IllegalAccessException();
-                }
-
-                p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Product selected does not belong to logged user.");
+                throw new IllegalAccessException();
             }
 
+            p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
+
+
             LOGGER.info("Product with product_id above %d successfully listed.", product_id);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (rs != null) {
                 rs.close();
