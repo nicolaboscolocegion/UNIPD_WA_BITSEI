@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.rest.invoiceproduct;
 
-import it.unipd.dei.bitsei.dao.invoice.CreateInvoiceDAO;
 import it.unipd.dei.bitsei.dao.invoiceproduct.CreateInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
@@ -15,7 +14,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.DateTimeException;
 
-import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
 /**
  * Creates a new invoice product into the database.
@@ -26,6 +24,9 @@ import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidatio
  */
 public class CreateInvoiceProductRR extends AbstractRR {
     private RestURIParser r = null;
+    int company_id;
+    int invoice_id;
+    int product_id;
     /**
      * Creates a new invoice product.
      *
@@ -33,9 +34,11 @@ public class CreateInvoiceProductRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public CreateInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
+    public CreateInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, int company_id, int invoice_id, int product_id) {
         super(Actions.CREATE_INVOICE_PRODUCT, req, res, con);
-        this.r = r;
+        this.company_id = company_id;
+        this.invoice_id = invoice_id;
+        this.product_id = product_id;
     }
 
     /**
@@ -69,7 +72,7 @@ public class CreateInvoiceProductRR extends AbstractRR {
 
 
             // creates a new object for accessing the database and store the invoice product
-            new CreateInvoiceProductDAO(con, ip, owner_id, r.getCompanyID()).access();
+            new CreateInvoiceProductDAO(con, ip, owner_id, company_id).access();
 
             m = new Message(String.format("InvoiceProduct successfully inserted."));
             LOGGER.info("InvoiceProduct successfully inserted.");
