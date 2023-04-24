@@ -703,16 +703,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         switch (method) {
             case "GET":
-                new GetInvoiceProductRR(req, res, getConnection()).serve();
+                new GetInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
                 break;
             case "POST":
-                new CreateInvoiceProductRR(req, res, getConnection()).serve();
+                new CreateInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
                 break;
             case "DELETE":
-                new DeleteInvoiceProductRR(req, res, getConnection()).serve();
+                new DeleteInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
                 break;
             case "PUT":
-                new UpdateInvoiceProductRR(req, res, getConnection()).serve();
+                new UpdateInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
                 break;
 
 

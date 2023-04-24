@@ -2,7 +2,6 @@ package it.unipd.dei.bitsei.dao.invoiceproduct;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.AbstractResource;
-import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.InvoiceProduct;
 
 import java.sql.Connection;
@@ -100,19 +99,6 @@ public final class DeleteInvoiceProductDAO<IP extends AbstractResource> extends 
                 ip = new InvoiceProduct(rs.getInt("invoice_id"), rs.getInt("product_id"), rs.getInt("quantity"), rs.getDouble("unit_price"), rs.getDouble("related_price"), rs.getString("related_price_description"), rs.getDate("purchase_date"));
             }
 
-            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, company_id);
-            pstmt.setInt(2, owner_id);
-            rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                LOGGER.error("Error on fetching data from database");
-                throw new SQLException();
-            }
-
-            if (rs.getInt("c") == 0) {
-                LOGGER.error("Company selected does not belong to logged user.");
-                throw new IllegalAccessException();
-            }
 
             pstmt = con.prepareStatement(DELETE);
             pstmt.setInt(1, invoice_id);

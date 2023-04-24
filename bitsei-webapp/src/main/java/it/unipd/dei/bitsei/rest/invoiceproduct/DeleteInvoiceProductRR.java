@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.rest.invoiceproduct;
 
-import it.unipd.dei.bitsei.dao.invoice.DeleteInvoiceDAO;
 import it.unipd.dei.bitsei.dao.invoiceproduct.DeleteInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
@@ -22,6 +21,9 @@ import java.sql.SQLException;
  */
 public class DeleteInvoiceProductRR extends AbstractRR {
     private RestURIParser r = null;
+    int company_id;
+    int invoice_id;
+    int product_id;
 
     /**
      * Deletes the invoice product.
@@ -30,9 +32,11 @@ public class DeleteInvoiceProductRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public DeleteInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
+    public DeleteInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, int company_id, int invoice_id, int product_id) {
         super(Actions.DELETE_INVOICE_PRODUCT, req, res, con);
-        this.r = r;
+        this.company_id = company_id;
+        this.invoice_id = invoice_id;
+        this.product_id = product_id;
     }
 
 
@@ -53,14 +57,11 @@ public class DeleteInvoiceProductRR extends AbstractRR {
 
         try {
 
-            int invoice_id = r.getResourceID(); //ATTENZIONE
-            int product_id = r.getResourceID(); //ATTENZIONE
-
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
-            // creates a new object for accessing the database and delete the invoice
-            ip = (InvoiceProduct) new DeleteInvoiceProductDAO<InvoiceProduct>(con, invoice_id, product_id, owner_id, r.getCompanyID()).access().getOutputParam();
+            // creates a new object for accessing the database and delete the invoice product
+            ip = (InvoiceProduct) new DeleteInvoiceProductDAO<InvoiceProduct>(con, invoice_id, product_id, owner_id, company_id).access().getOutputParam();
 
             m = new Message(String.format("Invoice product successfully deleted."));
             LOGGER.info("Invoice product deleted in the database.");

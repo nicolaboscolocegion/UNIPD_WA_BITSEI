@@ -106,6 +106,12 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
                     "Invalid input parameters. " + ex.getMessage(), ex);
         }
 
+        // Send message as a request attribute
+        req.setAttribute("message", m);
+
+        // forwards the control to the product-data JSP
+        req.getRequestDispatcher("/jsp/create-product.jsp").forward(req, res);
+
         LogContext.removeIPAddress();
         LogContext.removeAction();
         LogContext.removeResource();
