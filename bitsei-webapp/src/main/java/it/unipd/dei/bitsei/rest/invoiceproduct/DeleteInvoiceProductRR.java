@@ -87,5 +87,12 @@ public class DeleteInvoiceProductRR extends AbstractRR {
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
         }
+        catch (IllegalCallerException e) {
+            m = new Message(
+                    "Error: unexpected call to DeleteInvoiceProduct after invoice has been closed or emitted.");
+
+            LOGGER.error(
+                    "Error: unexpected call to DeleteInvoiceProduct after invoice has been closed or emitted.");
+        }
     }
 }
