@@ -123,6 +123,15 @@ public class GenerateInvoiceRR extends AbstractRR {
 
             List<DetailRow> ldr = (List<DetailRow>) out.get(0);
 
+            double total_related_price = 0;
+            for (DetailRow dr :ldr) {
+                double rp = dr.getRelated_price_numeric();
+                total_related_price += rp;
+            }
+            if (total_related_price > 0) {
+                ldr.add(new DetailRow("Costi accessori", "", 1, "", total_related_price, 0, ""));
+            }
+
             double total = 0;
             for (DetailRow dr : ldr) {
                 total += dr.getTotalD();
