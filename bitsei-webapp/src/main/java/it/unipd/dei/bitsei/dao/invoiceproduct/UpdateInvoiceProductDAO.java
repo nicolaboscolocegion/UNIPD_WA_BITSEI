@@ -2,6 +2,7 @@ package it.unipd.dei.bitsei.dao.invoiceproduct;
 
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
+import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.InvoiceProduct;
 
 import java.sql.Connection;
@@ -17,6 +18,8 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class UpdateInvoiceProductDAO extends AbstractDAO {
+
+    private static final String FETCH_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
     private static final String FETCH = "SELECT * FROM bitsei_schema.\"InvoiceProduct\" WHERE invoice_id = ? AND product_id;";
     /**
      * SQL statement to be executed to check ownership for security reasons.
@@ -84,6 +87,20 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
             if (rs.getInt("c") == 0) {
                 LOGGER.error("Data access violation");
                 throw new IllegalAccessException();
+            }
+
+            pstmt = con.prepareStatement(FETCH_INVOICE);
+            pstmt.setInt(1, invoiceProduct.getInvoice_id());
+            rs = pstmt.executeQuery();
+            Invoice i = null;
+
+            while (rs.next()) {
+                i = new Invoice(rs.getInt("invoice_id"), rs.getInt("customer_id"), rs.getInt("status"), rs.getInt("warning_number"), rs.getDate("warning_date"), rs.getString("warning_pdf_file"), rs.getString("invoice_number"), rs.getDate("invoice_date"), rs.getString("invoice_pdf_file"), rs.getString("invoice_xml_file"), rs.getDouble("total"), rs.getDouble("discount"), rs.getDouble("pension_fund_refund"), rs.getBoolean("has_stamp"));
+            }
+
+            if (i.getStatus() != 0) {
+                LOGGER.error("Update after closure not allowed.");
+                throw new IllegalCallerException();
             }
 
             pstmt = con.prepareStatement(FETCH);
