@@ -78,15 +78,13 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
 
             LOGGER.info("DATA: compID: " + company_id + " title: " + title + " defPrice: " + default_price + " logo: " + logo + " measurUnit: " + measurement_unit + " descr: " + description);
 
-            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-
             fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", logo, "LOGO");
 
             // creates a new foo product
             p = new Product(product_id, company_id, title, default_price, logo, measurement_unit, description);
 
             // creates a new object for accessing the database and stores the customer
-            new UpdateProductDAO(getConnection(), p, owner_id).access();
+            new UpdateProductDAO(getConnection(), p).access();
 
             m = new Message(String.format("Product %s successfully updated.", title));
 
@@ -129,11 +127,22 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
         // forwards the control to the update-product JSP
         req.getRequestDispatcher("/jsp/update-product.jsp").forward(req, res);
 
-
         LogContext.removeIPAddress();
         LogContext.removeAction();
         LogContext.removeResource();
 
+
+    }
+
+
+    public void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+
+        //LogContext.setIPAddress(req.getRemoteAddr());
+
+        if(req.getParameter("method").contains("put")) {
+            this.doPut(req,res);
+        }
 
     }
 
