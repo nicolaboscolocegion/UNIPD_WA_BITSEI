@@ -20,7 +20,6 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public class DeleteInvoiceProductRR extends AbstractRR {
-    private RestURIParser r = null;
     int company_id;
     int invoice_id;
     int product_id;
@@ -31,6 +30,9 @@ public class DeleteInvoiceProductRR extends AbstractRR {
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
+     * @param company_id the id of the company of the owner of the session.
+     * @param invoice_id the id of the invoice to which the invoice product item is related.
+     * @param product_id the id of the product to which the invoice product item is related.
      */
     public DeleteInvoiceProductRR(HttpServletRequest req, HttpServletResponse res, Connection con, int company_id, int invoice_id, int product_id) {
         super(Actions.DELETE_INVOICE_PRODUCT, req, res, con);
