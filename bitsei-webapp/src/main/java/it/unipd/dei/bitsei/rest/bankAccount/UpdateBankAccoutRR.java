@@ -69,17 +69,22 @@ public class UpdateBankAccoutRR extends AbstractRR{
 
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
 
-            //try to change the bank accoutn
-            boolean updated = new UpdateBankAccountDAO(con, oldBankAccountID, newBankAccount, owner_id).access().getOutputParam();
+            //controlls if the operation wa success
+            boolean updated = false;
+
+            if(!(newBankAccount.getBankName()==null || newBankAccount.getIban()==null || newBankAccount.getCompanyId() == -1 || newBankAccount.getBankAccountFriendlyName()==null)){
+                //try to change the bank accoutn
+                updated = new UpdateBankAccountDAO(con, oldBankAccountID, newBankAccount, owner_id).access().getOutputParam();
+            }
 
             if(updated){
                 res.setStatus(HttpServletResponse.SC_OK);
                 LOGGER.info("changed " + oldBankAccountID +  " to "  + newBankAccount.getIban());
             }else{
-                LOGGER.error("Fatal error while getting bankaccount.");
+                LOGGER.error("Bad request for: " + oldBankAccountID);
 
                 m = new Message("Cannot change the bank account", "E5A1", null);
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){

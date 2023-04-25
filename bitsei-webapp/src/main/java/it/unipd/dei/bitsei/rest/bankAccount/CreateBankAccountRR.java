@@ -58,8 +58,14 @@ public class CreateBankAccountRR extends AbstractRR{
             //find if there is a new bank accoount in the response
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
             
-            //try to change the bank accoutn
-            boolean created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
+            //define if the creation was made
+            boolean created = false;
+            //controlls if all the filds are written
+            if(!(newBankAccount.getBankName()==null || newBankAccount.getIban()==null || newBankAccount.getCompanyId() == -1 || newBankAccount.getBankAccountFriendlyName()==null)){
+                //try to change the bank account
+                created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
+            }
+            
 
             if(created){
                 res.setStatus(HttpServletResponse.SC_CREATED);
