@@ -7,10 +7,7 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
-import it.unipd.dei.bitsei.rest.documentation.CloseInvoiceRR;
-import it.unipd.dei.bitsei.rest.documentation.GenerateCustomersReportRR;
-import it.unipd.dei.bitsei.rest.documentation.GenerateInvoiceRR;
-import it.unipd.dei.bitsei.rest.documentation.GenerateProductsReportRR;
+import it.unipd.dei.bitsei.rest.documentation.*;
 import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
 import it.unipd.dei.bitsei.rest.invoice.DeleteInvoiceRR;
 import it.unipd.dei.bitsei.rest.invoice.GetInvoiceRR;
@@ -86,6 +83,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoiceProduct(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processGetDocument(req, res)) {
                 return;
             }
 
@@ -258,6 +260,52 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     break;
             }
         }
+
+        return true;
+
+
+    }
+
+
+    private boolean processGetDocument(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        Message m = null;
+
+        final String method = req.getMethod();
+
+        String URI = req.getRequestURI();
+        String[] parts = URI.split("/");
+        Integer company_id = Integer.parseInt(parts[7]);
+        Integer invoice_id = Integer.parseInt(parts[5]);
+        Integer document_type = Integer.parseInt(parts[3]);
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        if (document_type < 0 || document_type > 2) {
+            LOGGER.error("Document type not valid: " + parts[3]);
+            return false;
+        }
+
+        if (!parts[2].equals("getdocument")) {
+            LOGGER.info("Risorsa richiesta: " + parts[2]);
+            return false;
+        }
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+
+        switch (method) {
+
+            case "GET":
+                new GetDocumentRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), company_id, invoice_id, document_type).serve();
+                break;
+
+
+            default:
+                LOGGER.warn("Unsupported operation for URI /getdocument: %s.", method);
+                m = new Message("Unsupported operation for URI /getdocument.", "E4A5", String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+
 
         return true;
 

@@ -129,6 +129,10 @@ public final class Actions {
      * Deletion of invoice.
      */
     public static final String DELETE_INVOICE_PRODUCT = "DELETE_INVOICE_PRODUCT";
+    /**
+     * Getting document.
+     */
+    public static final String GET_DOCUMENT = "GET_DOCUMENT";
 
     /**
      * This class can be neither instantiated nor sub-classed.
