@@ -82,6 +82,7 @@ public class GetBankAccountRR extends AbstractRR{
                 LOGGER.info("bank account(s) successfully listed.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
+                res.setContentType(JSON_MEDIA_TYPE);
                 el.toJSON(res.getOutputStream());
 
             } else { // it should not happen
