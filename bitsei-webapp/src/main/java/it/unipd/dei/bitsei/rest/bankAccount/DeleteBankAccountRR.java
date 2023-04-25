@@ -75,13 +75,15 @@ public class DeleteBankAccountRR extends AbstractRR{
                 LOGGER.error("Fatal error while creating.");
 
                 m = new Message("Cannot delete the bank account", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
             LOGGER.error("Cannot dlete bank account: unexpected error while accessing the database.", e);
 
-            m = new Message("Cannot delete bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            m = new Message("Cannot delete bank account: unexpected error while accessing the database.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

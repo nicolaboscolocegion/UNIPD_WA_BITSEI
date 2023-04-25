@@ -89,6 +89,7 @@ public class GetBankAccountRR extends AbstractRR{
                 LOGGER.error("Fatal error while listing bank account(s).");
 
                 m = new Message("Cannot list bank account(s): unexpected error.", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
@@ -98,7 +99,8 @@ public class GetBankAccountRR extends AbstractRR{
         } catch (SQLException ex) {
             LOGGER.error("Cannot list bank account(s): unexpected database error.", ex);
 
-            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

@@ -74,13 +74,14 @@ public class CreateBankAccountRR extends AbstractRR{
                 LOGGER.error("Fatal error while creating.");
 
                 m = new Message("Cannot create the bank account", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
             LOGGER.error("Cannot crate bank account: unexpected error while accessing the database.", e);
-
-            m = new Message("Cannot create bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            res.setContentType("text/plain");
+            m = new Message("Cannot create bank account: unexpected error while accessing the database.", "E5A1", null);
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

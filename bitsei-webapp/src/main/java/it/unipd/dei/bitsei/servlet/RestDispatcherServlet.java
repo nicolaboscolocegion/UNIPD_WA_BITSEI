@@ -156,6 +156,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m = new Message("Unsupported operation for URI /bankaccounts.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    res.setContentType("text/plain");
                     m.toJSON(res.getOutputStream());
                 break;
             }
@@ -181,6 +182,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     m = new Message("Unsupported operation for URI /bankaccount.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    res.setContentType("text/plain");
                     m.toJSON(res.getOutputStream());
                     break;
             }

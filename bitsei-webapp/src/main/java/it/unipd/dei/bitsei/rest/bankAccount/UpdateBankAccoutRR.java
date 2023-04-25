@@ -84,13 +84,15 @@ public class UpdateBankAccoutRR extends AbstractRR{
                 LOGGER.error("Bad request for: " + oldBankAccountID);
 
                 m = new Message("Cannot change the bank account", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
             LOGGER.error("Cannot change bank account: unexpected error while accessing the database.", e);
 
-            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
