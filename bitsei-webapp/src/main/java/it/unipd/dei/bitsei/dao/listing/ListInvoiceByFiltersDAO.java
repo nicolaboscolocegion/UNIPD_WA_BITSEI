@@ -23,36 +23,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-class Filter {
-    String field_name;
-    Object from_value;
-    Object to_value;
-
-    String getField_name() {
-        return field_name;
-    }
-    
-    Object getFrom_value() {
-        return from_value;
-    }
-    
-    Object getTo_value() {
-        return to_value;
-    }
-    
-    void setField_name(String s) {
-        field_name = s;
-    }
-    
-    void setFrom_value(Object o) {
-        from_value = o;
-    }
-    
-    void setTo_value(Object o) {
-        to_value = o;
-    }
-}
-
 /**
  * List invoices associated to a company.
  *
@@ -61,6 +31,11 @@ class Filter {
  * @since 1.00
  */
 public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
+
+    /**
+     * The SQL statement to be executed in order to check user authorization for this resource
+     */
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" as cmp WHERE cmp.company_id = ? AND cmp.owner_id = ?";
 
     private final int ownerId;
     private final int companyId;
@@ -207,18 +182,38 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
      */
     @Override
     protected void doAccess() throws SQLException {
-
+        //String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
+        String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        ResultSet rs_check = null;
 
         // the results of the search
         final List<Invoice> invoices = new ArrayList<Invoice>();
 
+        // check if the user is allowed for this resource
+        try {
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, companyId);
+            pstmt.setInt(2, ownerId);
+            rs_check = pstmt.executeQuery();
+
+            if (!rs_check.next()) {
+                LOGGER.error("## ListInvoiceByFiltersDAO: Error on fetching data from database ##");
+                throw new SQLException();
+            }
+
+            if (rs_check.getInt("c") == 0) {
+                LOGGER.error("## ListInvoiceByFiltersDAO: Data access violation ##");
+                throw new IllegalAccessException();
+            }
+        }   catch (Exception e) {
+            throw new SQLException(e);
+        }
+
+        // perform the actual search
         try {
             StringBuilder query = new StringBuilder();
-            boolean firstFilter = true;
-
-            String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
             query.append(init_query);
 
             if(filterByTotal)
@@ -241,6 +236,8 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             
             if(filterByProductTitle)
                 query.append(FilterByStringList("p.title", fromProductTitle.size()));
+
+            query.append(";");
 
             pstmt = con.prepareStatement(query.toString());
             String param = "";

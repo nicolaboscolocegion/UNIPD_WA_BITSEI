@@ -31,18 +31,11 @@ public final class ListCustomerRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
         final int owner_id;
-        try {
-            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-        }
-        catch(Exception e) {
-            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
-            return;
-        }
-
         List<Customer> el = null;
         Message m = null;
 
         try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             // creates a new DAO for accessing the database and lists the customer(s)
             el = new ListCustomerDAO(con, owner_id, company_id).access().getOutputParam();
@@ -65,6 +58,14 @@ public final class ListCustomerRR extends AbstractRR {
             m = new Message("## ListCustomerRR: Cannot list customer(s): unexpected database error. ##", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
+        } catch (NumberFormatException ex) {
+            m = new Message("## ListCustomerRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            LOGGER.info("## ListInvoiceRR: Owner not parsable. " + ex.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("## ListCustomerRR: Runtime exception: " + e.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

@@ -742,12 +742,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processListInvoice(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
-
-        String path = req.getRequestURI();
         Message m = null;
-
         RestURIParser r = null;
+
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -792,10 +790,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processListCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
-
         Message m = null;
         RestURIParser r = null;
+
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -839,10 +837,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processListProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
-
         Message m = null;
         RestURIParser r = null;
+
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -887,10 +885,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
-
         Message m = null;
         RestURIParser r = null;
+
+        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());

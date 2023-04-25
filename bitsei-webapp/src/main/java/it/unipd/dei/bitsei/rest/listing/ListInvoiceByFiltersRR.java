@@ -46,18 +46,12 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
         final int owner_id;
-        try {
-             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-        }
-        catch(Exception e) {
-            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
-            return;
-        }
-
         List<Invoice> el = null;
         Message m = null;
 
         try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
             boolean filterByTotal = false;
             double fromTotal = FROM_DOUBLE;
             double toTotal = TO_DOUBLE;
@@ -223,6 +217,14 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             m = new Message("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected database error. ##", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
+        } catch (NumberFormatException ex) {
+            m = new Message("## ListInvoiceByFiltersRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            LOGGER.info("## ListInvoiceByFiltersRR: Owner not parsable. " + ex.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("## ListInvoiceByFiltersRR: Runtime exception: " + e.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

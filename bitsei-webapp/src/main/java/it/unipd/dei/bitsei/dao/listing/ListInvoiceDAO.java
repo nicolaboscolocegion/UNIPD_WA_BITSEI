@@ -38,9 +38,9 @@ import java.util.List;
 public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
 
     /**
-     * The SQL statement to be executed
+     * The SQL statement to be executed in order to check user authorization for this resource
      */
-    private static final String INIT_STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id WHERE ((cmp.company_id = ?) OR 1=1)";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" as cmp WHERE cmp.company_id = ? AND cmp.owner_id = ?";
 
     private final int ownerId;
     private final int companyId;
@@ -61,13 +61,36 @@ public class ListInvoiceDAO extends AbstractDAO<List<Invoice>> {
      */
     @Override
     protected void doAccess() throws SQLException {
-        final String STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
+        //final String STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
+        final String STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?;";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        ResultSet rs_check = null;
 
         // the results of the search
         List<Invoice> invoices = new ArrayList<Invoice>();
 
+        // check if the user is allowed for this resource
+        try {
+            pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
+            pstmt.setInt(1, companyId);
+            pstmt.setInt(2, ownerId);
+            rs_check = pstmt.executeQuery();
+
+            if (!rs_check.next()) {
+                LOGGER.error("## ListInvoiceDAO: Error on fetching data from database ##");
+                throw new SQLException();
+            }
+
+            if (rs_check.getInt("c") == 0) {
+                LOGGER.error("## ListInvoiceDAO: Data access violation ##");
+                throw new IllegalAccessException();
+            }
+        }   catch (Exception e) {
+            throw new SQLException(e);
+        }
+
+        // perform the actual search
         try {
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, ownerId);
