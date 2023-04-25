@@ -76,35 +76,19 @@ public final class CreateProductServlet extends AbstractDatabaseServlet {
 
             LOGGER.info("Product %s successfully created in the database.", title);
 
+        } catch(SQLException ex){
+            LOGGER.error("Cannot create product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot create product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            req.setAttribute("message", m);
         } catch (NumberFormatException ex) {
-            m = new Message(
-                    "Cannot create the product. Invalid input parameters: company_id and default_price must be integers, and title, logo, measurement_unit and description must be string.",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Cannot create the product. Invalid input parameters: company_id and default_price must be integers, and title, logo, measurement_unit and description must be string.",
-                    ex);
-        } catch (SQLException ex) {
-            if ("23505".equals(ex.getSQLState())) {
-                m = new Message(String.format("Cannot create the product: product %s already exists.", title), "E300",
-                        ex.getMessage());
-
-                LOGGER.error(
-                        new StringFormattedMessage("Cannot create the product: product %s already exists.", title),
-                        ex);
-            } else {
-                m = new Message("Cannot create the product: unexpected error while accessing the database.", "E200",
-                        ex.getMessage());
-
-                LOGGER.error("Cannot create the product: unexpected error while accessing the database.", ex);
-            }
-        }  catch (IllegalArgumentException ex) {
-            m = new Message(
-                    "Invalid input parameters. ",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Invalid input parameters. " + ex.getMessage(), ex);
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            req.setAttribute("message", m);
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         // Send message as a request attribute

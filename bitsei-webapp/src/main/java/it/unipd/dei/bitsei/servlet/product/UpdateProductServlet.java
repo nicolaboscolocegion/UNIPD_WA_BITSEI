@@ -95,12 +95,12 @@ public final class UpdateProductServlet extends AbstractDatabaseServlet {
             LOGGER.error("Cannot update product: unexpected error while accessing the database.", ex);
             m = new Message("Cannot update product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            m.toJSON(res.getOutputStream());
+            req.setAttribute("message", m);
         } catch (NumberFormatException ex) {
             m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            m.toJSON(res.getOutputStream());
+            req.setAttribute("message", m);
         } catch (RuntimeException e) {
             LOGGER.info("Runtime exception: " + e.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
