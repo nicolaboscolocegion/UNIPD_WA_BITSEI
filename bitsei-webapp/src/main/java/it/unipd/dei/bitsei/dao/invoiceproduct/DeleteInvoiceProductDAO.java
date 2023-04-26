@@ -19,7 +19,7 @@ import java.sql.SQLException;
  */
 public final class DeleteInvoiceProductDAO<IP extends AbstractResource> extends AbstractDAO<InvoiceProduct> {
     private static final String FETCH_INVOICE = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";
-    private static final String FETCH = "SELECT * FROM bitsei_schema.\"InvoiceProduct\" WHERE invoice_id = ? AND product_id = ?;";
+    private static final String FETCH = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ? AND product_id = ?;";
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */

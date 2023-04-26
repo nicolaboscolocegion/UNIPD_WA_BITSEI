@@ -725,7 +725,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         final String method = req.getMethod();
         String [] parts = req.getRequestURI().split("/");   ///    /rest/invoiceproduct/1/10/company/1
-        String resource = parts[2];
+        String resource = parts[3];
 
         if (!resource.equals("invoiceproduct")) {
             LOGGER.info("Risorsa richiesta: " + resource);
@@ -737,15 +737,15 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Integer productID = null;
 
 
-        invoiceID = Integer.parseInt(parts[3]);
-        productID = Integer.parseInt(parts[4]);
+        invoiceID = Integer.parseInt(parts[4]);
+        productID = Integer.parseInt(parts[5]);
 
-        if (!parts[5].equals("company")) {
+        if (!parts[6].equals("company")) {
             LOGGER.error("Bad URI format for invoiceproduct (company tag not specified)");
             return false;
         }
 
-        productID = Integer.parseInt(parts[6]);
+        companyID = Integer.parseInt(parts[7]);
 
 
 
