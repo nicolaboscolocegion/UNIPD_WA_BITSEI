@@ -93,6 +93,7 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
         }catch (NumberFormatException ex) {
             m = new Message("No company id provided, will be set to null.", "E5A1", ex.getMessage());
             LOGGER.info("No company id provided, will be set to null.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (DateTimeException ex) {
             m = new Message(
@@ -102,6 +103,7 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
             LOGGER.error(
                     "Cannot create the invoice product. Invalid input parameters: invalid date",
                     ex);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (IllegalArgumentException ex) {
             m = new Message(
@@ -110,6 +112,7 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (IllegalCallerException e) {
             m = new Message(
@@ -117,6 +120,10 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
 
             LOGGER.error(
                     "Error: unexpected call to UpdateInvoiceProduct after invoice has been closed or emitted.");
+            res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

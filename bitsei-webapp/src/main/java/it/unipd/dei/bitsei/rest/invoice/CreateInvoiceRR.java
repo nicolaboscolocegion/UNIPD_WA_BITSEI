@@ -86,6 +86,7 @@ public class CreateInvoiceRR extends AbstractRR {
         }catch (NumberFormatException ex) {
             m = new Message("No company id provided.", "E5A1", ex.getMessage());
             LOGGER.info("No company id provided.");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (DateTimeException ex) {
             m = new Message(
@@ -95,6 +96,7 @@ public class CreateInvoiceRR extends AbstractRR {
             LOGGER.error(
                     "Cannot create the invoice. Invalid input parameters: invalid date",
                     ex);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (IllegalArgumentException ex) {
             m = new Message(
@@ -103,7 +105,11 @@ public class CreateInvoiceRR extends AbstractRR {
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
