@@ -271,6 +271,22 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
 
         final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("getdocument")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
 
         String URI = req.getRequestURI();
         String[] parts = URI.split("/");
@@ -283,10 +299,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             return false;
         }
 
-        if (!parts[2].equals("getdocument")) {
-            LOGGER.info("Risorsa richiesta: " + parts[2]);
-            return false;
-        }
         // the request URI is: /user
         // if method GET, list users
         // if method POST, create user
@@ -793,7 +805,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
+        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -841,7 +853,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
+        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -888,7 +900,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
+        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -936,7 +948,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
+        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
