@@ -16,6 +16,6 @@ The Entity-Relationship schema is composed of the following entitites:
 \end{itemize}
 Every one of this entities corresponds to a table in the sql schema.
 
-The relation InvoiceProduct defines the products listed in an invoice and has the following attributes: quantity (integer), unit\_price (double), related\_price (double), related\_price\_description (char) and purchase\_date (date). The relation, in the sql schema, is translated into a table that has as primary key the union of invoice\_id, which point to the invoice which the invoiceProduct is part of, and product\_id, which points to the product which the invoiceProduct relates to.
+The relation InvoiceProduct defines the products listed in an invoice and has the following attributes: quantity (integer), unit\_price (double), related\_price (double), related\_price\_description (char) and purchase\_date (date). The relation, in the sql schema, is translated into a table that has as primary key the union of invoice\_id, an external key which points to the invoice which the invoiceProduct is part of, and product\_id, an external key which points to the product which the invoiceProduct relates to.
 
 
