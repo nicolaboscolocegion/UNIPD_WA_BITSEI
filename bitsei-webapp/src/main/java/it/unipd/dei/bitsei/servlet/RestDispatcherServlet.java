@@ -760,7 +760,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         companyID = Integer.parseInt(parts[7]);
 
 
-
         switch (method) {
             case "GET":
                 new GetInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
@@ -805,7 +804,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -853,8 +851,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         Message m = null;
         RestURIParser r = null;
 
-        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
-
         try {
             r = new RestURIParser(req.getRequestURI());
         } catch (IllegalArgumentException ex) {
@@ -899,8 +895,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         final String method = req.getMethod();
         Message m = null;
         RestURIParser r = null;
-
-        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -947,8 +941,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         final String method = req.getMethod();
         Message m = null;
         RestURIParser r = null;
-
-        //req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         try {
             r = new RestURIParser(req.getRequestURI());
@@ -1052,8 +1044,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-
-        req.getSession().setAttribute("owner_id", 1); //TODO: remove this
 
         Message m = null;
         RestURIParser r = null;
