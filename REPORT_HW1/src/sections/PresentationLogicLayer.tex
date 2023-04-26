@@ -6,8 +6,9 @@ Here are listed the main pages that will be available on our web application:
 
 \begin{itemize}
     \item Login Page: here the user can log in filling the form with his username and password;
+    \item Reset password Page: here the user can reset his password;
     \item Home Page: the home page of the application: the home page will be reached immediately after the login part. Here some of the insight plots will be displayed. on the left side of the page a nav menu will be shown, with the dropdown menu that will allow to choose the current company used, and all other following sections will be displayed as links;
-    \item User Page: here the user can access to his reserved area, in which will able to modify user settings, notification settings, company settings and bank account settings through forms;
+    \item Settings Page: here the user can access to his reserved area, in which will able to modify some settings as: notification settings, company settings and bank account settings through forms;
     \item Product Creation Page: here the user will have a form to insert a new product in the database;
     \item Product Update Page: here the user will have firstly the possibility to choose one of his products through a radio button: once one is chosen, he will be redirected to a pre-filled form of the product, in which he will be able to modify it;
     \item Product Delete Page: here the user will have the possibility to delete a product, through a radio button;
@@ -17,13 +18,14 @@ Here are listed the main pages that will be available on our web application:
     \item Customer Delete Page: here the user will have the possibility to delete a customer, through a radio button;
     \item Customer List Page: here a list of all customers will be listed: a button will allow the user to download in pdf format a list of all the customers;
     \item Invoice Creation Page: here a new invoice entity will be created, setting up some general data through a form, as for example to which customer the invoice will be related;
+    \item Invoice List Page: here the user can look to the list of his invoices, which will display some general data for each invoice, and through buttons he will be able to update the invoice, to edit the rows and to delete the invoice. Furthermore, by clicking on the actual row of the displayed table, a detailed page of the invoice will be accessible. 
+    \item Invoice Detail Page: here the user can look to the detail of the selected invoice; he will be also able to close the invoice if it is waiting to be billed (invoice warning PDF will be available for download), and to bill the invoice (actual invoice in both PDF and XML will be available for download) if it is closed. Status will be immediately available. Also from here, buttons for editing rows, elimination and update will be available. Section for downloads will be available.
     \item Invoice Update Page: here the user can edit the data entered in the creation part;
-    \item Invoice List Page: here the user can look to the list of his invoices, in which he will see all the open invoices, in which he will able to add invoice rows, closed invoices that are waiting to be billed (invoice warning PDF will be available for download), and billed invoices (actual invoice in both PDF and XML will be available for download). Filters to the list will be available.
     \item Invoice Row List Page: by clicking on an invoice a list of all invoice rows of a specific invoice will be available;
-    \item Invoice Row Insertion Page: by clicking on a specific button on open invoices, a form to insert a new row on the invoice will be available, in which also the product sold will be available;
+    \item Invoice Row Insertion Page: by clicking on a specific button on open invoice row list, a form to insert a new row on the invoice will be available;
     \item Detailed Insights Page: a page where the user can see all the insights available.
 \end{itemize}
-\newpage
+
 
 
 \subsection{Login page - Reset password page - New password page}
@@ -60,7 +62,7 @@ The bottom left shows the number of invoices resulting from the search. In the l
 \end{figure}
 \newpage
 
-\subsection{Create invoice page - Edit invoice page - Invoice rows page}
+\subsection{Create invoice page - Edit invoice page - Invoice rows list page}
 
 \begin{itemize}
     \item \textbf{Create invoice page}: On this page you can create a new invoice. At the top are fields to be filled in, and at the bottom is the table displaying all rows related to this invoice. To add or edit rows you need to click on the "Edit rows here" link that leads to the "Edit rows" page. Still further down are two buttons, one to cancel and return to the invoice list and one to confirm the creation of the invoice.
