@@ -130,6 +130,7 @@
         <url-pattern>/rest/list-company/*</url-pattern>
         <url-pattern>/rest/list-product/*</url-pattern>
         <url-pattern>/rest/filter-invoices/*</url-pattern>
+        <url-pattern>/rest/charts/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>

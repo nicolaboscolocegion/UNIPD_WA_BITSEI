@@ -1044,7 +1044,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
         final String method = req.getMethod();
-
         Message m = null;
         RestURIParser r = null;
 
@@ -1068,9 +1067,9 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 new PlotChartRR(req, res, getConnection(), company_id, requestData).serve();
                 break;
             default:
-                LOGGER.warn("Unsupported operation for URI chart/filter-invoices %s.", method);
+                LOGGER.warn("Unsupported operation for URI /charts %s.", method);
 
-                m = new Message("Unsupported operation for URI chart/filter-invoices.", "E4A5",
+                m = new Message("Unsupported operation for URI /charts.", "E4A5",
                         String.format("Requested operation %s.", method));
                 res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                 m.toJSON(res.getOutputStream());

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * A REST resource for listing {@link Invoice}s.
+ * A REST resource for plotting charts.
  */
 public final class PlotChartRR extends AbstractRR {
 
@@ -53,18 +53,14 @@ public final class PlotChartRR extends AbstractRR {
     protected void doServe() throws IOException {
 
         final int owner_id;
-        try {
-             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-        }
-        catch(Exception e) {
-            LOGGER.warn("## PlotChartRR: Illegal value for attribute {owner_id} ##");
-            return;
-        }
+        
 
         List<InvoiceCustomer> el = null;
         Message m = null;
 
         try {
+            owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            
             boolean filterByTotal = false;
             double fromTotal = FROM_DOUBLE;
             double toTotal = TO_DOUBLE;
@@ -454,6 +450,14 @@ public final class PlotChartRR extends AbstractRR {
             m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
+        } catch (NumberFormatException ex) {
+            m = new Message("## PlotChartRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            LOGGER.info("## PlotChartRR: Owner not parsable. " + ex.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("## PlotChartRR: Runtime exception: " + e.getStackTrace() + " ##");
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
