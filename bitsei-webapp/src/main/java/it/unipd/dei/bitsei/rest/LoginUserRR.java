@@ -79,6 +79,13 @@ public class LoginUserRR extends AbstractRR {
                 TokenJWT token = new TokenJWT(loginResource.getEmail(), loginResource.getPassword(), owner_id);
                 res.setStatus(HttpServletResponse.SC_OK);
                 new Token(token.getTokenString()).toJSON(res.getOutputStream());
+            } else {
+                // set the MIME media type of the response
+                res.setContentType("application/json; charset=utf-8");
+
+                m = new Message("Wrong email or password", "E5A1", "Wrong email or password");
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                m.toJSON(res.getOutputStream());
             }
 
         } catch (SQLException ex) {

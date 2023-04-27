@@ -114,6 +114,8 @@
 
     <filter-mapping>
         <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/rest/bankaccount/*</url-pattern>
+        <url-pattern>/rest/bankaccounts/*</url-pattern>
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
         <url-pattern>/rest/invoice/*</url-pattern>
@@ -132,6 +134,7 @@
         <url-pattern>/rest/filter-invoices/*</url-pattern>
         <url-pattern>/rest/charts/*</url-pattern>
     </filter-mapping>
+
 
     <resource-ref>
         <description>Connection pool to the database</description>
