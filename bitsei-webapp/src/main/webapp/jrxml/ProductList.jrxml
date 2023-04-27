@@ -145,7 +145,7 @@
                 </graphicElement>
             </line>
             <image>
-                <reportElement x="750" y="50" width="52" height="27" uuid="5dc2315b-3ab2-446f-9f1d-894fd2f9e38b"/>
+                <reportElement x="750" y="40" width="52" height="27" uuid="5dc2315b-3ab2-446f-9f1d-894fd2f9e38b"/>
                 <imageExpression><![CDATA[$P{bitsei_logo}]]></imageExpression>
             </image>
         </band>

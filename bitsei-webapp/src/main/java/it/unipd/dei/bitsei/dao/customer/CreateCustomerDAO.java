@@ -29,6 +29,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
      */
     private final Customer customer;
     private final int owner_id;
+    private final int company_id;
 
     /**
      * Creates a new object for storing a customer into the database.
@@ -40,7 +41,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
      * @param owner_id
      *            the owner of the customer.
      */
-    public CreateCustomerDAO(final Connection con, final Customer customer, final int owner_id) {
+    public CreateCustomerDAO(final Connection con, final Customer customer, final int owner_id, final int company_id) {
         super(con);
 
         if (customer == null) {
@@ -48,7 +49,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
             throw new NullPointerException("The customer cannot be null.");
         }
         this.owner_id = owner_id;
-
+        this.company_id = company_id;
         this.customer = customer;
     }
 
@@ -60,7 +61,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
 
         try {
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, customer.getCompanyID());
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {
@@ -92,8 +93,8 @@ public final class CreateCustomerDAO extends AbstractDAO {
 
 
 
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

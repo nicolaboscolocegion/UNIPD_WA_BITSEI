@@ -93,6 +93,46 @@ public final class Actions {
     public static final String UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
     public static final String GET_CUSTOMER = "GET_CUSTOMER";
     public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
+    public static final String CLOSE_INVOICE = "CLOSE_INVOICE";
+    public static final String SEND_MAIL = "SEND_MAIL";
+
+    /**
+     * Creation of new invoice.
+     */
+    public static final String CREATE_INVOICE = "CREATE_INVOICE";
+    /**
+     * Update of invoice.
+     */
+    public static final String UPDATE_INVOICE = "UPDATE_INVOICE";
+    /**
+     * Get of invoice.
+     */
+    public static final String GET_INVOICE = "GET_INVOICE";
+    /**
+     * Deletion of invoice.
+     */
+    public static final String DELETE_INVOICE = "DELETE_INVOICE";
+
+    /**
+     * Creation of new invoice.
+     */
+    public static final String CREATE_INVOICE_PRODUCT = "CREATE_INVOICE_PRODUCT";
+    /**
+     * Update of invoice.
+     */
+    public static final String UPDATE_INVOICE_PRODUCT = "UPDATE_INVOICE_PRODUCT";
+    /**
+     * Get of invoice.
+     */
+    public static final String GET_INVOICE_PRODUCT = "GET_INVOICE_PRODUCT";
+    /**
+     * Deletion of invoice.
+     */
+    public static final String DELETE_INVOICE_PRODUCT = "DELETE_INVOICE_PRODUCT";
+    /**
+     * Getting document.
+     */
+    public static final String GET_DOCUMENT = "GET_DOCUMENT";
 
     /**
      * change bank account

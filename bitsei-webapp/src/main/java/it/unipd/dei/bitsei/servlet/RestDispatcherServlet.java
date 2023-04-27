@@ -9,6 +9,17 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.documentation.*;
+import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoice.DeleteInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoice.GetInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoice.UpdateInvoiceRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.CreateInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.DeleteInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.GetInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.invoiceproduct.UpdateInvoiceProductRR;
+import it.unipd.dei.bitsei.rest.listing.*;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.bankAccount.CreateBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.DeleteBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.GetBankAccountRR;
@@ -25,7 +36,9 @@ import it.unipd.dei.bitsei.resources.Product;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Dispatches the request to the proper REST resource.
@@ -45,6 +58,15 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         final OutputStream out = res.getOutputStream();
 
         try {
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processCustomersReport(req, res)) {
+                return;
+            }
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processProductsReport(req, res)) {
+                return;
+            }
             // if the requested resource was a User, delegate its processing and return
             if (processUser(req, res)) {
                 return;
@@ -61,6 +83,21 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an User, delegate its processing and return
             if (processCustomer(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if (processInvoice(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if (processInvoiceProduct(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processGetDocument(req, res)) {
                 return;
             }
 
@@ -81,6 +118,21 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was a list of filtered invoices, delegate its processing and return
             if(processListInvoiceByFilters(req, res)) {
+                return;
+            }
+
+            // if the requested resource was a list of filtered invoices, delegate its processing and return
+            if(processChartInvoiceByFilters(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processCloseInvoice(req, res)) {
+                return;
+            }
+
+            // if the requested resource was an invoice, delegate its processing and return
+            if(processGenerateInvoice(req, res)) {
                 return;
             }
 
@@ -108,6 +160,270 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             LogContext.removeIPAddress();
         }
+    }
+
+    private boolean processCloseInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+        if (!r.getResource().equals("closeinvoice")) {
+            return false;
+        }
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+
+                case "PUT":
+                    new CloseInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /closeinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /closeinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+
+    }
+
+    private boolean processGenerateInvoice(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+        if (!r.getResource().equals("generateinvoice")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+                default:
+                    LOGGER.warn("Unsupported operation for URI /generateinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /generateinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+
+                case "PUT":
+                    new GenerateInvoiceRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /generateinvoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /generateinvoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+
+    }
+
+
+    private boolean processGetDocument(HttpServletRequest req, HttpServletResponse res) throws IOException, SQLException {
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("getdocument")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        String URI = req.getRequestURI();
+        String[] parts = URI.split("/");
+        Integer company_id = Integer.parseInt(parts[7]);
+        Integer invoice_id = Integer.parseInt(parts[5]);
+        Integer document_type = Integer.parseInt(parts[3]);
+        int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+        if (document_type < 0 || document_type > 2) {
+            LOGGER.error("Document type not valid: " + parts[3]);
+            return false;
+        }
+
+        // the request URI is: /user
+        // if method GET, list users
+        // if method POST, create user
+
+        switch (method) {
+
+            case "GET":
+                new GetDocumentRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), company_id, invoice_id, document_type).serve();
+                break;
+
+
+            default:
+                LOGGER.warn("Unsupported operation for URI /getdocument: %s.", method);
+                m = new Message("Unsupported operation for URI /getdocument.", "E4A5", String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+
+
+        return true;
+
+
+    }
+
+    private boolean processCustomersReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("customerreport")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+                case "GET":
+                    LOGGER.info("qui" + r.toString());
+                    new GenerateCustomersReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /customerreport: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /customerreport.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+
+
+        return true;
+
+
+    }
+
+
+    private boolean processProductsReport (final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("productsreport")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+                case "GET":
+                    new GenerateProductsReportRR(req, res, getConnection(), super.getServletContext().getRealPath("/"), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /productsreport: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /productsreport.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+
+
+        return true;
+
+
     }
 
     /**
@@ -348,34 +664,33 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      */
     private boolean processCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
 
-        final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
 
-        // the requested resource was not an user
-        if (path.lastIndexOf("rest/customer") <= 0) {
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /user
-        path = path.substring(path.lastIndexOf("customer") + 8);
 
-        // the request URI is: /user
-        // if method GET, list users
-        // if method POST, create user
-        if (path.length() == 0 || path.equals("/")) {
+
+        if (!r.getResource().equals("customer")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
 
             switch (method) {
-                /*case "GET":
-                    new ListCustomerRR(req, res, getConnection()).serve();
-                    break;*/
+
                 case "POST":
-                    new CreateCustomerRR(req, res, getConnection()).serve();
+                    new CreateCustomerRR(req, res, getConnection(), r).serve();
                     break;
-                 /*case "DELETE":
-                    new DeleteCustomerRR(req, res, getConnection()).serve();
-                    break;*/
                 default:
                     LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
 
@@ -387,16 +702,16 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
 
-        else if (path.matches("/\\d+")) {
+        else {
             switch (method) {
                 case "GET":
-                    new GetCustomerRR(req, res, getConnection()).serve();
+                    new GetCustomerRR(req, res, getConnection(), r).serve();
                     break;
                 case "DELETE":
-                    new DeleteCustomerRR(req, res, getConnection()).serve();
+                    new DeleteCustomerRR(req, res, getConnection(), r).serve();
                     break;
                 case "PUT":
-                    new UpdateCustomerRR(req, res, getConnection()).serve();
+                    new UpdateCustomerRR(req, res, getConnection(), r).serve();
                     break;
 
 
@@ -416,6 +731,151 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
     }
 
     /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processInvoice(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("invoice")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+
+                case "POST":
+                    new CreateInvoiceRR(req, res, getConnection(), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /invoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /invoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+                case "GET":
+                    new GetInvoiceRR(req, res, getConnection(), r).serve();
+                    break;
+                case "DELETE":
+                    new DeleteInvoiceRR(req, res, getConnection(), r).serve();
+                    break;
+                case "PUT":
+                    new UpdateInvoiceRR(req, res, getConnection(), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /invoice: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /invoice.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processInvoiceProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        Message m = null;
+
+        final String method = req.getMethod();
+        String [] parts = req.getRequestURI().split("/");   ///    /rest/invoiceproduct/1/10/company/1
+        String resource = parts[3];
+
+        if (!resource.equals("invoiceproduct")) {
+            LOGGER.info("Risorsa richiesta: " + resource);
+            return false;
+        }
+
+        Integer companyID = null;
+        Integer invoiceID = null;
+        Integer productID = null;
+
+
+        invoiceID = Integer.parseInt(parts[4]);
+        productID = Integer.parseInt(parts[5]);
+
+        if (!parts[6].equals("company")) {
+            LOGGER.error("Bad URI format for invoiceproduct (company tag not specified)");
+            return false;
+        }
+
+        companyID = Integer.parseInt(parts[7]);
+
+
+        switch (method) {
+            case "GET":
+                new GetInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
+                break;
+            case "POST":
+                new CreateInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
+                break;
+            case "DELETE":
+                new DeleteInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
+                break;
+            case "PUT":
+                new UpdateInvoiceProductRR(req, res, getConnection(), companyID, invoiceID, productID).serve();
+                break;
+
+
+            default:
+                LOGGER.warn("Unsupported operation for URI /invoiceproduct: %s.", method);
+
+                m = new Message("Unsupported operation for URI /invoiceproduct.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+
+
+        return true;
+
+    }
+
+
+    /**
      * Checks whether the request is for a list of {@link Invoice}s resource and, in case, processes it.
      *
      * @param req the HTTP request.
@@ -424,30 +884,29 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoice(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
+        RestURIParser r = null;
 
-        // the requested resource was not a list-invoice
-        if (path.lastIndexOf("rest/list-invoice") <= 0) {
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
 
-        // strip everything until after the /list-invoice
-        path = path.substring(path.lastIndexOf("list-invoice") + "list-invoice".length());
+        if(!r.getResource().equals("list-invoice")) {
+            return false;
+        }
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-invoice
         // if method GET, list all invoices where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListInvoiceRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListInvoiceRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-invoice: %s.", method);
@@ -472,30 +931,27 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListCustomer(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
+        RestURIParser r = null;
 
-        // the requested resource was not a list-customer
-        if (path.lastIndexOf("rest/list-customer") <= 0) {
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
-
-        // strip everything until after the /list-customer
-        path = path.substring(path.lastIndexOf("list-customer") + "list-customer".length());
+        if(!r.getResource().equals("list-customer")) {
+            return false;
+        }
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-customer
         // if method GET, list all customers where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListCustomerRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListCustomerRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-customer: %s.", method);
@@ -520,30 +976,27 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
+        RestURIParser r = null;
 
-        // the requested resource was not a list-product
-        if (path.lastIndexOf("rest/list-product") <= 0) {
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
-
-        // strip everything until after the /list-product
-        path = path.substring(path.lastIndexOf("list-product") + "list-product".length());
+        if(!r.getResource().equals("list-product")) {
+            return false;
+        }
+        final int company_id = r.getCompanyID();
 
         // the request URI is: /list-product
         // if method GET, list all products where CompanyId == currentUser_CompanyId
-        // if method POST, TODO
-        if (path.length() == 0 || path.equals("/")) {
+        if (r.getResourceID() == -1) {
             switch (method) {
                 case "GET":
-                    new ListProductRR(req, res, getConnection(), companyId).serve();
-                    break;
-                case "POST":
-                    //new ListFilteredInvoicesRR(req, res, getConnection()).serve();
+                    new ListProductRR(req, res, getConnection(), company_id).serve();
                     break;
                 default:
                     LOGGER.warn("Unsupported operation for URI /list-product: %s.", method);
@@ -569,47 +1022,39 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @throws Exception if any error occurs.
      */
     private boolean processListInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
-        final int companyId = -1; //TODO: replace with currentUser_CompanyId, ask to autent. subgroup
         final String method = req.getMethod();
-
-        String path = req.getRequestURI();
         Message m = null;
+        RestURIParser r = null;
 
-        // the requested resource was not a filter-invoices
-        if (path.lastIndexOf("rest/filter-invoices") <= 0) {
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
-
-        // strip everything until after the /filter-invoices
-        path = path.substring(path.lastIndexOf("filter-invoices") + "filter-invoices".length());
-
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate");
-        // the request URI contains filter(s)
-        boolean checkFilters = false;
-        for(String filter : filterList) {
-            boolean tmp = checkPath(path, filter, req, res, m);
-            if(tmp)
-                path = path.substring(path.lastIndexOf(filter) + filter.length());
-            checkFilters = checkFilters || tmp;
+        if(!r.getResource().equals("filter-invoices")) {
+            return false;
         }
+        final int company_id = r.getCompanyID();
 
-        // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
-        if (!checkFilters) {
-            LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
-            m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
-                    String.format("Requested URI: %s.", req.getRequestURI()));
-            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            m.toJSON(res.getOutputStream());
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "startPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromBusinessName", "fromProductTitle");
+        // the request URI contains filter(s)
+        Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
+
+        // it enters here if the user parsed illegal filters
+        if (requestData == null) {
+            // instead of throwing error list all the invoices
+            new ListInvoiceRR(req, res, getConnection(), company_id).serve();
         }
         else {
             switch (method) {
-                case "GET":
-                    new ListInvoiceByFiltersRR(req, res, getConnection(), companyId).serve();
+                case "POST":
+                    new ListInvoiceByFiltersRR(req, res, getConnection(), company_id, requestData).serve();
                     break;
                 default:
-                    LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
+                    LOGGER.warn("Unsupported operation for URI /filter-invoices %s.", method);
 
-                    m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
+                    m = new Message("Unsupported operation for URI /filter-invoices.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());
@@ -617,92 +1062,110 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             }
         }
 
+
         return true;
     }
 
 
+    private Map<String, String> checkFilterPath(List<String> filterList, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {
+        String request = req.getReader().lines().collect(Collectors.joining());
 
-    private boolean checkPath(String path, String filter, HttpServletRequest req, HttpServletResponse res, Message m) throws IOException {
+        // Remove escape characters from the request
+        request = request.replaceAll("\\\\", "");
+
+        LOGGER.info("## checkPath func: Request: " + request + " ##");
+        Map<String, String> requestData = new HashMap<>();
+
+        // Split the request in a list of key-value pairs
+        String[] requestLines = request.split(",");
+
         try {
-            if(path.contains(filter)) {
-                path = path.substring(path.lastIndexOf(filter) + filter.length() + 1);
-                if(path.indexOf("/") > -1)
-                    path = path.substring(0, path.indexOf("/"));
+            // Parse every key-value pair and add it to the map
+            for(String line : requestLines) {
+                String[] keyValue = line.split(":");
 
-                if (path.length() == 0 || path.equals("/")) {
-                    LOGGER.warn("Wrong format for URI /filter-invoices/" + filter + "/{" + filter + "}: no {" + filter + "} specified. Requested URI: %s.", req.getRequestURI());
+                // Clean the data before parsing
+                String key = keyValue[0].trim().replaceAll("\"", "");
+                key = key.replaceAll("\\s+", "");
+                key = key.replaceAll("[\\[\\](){}]","");
+                String value = keyValue[1].trim().replaceAll("\"", "");
+                value = value.replaceAll("[\\[\\](){}]","");
 
-                    m = new Message("Wrong format for URI /filter-invoices/" + filter + "/{" + filter + "}: no {" + filter + "} specified.", "E4A7",
+                if(!filterList.contains(key)) {
+                    LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+
+                    m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
                             String.format("Requested URI: %s.", req.getRequestURI()));
                     res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     m.toJSON(res.getOutputStream());
-                    return false;
+                    return null;
+                }
+                else {
+                    requestData.put(key, value);
+                    LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
                 }
             }
-            else {
-                return false;
-            }
-        } catch (IOException ex) {
-            LOGGER.error("Unexpected error while processing the checkPath function.");
+        } catch (Exception e) {
+            LOGGER.error("## checkPath func: Unexpected exception thrown: " + e + " ##");
 
-            m = new Message("Unexpected error in function checkPath.", "E5A1",
+            m = new Message("## checkPath func: Unexpected exception thrown: " + e + " ##", "E4A7",
                     String.format("Requested URI: %s.", req.getRequestURI()));
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
+            return null;
+        }
+        return requestData;
+    }
+
+
+    /**
+     * Checks whether the request is for plot a filtered chart and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for plot a filtered chart; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processChartInvoiceByFilters(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+        final String method = req.getMethod();
+        Message m = null;
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
             return false;
         }
-        LOGGER.info("##  checkPath func: filter: " + filter + " found! Value: " + path + " ##");
+        if(!r.getResource().equals("charts")) {
+            return false;
+        }
+        final int company_id = r.getCompanyID();
+
+        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "chart_period");
+        // the request URI contains filters or the chart type/period
+        Map<String, String> requestData = checkFilterPath(filterList, req, res, m);
+
+        switch (method) {
+            case "POST":
+                new PlotChartRR(req, res, getConnection(), company_id, requestData).serve();
+                break;
+            default:
+                LOGGER.warn("Unsupported operation for URI /charts %s.", method);
+
+                m = new Message("Unsupported operation for URI /charts.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+
         return true;
     }
+
+
+
+
 }
 
-
-/*
-* ListFilteredInvoices
-
-      // the request URI is: /filter-invoices/with-filters/filter1/{value_of_filter1}/filter2/{value_of_filter2}...
-                if(path.contains("with-filters")) {
-                    path = path.substring(path.lastIndexOf("with-filters") + "with-filters".length());
-
-                    Map<String, Object> filtersMap = Map.of("fromTotal", null, "toTotal", null, "fromDiscount", null, "toDiscount", null, "fromPfr", null, "toPfr", null, "fromInvoiceDate", null, "toInvoiceDate", null, "fromWarningDate", null, "toWarningDate", null);
-                    // the request URI contains filter(s)
-                    boolean checkFilters = false;
-                    for(String filter : filtersMap.keySet()) {
-                        boolean tmp = checkPath(path, filter, req, res, m);
-                        if(tmp) {
-                            path = path.substring(path.lastIndexOf(filter) + filter.length());
-                            filtersMap.put(filter, true);
-                        }
-                        checkFilters = checkFilters || tmp;
-                    }
-
-                    // it enters here if the user doesn't fix any filter, so it should call listInvoicesByCompanyId not throw exception TODO
-                    if (!checkFilters) {
-                        LOGGER.error("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##");
-                        m = new Message("## REST DISPATCHER SERVLET: ERROR IN \"if(!checkFilters)\" ##", "E4A8",
-                                String.format("Requested URI: %s.", req.getRequestURI()));
-                        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        m.toJSON(res.getOutputStream());
-                    }
-                    else {
-                        switch (method) {
-                            case "GET":
-                                new ListInvoiceRR(req, res, getConnection()).listInvoicesByFilters(companyId, filtersMap);
-
-                                break;
-                            default:
-                                LOGGER.warn("Unsupported operation for URI /employee/salary/{salary}: %s.", method);
-
-                                m = new Message("Unsupported operation for URI /employee/salary/{salary}.", "E4A5",
-                                        String.format("Requested operation %s.", method));
-                                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-                                m.toJSON(res.getOutputStream());
-                                break;
-                        }
-                    }
-                }
-            }
-
-        }
-* */
 

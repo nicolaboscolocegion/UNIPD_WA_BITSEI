@@ -1,5 +1,7 @@
 package it.unipd.dei.bitsei.resources;
 
+import java.util.Locale;
+
 /**
  * Represents the data about an invoice row of an Invoice.
  *
@@ -25,11 +27,16 @@ public class DetailRow {
     /**
      * The name of the product.
      */
-    private final String unit_price;
+    private final Double unit_price;
     /**
      * The default price per unit of the product.
      */
     private final String related_price;
+
+    /**
+     * The default price per unit of the product.
+     */
+    private final Double related_price_numeric;
     /**
      * A path pointing to the logo/image of the product.
      */
@@ -65,19 +72,21 @@ public class DetailRow {
             this.measurement_unit = "";
         }
         if (unit_price > 0) {
-            this.unit_price = Double.toString(unit_price);
+            this.unit_price = unit_price;
         }
         else {
-            this.unit_price = "";
+            this.unit_price = 0.00;
         }
 
         this.purchase_date = purchase_date;
         if (related_price > 0) {
             this.related_price = Double.toString(related_price);
+            this.related_price_numeric = related_price;
             this.related_price_description = related_price_description;
         }
         else {
             this.related_price = "";
+            this.related_price_numeric = 0.0;
             this.related_price_description = "";
         }
 
@@ -94,12 +103,26 @@ public class DetailRow {
         return quantity + " " + this.measurement_unit + ".";
     }
 
+    public String getNumericQuantity() {
+        return quantity + ".00";
+    }
+
+    public String getMeasurement_unit() {
+        return measurement_unit;
+    }
+
     public String getUnit_price() {
         return unit_price + " €";
     }
 
+    public String getNumericUnit_price() {return String.format(Locale.UK,"%.2f",unit_price);}
+
     public String getRelated_price() {
         return related_price + " €";
+    }
+
+    public Double getRelated_price_numeric() {
+        return related_price_numeric;
     }
 
     public String getRelated_price_description() {
