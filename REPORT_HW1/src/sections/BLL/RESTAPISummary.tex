@@ -19,10 +19,14 @@ rest/customer & POST & Create a new customer using the JSON passed in the reques
 rest/customer/\{id\} & GET & Get the customer associated to the customerId passed through the URL \\\hline
 rest/customer/\{id\} & DELETE & Delete the customer associated to the customerId passed through the URL \\\hline
 rest/customer/\{id\} & PUT & Update the customer associated to the customerId passed through the URL with the parameters passed in the request body\\\hline
+rest/customerreport/ & GET & Generate a list of all customers of the current company in a PDF file\\\hline
+rest/productreport/ & GET & Generate a list of all products of the current company in a PDF file\\\hline
 rest/invoice & POST & Create a new invoice using the JSON passed in the request body \\\hline
 rest/invoice/\{id\} & GET & Get the invoice associated to the invoice id passed through the URL \\\hline
 rest/invoice/\{id\} & DELETE & Delete the invoice associated to the invoice id passed through the URL \\\hline
 rest/invoice/\{id\} & PUT & Update the invoice associated to the invoice id passed through the URL with the parameters passed in the request body\\\hline
+rest/closeinvoice/\{id\} & PUT & Update the invoice status to 1; this will block the possibility of updating the invoice and the possibility of editing his rows. A document in PDF format will be created, will be available for download and will be sent via mail/telegram.\\\hline
+rest/generateinvoice/\{id\} & PUT & Update the invoice status to 2; this will block the possibility of updating the invoice and the possibility of editing his rows. Two documents in PDF and XML format will be created, will be available for download and will be sent via mail/telegram.\\\hline
 rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & POST & Create a new invoice product related to the invoice with \{inv\_id\} and the product with \{prod\_id\} using the JSON passed in the request body \\\hline
 rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & GET & Get the invoice product associated to the invoice id and the product id passed through the URL \\\hline
 rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & DELETE & Delete the invoice product associated to the invoice id and the product id passed through the URL \\\hline
