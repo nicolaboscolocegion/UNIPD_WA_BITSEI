@@ -24,7 +24,13 @@ package it.unipd.dei.bitsei.resources;
  * @since 1.00
  */
 public final class Actions {
-
+    /**
+     * fetch user
+     */
+    public static final String GET_USER = "GET_USER";
+    /**
+     * The list of the users
+     */
     public static final String LIST_USER = "LIST_USER";
 
     /**
