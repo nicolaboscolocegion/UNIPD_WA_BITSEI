@@ -180,7 +180,7 @@
                 </graphicElement>
             </line>
             <image hAlign="Right" vAlign="Bottom">
-                <reportElement positionType="FixRelativeToBottom" x="500" y="60" width="55" height="35" uuid="1a685120-4549-48e6-9b4a-a4b49238b60d"/>
+                <reportElement positionType="FixRelativeToBottom" x="498" y="50" width="55" height="35" uuid="1a685120-4549-48e6-9b4a-a4b49238b60d"/>
                 <imageExpression><![CDATA[$P{bitsei_logo}]]></imageExpression>
             </image>
         </band>
@@ -188,14 +188,14 @@
     <pageFooter>
         <band height="20" splitType="Stretch">
             <textField>
-                <reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="6f13e17d-4b46-4ede-ab63-9d2685ec9c16"/>
+                <reportElement style="Column header" x="435" y="0" width="85" height="20" uuid="6f13e17d-4b46-4ede-ab63-9d2685ec9c16"/>
                 <textElement textAlignment="Right">
                     <font size="10" isBold="false"/>
                 </textElement>
                 <textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
             </textField>
             <textField evaluationTime="Report">
-                <reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="6857db7e-824a-4cda-b8dc-fe5c95aca145"/>
+                <reportElement style="Column header" x="520" y="0" width="35" height="20" uuid="6857db7e-824a-4cda-b8dc-fe5c95aca145"/>
                 <textElement textAlignment="Right">
                     <font size="10" isBold="false"/>
                 </textElement>

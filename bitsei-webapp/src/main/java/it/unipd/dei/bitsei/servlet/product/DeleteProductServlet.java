@@ -43,43 +43,40 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
 
         try {
 
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             // retrieves the request parameters
             product_id = Integer.parseInt(req.getParameter("product_id"));
-
+            int company_id = Integer.parseInt(req.getParameter("company_id"));
 
             // creates a new product
             p = new Product(product_id);
 
             // creates a new object for accessing the database and delete the product
-            new DeleteProductDAO(getConnection(), p).access();
+            new DeleteProductDAO(getConnection(), p,owner_id, company_id).access();
 
             m = new Message(String.format("Product successfully deleted."));
             LOGGER.info("Product successfully removed from the database.");
 
+        } catch(SQLException ex){
+            LOGGER.error("Cannot delete product: unexpected error while accessing the database.", ex);
+            m = new Message("Cannot delete product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            req.setAttribute("message", m);
         } catch (NumberFormatException ex) {
-            m = new Message(
-                    "Cannot delete the product. Invalid input parameters: product_id must be integer.",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Cannot delete the product. Invalid input parameters: product_id must be integer.",
-                    ex);
-        } catch (SQLException ex) {
-
-            m = new Message("Cannot delete the product: unexpected error while accessing the database.", "E200",
-                    ex.getMessage());
-
-            LOGGER.error("Cannot delete the product: unexpected error while accessing the database.", ex);
-
-        }  catch (IllegalArgumentException ex) {
-            m = new Message(
-                    "Invalid input parameters. ",
-                    "E100", ex.getMessage());
-
-            LOGGER.error(
-                    "Invalid input parameters. " + ex.getMessage(), ex);
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            req.setAttribute("message", m);
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
+        // Send message as a request attribute
+        req.setAttribute("message", m);
+
+        // forwards the control to the delete-product JSP
+        req.getRequestDispatcher("/jsp/product-delete.jsp").forward(req, res);
 
         LogContext.removeIPAddress();
         LogContext.removeAction();
@@ -87,5 +84,7 @@ public final class DeleteProductServlet extends AbstractDatabaseServlet {
 
 
     }
+
+
 
 }

@@ -13,6 +13,7 @@ import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,7 @@ import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidatio
 public class CreateCustomerRR extends AbstractRR {
 
 
+    private RestURIParser r = null;
     /**
      * Creates a new customer
      *
@@ -35,8 +37,9 @@ public class CreateCustomerRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public CreateCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public CreateCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.CREATE_CUSTOMER, req, res, con);
+        this.r = r;
     }
 
 
@@ -71,7 +74,7 @@ public class CreateCustomerRR extends AbstractRR {
 
 
             // creates a new object for accessing the database and stores the customer
-            new CreateCustomerDAO(con, c, owner_id).access();
+            new CreateCustomerDAO(con, c, owner_id, r.getCompanyID()).access();
 
             m = new Message(String.format("Customer %s successfully inserted.", c.getBusinessName()));
             LOGGER.info("Customer succesfully inserted.");
@@ -85,10 +88,14 @@ public class CreateCustomerRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided for " +  c.getBusinessName() + ", will be set to null.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided for %s, will be set to null.", c.getBusinessName());
-                m.toJSON(res.getOutputStream());
-            }
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 }
 
