@@ -19,6 +19,8 @@ import it.unipd.dei.bitsei.dao.user.PasswordRestDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import it.unipd.dei.bitsei.utils.HashGenerator;
+import it.unipd.dei.bitsei.utils.mail.MailManager;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -62,8 +64,8 @@ public class RestPasswordRR extends AbstractRR {
             if (password_rest != null) {
                 LOGGER.info("TOKEN." + password_rest.getToken());
 
-                // TODO: Send email to user with the link to reset password.
-                // SendEmail(user.email, password_rest.getReset_token());
+                //sending email to the user with the token to reset the password
+                MailManager.sendMail(email.getValue(), "Reset Password", "reset token is: " + password_rest.getToken(), "text/html;charset=UTF-8");
 
                 m = new Message("Reset password token send to your email, check your inbox", null, null);
                 res.setStatus(HttpServletResponse.SC_OK);
@@ -79,6 +81,10 @@ public class RestPasswordRR extends AbstractRR {
             LOGGER.error("Cannot create the reset token: unexpected database error.", ex);
 
             m = new Message("Cannot create the reset token: unexpected database error.", "E5A1", ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
+        } catch (MessagingException e) {
+            m = new Message("Cannot send email to this email address: unexpected error.", "E5A1", null);
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
