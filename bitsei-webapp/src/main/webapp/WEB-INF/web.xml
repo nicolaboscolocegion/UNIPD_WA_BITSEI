@@ -119,6 +119,7 @@
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
         <url-pattern>/rest/invoice/*</url-pattern>
+        <url-pattern>/rest/user</url-pattern>
         <url-pattern>/rest/invoiceproduct/*</url-pattern>
         <url-pattern>/rest/closeinvoice/*</url-pattern>
         <url-pattern>/rest/customerreport/*</url-pattern>

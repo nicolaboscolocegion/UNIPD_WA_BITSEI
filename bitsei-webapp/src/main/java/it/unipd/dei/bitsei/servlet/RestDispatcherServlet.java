@@ -1,5 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
+import it.unipd.dei.bitsei.dao.user.GetUserDAO;
 import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -9,10 +10,7 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
-import it.unipd.dei.bitsei.rest.user.ChangePasswordRR;
-import it.unipd.dei.bitsei.rest.user.ListUserRR;
-import it.unipd.dei.bitsei.rest.user.LoginUserRR;
-import it.unipd.dei.bitsei.rest.user.RestPasswordRR;
+import it.unipd.dei.bitsei.rest.user.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.documentation.*;
 import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
@@ -539,7 +537,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             switch (method) {
                 case "GET":
-                    new ListUserRR(req, res, getConnection()).serve();
+                    new GetUserRR(req, res, getConnection()).serve();
                     break;
                 case "POST":
 //                    new CreateUserRR(req, res, getConnection()).serve();
