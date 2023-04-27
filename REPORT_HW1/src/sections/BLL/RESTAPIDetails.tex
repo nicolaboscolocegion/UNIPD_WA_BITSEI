@@ -836,6 +836,75 @@ The following endpoint allows to filter and list the invoices associated to the 
     
 \end{itemize}
 
+% REST RESOURCE #16
+\subsubsection*{Plot the filtered charts associated to a company}
+
+% the description of the resource
+The following endpoint allows to filter and list the invoices associated to the current company logged in the system and plot a chart.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/charts}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+        \item the user can set one, many or all the filters defined below: 
+        \begin{itemize}
+            \item \texttt{fromTotal = \{Double\}} - the lower bound for the \textit{Total},
+            \item \texttt{toTotal = \{Double\}} - the upper bound for the \textit{Total},
+            \item \texttt{fromDiscount = \{Double\}} - the lower bound for the \textit{Discount}, 
+            \item \texttt{toDiscount = \{Double\}} - the upper bound for the \textit{Discount},
+            \item \texttt{fromPfr = \{Double\}} - the lower bound for the \textit{Pension Fund Refund}, 
+            \item \texttt{toPfr = \{Double\}} - the upper bound for the \textit{Pension Fund Refund},
+            \item \texttt{fromInvoiceDate = \{Date\}} - the lower bound for the \textit{Invoice Date}, 
+            \item \texttt{toInvoiceDate = \{Date\}} - the upper bound for the \textit{Invoice Date},
+            \item \texttt{fromWarningDate = \{Date\}} - the lower bound for the \textit{Warning Date}, 
+            \item \texttt{toWarningDate = \{Date\}} - the upper bound for the \textit{Warning Date},
+            \item \texttt{fromBusinessName = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Customer Names} to filter the invoices,
+            \item \texttt{fromProductTitle = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Product Titles} to filter the invoices,
+            \item \texttt{chart\_type = \{int\}} - the chart type: 1 for Invoice by date, 2 for Total by date, 3 for Discount by date, 4 for Invoice by custmer, 5 for Total by customer,
+            \item \texttt{chart\_period = \{int\}} - the chart period we want to group dates in the x-axis: 1 for Months, 2 for Days, 3 for Years
+        \end{itemize}     
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
 
 \subsubsection*{bankaccount resurce}
 
