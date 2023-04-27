@@ -1,13 +1,16 @@
+\newpage
 \section{Group Members Contribution}
 
 % For each group member, describe in detail the contribution to the project.
 
 \begin{description}
-	\item[Mirco Cazzaro] Initial contribution on the database design; implementation of Customer CRUD operations; implementation on the logic behind invoice status (invoice closure and generation); implementation of JasperReport library for PDF generation; implementation of XML electronic invoices that follow italian regulations using Dom4j library; Implementation of Rest URI parsing utility; Implementation of JasperReport export file utility;
-	\item[Marco Martinelli] Implementation of database reading section to fetch, as a list, Invoices (with many different filters), Products and Customers. Implementation of notification utils for both emails and telegram. 
-	\item[Farzad Shami] Implementation of the authentication logic part using JWT tokens; Implementation of customer management part.
-	\item[Nicola Boscolo Cegion] Implementation of Bank account CRUD operations, implementation of login, implementation of JWT tokens.
-	\item[Christian Marchiori] Implementation of insight part by generating different typologies of charts (scatter plots, histograms and pie charts) based on different filters. Implemented initial setup for displaying charts through javascript and the "Chart.js" library. Drawn detailed mock-ups of almost every page of the application.
-	\item[Andrea Costa] Implementation of JSP pages for products.
-	\item[Fabio Zanini] Implementation of the logic behind Invoices, Products and Invoice\_Products CRUD operations in a restful way; Implementation of relative resources classes (Product, Invoice, Invoice\_Product). Creation of SQL inserts for toy data for the database.
+	\item[Mirco Cazzaro] Initial contribution to the database design; implementation of Customer \textit{CRUD} operations; implementation of the logic behind invoice status (invoice closure and generation); implementation of \textit{JasperReport} library for \textit{PDF} generation; implementation of \textit{XML} electronic invoices that follow Italian regulations using \textit{Dom4j} library; Implementation of \textit{REST URI} parsing utility; Implementation of \textit{JasperReport} export file utility;
+	\item[Marco Martinelli] Implementation of database reading section to fetch, as a list, Invoices, Products, and Customers. 
+    Implementation of the invoices listing by filters \textit{fromValue}, \textit{toValue}, \textit{fromValue-toValue} using as parameters: total, discount, pension fund refund, invoice date, warning date, customer name, product name.
+    Implementation of notification utils for both emails and telegram, used for sending plain text messages and messages with an attachment.  
+	\item[Farzad Shami] Implementation of the authentication logic part using \textit{JWT} tokens; Implementation of customer management part.
+	\item[Nicola Boscolo Cegion] Implementation of Bank account \textit{CRUD} operations, implementation of login, implementation of \textit{JWT} tokens.
+	\item[Christian Marchiori] Implementation of insight part by generating different typologies of charts (scatter plots, histograms, and pie charts) based on different filters. Implemented initial setup for displaying charts through \textit{JavaScript} and the \textit{Chart.js} library. Drawn detailed mock-ups of almost every page of the application.
+	\item[Fabio Zanini] Implementation of the logic behind \textit{Invoices}, \textit{Products} and \textit{Invoice\_Products} \textit{CRUD} operations in a restful way; Implementation of relative resources classes (\textit{Product}, \textit{Invoice}, \textit{Invoice\_Product}). Creation of \textit{SQL} inserts for toy data for the database.
+	\item[Andrea Costa] Implementation of \textit{JSP} pages for products.
 \end{description}

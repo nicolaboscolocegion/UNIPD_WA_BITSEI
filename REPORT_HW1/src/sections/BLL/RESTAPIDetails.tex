@@ -1,19 +1,19 @@
 \subsection{REST API Details}
-At the end of every URI used in the Rest calls below, it will be automatically added the following path: 
+At the end of every \textit{URI} used in the Rest calls below, it will be automatically added the following path: 
 \begin{lstlisting}
     company/{id}
 \end{lstlisting}
 which specifies the id of the company currently logged into the system. \\
-Regarding the authentication aspect, when the user logs into the system a session token containing the owner id and the owner email is setted. \\
-If this token is not setted, every call will be blocked until the user authenticates himself. \\
-This token is particularly useful because it allows to check at every call to a Rest Resource that the user is authorized for the operation he's trying to do. \\
+Regarding the authentication aspect, when the user logs into the system a session token containing the owner id and the owner email is set. \\
+If this token is not set, every call will be blocked until the user authenticates himself. \\
+This token is particularly useful because it allows checking at every call to a \textit{REST} Resource that the user is authorized for the operation he's trying to do. \\
 So, the final flow will be:
 \begin{itemize}
-    \item The user logs into the system using his email and password.
-    \item After authentication, the \textit{JWT} token containing the owner identifier number and the owner email address is setted.
-    \item After the log in page, the user company is setted by default. If an user has more companies, he can select which one to use. \\
-            The company identifier is setted as a session attribute.
-    \item From now on, all the pages will show only the data associated to this company.
+    \item The user logs into the system using his E-mail and password.
+    \item After authentication, the \textit{JWT} token containing the owner identifier number and the owner email address is set.
+    \item After the login phase, the user company is set by default. If a user has more companies, he can select which one to use. \\
+            The company identifier is set as a session attribute.
+    \item From now on, all the pages will show only the data associated with this company.
 \end{itemize}
 
 %List here a few resources retrievable via REST API
@@ -40,7 +40,7 @@ The following endpoint allows to get the data of the user currently logged into 
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.}
+        \item \texttt{No \textit{URL} parameters required.}
     \end{itemize}
     
     \item Data Parameters: 
@@ -67,7 +67,7 @@ The following endpoint allows to get the data of the user currently logged into 
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
     500 & If any fatal error occurs in users listing \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
 
@@ -79,7 +79,7 @@ The following endpoint allows to get the data of the user currently logged into 
 \subsubsection*{Reset the password of a user registered in the system}
 
 % the description of the resource
-The following endpoint allows to send a link to an user via email to reset its password.
+The following endpoint allows sending a link to a user via email to reset his password.
 
 \begin{itemize}
 
@@ -95,7 +95,7 @@ The following endpoint allows to send a link to an user via email to reset its p
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.} 
+        \item \texttt{No \textit{URL} parameters required.} 
     \end{itemize}
     
     \item Data Parameters: 
@@ -122,7 +122,7 @@ message: Reset password token send to your email, check your inbox. \\
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
     500 & If any fatal error occurs in users listing \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -134,7 +134,7 @@ message: Reset password token send to your email, check your inbox. \\
 \subsubsection*{Change the password of a user registered in the system}
 
 % the description of the resource
-The following endpoint allows to change an user's password from inside the system.
+The following endpoint allows changing a user's password from inside the system.
 
 \begin{itemize}
     
@@ -150,15 +150,15 @@ The following endpoint allows to change an user's password from inside the syste
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.} 
+        \item \texttt{No \textit{URL} parameters required.} 
     \end{itemize}
     
     \item Data Parameters: 
     \begin{itemize}
         \item \texttt{ownerId = \{int\}, ownerMail = \{String\}} \\
-        The owner identifier and the owner mail contained in the authentication token.    
+        The owner identifier and the owner's mail contained in the authentication token.    
         \item \texttt{newPassword = \{String\}} \\
-        The new password to set for the current user.
+        The new password to be set for the current user.
         \item \texttt{resetToken = \{String\}} \\
         The reset token received via mail.
         \item 
@@ -170,7 +170,7 @@ The following endpoint allows to change an user's password from inside the syste
         \item Content: \\
         \textit{
 \{ \\
-    message: “Successfully done, now you can login with your new password” \\
+    message: “Successfully done, now you can log in with your new password” \\
 \} 
     }
     \end{itemize}
@@ -181,8 +181,8 @@ The following endpoint allows to change an user's password from inside the syste
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    404 & If the user which is trying to access this resource is not registered in the system \\\hline
-    500 & If any database related error occurs \\\hline
+    404 & If the user who is trying to access this resource is not registered in the system \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -194,7 +194,7 @@ The following endpoint allows to change an user's password from inside the syste
 \subsubsection*{Authenticate an user}
 
 % the description of the resource
-The following endpoint allows to authenticate an user into the system.
+The following endpoint allows authenticating a user into the system.
 
 \begin{itemize}
     
@@ -210,12 +210,12 @@ The following endpoint allows to authenticate an user into the system.
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.} 
+        \item \texttt{No \textit{URL} parameters required.} 
     \end{itemize}
     
     \item Data Parameters: 
     \begin{itemize}
-        \item \texttt{The JSON representation of the user email and password.}
+        \item \texttt{The \textit{JSON} representation of the user email and password.}
     \end{itemize}
     
     \item Success Response: 
@@ -237,7 +237,7 @@ The following endpoint allows to authenticate an user into the system.
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
     401 & If the email and/or password inserted by the user are wrong \\\hline
     500 & If any error occurs in sending the authentication response \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -265,7 +265,7 @@ The following endpoint allows to list all the companies associated to an user.
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.}
+        \item \texttt{No \textit{URL} parameters required.}
     \end{itemize}
     
     \item Data Parameters: 
@@ -292,7 +292,7 @@ The following endpoint allows to list all the companies associated to an user.
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
     500 & If any fatal error occurs in companies listing \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -301,10 +301,10 @@ The following endpoint allows to list all the companies associated to an user.
 
 \newpage
 % REST RESOURCE #6
-\subsubsection*{Create a new company associated to an user}
+\subsubsection*{Create a new company associated with a user}
 
 % the description of the resource
-The following endpoint allows to create a new company and associate it to an user already registered into the system.
+The following endpoint allows to create a new company and associate it to a user already registered into the system.
 
 \begin{itemize}
     
@@ -320,14 +320,14 @@ The following endpoint allows to create a new company and associate it to an use
     
     \item URL Parameters: 
     \begin{itemize}
-        \item \texttt{No URL parameters required.}
+        \item \texttt{No \textit{URL} parameters required.}
     \end{itemize}
     
     \item Data Parameters: 
     \begin{itemize}
         \item \texttt{ownerId = \{int\}} \\
         The identifier of the owner to which associate the new company being created.
-        \item \texttt{The JSON representation of the company to create.}     
+        \item \texttt{The \textit{JSON} representation of the company to create.}     
     \end{itemize}
 
     \item Success Response: 
@@ -346,7 +346,7 @@ The following endpoint allows to create a new company and associate it to an use
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
     500 & If the user has not bought a license for the new company he wants to create \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -355,7 +355,7 @@ The following endpoint allows to create a new company and associate it to an use
 
 \newpage
 % REST RESOURCE #7
-\subsubsection*{Get the image associated to a company}
+\subsubsection*{Get the image associated with a company}
 
 % the description of the resource
 The following endpoint allows to get the company image of the company specified in the URL.
@@ -386,10 +386,8 @@ The following endpoint allows to get the company image of the company specified 
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
-        \item Content:
-        \begin{lstlisting}
-''The .png image associated to the specified company''
-        \end{lstlisting}    
+        \item Content: \\
+        \qquad \textit{The .png image associated with the specified company}    
     \end{itemize}
     
     \item Error Response:
@@ -398,9 +396,9 @@ The following endpoint allows to get the company image of the company specified 
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    500 & If the users has not access to this company \\\hline 
+    500 & If the user is not allowed to access this company \\\hline 
     500 & If any fatal error occurs in the retrieval of the image \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -409,10 +407,10 @@ The following endpoint allows to get the company image of the company specified 
 
 \newpage
 % REST RESOURCE #8
-\subsubsection*{Create a new customer associated to a company}
+\subsubsection*{Create a new customer associated with a company}
 
 % the description of the resource
-The following endpoint allows to create a new customer and associate it to the current company logged in the system.
+The following endpoint allows the creation of a new customer and associates it with the company currently logged into the system.
 
 \begin{itemize}
     
@@ -434,7 +432,7 @@ The following endpoint allows to create a new customer and associate it to the c
     
     \item Data Parameters: 
     \begin{itemize}
-        \item \texttt{The JSON representation of the customer to create} 
+        \item \texttt{The \textit{JSON} representation of the customer to create} 
         \item \texttt{ownerId = \{int\}} \\
         The identifier of the owner contained in the authentication token.
     \end{itemize}
@@ -454,9 +452,9 @@ The following endpoint allows to create a new customer and associate it to the c
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -465,10 +463,10 @@ The following endpoint allows to create a new customer and associate it to the c
 
 \newpage
 % REST RESOURCE #9
-\subsubsection*{Get a customer associated to a company}
+\subsubsection*{Get a customer associated with a company}
 
 % the description of the resource
-The following endpoint allows to get a customer associated to the current company logged in the system.
+The following endpoint allows to get a customer associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -511,9 +509,9 @@ The following endpoint allows to get a customer associated to the current compan
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -522,10 +520,10 @@ The following endpoint allows to get a customer associated to the current compan
 
 \newpage
 % REST RESOURCE #10
-\subsubsection*{Delete a customer associated to a company}
+\subsubsection*{Delete a customer associated with a company}
 
 % the description of the resource
-The following endpoint allows to delete a customer associated to the current company logged in the system.
+The following endpoint allows to delete a customer associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -568,9 +566,9 @@ The following endpoint allows to delete a customer associated to the current com
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -579,10 +577,10 @@ The following endpoint allows to delete a customer associated to the current com
 
 \newpage
 % REST RESOURCE #11
-\subsubsection*{Update a customer associated to a company}
+\subsubsection*{Update a customer associated with a company}
 
 % the description of the resource
-The following endpoint allows to update a customer associated to the current company logged in the system.
+The following endpoint allows to update a customer associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -625,9 +623,9 @@ The following endpoint allows to update a customer associated to the current com
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -636,10 +634,10 @@ The following endpoint allows to update a customer associated to the current com
 
 \newpage
 % REST RESOURCE #12
-\subsubsection*{List the invoices associated to a company}
+\subsubsection*{List the invoices associated with a company}
 
 % the description of the resource
-The following endpoint allows to list all the invoices associated to the current company logged in the system.
+The following endpoint allows to list all the invoices associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -683,9 +681,9 @@ The following endpoint allows to list all the invoices associated to the current
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -694,10 +692,10 @@ The following endpoint allows to list all the invoices associated to the current
 
 \newpage
 %RR GET CUSTOMERS REPORT
-\subsubsection*{List the customers associated to a company in a PDF file}
+\subsubsection*{List the customers associated with a company in a \textit{PDF} file}
 
 % the description of the resource
-The following endpoint allows to list all the customers associated to the current company logged in the system in a pdf file.
+The following endpoint allows to list all the customers associated with the current company logged into the system in a \textit{PDF} file.
 
 \begin{itemize}
     
@@ -740,10 +738,10 @@ The following endpoint allows to list all the customers associated to the curren
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
     500 & If any error occurs in generating the \textit{PDF} file \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -752,16 +750,16 @@ The following endpoint allows to list all the customers associated to the curren
 
 \newpage
 %RR GET CUSTOMERS REPORT
-\subsubsection*{List the products associated to a company in a PDF file}
+\subsubsection*{List the products associated to a company in a \textit{PDF} file}
 
 % the description of the resource
-The following endpoint allows to list all the products associated to the current company logged in the system in a PDF file.
+The following endpoint allows to list all the products associated with the current company logged into the system in a \textit{PDF} file.
 
 \begin{itemize}
     
     \item URL: 
     \begin{itemize}
-        \item \texttt{/rest/customerreport}
+        \item \texttt{/rest/productreport}
     \end{itemize}
     
     \item Method: 
@@ -798,10 +796,10 @@ The following endpoint allows to list all the products associated to the current
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
     500 & If any error occurs in generating the \textit{PDF} file \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -809,11 +807,132 @@ The following endpoint allows to list all the products associated to the current
 
 
 \newpage
-% REST RESOURCE #13
-\subsubsection*{List the customers associated to a company}
+%RR CLOSE INVOICE
+\subsubsection*{Close an invoice}
 
 % the description of the resource
-The following endpoint allows to list all the customers associated to the current company logged in the system.
+The following endpoint allows closing the invoice having the identifier passed in the URL, blocking the possibility of updating and modifying it. \\
+When the invoice is successfully closed, a document in \textit{PDF} format will be available for download and will be sent to the company owner via E-mail and/or Telegram. 
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/closeinvoice/\{invoiceId\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{PUT}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to close.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \textit{            
+{
+    message: “Invoice successfully closed and exported!”
+}
+        }
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any error occurs in generating the \textit{PDF} file \\\hline
+    500 & If any error occurs in sending the \textit{PDF} file via E-mail\\\hline
+    500 & If any database-related error occurs \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+\newpage
+%RR GENERATE INVOICE
+\subsubsection*{Generate an invoice}
+
+% the description of the resource
+The following endpoint allows generating the invoice having the identifier passed in the URL, blocking the possibility of updating and modifying it. \\
+When the invoice is successfully generated, two documents in \textit{PDF} and \textit{XML} formats will be available for download and will be sent to the company owner via E-mail and/or Telegram. 
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/generateinvoice/\{invoiceId\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{PUT}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to generate.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \textit{            
+{
+    message: “Invoice successfully generated and exported!”
+}
+        }
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any error occurs in generating the \textit{PDF} file \\\hline
+    500 & If any error occurs in sending the \textit{PDF} file via E-mail\\\hline
+    500 & If any database-related error occurs \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+
+\newpage
+% REST RESOURCE #13
+\subsubsection*{List the customers associated with a company}
+
+% the description of the resource
+The following endpoint allows to list all the customers associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -857,9 +976,9 @@ The following endpoint allows to list all the customers associated to the curren
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -868,10 +987,10 @@ The following endpoint allows to list all the customers associated to the curren
 
 \newpage
 % REST RESOURCE #14
-\subsubsection*{List the products associated to a company}
+\subsubsection*{List the products associated with a company}
 
 % the description of the resource
-The following endpoint allows to list all the products associated to the current company logged in the system.
+The following endpoint allows to list all the products associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -915,9 +1034,9 @@ The following endpoint allows to list all the products associated to the current
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
-    500 & If any database related error occurs \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -925,11 +1044,79 @@ The following endpoint allows to list all the products associated to the current
 
 
 \newpage
-% REST RESOURCE #15
-\subsubsection*{List the filtered invoices associated to a company}
+%RR GET DOCUMENT
+\subsubsection*{Retrieve a document}
 
 % the description of the resource
-The following endpoint allows to filter and list the invoices associated to the current company logged in the system.
+The following endpoint allows the retrieval of the document associated with the invoice having the identifier passed in the \textit{URL}, in the format specified in the \textit{URL}. \\
+The available formats are: \textit{PDF Warning}, \textit{PDF Invoice}, and \textit{XML Invoice}.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/getdocument/\{type\}/invoice/\{invoiceId\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{type = \{int\}} \\
+        The type of document associated with the invoice to retrieve:
+        \begin{itemize}
+            \item 0 \textrightarrow \textit{PDF Warning file},
+            \item 1 \textrightarrow \textit{PDF Invoice file},
+            \item 2 \textrightarrow \textit{XML Invoice file}.
+        \end{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to retrieve.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \textit{            
+{
+    message: “Document successfully retrieved!”
+}
+        }
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
+    500 & If any error occurs in generating the \textit{PDF} file \\\hline
+    500 & If any error occurs in sending the \textit{PDF} file via E-mail\\\hline
+    500 & If any database-related error occurs \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+
+\newpage
+% REST RESOURCE #15
+\subsubsection*{List the filtered invoices associated with a company}
+
+% the description of the resource
+The following endpoint allows to filter and list the invoices associated with the current company logged into the system.
 
 \begin{itemize}
     
@@ -953,7 +1140,7 @@ The following endpoint allows to filter and list the invoices associated to the 
     \begin{itemize}
         \item \texttt{ownerId = \{int\}} \\
         The identifier of the owner contained in the authentication token.
-        \item the user can set one, many or all the filters defined below: 
+        \item the user can set one, many, or all the filters defined below: 
         \begin{itemize}
             \item \texttt{fromTotal = \{Double\}} - the lower bound for the \textit{Total},
             \item \texttt{toTotal = \{Double\}} - the upper bound for the \textit{Total},
@@ -988,10 +1175,10 @@ The following endpoint allows to filter and list the invoices associated to the 
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
     500 & If any error occurs in parsing the filters \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -1000,10 +1187,10 @@ The following endpoint allows to filter and list the invoices associated to the 
 
 \newpage
 % REST RESOURCE #16
-\subsubsection*{Plot the filtered charts associated to a company}
+\subsubsection*{Plot the filtered charts associated with a company}
 
 % the description of the resource
-The following endpoint allows to filter and list the invoices associated to the current company logged in the system and plot a chart.
+The following endpoint allows to filter and list the invoices associated to the current company logged into the system and plot a chart.
 
 \begin{itemize}
     
@@ -1027,7 +1214,7 @@ The following endpoint allows to filter and list the invoices associated to the 
     \begin{itemize}
         \item \texttt{ownerId = \{int\}} \\
         The identifier of the owner contained in the authentication token.
-        \item the user can set one, many or all the filters defined below: 
+        \item the user can set one, many, or all the filters defined below: 
         \begin{itemize}
             \item \texttt{fromTotal = \{Double\}} - the lower bound for the \textit{Total},
             \item \texttt{toTotal = \{Double\}} - the upper bound for the \textit{Total},
@@ -1041,7 +1228,7 @@ The following endpoint allows to filter and list the invoices associated to the 
             \item \texttt{toWarningDate = \{Date\}} - the upper bound for the \textit{Warning Date},
             \item \texttt{fromBusinessName = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Customer Names} to filter the invoices,
             \item \texttt{fromProductTitle = \{String(1)---String(2)---...---String(n)\}} - the list of the \textit{Product Titles} to filter the invoices,
-            \item \texttt{chart\_type = \{int\}} - the chart type: 1 for Invoice by date, 2 for Total by date, 3 for Discount by date, 4 for Invoice by custmer, 5 for Total by customer,
+            \item \texttt{chart\_type = \{int\}} - the chart type: 1 for Invoice by date, 2 for Total by date, 3 for Discount by date, 4 for Invoice by customer, 5 for Total by customer,
             \item \texttt{chart\_period = \{int\}} - the chart period we want to group dates in the x-axis: 1 for Months, 2 for Days, 3 for Years
         \end{itemize}     
     \end{itemize}
@@ -1061,10 +1248,10 @@ The following endpoint allows to filter and list the invoices associated to the 
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    400 & If any error occurs in parsing the ownerId  \\\hline
-    400 & If the user has not access to this company \\\hline
+    400 & If any error occurs in parsing the \textit{ownerId}  \\\hline
+    400 & If the user is not allowed to access this company \\\hline
     500 & If any error occurs in parsing the filters \\\hline
-    500 & If any database related error occurs \\\hline
+    500 & If any database-related error occurs \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -1072,33 +1259,32 @@ The following endpoint allows to filter and list the invoices associated to the 
 
 
 \newpage
-\subsubsection*{bankaccount resurce}
+\subsubsection*{Get the company's bank account details}
 
 % Bank account resurce
-
-Bank account contains the Bank account details.
+The following endpoint allows to get all the details about the bank account associated with the company currently logged into the system.
 
 \begin{itemize}
-    \item URL: \texttt{/rest/bankaccount/\{bankaccount ID\}/company/\{company ID\}}
+    \item URL: \texttt{/rest/bankaccount/\{bankaccountId\}/company/\{companyId\}}
     \item Method: \texttt{GET}
     \item URL Parameters: 
         \begin{itemize}
-            \item bankaccount ID:\{int\} bankaccount ID in the database
-            \item company ID:\{int\} company ID in the database
+            \item \texttt{bankaccountId = \{int\}} \\
+            The identifier of the bank account to retrieve
+            \item \texttt{companyId = \{int\}} \\
+            The identifier of the company currently logged into the system.
         \end{itemize}
-    \item Data Parameters: None
+    \item Data Parameters: 
+    \begin{itemize} 
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
     \item Success Response: 
     \begin{itemize}
         \item Code: 200
-        \item Content: example:
+        \item Content:
         \begin{lstlisting}
-        {
-        "bankaccount_id": 1,
-        "IBAN": "IT25674893201252722926",
-        "bank_name": "ISP",
-        "bankaccount_friendly_name": "Intesa San Paolo",
-        "company_id": 1
-        }
+{"bankaccount_id":1,"IBAN": "IT25674893201252722926","bank_name":"ISP","bankaccount_friendly_name":"Intesa San Paolo","company_id":1}
         \end{lstlisting}   
     \end{itemize}
         \item Error Response:
@@ -1107,8 +1293,8 @@ Bank account contains the Bank account details.
         \begin{tabular}{|c|c|}
         \hline
         \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-        500 & If bank account not found \\\hline
-        500 & If any database related erros accours\\\hline
+        500 & If the required bank account is not found in the database\\\hline
+        500 & If any database-related error occurs \\\hline
         \end{tabular} 
         \end{table} 
     
