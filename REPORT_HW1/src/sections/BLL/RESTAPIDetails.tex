@@ -20,10 +20,10 @@ So, the final flow will be:
 
 
 % REST RESOURCE #1
-\subsubsection*{List the users registered in the system}
+\subsubsection*{Get the data of the user}
 
 % the description of the resource
-The following endpoint allows to get a list of all the users registered in the system.
+The following endpoint allows to get the data of the user currently logged into the system.
 
 \begin{itemize}
 
@@ -44,7 +44,8 @@ The following endpoint allows to get a list of all the users registered in the s
     
     \item Data Parameters: 
     \begin{itemize}
-        \item \texttt{No Data parameters required.} 
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
     \end{itemize}
     
     \item Success Response: 
@@ -52,11 +53,9 @@ The following endpoint allows to get a list of all the users registered in the s
         \item Code: 200
         \item Content: 
         \begin{lstlisting}
-{"resource-list":
 [
 {"user":{"firstname":"Burr","lastname":"Mycah","username":"mmcclosh0","email":"mchaudret0@dailymail.co.uk","telegram_chat_id":null}},
-{"user":{firstname":"Daffy","lastname":"Lisette","username":"ldinningtont","email":"lgianettinit@wp.com","telegram_chat_id":null}}
-]} 
+]
         \end{lstlisting}    
     \end{itemize}
     
@@ -100,7 +99,7 @@ The following endpoint allows to send a link to an user via email to reset its p
     \item Data Parameters: 
     \begin{itemize}
         \item \texttt{ownerMail = \{String\}} \\
-        The owner mail contained in the authentication token.    
+        The mail inserted by the user in which to receive the link to reset the password.    
     \end{itemize}
     
     \item Success Response: 
@@ -108,7 +107,9 @@ The following endpoint allows to send a link to an user via email to reset its p
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    message: “Reset password token send to your email, check your inbox”
+}
         \end{lstlisting}
     \end{itemize}
     
@@ -153,6 +154,11 @@ The following endpoint allows to change an user's password from inside the syste
     \begin{itemize}
         \item \texttt{ownerId = \{int\}, ownerMail = \{String\}} \\
         The owner identifier and the owner mail contained in the authentication token.    
+        \item \texttt{newPassword = \{String\}} \\
+        The new password to set for the current user.
+        \item \texttt{resetToken = \{String\}} \\
+        The reset token received via mail.
+        \item 
     \end{itemize}
     
     \item Success Response: 
@@ -160,7 +166,9 @@ The following endpoint allows to change an user's password from inside the syste
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    message: “Successfully done, now you can login with your new password”
+}
         \end{lstlisting}
     \end{itemize}
     
