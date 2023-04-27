@@ -29,13 +29,12 @@ nothing to say init :)
 ### Contributors
 
 ---
-- Aashishkumar Anil Yadav - 2041274
-- Nicola Boscolo Cegion - 2074285
 - Mirco Cazzaro - 2076745
-- Fabio Zanini - 2088628
-- Christian Marchiori - 2078343
-- Farzad Shami - 2090160
+- Nicola Boscolo Cegion - 2074285
 - Andrea Costa - 2061900
+- Christian Marchiori - 2078343
 - Marco Martinelli - 2087646
+- Farzad Shami - 2090160
+- Fabio Zanini - 2088628
 
 <p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova </a></em>
