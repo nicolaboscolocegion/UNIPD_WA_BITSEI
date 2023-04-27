@@ -837,8 +837,52 @@ The following endpoint allows to filter and list the invoices associated to the 
 \end{itemize}
 
 
+\subsubsection*{bankaccount resurce}
+
+% Bank account resurce
+
+Bank account contains the Bank account details.
+
+\begin{itemize}
+    \item URL: \texttt{/rest/bankaccount/\{bankaccount ID\}/company/\{company ID\}}
+    \item Method: \texttt{GET}
+    \item URL Parameters: 
+        \begin{itemize}
+            \item bankaccount ID:\{int\} bankaccount ID in the database
+            \item company ID:\{int\} company ID in the database
+        \end{itemize}
+    \item Data Parameters: None
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content: example:
+        \begin{lstlisting}
+        {
+        "bankaccount_id": 1,
+        "IBAN": "IT25674893201252722926",
+        "bank_name": "ISP",
+        "bankaccount_friendly_name": "Intesa San Paolo",
+        "company_id": 1
+        }
+        \end{lstlisting}   
+    \end{itemize}
+        \item Error Response:
+        \begin{table}[!h]
+        \centering 
+        \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+        500 & If bank account not found \\\hline
+        500 & If any database related erros accours\\\hline
+        \end{tabular} 
+        \end{table} 
+    
+\end{itemize}
+
+
 \subsubsection*{A resource}
 
+%TODO remember to remove this template
 % the description of the resource
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
