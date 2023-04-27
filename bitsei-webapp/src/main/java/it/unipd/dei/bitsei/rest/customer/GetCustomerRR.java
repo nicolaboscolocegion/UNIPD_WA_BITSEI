@@ -13,6 +13,7 @@ import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class GetCustomerRR extends AbstractRR {
 
+    private RestURIParser r = null;
 
     /**
      * Gets a customer from the database by ID
@@ -33,8 +35,9 @@ public class GetCustomerRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GetCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con) {
+    public GetCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.GET_CUSTOMER, req, res, con);
+        this.r = r;
     }
 
 
@@ -55,19 +58,13 @@ public class GetCustomerRR extends AbstractRR {
 
         try {
 
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("company id cannot be empty.");
-            }
-
-            int customerID = Integer.parseInt(id);
+            int customerID = r.getResourceID();
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
 
             // creates a new object for accessing the database and stores the customer
-            c = new GetCustomerDAO(con, customerID, owner_id).access().getOutputParam();
+            c = new GetCustomerDAO(con, customerID, owner_id, r.getCompanyID()).access().getOutputParam();
 
             m = new Message(String.format("Customer %s successfully fetched.", c.getBusinessName()));
             LOGGER.info("Customer succesfully fetched.");
@@ -81,9 +78,13 @@ public class GetCustomerRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided.", "E5A1", ex.getMessage());
-            LOGGER.info("No company id provided.");
+            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            LOGGER.info("Owner not parsable." + ex.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
+        } catch (RuntimeException e) {
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
+            res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

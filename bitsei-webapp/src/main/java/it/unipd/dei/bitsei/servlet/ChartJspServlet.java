@@ -16,15 +16,13 @@
 
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.GetInvoicesByFiltersJspDAO;
+import it.unipd.dei.bitsei.dao.listing.GetInvoicesByFiltersJspDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +32,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.text.SimpleDateFormat;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
-import org.eclipse.tags.shaded.org.apache.xalan.templates.ElemSort;
-
-import javax.sql.DataSource;
 
 /**
  * Plots charts about invoices.

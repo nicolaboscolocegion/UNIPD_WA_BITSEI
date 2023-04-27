@@ -20,7 +20,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
     /**
      * The SQL statement to be executed
      */
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Customer\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Customer\".company_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Customer\".customer_id = ?;";
     private static final String STATEMENT = "UPDATE bitsei_schema.\"Customer\" SET business_name = ?, vat_number = ?, tax_code = ?, address = ?, city = ?, province = ?, postal_code = ?, email = ?, pec = ?, unique_code = ? WHERE customer_id = ?";
 
     /**
@@ -29,6 +29,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
      */
     private final Customer customer;
     private final int owner_id;
+    private final int company_id;
 
     /**
      * Creates a new object for updating a customer into the database.
@@ -40,7 +41,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
      * @param owner_id
      *            the owner of the customer.
      */
-    public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id) {
+    public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id, final int company_id) {
         super(con);
 
         if (customer == null) {
@@ -50,6 +51,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
 
         this.customer = customer;
         this.owner_id = owner_id;
+        this.company_id = company_id;
     }
 
     @Override
@@ -61,8 +63,9 @@ public final class UpdateCustomerDAO extends AbstractDAO {
         try {
 
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1, customer.getCompanyID());
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
+            pstmt.setInt(3, customer.getCustomerID());
             rs = pstmt.executeQuery();
             if (!rs.next()) {
                 LOGGER.error("Error on fetching data from database");
@@ -70,7 +73,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
             }
 
             if (rs.getInt("c") == 0) {
-                LOGGER.error("Company selected does not belong to logged user.");
+                LOGGER.error("Data access violation");
                 throw new IllegalAccessException();
             }
 
@@ -89,11 +92,10 @@ public final class UpdateCustomerDAO extends AbstractDAO {
 
             pstmt.execute();
 
-            LOGGER.info("query: " + pstmt.toString());
 
             LOGGER.info("Customer %s successfully updated in the database.", customer.getBusinessName());
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new SQLException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();

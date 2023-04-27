@@ -21,104 +21,112 @@ Since: 1.0
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Get Invoices By Filters Form</title>
-    </head>
+<html>
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Get Invoices By Filters Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    <body>
-        <h1>Get Invoices By Filters Form</h1>
+        /* Create three equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 33.33%;
+            padding: 10px;
+            height: 300px; /* Should be removed. Only for demonstration */
+        }
 
-        <div>
-            <hr>
-            <label for="filterByTotalID">Filter by Total:</label>
-            <input id="filterByTotalID" name="filterByTotal" type="checkbox"/><br/><br/>
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
 
-            <label for="fromTotalID">from Total:</label>
-            <input id="fromTotalID" name="fromTotal" type="number"/><br/><br/>
+<h1>Get Invoices By Filters Form</h1>
 
-            <label for="toTotalID">to Total:</label>
-            <input id="toTotalID" name="toTotal" type="number"/><br/><br/>
-            <hr>
+<div class="row">
+    <div id="listInvoicesByFilters-div" class="column">
+        <h3>Filter Invoices By Invoice Parameters</h3>
+        <hr>
+        <label for="filterByTotalID">Filter by Total:</label>
+        <input id="filterByTotalID" name="filterByTotal" type="checkbox"/><br/><br/>
 
+        <label for="fromTotalID">from Total:</label>
+        <input id="fromTotalID" name="fromTotal" type="number"/><br/><br/>
 
-            <label for="filterByDiscountID">Filter by Discount:</label>
-            <input id="filterByDiscountID" name="filterByDiscount" type="checkbox"/><br/><br/>
-
-            <label for="fromDiscountID">from Discount:</label>
-            <input id="fromDiscountID" name="fromDiscount" type="number"/><br/><br/>
-
-            <label for="toDiscountID">to Discount:</label>
-            <input id="toDiscountID" name="toDiscount" type="number"/><br/><br/>
-            <hr>
-
-
-            <label for="filterByPfrID">Filter by Pension Fund Refund:</label>
-            <input id="filterByPfrID" name="filterByPfr" type="checkbox"/><br/><br/>
-
-            <label for="fromPfrID">from Pension Fund Refund:</label>
-            <input id="fromPfrID" name="fromPfr" type="number"/><br/><br/>
-
-            <label for="toPfrID">to Pension Fund Refund:</label>
-            <input id="toPfrID" name="toPfr" type="number"/><br/><br/>
-            <hr>
-
-
-            <label for="filterByInvoiceDateID">Filter by Invoice Date:</label>
-            <input id="filterByInvoiceDateID" name="filterByInvoiceDate" type="checkbox"/><br/><br/>
-
-            <label for="fromInvoiceDateID">from Invoice Date:</label>
-            <input id="fromInvoiceDateID" name="fromInvoiceDate" type="date"/><br/><br/>
-
-            <label for="toInvoiceDateID">to Invoice Date:</label>
-            <input id="toInvoiceDateID" name="toInvoiceDate" type="date"/><br/><br/>
-            <hr>
+        <label for="toTotalID">to Total:</label>
+        <input id="toTotalID" name="toTotal" type="number"/><br/><br/>
+        <hr>
 
 
-            <label for="filterByWarningDateID">Filter by Warning Date:</label>
-            <input id="filterByWarningDateID" name="filterByWarningDate" type="checkbox"/><br/><br/>
+        <label for="filterByDiscountID">Filter by Discount:</label>
+        <input id="filterByDiscountID" name="filterByDiscount" type="checkbox"/><br/><br/>
 
-            <label for="fromWarningDateID">from Warning Date:</label>
-            <input id="fromWarningDateID" name="fromWarningDate" type="date"/><br/><br/>
+        <label for="fromDiscountID">from Discount:</label>
+        <input id="fromDiscountID" name="fromDiscount" type="number"/><br/><br/>
 
-            <label for="toWarningDateID">to Warning Date:</label>
-            <input id="toWarningDateID" name="toWarningDate" type="date"/><br/><br/>
-            <hr>
+        <label for="toDiscountID">to Discount:</label>
+        <input id="toDiscountID" name="toDiscount" type="number"/><br/><br/>
+        <hr>
 
-            <button type="submit" id="listInvoicesByFiltersButton">Submit</button><br/>
-            <button type="reset">Reset the form</button>
-        </div>
 
-        <div>
-            <button type="submit" id="listInvoicesByCompanyIdButton">List all the invoices</button><br/>
-        </div>
+        <label for="filterByPfrID">Filter by Pension Fund Refund:</label>
+        <input id="filterByPfrID" name="filterByPfr" type="checkbox"/><br/><br/>
 
-        <div>
-            <button type="submit" id="listCustomersByCompanyIdButton">List all the customers</button><br/>
-        </div>
+        <label for="fromPfrID">from Pension Fund Refund:</label>
+        <input id="fromPfrID" name="fromPfr" type="number"/><br/><br/>
 
-        <div>
-            <button type="submit" id="listProductsByCompanyIdButton">List all the products</button><br/>
-        </div>
+        <label for="toPfrID">to Pension Fund Refund:</label>
+        <input id="toPfrID" name="toPfr" type="number"/><br/><br/>
+        <hr>
 
-        <div id="listInvoicesByFilters-results" style="margin: 2em;"></div>
 
-        <div id="listInvoicesByCompanyId-results" style="margin: 2em;"></div>
+        <label for="filterByInvoiceDateID">Filter by Invoice Date:</label>
+        <input id="filterByInvoiceDateID" name="filterByInvoiceDate" type="checkbox"/><br/><br/>
 
-        <div id="listCustomersByCompanyId-results" style="margin: 2em;"></div>
+        <label for="fromInvoiceDateID">from Invoice Date:</label>
+        <input id="fromInvoiceDateID" name="fromInvoiceDate" type="date"/><br/><br/>
 
-        <div id="listProductsByCompanyId-results" style="margin: 2em;"></div>
+        <label for="toInvoiceDateID">to Invoice Date:</label>
+        <input id="toInvoiceDateID" name="toInvoiceDate" type="date"/><br/><br/>
+        <hr>
 
-        <script type="text/javascript" src="<c:url value="/js/ajax_list-invoices-by-filters.js"/>"></script>
 
-        <script type="text/javascript" src="<c:url value="/js/ajax_list-invoices-by-companyId.js"/>"></script>
+        <label for="filterByWarningDateID">Filter by Warning Date:</label>
+        <input id="filterByWarningDateID" name="filterByWarningDate" type="checkbox"/><br/><br/>
 
-        <script type="text/javascript" src="<c:url value="/js/ajax_list-customers-by-companyId.js"/>"></script>
+        <label for="fromWarningDateID">from Warning Date:</label>
+        <input id="fromWarningDateID" name="fromWarningDate" type="date"/><br/><br/>
 
-        <script type="text/javascript" src="<c:url value="/js/ajax_list-products-by-companyId.js"/>"></script>
+        <label for="toWarningDateID">to Warning Date:</label>
+        <input id="toWarningDateID" name="toWarningDate" type="date"/><br/><br/>
+        <hr>
 
-    </body>
+        <button type="submit" id="listInvoicesByFilters-button">Search with filters</button><br/>
+        <button type="reset">Reset filters</button>
+    </div>
+
+    <div id="listCustomersByCompanyID-div" class="column">
+        <h3>Filter Invoices By Customer(s)</h3>
+        <button type="button" id="listCustomersByCompanyID-button">List all the customers</button><br/>
+    </div>
+
+    <div id="listProductsByCompanyID-div" class="column">
+        <h3>Filter Invoices By Product(s)</h3>
+        <button type="button" id="listProductsByCompanyID-button">List all the products</button><br/>
+    </div>
+</div>
+
+<script type="text/javascript" src="<c:url value="../js/ajax_list_customers_by_companyId.js"/>"></script>
+<script type="text/javascript" src="<c:url value="../js/ajax_list_products_by_companyId.js"/>"></script>
+<script type="text/javascript" src="<c:url value="../js/ajax_list_invoices_by_filters.js"/>"></script>
+
+</body>
 </html>

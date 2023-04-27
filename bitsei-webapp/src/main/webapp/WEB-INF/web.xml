@@ -60,68 +60,8 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>CreateInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.CreateInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CreateInvoiceServlet</servlet-name>
-        <url-pattern>/invoiceinsert</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DeleteInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.DeleteInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DeleteInvoiceServlet</servlet-name>
-        <url-pattern>/invoicedelete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>UpdateInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.UpdateInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>UpdateInvoiceServlet</servlet-name>
-        <url-pattern>/invoiceupdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>CreateInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.CreateInvoiceProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CreateInvoiceProductServlet</servlet-name>
-        <url-pattern>/invoiceproductinsert</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DeleteInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.DeleteInvoiceProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DeleteInvoiceProductServlet</servlet-name>
-        <url-pattern>/invoiceproductdelete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>UpdateInvoiceProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.UpdateInvoiceProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>UpdateInvoiceProductServlet</servlet-name>
-        <url-pattern>/invoiceproductupdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>LoadProductForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.LoadProductForUpdateServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.GetProductServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -130,48 +70,8 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoice.LoadInvoiceForUpdateServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoadInvoiceForUpdateServlet</servlet-name>
-        <url-pattern>/loadinvoice</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.invoiceproduct.LoadInvoiceProductForUpdateServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoadInvoiceProductForUpdateServlet</servlet-name>
-        <url-pattern>/loadinvoiceproduct</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>GenerateCustomersReportServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateCustomersReportServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>GenerateCustomersReportServlet</servlet-name>
-        <url-pattern>/generatecreport</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>GenerateProductsReportServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GenerateProductsReportServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>GenerateProductsReportServlet</servlet-name>
-        <url-pattern>/generatepreport</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -181,7 +81,7 @@
 
     <servlet>
         <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.GetInvoicesByFiltersJspServlet</servlet-class>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersJspServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -199,16 +99,6 @@
         <url-pattern>/chart-form</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>CloseInvoiceServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.CloseInvoiceServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CloseInvoiceServlet</servlet-name>
-        <url-pattern>/closeinvoice</url-pattern>
-    </servlet-mapping>
 
 <!--    <servlet-mapping>-->
 <!--        <servlet-name>LoginServlet</servlet-name>-->
@@ -228,6 +118,21 @@
         <url-pattern>/rest/bankaccounts/*</url-pattern>
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
+        <url-pattern>/rest/invoice/*</url-pattern>
+        <url-pattern>/rest/invoiceproduct/*</url-pattern>
+        <url-pattern>/rest/closeinvoice/*</url-pattern>
+        <url-pattern>/rest/customerreport/*</url-pattern>
+        <url-pattern>/rest/productsreport/*</url-pattern>
+        <url-pattern>/rest/generateinvoice/*</url-pattern>
+        <url-pattern>/productinsert</url-pattern>
+        <url-pattern>/productdelete</url-pattern>
+        <url-pattern>/productupdate</url-pattern>
+        <url-pattern>/loadproduct</url-pattern>
+        <url-pattern>/rest/list-invoice/*</url-pattern>
+        <url-pattern>/rest/list-company/*</url-pattern>
+        <url-pattern>/rest/list-product/*</url-pattern>
+        <url-pattern>/rest/filter-invoices/*</url-pattern>
+        <url-pattern>/rest/charts/*</url-pattern>
     </filter-mapping>
 
 
