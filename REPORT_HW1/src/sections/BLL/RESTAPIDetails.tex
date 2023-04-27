@@ -865,7 +865,24 @@ The following endpoint allows to update an invoice associated to the current com
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    "invoice": {
+        "invoice_id": 33,
+        "customer_id": 1,
+        "status": 0,
+        "warning_number": 1,
+        "warning_date": "2023-04-02",
+        "warning_pdf_file": "pdf_update.pdf",
+        "invoice_number": "400",
+        "invoice_date": "2023-04-17",
+        "invoice_pdf_file": "inv_pdf_update.pdf",
+        "invoice_xml_file": "inv_xml_update.xml",
+        "total": 200.0,
+        "discount": 5.0,
+        "pension_fund_refund": 3.0,
+        "has_stamp": false
+    }
+}
         \end{lstlisting}    
     \end{itemize}
     
@@ -875,8 +892,8 @@ The following endpoint allows to update an invoice associated to the current com
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id is not present in Invoice table \\\hline
+    500 & When the inserted invoice\_id is not linked to the company with company\_id \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -913,7 +930,7 @@ The following endpoint allows to create a new invoice product related to a produ
 	\item \texttt{productId = \{int\}} \\
         The identifier of the product related to the invoice product to create.
         \item \texttt{companyId = \{int\}} \\
-        The identifier of the company to which associate the new customer.
+        The identifier of the company to which associate the new invoice product.
     \end{itemize}
     
     \item Data Parameters: 
@@ -928,7 +945,17 @@ The following endpoint allows to create a new invoice product related to a produ
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 400,
+        "unit_price": 119.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price",
+        "purchase_date": "2023-03-17"
+    }
+}
         \end{lstlisting}    
     \end{itemize}
     
@@ -938,8 +965,7 @@ The following endpoint allows to create a new invoice product related to a produ
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -985,8 +1011,17 @@ The following endpoint allows to get an invoice product related to a product and
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-{"resource-list":
-[]}
+{
+    "invoiceproduct": {
+        "invoice_id": 1,
+        "product_id": 1,
+        "quantity": 50,
+        "unit_price": 26.9,
+        "related_price": 0.0,
+        "related_price_description": null,
+        "purchase_date": "2021-01-05"
+    }
+}
         \end{lstlisting}        
     \end{itemize}
     
@@ -996,8 +1031,7 @@ The following endpoint allows to get an invoice product related to a product and
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -1042,7 +1076,17 @@ The following endpoint allows to delete an invoice product related to a product 
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 400,
+        "unit_price": 119.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price",
+        "purchase_date": "2023-03-17"
+    }
+}
         \end{lstlisting}    
     \end{itemize}
     
@@ -1052,8 +1096,7 @@ The following endpoint allows to delete an invoice product related to a product 
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
     \end{tabular} 
     \end{table} 
     
@@ -1100,7 +1143,17 @@ The following endpoint allows to update an invoice product related to a product 
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+            {
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 415,
+        "unit_price": 121.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price V2",
+        "purchase_date": "2023-03-17"
+    }
+}
         \end{lstlisting}    
     \end{itemize}
     
@@ -1110,8 +1163,7 @@ The following endpoint allows to update an invoice product related to a product 
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
     \end{tabular} 
     \end{table} 
     
