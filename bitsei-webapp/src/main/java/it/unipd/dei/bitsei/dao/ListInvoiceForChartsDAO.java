@@ -182,7 +182,7 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
      */
     @Override
     protected void doAccess() throws SQLException {
-        String init_query = "SELECT * FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
+        String init_query = "SELECT i.*,c.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ResultSet rs_check = null;
@@ -286,8 +286,8 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
             }
 
 
-            LOGGER.info("## ListInvoiceByFiltersDAO: Submitted query: " + query + " ##");
-            LOGGER.info("## ListInvoiceByFiltersDAO: Submitted parameters --> " + param + " ##");
+            LOGGER.info("## ListInvoiceForChartsDAO: Submitted query: " + query + " ##");
+            LOGGER.info("## ListInvoiceForChartsDAO: Submitted parameters --> " + param + " ##");
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -310,7 +310,7 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
                 );
             }
 
-            LOGGER.info("## ListInvoiceByFiltersDAO: Invoices succesfully listed ##");
+            LOGGER.info("## ListInvoiceForChartsDAO: Invoices succesfully listed ##");
         } finally {
             if (rs != null) {
                 rs.close();
