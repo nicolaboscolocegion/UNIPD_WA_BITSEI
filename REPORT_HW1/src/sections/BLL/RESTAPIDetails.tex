@@ -566,7 +566,7 @@ The following endpoint allows to update a customer associated to the current com
     
     \item Method: 
     \begin{itemize}
-        \item \texttt{GET}
+        \item \texttt{PUT}
     \end{itemize}
     
     \item URL Parameters: 
@@ -660,6 +660,111 @@ The following endpoint allows to list all the invoices associated to the current
     \end{table} 
     
 \end{itemize}
+
+
+%RR GET CUSTOMERS REPORT
+\subsubsection*{List the customers associated to a company in a PDF file}
+
+% the description of the resource
+The following endpoint allows to list all the customers associated to the current company logged in the system in a pdf file.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customerreport}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+
+%RR GET CUSTOMERS REPORT
+\subsubsection*{List the products associated to a company in a PDF file}
+
+% the description of the resource
+The following endpoint allows to list all the products associated to the current company logged in the system in a PDF file.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/customerreport}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    Error code 1 & When of Error Code 1 \\\hline
+    Error code 2 & When of Error Code 2 \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
 
 
 % REST RESOURCE #13
