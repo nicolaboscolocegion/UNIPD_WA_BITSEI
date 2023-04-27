@@ -21,11 +21,14 @@ import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.tags.shaded.org.apache.regexp.RE;
+
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.Resource;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import it.unipd.dei.bitsei.dao.bankAccount.GetBankAccountDAO;
@@ -63,13 +66,12 @@ public class GetBankAccountRR extends AbstractRR{
         try {
             
             
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("bank can not be empty");
-            }
+            String path = req.getRequestURI();
+            
+            RestURIParser uri = new RestURIParser(path);
+            
 
-            int company_id = Integer.parseInt(id);
+            int company_id = uri.getCompanyID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             
 
@@ -80,12 +82,14 @@ public class GetBankAccountRR extends AbstractRR{
                 LOGGER.info("bank account(s) successfully listed.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
+                res.setContentType(JSON_MEDIA_TYPE);
                 el.toJSON(res.getOutputStream());
 
             } else { // it should not happen
                 LOGGER.error("Fatal error while listing bank account(s).");
 
                 m = new Message("Cannot list bank account(s): unexpected error.", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
@@ -95,7 +99,8 @@ public class GetBankAccountRR extends AbstractRR{
         } catch (SQLException ex) {
             LOGGER.error("Cannot list bank account(s): unexpected database error.", ex);
 
-            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

@@ -20,11 +20,14 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.eclipse.tags.shaded.org.apache.regexp.RE;
+
 import it.unipd.dei.bitsei.dao.bankAccount.UpdateBankAccountDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -58,35 +61,38 @@ public class UpdateBankAccoutRR extends AbstractRR{
         
         try{
 
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("bank can not be empty");
-            }
-            LOGGER.warn("old bank account id: " + id);
+            RestURIParser uri = new RestURIParser(req.getRequestURI());
+            
 
-            int oldBankAccountID = Integer.parseInt(id);
+            int oldBankAccountID = uri.getResourceID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
 
-            //try to change the bank accoutn
-            boolean updated = new UpdateBankAccountDAO(con, oldBankAccountID, newBankAccount, owner_id).access().getOutputParam();
+            //controlls if the operation wa success
+            boolean updated = false;
+
+            if(!(newBankAccount.getBankName()==null || newBankAccount.getIban()==null || newBankAccount.getCompanyId() == -1 || newBankAccount.getBankAccountFriendlyName()==null)){
+                //try to change the bank accoutn
+                updated = new UpdateBankAccountDAO(con, oldBankAccountID, newBankAccount, owner_id).access().getOutputParam();
+            }
 
             if(updated){
                 res.setStatus(HttpServletResponse.SC_OK);
                 LOGGER.info("changed " + oldBankAccountID +  " to "  + newBankAccount.getIban());
             }else{
-                LOGGER.error("Fatal error while getting bankaccount.");
+                LOGGER.error("Bad request for: " + oldBankAccountID);
 
                 m = new Message("Cannot change the bank account", "E5A1", null);
-                res.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                res.setContentType("text/plain");
+                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
             LOGGER.error("Cannot change bank account: unexpected error while accessing the database.", e);
 
-            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            m = new Message("Cannot change bank account: unexpected error while accessing the database.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

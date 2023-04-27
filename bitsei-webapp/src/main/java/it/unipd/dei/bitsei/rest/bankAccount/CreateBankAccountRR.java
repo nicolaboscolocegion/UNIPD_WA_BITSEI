@@ -58,8 +58,14 @@ public class CreateBankAccountRR extends AbstractRR{
             //find if there is a new bank accoount in the response
             BankAccount newBankAccount= BankAccount.fromJSON(requestStream);
             
-            //try to change the bank accoutn
-            boolean created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
+            //define if the creation was made
+            boolean created = false;
+            //controlls if all the filds are written
+            if(!(newBankAccount.getBankName()==null || newBankAccount.getIban()==null || newBankAccount.getCompanyId() == -1 || newBankAccount.getBankAccountFriendlyName()==null)){
+                //try to change the bank account
+                created = new CreateBankAccountDAO(con, newBankAccount, owner_id).access().getOutputParam();
+            }
+            
 
             if(created){
                 res.setStatus(HttpServletResponse.SC_CREATED);
@@ -68,13 +74,14 @@ public class CreateBankAccountRR extends AbstractRR{
                 LOGGER.error("Fatal error while creating.");
 
                 m = new Message("Cannot create the bank account", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 m.toJSON(res.getOutputStream());
             }
         }catch(SQLException e){
             LOGGER.error("Cannot crate bank account: unexpected error while accessing the database.", e);
-
-            m = new Message("Cannot create bank account: unexpected error while accessing the database.", "E5A1", e.getMessage());
+            res.setContentType("text/plain");
+            m = new Message("Cannot create bank account: unexpected error while accessing the database.", "E5A1", null);
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

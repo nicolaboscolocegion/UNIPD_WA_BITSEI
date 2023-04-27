@@ -27,6 +27,7 @@ import it.unipd.dei.bitsei.resources.Company;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.resources.ResourceList;
 import it.unipd.dei.bitsei.rest.AbstractRR;
+import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -65,13 +66,10 @@ public class ListBankAccountsRR extends AbstractRR{
 
         try {
             
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("company id cannot be empty.");
-            }
+            RestURIParser uri = new RestURIParser(req.getRequestURI());
 
-            int company_id = Integer.parseInt(id);
+
+            int company_id = uri.getCompanyID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             
 
@@ -82,19 +80,22 @@ public class ListBankAccountsRR extends AbstractRR{
                 LOGGER.info("bank account(s) successfully listed.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
+                res.setContentType(JSON_MEDIA_TYPE);
                 new ResourceList(el).toJSON(res.getOutputStream());
 
             } else { // it should not happen
                 LOGGER.error("Fatal error while listing bank account(s).");
 
                 m = new Message("Cannot list bank account(s): unexpected error.", "E5A1", null);
+                res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
             LOGGER.error("Cannot list bank account(s): unexpected database error.", ex);
 
-            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list bank account(s): unexpected database error.", "E5A1", null);
+            res.setContentType("text/plain");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
