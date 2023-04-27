@@ -1,20 +1,20 @@
 package it.unipd.dei.bitsei.resources;
 
-import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 
 /**
  * Represents the data about an invoice.
  */
-//public class Invoice extends AbstractResource {
-public class Invoice {
+public class Invoice extends AbstractResource {
     /**
      * The id of the invoice
      */
-    private final int invoice_id;
+    private int invoice_id;
 
     /**
      * The id of the customer
@@ -101,7 +101,12 @@ public class Invoice {
      */
     public Invoice(final int invoice_id, final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp) {
         this.invoice_id = invoice_id;
-        this.customer_id = customer_id;
+        if (customer_id != -1) {
+            this.customer_id = customer_id;
+        }
+        else {
+            this.customer_id = 0;
+        }
         this.status = status;
         this.warning_number = warning_number;
         this.warning_date = warning_date;
@@ -114,6 +119,67 @@ public class Invoice {
         this.discount = discount;
         this.pension_fund_refund = pension_fund_refund;
         this.has_stamp = has_stamp;
+    }
+
+    /**
+     * Creates a new invoice
+     *
+     * @param customer_id       the id of the customer
+     * @param status            the status of the invoice
+     * @param warning_number    the warning number of the invoice
+     * @param warning_date      the warning date of the invoice
+     * @param warning_pdf_file  the warning pdf file of the invoice
+     * @param invoice_number    the invoice number of the invoice
+     * @param invoice_date      the invoice date of the invoice
+     * @param invoice_pdf_file  the invoice pdf file of the invoice
+     * @param invoice_xml_file  the invoice xml file of the invoice
+     * @param total             the total of the invoice
+     * @param discount          the discount of the invoice
+     * @param pension_fund_refund   the pension fund refund of the invoice
+     * @param has_stamp         the stamp of the invoice
+     */
+    public Invoice(final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp) {
+        this.invoice_id = -1;
+        if (customer_id != -1) {
+            this.customer_id = customer_id;
+        }
+        else {
+            this.customer_id = 0;
+        }
+        this.status = status;
+        this.warning_number = warning_number;
+        this.warning_date = warning_date;
+        this.warning_pdf_file = warning_pdf_file;
+        this.invoice_number = invoice_number;
+        this.invoice_date = invoice_date;
+        this.invoice_pdf_file = invoice_pdf_file;
+        this.invoice_xml_file = invoice_xml_file;
+        this.total = total;
+        this.discount = discount;
+        this.pension_fund_refund = pension_fund_refund;
+        this.has_stamp = has_stamp;
+    }
+
+    /**
+     * Constructor used to delete an existing invoice.
+     *
+     * @param invoice_id the invoice_id (primary key).
+     */
+    public Invoice(int invoice_id) {
+        this.invoice_id = invoice_id;
+        this.customer_id = -1;
+        this.status = -1;
+        this.warning_number = -1;
+        this.warning_date = null;
+        this.warning_pdf_file = null;
+        this.invoice_number = null;
+        this.invoice_date = null;
+        this.invoice_pdf_file = null;
+        this.invoice_xml_file = null;
+        this.total = -1;
+        this.discount = -1;
+        this.pension_fund_refund = -1;
+        this.has_stamp = false;
     }
 
     /**
@@ -242,7 +308,13 @@ public class Invoice {
         return has_stamp;
     }
 
-    /*
+    /**
+     * Sets the invoice ID of this object to the ID passed as parameter.
+     * @param invoice_id The value for the invoice ID we want to set.
+     */
+    public void setInvoice_id(int invoice_id) {this.invoice_id = invoice_id;}
+
+
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {
 
@@ -252,26 +324,30 @@ public class Invoice {
         jg.writeFieldName("invoice");
         jg.writeStartObject();
 
-        jg.writeNumberField("invoice_id", invoice_id);
-        jg.writeNumberField("customer_id", customer_id);
-        jg.writeNumberField("status", status);
-        jg.writeNumberField("warning_number", warning_number);
-        jg.writeStringField("warning_date", warning_date.toString());
-        jg.writeStringField("warning_pdf_file", warning_pdf_file);
-        jg.writeStringField("invoice_number", invoice_number);
-        jg.writeStringField("invoice_date", invoice_date.toString());
-        jg.writeStringField("invoice_pdf_file", invoice_pdf_file);
-        jg.writeStringField("invoice_xml_file", invoice_xml_file);
-        jg.writeNumberField("total", total);
-        jg.writeNumberField("discount", discount);
-        jg.writeNumberField("pension_fund_refund", pension_fund_refund);
-        jg.writeBooleanField("has_stamp", has_stamp);
+        try {
+            jg.writeNumberField("invoice_id", invoice_id);
+            jg.writeNumberField("customer_id", customer_id);
+            jg.writeNumberField("status", status);
+            jg.writeNumberField("warning_number", warning_number);
+            jg.writeStringField("warning_date", warning_date.toString());
+            jg.writeStringField("warning_pdf_file", warning_pdf_file);
+            jg.writeStringField("invoice_number", invoice_number);
+            jg.writeStringField("invoice_date", invoice_date.toString());
+            jg.writeStringField("invoice_pdf_file", invoice_pdf_file);
+            jg.writeStringField("invoice_xml_file", invoice_xml_file);
+            jg.writeNumberField("total", total);
+            jg.writeNumberField("discount", discount);
+            jg.writeNumberField("pension_fund_refund", pension_fund_refund);
+            jg.writeBooleanField("has_stamp", has_stamp);
+
+        } catch (Throwable T) {
+            //LOGGER.warn("## INVOICE CLASS: Invoice #%d has null field(s).", invoice_id);
+        }
 
         jg.writeEndObject();
         jg.writeEndObject();
         jg.flush();
     }
-    */
 
     /**
      * Creates a {@code Invoice} from its JSON representation.
@@ -280,23 +356,22 @@ public class Invoice {
      * @return the {@code Invoice} created from the JSON representation.
      * @throws IOException if something goes wrong while parsing.
      */
-    /*
     public static Invoice fromJSON(final InputStream in) throws IOException {
 
         // the fields read from JSON
-        int jInvoice_id = 0;
-        int jCustomer_id = 0;
-        int jStatus = 0;
-        int jWarning_number = 0;
+        int jInvoice_id = -1;
+        int jCustomer_id = -1;
+        int jStatus = -1;
+        int jWarning_number = -1;
         Date jWarning_date = null;
         String jWarning_pdf_file = null;
         String jInvoice_number = null;
         Date jInvoice_date = null;
         String jInvoice_pdf_file = null;
         String jInvoice_xml_file = null;
-        double jTotal = 0;
-        double jDiscount = 0;
-        double jPension_fund_refund = 0;
+        double jTotal = -1;
+        double jDiscount = -1;
+        double jPension_fund_refund = -1;
         boolean jHas_stamp = false;
 
         try {
@@ -308,8 +383,8 @@ public class Invoice {
 
                 // there are no more events
                 if (jp.nextToken() == null) {
-                    LOGGER.error("No User object found in the stream.");
-                    throw new EOFException("Unable to parse JSON: no User object found.");
+                    LOGGER.error("No Invoice object found in the stream.");
+                    throw new EOFException("Unable to parse JSON: no Invoice object found.");
                 }
             }
 
@@ -336,8 +411,7 @@ public class Invoice {
                         case "warning_date":
                             jp.nextToken();
                             String tmpDate = jp.getText();
-                            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(tmpDate);
-                            jWarning_date = date;
+                            jWarning_date = Date.valueOf(tmpDate);
                             break;
                         case "warning_pdf_file":
                             jp.nextToken();
@@ -350,8 +424,7 @@ public class Invoice {
                         case "invoice_date":
                             jp.nextToken();
                             String tmpDate2 = jp.getText();
-                            Date date2 = new SimpleDateFormat("dd/MM/yyyy").parse(tmpDate2);
-                            jInvoice_date = date2;
+                            jInvoice_date = Date.valueOf(tmpDate2);
                             break;
                         case "invoice_pdf_file":
                             jp.nextToken();
@@ -386,5 +459,5 @@ public class Invoice {
 
         return new Invoice(jInvoice_id, jCustomer_id, jStatus, jWarning_number, jWarning_date, jWarning_pdf_file, jInvoice_number, jInvoice_date, jInvoice_pdf_file, jInvoice_xml_file, jTotal, jDiscount, jPension_fund_refund, jHas_stamp);
     }
-     */
+
 }
