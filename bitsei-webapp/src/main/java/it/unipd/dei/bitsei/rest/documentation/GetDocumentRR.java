@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.rest.documentation;
 
-import it.unipd.dei.bitsei.dao.GetCompanyImageDAO;
 import it.unipd.dei.bitsei.dao.documentation.GetDocumentDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Message;

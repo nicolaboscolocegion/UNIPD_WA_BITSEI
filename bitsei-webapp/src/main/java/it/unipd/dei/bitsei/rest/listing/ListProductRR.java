@@ -3,7 +3,6 @@ package it.unipd.dei.bitsei.rest.listing;
 import it.unipd.dei.bitsei.dao.listing.ListProductDAO;
 import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.AbstractRR;
-import it.unipd.dei.bitsei.telegram.BitseiBot;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

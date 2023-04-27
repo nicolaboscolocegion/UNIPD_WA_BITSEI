@@ -1,14 +1,16 @@
 package it.unipd.dei.bitsei.servlet;
 
+import it.unipd.dei.bitsei.dao.user.GetUserDAO;
 import it.unipd.dei.bitsei.resources.User;
-import it.unipd.dei.bitsei.resources.BankAccount;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.*;
+import it.unipd.dei.bitsei.rest.company.*;
 import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.user.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.documentation.*;
 import it.unipd.dei.bitsei.rest.invoice.CreateInvoiceRR;
@@ -20,7 +22,6 @@ import it.unipd.dei.bitsei.rest.invoiceproduct.DeleteInvoiceProductRR;
 import it.unipd.dei.bitsei.rest.invoiceproduct.GetInvoiceProductRR;
 import it.unipd.dei.bitsei.rest.invoiceproduct.UpdateInvoiceProductRR;
 import it.unipd.dei.bitsei.rest.listing.*;
-import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.bankAccount.CreateBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.DeleteBankAccountRR;
 import it.unipd.dei.bitsei.rest.bankAccount.GetBankAccountRR;
@@ -29,7 +30,6 @@ import it.unipd.dei.bitsei.rest.bankAccount.UpdateBankAccoutRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.Invoice;
 import it.unipd.dei.bitsei.resources.Customer;
 import it.unipd.dei.bitsei.resources.Product;
@@ -37,7 +37,6 @@ import it.unipd.dei.bitsei.resources.Product;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -538,7 +537,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             switch (method) {
                 case "GET":
-                    new ListUserRR(req, res, getConnection()).serve();
+                    new GetUserRR(req, res, getConnection()).serve();
                     break;
                 case "POST":
 //                    new CreateUserRR(req, res, getConnection()).serve();

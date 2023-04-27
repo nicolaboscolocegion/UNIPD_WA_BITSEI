@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.company;
 
-import it.unipd.dei.bitsei.dao.GetCompanyDAO;
+import it.unipd.dei.bitsei.dao.company.ListCompaniesDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
- * A REST resource for getting {@link Company}.
+ * A REST resource for listing {@link Company}s.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class GetCompanyRR extends AbstractRR {
+public final class ListCompanyRR extends AbstractRR {
 
     /**
      * Creates a new REST resource for listing {@code Company}s.
@@ -40,38 +42,31 @@ public final class GetCompanyRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public GetCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.GET_COMPANY, req, res, con);
+    public ListCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.LIST_COMPANIES, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        Company el = null;
+        List<Company> el = null;
         Message m = null;
 
         try {
-            String uri = req.getRequestURI();
-            String id = uri.substring(uri.lastIndexOf('/') + 1);
-            if (id.isEmpty() || id.isBlank()) {
-                throw new IOException("company id cannot be empty.");
-            }
-
-            int company_id = Integer.parseInt(id);
+            // creates a new DAO for accessing the database and lists the companies
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-
-            el = new GetCompanyDAO(con, company_id, owner_id).access().getOutputParam();
+            el = new ListCompaniesDAO(con, owner_id).access().getOutputParam();
 
             if (el != null) {
-                LOGGER.info("Company successfully get.");
+                LOGGER.info("Companies successfully listed.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
-                el.toJSON(res.getOutputStream());
-            } else {
-                LOGGER.error("Fatal error while fetching Company.");
+                new ResourceList(el).toJSON(res.getOutputStream());
+            } else { // it should not happen
+                LOGGER.error("Fatal error while listing Companies.");
 
-                m = new Message("Cannot fetch Company: make sure you have a right access to this company.", "E5A1", null);
+                m = new Message("Cannot list Companies: unexpected error.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }

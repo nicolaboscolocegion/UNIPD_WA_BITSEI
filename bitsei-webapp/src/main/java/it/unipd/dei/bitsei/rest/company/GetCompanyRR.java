@@ -13,69 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.company;
 
-import it.unipd.dei.bitsei.dao.ListUserDAO;
-import it.unipd.dei.bitsei.resources.Actions;
-import it.unipd.dei.bitsei.resources.User;
-import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.ResourceList;
+import it.unipd.dei.bitsei.dao.company.GetCompanyDAO;
+import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
- * A REST resource for listing {@link User}s.
+ * A REST resource for getting {@link Company}.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class ListUserRR extends AbstractRR {
+public final class GetCompanyRR extends AbstractRR {
 
     /**
-     * Creates a new REST resource for listing {@code User}s.
+     * Creates a new REST resource for listing {@code Company}s.
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public ListUserRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.LIST_USER, req, res, con);
+    public GetCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.GET_COMPANY, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        List<User> el = null;
+        Company el = null;
         Message m = null;
 
         try {
+            String uri = req.getRequestURI();
+            String id = uri.substring(uri.lastIndexOf('/') + 1);
+            if (id.isEmpty() || id.isBlank()) {
+                throw new IOException("company id cannot be empty.");
+            }
 
-            // creates a new DAO for accessing the database and lists the user(s)
-            el = new ListUserDAO(con).access().getOutputParam();
+            int company_id = Integer.parseInt(id);
+            int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+
+            el = new GetCompanyDAO(con, company_id, owner_id).access().getOutputParam();
 
             if (el != null) {
-                LOGGER.info("User(s) successfully listed.");
+                LOGGER.info("Company successfully get.");
 
                 res.setStatus(HttpServletResponse.SC_OK);
-                new ResourceList(el).toJSON(res.getOutputStream());
-            } else { // it should not happen
-                LOGGER.error("Fatal error while listing user(s).");
+                el.toJSON(res.getOutputStream());
+            } else {
+                LOGGER.error("Fatal error while fetching Company.");
 
-                m = new Message("Cannot list user(s): unexpected error.", "E5A1", null);
+                m = new Message("Cannot fetch Company: make sure you have a right access to this company.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("Cannot list user(s): unexpected database error.", ex);
+            LOGGER.error("Cannot list Companies: unexpected database error.", ex);
 
-            m = new Message("Cannot list user(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list Companies: unexpected database error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }
