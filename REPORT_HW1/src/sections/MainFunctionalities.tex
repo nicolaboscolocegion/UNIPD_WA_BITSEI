@@ -18,3 +18,17 @@ In particular, our web application is divided in four main parts:
     \item Notification Management: notifications are directed both to the user and to customers: for what concerns the user, he has the opportunity to get them both via mail and via Telegram. He can set up these preferences on his reserved area, as long as for telegram is also needed to specify his Chat ID. notifications for customers are only via mail. /*when are performed?*/
     \item Insight Printout: the user has the possibility to see, for each company, different typologies of insight plots, as for example histograms on invoices in a certain amount of time, sales in a certain amount of time, invoices filtered by customers, sales filtered by customers, total discount for a certain amount of time.
 \end{itemize}
+
+\subsection{Deployment - CI/CD}\label{subsec:deployment---ci/cd}
+In Bitbucket, Pipelines is a powerful feature that automates the build, test, and deployment process of your code.
+It's a continuous integration and delivery (CI/CD) tool that helps you streamline your development workflow and ensure that your code is always up-to-date and error-free.
+Our pipeline consists of two essential steps.
+The first step is the build phase, which is responsible for compiling the code, This step helps us identify any errors or issues in our code early on, preventing unwanted errors from occurring in the future.
+If the build phase passes successfully, the next step is the deployment phase.
+This step deploys the latest version of our code to our server, ensuring that our application is always up-to-date and running smoothly.
+With Pipelines, we can easily monitor the progress of our builds and deployments, and quickly troubleshoot any issues that may arise.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=390pt, keepaspectratio]{resources/pipeline.png}\label{fig:bitbucket-pipeline}
+\end{figure}
