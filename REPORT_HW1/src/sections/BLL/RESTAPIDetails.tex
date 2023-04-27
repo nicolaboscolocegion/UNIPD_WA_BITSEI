@@ -1,5 +1,5 @@
 \subsection{REST API Details}
-At the end of every URI used in the Rest calls below, it's automatically added the following path: 
+At the end of every URI used in the Rest calls below, it will be automatically added the following path: 
 \begin{lstlisting}
     company/{id}
 \end{lstlisting}
@@ -7,6 +7,14 @@ which specifies the id of the company currently logged into the system. \\
 Regarding the authentication aspect, when the user logs into the system a session token containing the owner id and the owner email is setted. \\
 If this token is not setted, every call will be blocked until the user authenticates himself. \\
 This token is particularly useful because it allows to check at every call to a Rest Resource that the user is authorized for the operation he's trying to do. \\
+So, the final flow will be:
+\begin{itemize}
+    \item The user logs into the system using his email and password.
+    \item After authentication, the \textit{JWT} token containing the owner identifier number and the owner email address is setted.
+    \item After the log in page, the user company is setted by default. If an user has more companies, he can select which one to use. \\
+            The company identifier is setted as a session attribute.
+    \item From now on, all the pages will show only the data associated to this company.
+\end{itemize}
 
 %List here a few resources retrievable via REST API
 
