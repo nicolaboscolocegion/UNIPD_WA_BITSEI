@@ -9,11 +9,11 @@ import java.util.*;
 
 
 import it.unipd.dei.bitsei.dao.documentation.CloseInvoiceDAO;
-import it.unipd.dei.bitsei.mail.MailManager;
+import it.unipd.dei.bitsei.utils.mail.MailManager;
 import it.unipd.dei.bitsei.resources.*;
 
 import it.unipd.dei.bitsei.rest.AbstractRR;
-import it.unipd.dei.bitsei.telegram.BitseiBot;
+import it.unipd.dei.bitsei.utils.telegram.BitseiBot;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;

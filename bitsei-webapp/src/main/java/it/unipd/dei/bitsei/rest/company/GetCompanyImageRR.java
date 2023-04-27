@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.company;
 
-import it.unipd.dei.bitsei.dao.DeleteCompanyDAO;
+import it.unipd.dei.bitsei.dao.company.GetCompanyImageDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,13 +26,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * A REST resource for deleting {@link Company}.
+ * A REST resource for getting {@link Company}.
  *
  * @author BITSEI GROUP
  * @version 1.00
  * @since 1.00
  */
-public final class DeleteCompanyRR extends AbstractRR {
+public final class GetCompanyImageRR extends AbstractRR {
 
     /**
      * Creates a new REST resource for listing {@code Company}s.
@@ -40,15 +41,15 @@ public final class DeleteCompanyRR extends AbstractRR {
      * @param res the HTTP response.
      * @param con the connection to the database.
      */
-    public DeleteCompanyRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
-        super(Actions.DELETE_COMPANY, req, res, con);
+    public GetCompanyImageRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
+        super(Actions.GET_COMPANY_IMAGE, req, res, con);
     }
 
 
     @Override
     protected void doServe() throws IOException {
 
-        boolean is_ok = false;
+        byte[] el = null;
         Message m = null;
 
         try {
@@ -61,24 +62,26 @@ public final class DeleteCompanyRR extends AbstractRR {
             int company_id = Integer.parseInt(id);
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
-            is_ok = new DeleteCompanyDAO(con, company_id, owner_id).access().getOutputParam();
+            el = new GetCompanyImageDAO(con, company_id, owner_id).access().getOutputParam();
 
-            if (is_ok) {
-                LOGGER.info("Company successfully delete.");
+            if (el != null) {
+                LOGGER.info("Company successfully get.");
 
-                res.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                res.getOutputStream().flush();
+                res.setContentType("image/png");
+                res.setStatus(HttpServletResponse.SC_OK);
+                res.getOutputStream().write(el);
+
             } else {
-                LOGGER.error("Fatal error while deleting Company.");
+                LOGGER.error("Fatal error while fetching Company.");
 
-                m = new Message("Cannot delete Company: make sure you have a right access to this company.", "E5A1", null);
+                m = new Message("Cannot fetch Company: make sure you have a right access to this company.", "E5A1", null);
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("Cannot delete Company: unexpected database error.", ex);
+            LOGGER.error("Cannot list Companies: unexpected database error.", ex);
 
-            m = new Message("Cannot delete Company: unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list Companies: unexpected database error.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

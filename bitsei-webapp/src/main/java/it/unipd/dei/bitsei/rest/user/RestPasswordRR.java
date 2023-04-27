@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.user;
 
-import it.unipd.dei.bitsei.dao.PasswordRestDAO;
+import it.unipd.dei.bitsei.dao.user.PasswordRestDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import it.unipd.dei.bitsei.utils.HashGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

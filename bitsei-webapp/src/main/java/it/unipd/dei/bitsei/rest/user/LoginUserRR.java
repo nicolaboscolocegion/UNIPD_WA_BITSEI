@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.user;
 
 
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.jose4j.lang.JoseException;
 
-import it.unipd.dei.bitsei.dao.UserAuthDAO;
+import it.unipd.dei.bitsei.dao.user.UserAuthDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.LoginResource;
 import it.unipd.dei.bitsei.resources.Message;

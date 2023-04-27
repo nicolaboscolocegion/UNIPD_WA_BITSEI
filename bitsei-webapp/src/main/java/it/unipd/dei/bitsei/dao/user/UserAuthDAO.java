@@ -15,10 +15,11 @@
  */
 
 
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.user;
 
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.LoginResource;
 
 import java.sql.Connection;

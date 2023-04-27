@@ -1,11 +1,9 @@
 package it.unipd.dei.bitsei.rest;
 
-import it.unipd.dei.bitsei.dao.ListInvoiceForChartsDAO;
+import it.unipd.dei.bitsei.dao.listing.ListInvoiceForChartsDAO;
 import it.unipd.dei.bitsei.resources.*;
-import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jersey.repackaged.org.objectweb.asm.Label;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,7 +12,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
