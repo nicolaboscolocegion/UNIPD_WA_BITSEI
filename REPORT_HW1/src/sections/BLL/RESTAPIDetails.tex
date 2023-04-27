@@ -613,6 +613,563 @@ The following endpoint allows to update a customer associated to the current com
     
 \end{itemize}
 
+% REST RESOURCE #12
+\subsubsection*{Create a new invoice associated to a company}
+
+% the description of the resource
+The following endpoint allows to create a new invoice and associate it to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoice/}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{companyId = \{int\}} \\
+        The identifier of the company to which associate the new invoice.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{The JSON representation of the invoice to create} 
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoice": {
+        "invoice_id": -1,
+        "customer_id": 1,
+        "status": 0,
+        "warning_number": 0,
+        "warning_date": "2023-03-02",
+        "warning_pdf_file": "pdf_insertion_3.pdf",
+        "invoice_number": "450",
+        "invoice_date": "2023-03-17",
+        "invoice_pdf_file": "inv_pdf_insertion_3.pdf",
+        "invoice_xml_file": "inv_xml_insertion_3.xml",
+        "total": 250.0,
+        "discount": 3.0,
+        "pension_fund_refund": 5.0,
+        "has_stamp": false
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted customer\_id is not present in Customer table \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #13
+\subsubsection*{Get an invoice associated to a company}
+
+% the description of the resource
+The following endpoint allows to get an invoice associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoice/\{id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to retrieve.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.   
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoice": {
+        "invoice_id": 1,
+        "customer_id": 1,
+        "status": 1,
+        "warning_number": 1,
+        "warning_date": "2023-04-02",
+        "warning_pdf_file": "pdf_update.pdf",
+        "invoice_number": "400",
+        "invoice_date": "2023-04-17",
+        "invoice_pdf_file": "inv_pdf_update.pdf",
+        "invoice_xml_file": "inv_xml_update.xml",
+        "total": 200.0,
+        "discount": 5.0,
+        "pension_fund_refund": 3.0,
+        "has_stamp": false
+    }
+}
+
+        \end{lstlisting}        
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id is not present in Invoice table \\\hline
+    500 & When the inserted invoice\_id is not linked to the company with company\_id \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+% REST RESOURCE #14
+\subsubsection*{Delete an invoice associated to a company}
+
+% the description of the resource
+The following endpoint allows to delete an invoice associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoice/\{id\}}
+    \end{itemize}
+
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{DELETE}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to delete.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoice": {
+        "invoice_id": 34,
+        "customer_id": 1,
+        "status": 0,
+        "warning_number": 0,
+        "warning_date": "2023-03-02",
+        "warning_pdf_file": "pdf_insertion_3.pdf",
+        "invoice_number": "450",
+        "invoice_date": "2023-03-17",
+        "invoice_pdf_file": "inv_pdf_insertion_3.pdf",
+        "invoice_xml_file": "inv_xml_insertion_3.xml",
+        "total": 250.0,
+        "discount": 3.0,
+        "pension_fund_refund": 5.0,
+        "has_stamp": false
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id is not present in Invoice table \\\hline
+    500 & When the inserted invoice\_id is not linked to the company with company\_id \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #15
+\subsubsection*{Update an invoice associated to a company}
+
+% the description of the resource
+The following endpoint allows to update an invoice associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoice/\{id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice to delete.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+	\item \texttt{The JSON representation of the invoice to update}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoice": {
+        "invoice_id": 33,
+        "customer_id": 1,
+        "status": 0,
+        "warning_number": 1,
+        "warning_date": "2023-04-02",
+        "warning_pdf_file": "pdf_update.pdf",
+        "invoice_number": "400",
+        "invoice_date": "2023-04-17",
+        "invoice_pdf_file": "inv_pdf_update.pdf",
+        "invoice_xml_file": "inv_xml_update.xml",
+        "total": 200.0,
+        "discount": 5.0,
+        "pension_fund_refund": 3.0,
+        "has_stamp": false
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id is not present in Invoice table \\\hline
+    500 & When the inserted invoice\_id is not linked to the company with company\_id \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+
+
+
+
+
+% REST RESOURCE #16
+\subsubsection*{Create a new invoice product associated to an invoice, a product and a company}
+
+% the description of the resource
+The following endpoint allows to create a new invoice product related to a product and an invoice and associate it to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoiceproduct//\{inv\_id\}/\{prod\_id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{POST}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+	\item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice related to the invoice product to create.
+	\item \texttt{productId = \{int\}} \\
+        The identifier of the product related to the invoice product to create.
+        \item \texttt{companyId = \{int\}} \\
+        The identifier of the company to which associate the new invoice product.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{The JSON representation of the invoice product to create} 
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 400,
+        "unit_price": 119.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price",
+        "purchase_date": "2023-03-17"
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #17
+\subsubsection*{Get an invoice product associated to an invoice, a product and a company}
+
+% the description of the resource
+The following endpoint allows to get an invoice product related to a product and an invoice and associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoiceproduct/\{inv\_id\}/\{prod\_id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice related to the invoice product to retrieve.
+	\item \texttt{productId = \{int\}} \\
+        The identifier of the product related to the invoice product to retrieve.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.   
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoiceproduct": {
+        "invoice_id": 1,
+        "product_id": 1,
+        "quantity": 50,
+        "unit_price": 26.9,
+        "related_price": 0.0,
+        "related_price_description": null,
+        "purchase_date": "2021-01-05"
+    }
+}
+        \end{lstlisting}        
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+% REST RESOURCE #18
+\subsubsection*{Delete an invoice product associated to an invoice, a product and a company}
+
+% the description of the resource
+The following endpoint allows to delete an invoice product related to a product and an invoice and associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoiceproduct/\{inv\_id\}/\{prod\_id\}}
+    \end{itemize}
+
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{DELETE}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice related to the invoice product to delete.
+	\item \texttt{productId = \{int\}} \\
+        The identifier of the product related to the invoice product to delete.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+{
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 400,
+        "unit_price": 119.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price",
+        "purchase_date": "2023-03-17"
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
+% REST RESOURCE #19
+\subsubsection*{Update an invoice product associated to an invoice, a product and a company}
+
+% the description of the resource
+The following endpoint allows to update an invoice product related to a product and an invoice and associated to the current company logged in the system.
+
+\begin{itemize}
+    
+    \item URL: 
+    \begin{itemize}
+        \item \texttt{/rest/invoiceproduct/\{inv\_id\}/\{prod\_id\}}
+    \end{itemize}
+    
+    \item Method: 
+    \begin{itemize}
+        \item \texttt{GET}
+    \end{itemize}
+    
+    \item URL Parameters: 
+    \begin{itemize}
+        \item \texttt{invoiceId = \{int\}} \\
+        The identifier of the invoice related to the invoice product to update.
+	\item \texttt{productId = \{int\}} \\
+        The identifier of the product related to the invoice product to update.
+        \item \texttt{company = \{int\}} \\
+        The identifier of the company currently logged into the system.
+    \end{itemize}
+    
+    \item Data Parameters: 
+    \begin{itemize}
+	\item \texttt{The JSON representation of the invoice product to create}
+        \item \texttt{ownerId = \{int\}} \\
+        The identifier of the owner contained in the authentication token.
+    \end{itemize}
+    
+    \item Success Response: 
+    \begin{itemize}
+        \item Code: 200
+        \item Content:
+        \begin{lstlisting}
+            {
+    "invoiceproduct": {
+        "invoice_id": 33,
+        "product_id": 1,
+        "quantity": 415,
+        "unit_price": 121.0,
+        "related_price": 12.0,
+        "related_price_description": "description rel price V2",
+        "purchase_date": "2023-03-17"
+    }
+}
+        \end{lstlisting}    
+    \end{itemize}
+    
+    \item Error Response:
+    \begin{table}[!h]
+    \centering 
+    \begin{tabular}{|c|c|}
+    \hline
+    \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
+    500 & When the inserted invoice\_id and product\_id combination is not present in InvoiceProduct table \\\hline
+    \end{tabular} 
+    \end{table} 
+    
+\end{itemize}
+
+
 
 % REST RESOURCE #12
 \subsubsection*{List the invoices associated to a company}
@@ -1009,7 +1566,14 @@ The following endpoint allows to filter and list the invoices associated to the 
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-{}
+{
+	"chart":{
+		"labels":["Dicembre 2023"],
+		"data":["1"],
+		"type":1,
+		"period":1
+	}
+}
         \end{lstlisting}    
     \end{itemize}
     
