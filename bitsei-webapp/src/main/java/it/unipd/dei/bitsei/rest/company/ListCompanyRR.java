@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.rest;
+package it.unipd.dei.bitsei.rest.company;
 
-import it.unipd.dei.bitsei.dao.ListCompaniesDAO;
+import it.unipd.dei.bitsei.dao.company.ListCompaniesDAO;
 import it.unipd.dei.bitsei.resources.*;
+import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

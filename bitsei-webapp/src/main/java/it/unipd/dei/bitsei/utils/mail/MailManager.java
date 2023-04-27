@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package it.unipd.dei.bitsei.mail;
+package it.unipd.dei.bitsei.utils.mail;
 
 
 import jakarta.activation.DataHandler;

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.company;
+
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

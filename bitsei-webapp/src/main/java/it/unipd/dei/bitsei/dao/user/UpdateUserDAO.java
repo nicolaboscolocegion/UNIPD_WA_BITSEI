@@ -1,5 +1,6 @@
-package it.unipd.dei.bitsei.dao;
+package it.unipd.dei.bitsei.dao.user;
 
+import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.User;
 
 import java.lang.reflect.Field;
@@ -10,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateUserDAO extends AbstractDAO<User>{
+public class UpdateUserDAO extends AbstractDAO<User> {
 
     private final int user_id;
     private final User user;

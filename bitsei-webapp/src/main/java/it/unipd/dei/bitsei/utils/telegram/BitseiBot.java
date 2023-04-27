@@ -1,4 +1,4 @@
-package it.unipd.dei.bitsei.telegram;
+package it.unipd.dei.bitsei.utils.telegram;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
