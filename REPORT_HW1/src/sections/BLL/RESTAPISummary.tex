@@ -4,7 +4,7 @@
 
 \begin{longtable}{|p{.375\columnwidth}|p{.1\columnwidth} |p{.35\columnwidth}|p{.1\columnwidth}|} 
 \hline
-\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
+\textbf{URI} & \textbf{Method} & \textbf{Description} \\\hline
 rest/user & GET & Get the list of all the users that are inserted as ``company owner'' in the database \\\hline
 rest/user/reset-password & POST & Send an email to the user with a link to reset the password \\\hline
 rest/user/change-password & POST & Change the user password with the one passed in the request body \\\hline
@@ -34,12 +34,9 @@ rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & PUT & Update the invoice product 
 rest/list-invoice/\{id\} & GET & Get the list of all the invoices associated to the companyId passed through the URL \\\hline
 rest/list-customer/\{id\} & GET & Get the list of all the customers associated to the companyId passed through the URL \\\hline
 rest/list-product/\{id\} & GET & Get the list of all the products associated to the companyId passed through the URL \\\hline
-rest/getdocument/\{type\}/invoice/\{id\}/company/\{id\} & GET & Get the document specified by type (0: PDF Warning; 1: PDF Invoice; 2: XML Invoice)\\hline
+rest/getdocument/\{type\}/invoice/\{id\} & GET & Get the document specified by type: (0: PDF Warning; 1: PDF Invoice; 2: XML Invoice) \\\hline
 rest/filter-invoices & POST & Get the list of all the invoices filtered with the parameters passed in the request body in JSON format \\\hline
 rest/charts & POST & Plot the filtered chart according with the parameters passed in the request body in JSON format \\\hline
-\\\hline
-
-What is the URI? & What HTTP method uses? &  Describe briefly the result of calling the URI & is it behind a filter?\\\hline
 \caption{Describe in this table your REST API}
 \label{tab:termGlossary}
 \end{longtable}
