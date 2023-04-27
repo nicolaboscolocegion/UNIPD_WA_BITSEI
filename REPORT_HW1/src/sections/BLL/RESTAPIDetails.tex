@@ -865,7 +865,24 @@ The following endpoint allows to update an invoice associated to the current com
         \item Code: 200
         \item Content:
         \begin{lstlisting}
-            TODO
+{
+    "invoice": {
+        "invoice_id": 33,
+        "customer_id": 1,
+        "status": 0,
+        "warning_number": 1,
+        "warning_date": "2023-04-02",
+        "warning_pdf_file": "pdf_update.pdf",
+        "invoice_number": "400",
+        "invoice_date": "2023-04-17",
+        "invoice_pdf_file": "inv_pdf_update.pdf",
+        "invoice_xml_file": "inv_xml_update.xml",
+        "total": 200.0,
+        "discount": 5.0,
+        "pension_fund_refund": 3.0,
+        "has_stamp": false
+    }
+}
         \end{lstlisting}    
     \end{itemize}
     
@@ -875,8 +892,8 @@ The following endpoint allows to update an invoice associated to the current com
     \begin{tabular}{|c|c|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Code}} & \multicolumn{1}{c|}{\textbf{When}} \\ \hline
-    Error code 1 & When of Error Code 1 \\\hline
-    Error code 2 & When of Error Code 2 \\\hline
+    500 & When the inserted invoice\_id is not present in Invoice table \\\hline
+    500 & When the inserted invoice\_id is not linked to the company with company\_id \\\hline
     \end{tabular} 
     \end{table} 
     
