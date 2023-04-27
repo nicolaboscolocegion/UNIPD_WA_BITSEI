@@ -8,4 +8,13 @@ Full class diagram available as vector image \href{https://drive.google.com/file
 
 %Describe here the class diagram of your project
  
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+In the class diagram above, we can see the classes used to handle the customer creation, deletion, update and loading. We can see that there is a resource named Customer which implements the constructors and the get methods for the parameters (which corresponds to the parameters in the ER schema) and set method for the parameter that corresponds to the primary key in the ER schema. This Customer resource is implemented using rest. 
+
+There is a RestDispatcherServlet servlet that, using the RestURIParser class, parses the URI and understands the resource and the method required. Then, the RestDispatcherServlet calls the corresponding rest resource (for example, if the request is a get for Customer, the RestDispatcherServlet calls GetCustomerRR). Each one of this resources retrieve the parameters passed in JSON format, if any, and check that they are as expected (checks for image file extensions, dates consistence, and so on). After doing this, the rest resource calls the DAO for the requested method. The DAO checks that the user is authorized (check ownership statements) to make the actions required: if the user, for example, is not the owner of a company, he cannot change things about that company; he can only modify things about his companies. Then, if all is good, the DAO executes the SQL statement and gets (/stores) the data from (/in) the database. And then the DAO returns the values requested.
+
+The DAOs for creation of resources implement a POST request; the DAOs for deletion of resources implement a DELETE request; those for update, implement a PUT requiest; fiinally, the DAOs fot loading a resourse, implement a GET request.
+
+\vspace{0.5 cm}
+
+All the resources, apart from Product, are developed using rest. 
+The Product resource, is implemented using servelts+DAOs. In this case, it all works similar, but instead of having rest resources, we have a servlet for each method (creation, deletion, loading, update). Each one of this servlets makes the checks on the parameters and calls the corresponding DAOs, which implements the POST/DELETE/GET/PUT method and execute the corresponding SQL statement (after checking ownership and possible data access violations).
