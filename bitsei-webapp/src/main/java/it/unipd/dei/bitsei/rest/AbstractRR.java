@@ -161,7 +161,7 @@ public abstract class AbstractRR implements RestResource {
             return false;
         }
 
-        if (!accept.contains(JSON_MEDIA_TYPE) && !accept.equals(ALL_MEDIA_TYPE)) {
+        if (!accept.contains(JSON_MEDIA_TYPE) && !accept.equals(MULTIPART_FORM_DATA_MEDIA_TYPE) && !accept.equals(ALL_MEDIA_TYPE)) {
             LOGGER.error(
                     "Unsupported output media type. Resources are represented only in application/json. Requested representation is %s.",
                     accept);
@@ -189,7 +189,7 @@ public abstract class AbstractRR implements RestResource {
                     return false;
                 }
 
-                if (!contentType.contains(JSON_MEDIA_TYPE)) {
+                if (!contentType.contains(JSON_MEDIA_TYPE) && !contentType.contains(MULTIPART_FORM_DATA_MEDIA_TYPE)) {
                     LOGGER.error(
                             "Unsupported input media type. Resources are represented only in application/json. Submitted representation is %s.",
                             contentType);
