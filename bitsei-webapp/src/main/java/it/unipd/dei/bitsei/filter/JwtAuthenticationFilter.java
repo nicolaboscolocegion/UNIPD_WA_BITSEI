@@ -41,6 +41,10 @@ import it.unipd.dei.bitsei.utils.TokenJWT;
  * @since 1.00
  */
 public class JwtAuthenticationFilter implements Filter {
+    /**
+     * Default constructor
+     */
+    public JwtAuthenticationFilter(){}
 
     // logger for this class
     private static final java.util.logging.Logger LOG = Logger.getLogger(JwtAuthenticationFilter.class.getName());
