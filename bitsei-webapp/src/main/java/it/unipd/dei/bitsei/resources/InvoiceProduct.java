@@ -114,34 +114,66 @@ public class InvoiceProduct extends AbstractResource {
         this.total = null;
     }
 
+    /**
+     * Get the invoice id
+     * @return the invoice id
+     */
     public Integer getInvoice_id() {
         return invoice_id;
     }
 
+    /**
+     * Get the product id
+     * @return the product id
+     */
     public Integer getProduct_id() {
         return product_id;
     }
 
+    /**
+     * Get the quantity
+     * @return the quantity
+     */
     public Integer getQuantity() {
         return quantity;
     }
 
+    /**
+     * Get the unit price
+     * @return the unit price
+     */
     public Double getUnit_price() {
         return unit_price;
     }
 
+    /**
+     * Get the related price
+     * @return the related price
+     */
     public Double getRelated_price() {
         return related_price;
     }
 
+    /**
+     * Get the related price description
+     * @return the related price description
+     */
     public String getRelated_price_description() {
         return related_price_description;
     }
 
+    /**
+     * Get the purchase date
+     * @return the purchase date
+     */
     public Date getPurchase_date() {
         return purchase_date;
     }
 
+    /**
+     * Get the total as double
+     * @return the total as double
+     */
     public Double getTotal() {
         return total;
     }
@@ -159,6 +191,12 @@ public class InvoiceProduct extends AbstractResource {
     public void setProduct_id(int product_id) {this.product_id = product_id;}
 
 
+    /**
+     * Writes the JSON representation of this object to the given output stream.
+     *
+     * @param out the output stream
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {
 

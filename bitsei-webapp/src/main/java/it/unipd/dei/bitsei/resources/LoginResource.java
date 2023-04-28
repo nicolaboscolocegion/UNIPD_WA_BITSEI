@@ -45,11 +45,18 @@ public class LoginResource extends AbstractResource {
         this.password = password;
     }
 
-
+    /**
+     * Get the email
+     * @return email
+     */
     public final String getEmail() {
         return email;
     }
 
+    /**
+     * Get the password
+     * @return the password
+     */
     public final String getPassword() {
         return password;
     }
@@ -58,6 +65,8 @@ public class LoginResource extends AbstractResource {
      * create the resource from a Json
      *
      * @param in input stream with json file
+     * @throws IOException if an I/O error occurs
+     * @return new LoginResource object from fetched data
      */
     public static LoginResource fromJSON(final InputStream in) throws IOException {
         String jemail = null;

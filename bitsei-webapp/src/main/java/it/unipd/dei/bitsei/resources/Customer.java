@@ -321,6 +321,10 @@ public class Customer extends AbstractResource {
         return customerID;
     }
 
+    /**
+     * Set the customer id of the entity
+     * @param customerID the id of the customer
+     */
     public void setCustomerID(int customerID) {this.customerID = customerID;}
 
 
@@ -355,20 +359,14 @@ public class Customer extends AbstractResource {
     }
 
 
+    /**
+     * fetch JSONs with all the data for the customer
+     * @param in The input stream
+     * @return new Customer entity
+     * @throws IOException if an I/O error occurs
+     */
     public static Customer fromJSON(final InputStream in) throws IOException {
 
-/*
-        jg.writeStringField("businessName", businessName); //'message':
-        jg.writeStringField("vatNumber", vatNumber); //'message':
-        jg.writeStringField("taxCode", taxCode); //'message':
-        jg.writeStringField("address", address); //'message':
-        jg.writeStringField("city", city); //'message':
-        jg.writeStringField("province", province); //'message':
-        jg.writeStringField("postalCode", postalCode); //'message':
-        jg.writeStringField("emailAddress", emailAddress); //'message':
-        jg.writeStringField("pec", pec); //'message':
-        jg.writeStringField("uniqueCode", uniqueCode); //'message':
-*/
 
         // the fields read from JSON
         String jBusinessName = null;

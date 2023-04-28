@@ -130,6 +130,22 @@ public class Company extends AbstractResource {
         this.has_telegram_notifications = has_telegram_notifications;
     }
 
+    /**
+     * Creates a new user instance without password and logo
+     *
+     * @param company_id                 the id of the company
+     * @param title                      the title of the company
+     * @param business_name              the business name of the company
+     * @param vat_number                 the vat number of the company
+     * @param tax_code                   the tax code of the company
+     * @param address                    the address of the company
+     * @param province                   the province of the company
+     * @param city                       the city of the company
+     * @param postal_code                the postal code of the company
+     * @param unique_code                the unique code of the company
+     * @param has_mail_notifications     the mail notifications of the company
+     * @param has_telegram_notifications the telegram notifications of the company
+     */
     public Company(final int company_id, final String title, final String business_name, final String vat_number, final String tax_code, final String address, final String province, final String city, final String postal_code, final String unique_code, final Boolean has_mail_notifications, final Boolean has_telegram_notifications) {
         this.logo = null;
         this.company_id = company_id;
@@ -146,63 +162,122 @@ public class Company extends AbstractResource {
         this.has_telegram_notifications = has_telegram_notifications;
     }
 
-
+    /**
+     * Set the company id of the entity
+     * @param company_id the id of the company
+     */
     public void setCompany_id(int company_id) {
         this.company_id = company_id;
     }
 
+    /**
+     * Gets the company id
+     * @return company_id
+     */
     public int getCompany_id() {
         return company_id;
     }
 
+    /**
+     * Gets the title
+     * @return title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets the logo as a byte array
+     * @return the logo as a byte array
+     */
     public byte[] getLogo() {
         return logo;
     }
 
+    /**
+     * Get the logo URI
+     * @return Logo URI
+     */
     public String getLogo_file_name() {
         return "http://localhost:8080/bitsei-1.0/rest/company/image/" + company_id;
     }
 
+    /**
+     * Gets the business name
+     * @return the business name
+     */
     public String getBusiness_name() {
         return business_name;
     }
 
+    /**
+     * Gets the VAT number
+     * @return the VAT number
+     */
     public String getVat_number() {
         return vat_number;
     }
 
+    /**
+     * Gets the TAX code
+     * @return the TAX code
+     */
     public String getTax_code() {
         return tax_code;
     }
 
+    /**
+     * Gets the address
+     * @return the address
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Gets the province
+     * @return the province
+     */
     public String getProvince() {
         return province;
     }
 
+    /**
+     * Gets the city
+     * @return the city
+     */
     public String getCity() {
         return city;
     }
 
+    /**
+     * Gets the postal code
+     * @return the postal code
+     */
     public String getPostal_code() {
         return postal_code;
     }
 
+    /**
+     * Gets the unique code
+     * @return the unique code
+     */
     public String getUnique_code() {
         return unique_code;
     }
 
+    /**
+     * Gets mail notification abilitation
+     * @return true if user has enabled mail notifications
+     */
     public Boolean isHas_mail_notifications() {
         return has_mail_notifications;
     }
 
+    /**
+     * Gets telegram notification abilitation
+     * @return true if user has enabled telegram notifications
+     */
     public Boolean isHas_telegram_notifications() {
         return has_telegram_notifications;
     }

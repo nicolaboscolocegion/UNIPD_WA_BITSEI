@@ -15,6 +15,7 @@
  */
 package it.unipd.dei.bitsei.resources;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -28,15 +29,28 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public class Token extends AbstractResource {
 
     private final String token;
-    
+
+    /**
+     * Build a new Token object
+     * @param T the BEARER token as string
+     */
     public Token (String T){
         this.token=T;
     }
 
+    /**
+     * Get the BEARER token
+     * @return the BEARER token
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     * Write JSON token data
+     * @param out The output stream
+     * @throws Exception if error occurs
+     */
     @Override
     protected void writeJSON(OutputStream out) throws Exception {
         final JsonGenerator jg = JSON_FACTORY.createGenerator(out);

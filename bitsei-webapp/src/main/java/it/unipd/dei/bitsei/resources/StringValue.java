@@ -54,6 +54,13 @@ public class StringValue extends AbstractResource {
         return strVal;
     }
 
+    /**
+     * Fetch JSONs StringValue object
+     * @param in the InputStream
+     * @param field_name the field name
+     * @return new StringValue objects
+     * @throws IOException if an I/O error occurs
+     */
     public static StringValue fromJSON(final InputStream in, String field_name) throws IOException {
 
         // the fields read from JSON

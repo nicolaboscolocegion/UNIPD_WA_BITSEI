@@ -8,6 +8,13 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
+/**
+ * The BankAccount resource.
+ *
+ * @author Nicola Boscolo Cegion (nicola.boscolocegion.1@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class BankAccount extends AbstractResource {
 
 
@@ -86,7 +93,10 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
-     * crates a JSON with all the data for the bank account
+     * Writes the JSON representation of this object to the given output stream.
+     *
+     * @param out the output stream
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void writeJSON(OutputStream out) throws Exception {
@@ -105,7 +115,12 @@ public class BankAccount extends AbstractResource {
         jg.flush();
     }
 
-
+    /**
+     * fetch JSONs with all the data for the bank account
+     * @param in The input stream
+     * @return new BankAccount entity
+     * @throws IOException if an I/O error occurs
+     */
     public static BankAccount fromJSON(InputStream in) throws IOException {
         String jIban = null;
         String jBankName = null;

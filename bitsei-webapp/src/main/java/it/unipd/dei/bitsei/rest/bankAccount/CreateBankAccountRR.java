@@ -29,6 +29,13 @@ import it.unipd.dei.bitsei.utils.TokenJWT;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Creates a new BankAccount.
+ *
+ * @author Nicola Boscolo Cegion (nicola.boscolocegion.1@studenti.unipd.it)
+ * @version 1.00
+ * @since 1.00
+ */
 public class CreateBankAccountRR extends AbstractRR{
 
     

@@ -90,50 +90,98 @@ public class DetailRow {
     }
 
 
+    /**
+     * Get product description
+     * @return product description
+     */
     public String getProduct_description() {
         return product_description;
     }
 
+    /**
+     * Get product quantity as string
+     * @return product quantity as string
+     */
     public String getQuantity() {
         return quantity + " " + this.measurement_unit + ".";
     }
 
+    /**
+     * Get product quantity as string with decimals
+     * @return product quantity as string with decimals
+     */
     public String getNumericQuantity() {
         return quantity + ".00";
     }
 
+    /**
+     * Get row measurement unit
+     * @return row measurement unit
+     */
     public String getMeasurement_unit() {
         return measurement_unit;
     }
 
+    /**
+     * Get unit price with currency
+     * @return unit price with currency
+     */
     public String getUnit_price() {
         return unit_price + " €";
     }
 
+    /**
+     * Get unit price with currency
+     * @return unit price with currency
+     */
     public String getNumericUnit_price() {
         return String.format(Locale.UK, "%.2f", unit_price);
     }
 
+    /**
+     * Get related price as string with currency
+     * @return related price as string with currency
+     */
     public String getRelated_price() {
         return related_price + " €";
     }
 
+    /**
+     * Get related price as double
+     * @return related price as double
+     */
     public Double getRelated_price_numeric() {
         return related_price_numeric;
     }
 
+    /**
+     * Get related price description
+     * @return related price description
+     */
     public String getRelated_price_description() {
         return related_price_description;
     }
 
+    /**
+     * Get purchase date
+     * @return purchase date
+     */
     public String getPurchase_date() {
         return purchase_date;
     }
 
+    /**
+     * Get total as string with currency
+     * @return total as string with currency
+     */
     public String getTotalS() {
         return totalS + " €";
     }
 
+    /**
+     * Get total as double
+     * @return total as double
+     */
     public Double getTotalD() {
         return totalD;
     }
