@@ -29,7 +29,7 @@ import static org.apache.taglibs.standard.functions.Functions.trim;
 
 
 /**
- * Creates a new customer into the database.
+ * Generates the invoice in pdf and xml formats.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
@@ -45,7 +45,7 @@ public class GenerateInvoiceRR extends AbstractRR {
     RestURIParser r = null;
 
     /**
-     * Creates a new customer
+     * Creates a GenerateInvoice entity.
      *
      * @param req     the HTTP request.
      * @param res     the HTTP response.
@@ -61,7 +61,7 @@ public class GenerateInvoiceRR extends AbstractRR {
 
 
     /**
-     * creates a new customer
+     * Generates the invoice in pdf and xml formats.
      */
     @Override
     protected void doServe() throws IOException {

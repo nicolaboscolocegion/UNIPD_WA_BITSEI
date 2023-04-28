@@ -20,7 +20,7 @@ import net.sf.jasperreports.engine.JRException;
 import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
 
 /**
- * Creates a new customer into the database.
+ * Generates a PDF customers list.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
@@ -35,7 +35,7 @@ public class GenerateCustomersReportRR extends AbstractRR {
 
 
     /**
-     * Creates a new customer
+     * Generates a PDF customers list.
      *
      * @param req     the HTTP request.
      * @param res     the HTTP response.
@@ -51,7 +51,7 @@ public class GenerateCustomersReportRR extends AbstractRR {
 
 
     /**
-     * creates a new customer
+     * generates the pdf file
      */
     @Override
     protected void doServe() throws IOException {
