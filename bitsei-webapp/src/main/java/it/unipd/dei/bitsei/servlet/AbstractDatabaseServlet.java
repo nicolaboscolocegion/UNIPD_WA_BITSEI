@@ -17,6 +17,10 @@ import java.sql.SQLException;
  * Gets the {@code DataSource} for managing the connection pool to the database.
  */
 public abstract class AbstractDatabaseServlet extends HttpServlet {
+    /**
+     * Default constructor.
+     */
+    public AbstractDatabaseServlet(){super();}
 
     /**
      * A LOGGER available for all the subclasses.
@@ -39,6 +43,7 @@ public abstract class AbstractDatabaseServlet extends HttpServlet {
      */
     public void init(ServletConfig config) throws ServletException {
 
+        super.init(config);
         // the JNDI lookup context
         InitialContext cxt;
 

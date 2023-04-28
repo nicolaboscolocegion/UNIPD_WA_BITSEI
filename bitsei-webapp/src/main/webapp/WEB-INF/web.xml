@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
@@ -10,12 +11,131 @@
     <servlet>
         <servlet-name>RestManagerServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
+        <multipart-config>
+            <location>/Users/farzad/Projects</location>
+            <max-file-size>2097152</max-file-size>
+            <max-request-size>4194304</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
     </servlet>
+
+<!--    <servlet>-->
+<!--        <servlet-name>LoginServlet</servlet-name>-->
+<!--        <servlet-class>it.unipd.dei.bitsei.servlet.LoginServlet</servlet-class>-->
+<!--    </servlet>-->
 
     <servlet-mapping>
         <servlet-name>RestManagerServlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.CreateProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <url-pattern>/productinsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.DeleteProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/productdelete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.UpdateProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/productupdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.product.GetProductServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoadProductForUpdateServlet</servlet-name>
+        <url-pattern>/loadproduct</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersJspServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetInvoicesByFiltersJspServlet</servlet-name>
+        <url-pattern>/get-invoices-by-filters-jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ChartJspServlet</servlet-name>
+        <servlet-class>it.unipd.dei.bitsei.servlet.ChartJspServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ChartJspServlet</servlet-name>
+        <url-pattern>/chart-form</url-pattern>
+    </servlet-mapping>
+
+
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>LoginServlet</servlet-name>-->
+<!--        <url-pattern>/login</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+<!--    Authentication filter-->
+
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>it.unipd.dei.bitsei.filter.JwtAuthenticationFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/rest/bankaccount/*</url-pattern>
+        <url-pattern>/rest/bankaccounts/*</url-pattern>
+        <url-pattern>/rest/company/*</url-pattern>
+        <url-pattern>/rest/customer/*</url-pattern>
+        <url-pattern>/rest/invoice/*</url-pattern>
+        <url-pattern>/rest/user</url-pattern>
+        <url-pattern>/rest/invoiceproduct/*</url-pattern>
+        <url-pattern>/rest/closeinvoice/*</url-pattern>
+        <url-pattern>/rest/customerreport/*</url-pattern>
+        <url-pattern>/rest/productsreport/*</url-pattern>
+        <url-pattern>/rest/generateinvoice/*</url-pattern>
+        <url-pattern>/productinsert</url-pattern>
+        <url-pattern>/productdelete</url-pattern>
+        <url-pattern>/productupdate</url-pattern>
+        <url-pattern>/loadproduct</url-pattern>
+        <url-pattern>/rest/list-invoice/*</url-pattern>
+        <url-pattern>/rest/list-company/*</url-pattern>
+        <url-pattern>/rest/list-product/*</url-pattern>
+        <url-pattern>/rest/filter-invoices/*</url-pattern>
+        <url-pattern>/rest/charts/*</url-pattern>
+    </filter-mapping>
+
 
     <resource-ref>
         <description>Connection pool to the database</description>

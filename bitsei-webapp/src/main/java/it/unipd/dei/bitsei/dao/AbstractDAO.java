@@ -21,20 +21,17 @@ import java.sql.SQLException;
  * transparently change the underlying DBMS, without the need of modifying their
  * code.
  * </ol>
- * </p>
  *
  * <p>
  * With respect to the first goal, {@code AbstractDAO}
  * provides a basic infrastructure which manages the connection, the commitment
  * of transactions (or the roll-back), if needed, and any exception that may be
  * thrown while accessing the database.
- * </p>
  *
  * <p>
  * With respect to the second goal,{@code AbstractDAO} is the
  * root of a hierarchy of helper classes, which isolate as much as possible the
  * DBMS-dependent code.
- * </p>
  *
  *
  * <p>
@@ -43,16 +40,14 @@ import java.sql.SQLException;
  * logic for accessing the database. This method is, in turn, called by
  * {@link AbstractDAO#access()}, which provides a consistent way of
  * accessing the database and managing exceptions.
- * </p>
  *
  * <p>
- * Concrete sub-classes may also override {@link AbstractDAO#access()}
+ * Concrete subclasses may also override {@link AbstractDAO#access()}
  * in order to provide a
  * different management of connection and transaction if they have peculiar
  * needs. Nevertheless, the objective of this class is to ease sub-classes by
  * providing a pre-packed logic for connection and transaction management, that
  * is what {@link AbstractDAO#access()} does.
- * </p>
  *
  * @param <T> the type of the output parameter returned by the DAO.
  */

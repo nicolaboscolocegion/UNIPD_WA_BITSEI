@@ -1,5 +1,5 @@
-## 
-<h2> BITSEI <img src="https://media.giphy.com/media/mGcNjsfWAjY5AEZNw6/giphy.gif" width="50"></h2>
+###
+<img src="bitsei-webapp/src/main/webapp/company_logos/bitsei_1024_gray_multi.png" width="100" alt="BITSEI Logo"/>
 
 ---
 BITSEI (Business Integrated System for Electronic Invoicing)
@@ -29,12 +29,12 @@ nothing to say init :)
 ### Contributors
 
 ---
-- Aashishkumar Anil Yadav - 2041274
-- Nicola Boscolo Cegion - 2074285
 - Mirco Cazzaro - 2076745
-- Fabio Zanini - 2088628
-- Christian Marchiori - 2078343
-- Farzad Shami - 2090160
+- Nicola Boscolo Cegion - 2074285
 - Andrea Costa - 2061900
+- Christian Marchiori - 2078343
+- Marco Martinelli - 2087646
+- Farzad Shami - 2090160
+- Fabio Zanini - 2088628
 
-<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova
+<p><em>Web Applications course of <a href="http://www.unipd.it">University of Padova </a></em>
