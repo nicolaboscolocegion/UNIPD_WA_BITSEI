@@ -8,7 +8,7 @@ import java.io.*;
 import java.sql.Date;
 
 /**
- * Represents the data about an invoice.
+ * Represents the data about an invoice and the related customer's business name.
  */
 public class InvoiceCustomer extends AbstractResource {
     /**
