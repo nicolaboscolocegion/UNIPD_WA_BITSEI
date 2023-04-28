@@ -121,6 +121,11 @@ public final class Actions {
     public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
 
     /**
+     * Plot chart action
+     */
+    public static final String PLOT_CHART = "PLOT_CHART";
+
+    /**
      * Create customer action
      */
     public static final String CREATE_CUSTOMER = "CREATE_CUSTOMER";

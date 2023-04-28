@@ -44,7 +44,7 @@ public final class PlotChartRR extends AbstractRR {
      * @param requestData the data of the request.
      */
     public PlotChartRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id, Map<String, String> requestData) {
-        super(Actions.LIST_INVOICES_BY_FILTERS, req, res, con);
+        super(Actions.PLOT_CHART, req, res, con);
         this.company_id = company_id;
         this.requestData = requestData;
     }
@@ -330,35 +330,6 @@ public final class PlotChartRR extends AbstractRR {
                         }
                         break;
                     case 3:
-                        //INVOICE BY CUSTOMER
-                        TreeMap<String, Integer> tmap_numb_customer = new TreeMap<>();
-                        for (InvoiceCustomer i : el) {
-
-                            tmap_numb_customer.put(i.getCustomer_businessName().trim(),
-                                    1 + tmap_numb_customer.getOrDefault(i.getCustomer_businessName().trim(), 0));
-
-                        }
-                        for (Map.Entry<String, Integer> entry : tmap_numb_customer.entrySet()) {
-                            tmap_labels.add(entry.getKey() + "");
-                            tmap_data.add(entry.getValue().toString());
-                        }
-                        break;
-                    case 4:
-                        //TOTAL BY CUSTOMER
-                        TreeMap<String, Double> tmap_total_customer = new TreeMap<>();
-                        for (InvoiceCustomer i : el) {
-
-                            tmap_total_customer.put(i.getCustomer_businessName().trim(),
-                                    i.getTotal() + tmap_total_customer.getOrDefault(i.getCustomer_businessName().trim(), 0.0));
-
-                        }
-                        for (Map.Entry<String, Double> entry : tmap_total_customer.entrySet()) {
-
-                            tmap_labels.add(entry.getKey() + "");
-                            tmap_data.add(entry.getValue().toString());
-                        }
-                        break;
-                    case 5:
                         switch (chart_period) {
                             case 1:
                                 //DISCOUNT BY DATE (MONTH)
@@ -428,7 +399,36 @@ public final class PlotChartRR extends AbstractRR {
                                 break;
                         }
                         break;
-                }
+                    case 4:
+                        //TOTAL BY CUSTOMER
+                        TreeMap<String, Double> tmap_total_customer = new TreeMap<>();
+                        for (InvoiceCustomer i : el) {
+
+                            tmap_total_customer.put(i.getCustomer_businessName().trim(),
+                                    i.getTotal() + tmap_total_customer.getOrDefault(i.getCustomer_businessName().trim(), 0.0));
+
+                        }
+                        for (Map.Entry<String, Double> entry : tmap_total_customer.entrySet()) {
+
+                            tmap_labels.add(entry.getKey() + "");
+                            tmap_data.add(entry.getValue().toString());
+                        }
+                        break;
+                    case 5:
+                        //INVOICE BY CUSTOMER
+                        TreeMap<String, Integer> tmap_numb_customer = new TreeMap<>();
+                        for (InvoiceCustomer i : el) {
+
+                            tmap_numb_customer.put(i.getCustomer_businessName().trim(),
+                                    1 + tmap_numb_customer.getOrDefault(i.getCustomer_businessName().trim(), 0));
+
+                        }
+                        for (Map.Entry<String, Integer> entry : tmap_numb_customer.entrySet()) {
+                            tmap_labels.add(entry.getKey() + "");
+                            tmap_data.add(entry.getValue().toString());
+                        }
+                        break;
+                    }
 
 
                 LOGGER.info("## PlotChartRR: Chart successfully plotted. ##");

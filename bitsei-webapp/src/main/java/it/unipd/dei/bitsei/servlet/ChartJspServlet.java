@@ -40,7 +40,7 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 /**
  * Plots charts about invoices.
 * 
-* @author Nicola Ferro (ferro@dei.unipd.it)
+* @author Christian Marchiori
 * @version 1.00
 * @since 1.00
 */

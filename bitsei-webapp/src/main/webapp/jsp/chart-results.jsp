@@ -13,7 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  
- Author: Nicola Ferro (ferro@dei.unipd.it)
+ Author: Christian Marchiori
  Version: 1.0
  Since: 1.0
 -->
