@@ -1,7 +1,20 @@
-\subsection{Class Diagram}
+\subsection{Class Diagram (sample on customer management)}
 
-\includegraphics[]{ClassDiagram.pdf}
+
+\includegraphics[width=\textwidth, keepaspectratio]{resources/sample_businesslogic.pdf}
+Full class diagram available as vector image \href{https://drive.google.com/file/d/1cTR0OGGH9rbpp6zuY7K3tNlbGnMKxU8j/view?usp=share_link}{here}.
+
+\pagebreak
 
 %Describe here the class diagram of your project
+ 
+In the class diagram above, we can see the classes used to handle customer creation, deletion, update, and loading. We can see that there is a resource named Customer which implements the constructors and the get methods for the parameters (which corresponds to the parameters in the ER schema) and set method for the parameter that corresponds to the primary key in the ER schema. This Customer resource is implemented using rest. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+There is a \textit{RestDispatcherServlet} servlet that, using the \textit{RestURIParser} class, parses the \textit{URI} and understands the resource and the method required. Then, the \textit{RestDispatcherServlet} calls the corresponding rest resource (for example, if the request is a get for Customer, the \textit{RestDispatcherServlet} calls \textit{GetCustomerRR}). Each one of these resources retrieves the parameters passed in \textit{JSON} format, if any, and check that they are as expected (checks for image file extensionsdatate consistency, and so on). After doing this, the rest resource calls the \textit{DAO} for the requested method. The \textit{DAO} checks that the user is authorized (check ownership statements) to make the actions required: if the user, for example, is not the owner of a company, he cannot change things about that company; he can only modify things about his companies. Then, if all is good, the \textit{DAO} executes the \textit{SQL} statement and gets (/stores) the data from (/in) the database. Then the \textit{DAO} returns the values requested.
+
+The \textit{DAO}s for the creation of resources implement a \textit{POST} request; the \textit{DAO}s for deletion of resources implement a \textit{DELETE} request; those for update implement a \textit{PUT} request; finally, the \textit{DAO}s for loading a resource, implement a \textit{GET} request.
+
+\vspace{0.5 cm}
+
+All the resources, apart from \textit{Product}, are developed using \textit{REST}. 
+The \textit{Product} resource, is implemented using servelts+\textit{DAO}s. In this case, everything works similarly, just instead of having rest resources we have a servlet for each method (creation, deletion, loading, update). Each one of these servlets makes the checks on the parameters and calls the corresponding \textit{DAO}s, which implements the \textit{POST}/\textit{DELETE}/\textit{GET}/\textit{PUT} method and executes the corresponding \textit{SQL} statement (after checking ownership and possible data access violations).

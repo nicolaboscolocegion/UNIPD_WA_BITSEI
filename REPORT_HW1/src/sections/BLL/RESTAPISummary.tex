@@ -1,11 +1,45 @@
+\newpage
 \subsection{REST API Summary}
 
 %describe the REST API. If needed, add a few lines of text here, describing the content of the table.
+Most of the functionalities in our web app are available via \textit{REST API}.  \\
+The table below gathers all the \textit{REST} resources implemented.
 
 \begin{longtable}{|p{.375\columnwidth}|p{.1\columnwidth} |p{.35\columnwidth}|p{.1\columnwidth}|} 
 \hline
-\textbf{URI} & \textbf{Method} & \textbf{Description} & \textbf{Filter} \\\hline
-What is the URI? & What HTTP method uses? &  Describe briefly the result of calling the URI & is it behind a filter?\\\hline
-\caption{Describe in this table your REST API}
+\textbf{URI} & \textbf{Method} & \textbf{Description} \\\hline
+rest/user & GET & Get the data of the user currently logged into the system \\\hline
+rest/user/reset-password & POST & Send an email to the user with a link to reset the password \\\hline
+rest/user/change-password & POST & Change the user password with the one passed in the request body \\\hline
+rest/login & POST & Authenticate the user using the \textit{JSON} passed in the request body\\\hline
+rest/company & GET & Get the list of all the companies associated with the current user \\\hline
+rest/company & POST & Create a new company and associate it to the current user \\\hline
+rest/company/image/\{id\} & GET & Get the company image \\\hline
+rest/company/\{id\} & GET & Get the company associated with the \textit{companyId} passed through the \textit{URL} \\\hline
+rest/company/\{id\} & PUT & Update the company associated with the \textit{companyId} passed through the \textit{URL} with the parameters passed in the request body \\\hline
+rest/company/\{id\} & DELETE & Delete the company associated with the \textit{companyId} passed through the \textit{URL} \\\hline
+rest/customer & POST & Create a new customer using the \textit{JSON} passed in the request body \\\hline
+rest/customer/\{id\} & GET & Get the customer associated to the \textit{customerId} passed through the \textit{URL} \\\hline
+rest/customer/\{id\} & DELETE & Delete the customer associated with the \textit{customerId} passed through the \textit{URL} \\\hline
+rest/customer/\{id\} & PUT & Update the customer associated to the \textit{customerId} passed through the \textit{URL} with the parameters passed in the request body\\\hline
+rest/customerreport/ & GET & Generate a list of all customers of the current company in a PDF file\\\hline
+rest/productreport/ & GET & Generate a list of all products of the current company in a PDF file\\\hline
+rest/invoice & POST & Create a new invoice using the \textit{JSON} passed in the request body \\\hline
+rest/invoice/\{id\} & GET & Get the invoice associated with the \textit{invoiceId} passed through the \textit{URL} \\\hline
+rest/invoice/\{id\} & DELETE & Delete the invoice associated with the \textit{invoiceId} passed through the \textit{URL} \\\hline
+rest/invoice/\{id\} & PUT & Update the invoice associated to the \textit{invoiceId} passed through the \textit{URL} with the parameters passed in the request body\\\hline
+rest/closeinvoice/\{id\} & PUT & Update the invoice status to 1: this will block the possibility of updating the invoice and of editing its rows. A document in \textit{PDF} format will be created and will be available for download and for being sent via E-mail and/or Telegram.\\\hline
+rest/generateinvoice/\{id\} & PUT & Update the invoice status to 2; this will block the possibility of updating the invoice and of editing its rows. Two documents in \textit{PDF} and \textit{XML} format will be created and will be available for download and for being sent via E-mail and/or Telegram.\\\hline
+rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & POST & Create a new invoice product related to the invoice with \textit{\{inv\_id\}} and the product with \textit{\{prod\_id\}} using the \textit{JSON} passed in the request body \\\hline
+rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & GET & Get the invoice product associated with the \textit{invoiceId} and the \textit{productId} passed through the \textit{URL} \\\hline
+rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & DELETE & Delete the invoice product associated with the \textit{invoiceId} and the \textit{productId} passed through the \textit{URL} \\\hline
+rest/invoiceproduct/\{inv\_id\}/\{prod\_id\} & PUT & Update the invoice product associated with the \textit{invoiceId} and the \textit{productId} passed through the \textit{URL} with the parameters passed in the request body\\\hline
+rest/list-invoice/\{id\} & GET & Get the list of all the invoices associated with the \textit{companyId} passed through the \textit{URL} \\\hline
+rest/list-customer/\{id\} & GET & Get the list of all the customers associated with the \textit{companyId} passed through the \textit{URL} \\\hline
+rest/list-product/\{id\} & GET & Get the list of all the products associated with the \textit{companyId} passed through the \textit{URL} \\\hline
+rest/getdocument/\{type\}/invoice/\{id\} & GET & Get the document specified by type: (0: \textit{PDF} Warning; 1: \textit{PDF} Invoice; 2: \textit{XML} Invoice) \\\hline
+rest/filter-invoices & POST & Get the list of all the invoices filtered with the parameters passed in the request body in \textit{JSON} format \\\hline
+rest/charts & POST & Plot the filtered chart according to the parameters passed in the request body in \textit{JSON} format \\\hline
+\caption{\textit{REST} resources implemented by the \textit{BITSEI} Web App}
 \label{tab:termGlossary}
 \end{longtable}

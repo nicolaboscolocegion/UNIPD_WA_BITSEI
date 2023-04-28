@@ -1,0 +1,32 @@
+so i know that none one but unfortunaly here we are... :(
+
+first of all, all the document is written in latex, that is praticaly like HTML but for document (the sintax is very different)
+so plz look how to use tables and list, you will need it, but don't warry they are pretty simple and you should look how the template is made
+
+
+1. so for stating add your main information in groupdata.tex
+2. go in ./sections/Contributions.tex and write what have you done
+3. in ./sections/BLL/RESTAPISummary.tex add all your rest api with every HTTP method that you use and add a simple description
+4. in ./sections/BLL/RESTErrorCodes.tex add all error codes that you use, controll if the error is already in the table
+5. in ./sections/BLL/RESTAPIDetails.tex describe in a better way what is the resuce, and add all the informatin asked in the template,
+
+.bonus for mirco go ./sections/DLL here you will find where to add the ER schema, and in OtherInformation.tex you should describe the ER schema
+
+TODO
+
+there are parts that we should decide who is gonna do it:
+./sections/Objectives.tex
+    sef self explanatory, simple description were we say: wat our system will be used for? Why is it important? What problems does it solve?
+
+./sections/MainFunctionalities.tex
+    sef self explanatory, what services does offer our app and how it is organized?
+
+./sections/PresentationLogicLayer.tex
+    here we will add how the site is organized and show the mockups for the website 
+
+./sections/BusinessLogicLayer.tex 
+    here we should say how the classes are arranged and say how they works, here we should add the Sequence diagram 
+
+
+
+
