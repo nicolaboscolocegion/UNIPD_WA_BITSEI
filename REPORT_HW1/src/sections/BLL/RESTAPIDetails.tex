@@ -1,4 +1,4 @@
-\subsection{REST API Details}
+\usepackage{hyperref}\subsection{REST API Details}
 At the end of every \textit{URI} used in the Rest calls below, it will be automatically added the following path: 
 \begin{lstlisting}
     company/{id}
@@ -1303,4 +1303,36 @@ The following endpoint allows to get all the details about the bank account asso
     
 \end{itemize}
 
-
+\subsection{CURL examples}
+\begin{itemize}
+    \item For logging in:
+    \begin{lstlisting}
+    curl --location 'localhost:8080/bitsei-1.0/rest/login/' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "email": "your email",
+        "password": "your password"
+    }'
+    \end{lstlisting}
+    \item For creating companies:
+    \begin{lstlisting}
+    curl --location 'localhost:8080/bitsei-1.0/rest/company' \
+    --header 'Authorization: YOUR TOKEN' \
+    --form 'title="Youfeed"' \
+    --form 'business_name="Leannon and Sons"' \
+    --form 'vat_number="11111111111"' \
+    --form 'tax_code="59767-008"' \
+    --form 'address="88 Mandrak Road"' \
+    --form 'province="VR"' \
+    --form 'city="Helong"' \
+    --form 'unique_code="3"' \
+    --form 'has_mail_notifications="false"' \
+    --form 'has_telegram_notifications="false"' \
+    --form 'logo=@"IMAGE PATH"'
+    \end{lstlisting}
+    \item For Getting the list of companies:
+    \begin{lstlisting}
+    curl --location 'localhost:8080/bitsei-1.0/rest/company' \
+    --header 'Authorization: YOUR TOKEN'
+    \end{lstlisting}
+\end{itemize}
