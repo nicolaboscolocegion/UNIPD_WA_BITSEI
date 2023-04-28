@@ -400,6 +400,21 @@ public final class PlotChartRR extends AbstractRR {
                         }
                         break;
                     case 4:
+                        //INVOICE BY CUSTOMER
+                        TreeMap<String, Integer> tmap_numb_customer = new TreeMap<>();
+                        for (InvoiceCustomer i : el) {
+
+                            tmap_numb_customer.put(i.getCustomer_businessName().trim(),
+                                    1 + tmap_numb_customer.getOrDefault(i.getCustomer_businessName().trim(), 0));
+
+                        }
+                        for (Map.Entry<String, Integer> entry : tmap_numb_customer.entrySet()) {
+                            tmap_labels.add(entry.getKey() + "");
+                            tmap_data.add(entry.getValue().toString());
+                        }
+                        
+                        break;
+                    case 5:
                         //TOTAL BY CUSTOMER
                         TreeMap<String, Double> tmap_total_customer = new TreeMap<>();
                         for (InvoiceCustomer i : el) {
@@ -410,20 +425,6 @@ public final class PlotChartRR extends AbstractRR {
                         }
                         for (Map.Entry<String, Double> entry : tmap_total_customer.entrySet()) {
 
-                            tmap_labels.add(entry.getKey() + "");
-                            tmap_data.add(entry.getValue().toString());
-                        }
-                        break;
-                    case 5:
-                        //INVOICE BY CUSTOMER
-                        TreeMap<String, Integer> tmap_numb_customer = new TreeMap<>();
-                        for (InvoiceCustomer i : el) {
-
-                            tmap_numb_customer.put(i.getCustomer_businessName().trim(),
-                                    1 + tmap_numb_customer.getOrDefault(i.getCustomer_businessName().trim(), 0));
-
-                        }
-                        for (Map.Entry<String, Integer> entry : tmap_numb_customer.entrySet()) {
                             tmap_labels.add(entry.getKey() + "");
                             tmap_data.add(entry.getValue().toString());
                         }
