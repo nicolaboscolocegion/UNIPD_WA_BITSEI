@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Generates a random hash with SHA-256 algorithm.
+ * HashGenerator Generates a random hash with SHA-256 algorithm.
  * This class is used to generate a random hash for the reset-password of a user.
  *
  * @author BITSEI GROUP
@@ -29,7 +29,17 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashGenerator {
 
-    // Generate a random hash
+    /**
+     * Empty constructor.
+     */
+    public HashGenerator(){
+        // empty constructor
+    }
+
+    /** Generate a random hash based on the random UUID and the SHA-256 algorithm.
+     *
+     * @return a random hash with SHA-256 algorithm
+     */
     public static String generateHash() {
         MessageDigest digest = null;
         try {

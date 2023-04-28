@@ -13,8 +13,23 @@ import java.util.regex.Pattern;
  */
 public abstract class RegexValidationClass {
 
+    /**
+     * Empty constructor.
+     */
+    public RegexValidationClass(){
+        // empty constructor
+    }
+
+    /**
+     * fieldRegexValidation method validates the input fields of the user.
+     *
+     * @param regexPattern the regex pattern to be matched
+     * @param emailAddress the email address to be validated
+     * @param type         the type of the field to be validated
+     * @throws IllegalArgumentException if the input fields are not valid
+     */
     public static void fieldRegexValidation(String regexPattern, String emailAddress, String type) {
-        if(!Pattern.compile(regexPattern).matcher(emailAddress).matches()) {
+        if (!Pattern.compile(regexPattern).matcher(emailAddress).matches()) {
             throw new IllegalArgumentException(String.valueOf(new StringFormattedMessage("%s : format not valid", type)));
         }
     }

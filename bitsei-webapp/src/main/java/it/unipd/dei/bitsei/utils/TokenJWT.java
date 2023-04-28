@@ -39,28 +39,46 @@ import org.jose4j.lang.JoseException;
  */
 public class TokenJWT {
     // 0 = valid, 1 = expired, 2 = not valid
+    /**
+     * Valid token Status
+     */
     public static final int VALID = 0;
+
+    /**
+     * EXPIRED token Status
+     */
     public static final int EXPIRED = 1;
+
+    /**
+     * Not VALID token Status
+     */
     public static final int NOT_VALID = 2;
 
     // expiration time of the token -> 24H
     private static final float EXPIRATION_TIME_MINUTES = 1440;
 
+    // issuer of the token
     private JsonWebSignature token;
+
+    // claims of the token
     private JwtClaims claims;
+
+    // validity of the token
     private int isValid = 2;
+
 
     private static RsaJsonWebKey rsaJsonWebKey = null;
 
-    private static final String key=
-    "{\r\n    \"p\": \"Dm6kw6vR7S1L5PQxPnuzd0N85Was0AGvn4mRUZDyl_n6f4t0YQM1FCoCeSrErtrOgKr7CsKxOrNk_io63_d2NEbJjX6lKh6qIhAsZnfGMpF9dzwZFv9HOzUBLh4twvbLK436jO2OQ1d43CwHvJx-VrHOI4e1IXbJ1On9-0ZMWTgN\",\r\n    \"kty\": \"RSA\",\r\n    \"q\": \"CncSZobr2QELKXg2-2Dh8ee3eNMBuLM0cNpbTcvbxlUsCAiz6tbbbS0pk51tTAuOQul8Wxd8PpBfYKl3FlYRLCsPCBgwfIAk_IeoeciDSWa3mYsEwJJyghVoEzLbidGkvKtBaBX5IPlkS4qRfC-b8gktSUdOzuwGbWEpZ0PjmKU7\",\r\n    \"d\": \"c--nFlbOCcnkHOEEkaqCnJ0AQuAAMzie3d-PJnpAn7vmIKGMySBd_3qVu8PZ681sfRiHlTUp6Adm1mINEY7KzI8Qa3nVeWhnS1Kt-cnj_J_-Vz7X3FVyhXvUNVx_SG3yvCkDUq3i7xyIfQkLOIb4vbipsr1r154syZtTCLO8ZH1lC-_zlgZndItvhcrBBs6yJ1nRU55MuBO8KBI8cBwxSVmXsa0WFf4-eAHv_PF2pBeHAUT-BMcFSCU6BLFDRssIIMAuKLShFBWm_trsG0z3rmrPiploQcHRUrSoY5nmul1A_ICpxu4nXPjs0j9j5PczMcC4QJm2tipkK1LPOIk2iCk\",\r\n    \"e\": \"AQAB\",\r\n    \"use\": \"sig\",\r\n    \"kid\": \"5eHhhyrXqB1kjy5fAe2Z2j4GViOrnnzv-otgarOnX3E\",\r\n    \"qi\": \"BB-3HWDoqhySKK5ljUXC3v4X0z9COi7KENJSWCZWpAEx4hYJfikCke-XsL1obaSr8uIsHl4XPjDEKJEg6cUbVI7caYZDi-1nLeBGmKQdfMHaZGxptJR1bByKNRLc1ZXPC5mM_2yrKedyDq6pDZ9iVpi4ur7Is0ScPvJiT09MKngd\",\r\n    \"dp\": \"A-fAwgoOhkWJkezaHnROvekPNOwxux-ZrGwHXLECVEmalUThOxcpF8m-XZdLHZ2r33lk8SZ52s6Md5Jp2A0YeVDmXVl1zA38L7d8rEWg5jIkZ01l5KkzVzwik54q9-TcWW7T66qkomhbFgj8Fvep4D_A7jBcvS9tsiWXSpVdN49J\",\r\n    \"alg\": \"RS256\",\r\n    \"dq\": \"Cdy2sXpaztFF9Jm-rt1ZcMAezjWD_MydEfEldEY2Yk0nxpZ0_03l0ZhrAxqrwqttMK-aqrmSM9-Ykp6BhMItQsN9UfKB1wJoWLd7VPFakBTF12QEYXphgSetQdJ-w_2WUtrNM8rpUWLVWr9GZZL0Un7Fd7ZElYomcHPNMezvko27\",\r\n    \"n\": \"lwjnyvGv78GfHTCUXG1uFKC6SdwJxDYYCrLf_KDSCIA5ymS2sy5Rh__8XlAYbJxuCB3dQK1B5n3cCBXg_LT1O-Ync2YkKCZPzOs_5EaZqaTLSB5n5eQjaYwy3413MD4ZUnt7KVzKnnNxA5M0JwgffiRhs3iHtlM5O2wFsxURY7Fu0-ZVzbq-YoEcMyuTywFzMaBddYn1L33RHaKlEE4T61_qbJDWpeQiNm2RUBzzg4jVRcOBui9Q7U_MTQhqMca8hk3s6_0c8U_KAVtM4xJVDX79WynYgFZwF4Ib7kfEHZjsnSpXW2QWavh9qck-w1sHdjej6pnyaSOs7-mQfOhoS_8\"\r\n}";
+    private static final String key =
+            "{\r\n    \"p\": \"Dm6kw6vR7S1L5PQxPnuzd0N85Was0AGvn4mRUZDyl_n6f4t0YQM1FCoCeSrErtrOgKr7CsKxOrNk_io63_d2NEbJjX6lKh6qIhAsZnfGMpF9dzwZFv9HOzUBLh4twvbLK436jO2OQ1d43CwHvJx-VrHOI4e1IXbJ1On9-0ZMWTgN\",\r\n    \"kty\": \"RSA\",\r\n    \"q\": \"CncSZobr2QELKXg2-2Dh8ee3eNMBuLM0cNpbTcvbxlUsCAiz6tbbbS0pk51tTAuOQul8Wxd8PpBfYKl3FlYRLCsPCBgwfIAk_IeoeciDSWa3mYsEwJJyghVoEzLbidGkvKtBaBX5IPlkS4qRfC-b8gktSUdOzuwGbWEpZ0PjmKU7\",\r\n    \"d\": \"c--nFlbOCcnkHOEEkaqCnJ0AQuAAMzie3d-PJnpAn7vmIKGMySBd_3qVu8PZ681sfRiHlTUp6Adm1mINEY7KzI8Qa3nVeWhnS1Kt-cnj_J_-Vz7X3FVyhXvUNVx_SG3yvCkDUq3i7xyIfQkLOIb4vbipsr1r154syZtTCLO8ZH1lC-_zlgZndItvhcrBBs6yJ1nRU55MuBO8KBI8cBwxSVmXsa0WFf4-eAHv_PF2pBeHAUT-BMcFSCU6BLFDRssIIMAuKLShFBWm_trsG0z3rmrPiploQcHRUrSoY5nmul1A_ICpxu4nXPjs0j9j5PczMcC4QJm2tipkK1LPOIk2iCk\",\r\n    \"e\": \"AQAB\",\r\n    \"use\": \"sig\",\r\n    \"kid\": \"5eHhhyrXqB1kjy5fAe2Z2j4GViOrnnzv-otgarOnX3E\",\r\n    \"qi\": \"BB-3HWDoqhySKK5ljUXC3v4X0z9COi7KENJSWCZWpAEx4hYJfikCke-XsL1obaSr8uIsHl4XPjDEKJEg6cUbVI7caYZDi-1nLeBGmKQdfMHaZGxptJR1bByKNRLc1ZXPC5mM_2yrKedyDq6pDZ9iVpi4ur7Is0ScPvJiT09MKngd\",\r\n    \"dp\": \"A-fAwgoOhkWJkezaHnROvekPNOwxux-ZrGwHXLECVEmalUThOxcpF8m-XZdLHZ2r33lk8SZ52s6Md5Jp2A0YeVDmXVl1zA38L7d8rEWg5jIkZ01l5KkzVzwik54q9-TcWW7T66qkomhbFgj8Fvep4D_A7jBcvS9tsiWXSpVdN49J\",\r\n    \"alg\": \"RS256\",\r\n    \"dq\": \"Cdy2sXpaztFF9Jm-rt1ZcMAezjWD_MydEfEldEY2Yk0nxpZ0_03l0ZhrAxqrwqttMK-aqrmSM9-Ykp6BhMItQsN9UfKB1wJoWLd7VPFakBTF12QEYXphgSetQdJ-w_2WUtrNM8rpUWLVWr9GZZL0Un7Fd7ZElYomcHPNMezvko27\",\r\n    \"n\": \"lwjnyvGv78GfHTCUXG1uFKC6SdwJxDYYCrLf_KDSCIA5ymS2sy5Rh__8XlAYbJxuCB3dQK1B5n3cCBXg_LT1O-Ync2YkKCZPzOs_5EaZqaTLSB5n5eQjaYwy3413MD4ZUnt7KVzKnnNxA5M0JwgffiRhs3iHtlM5O2wFsxURY7Fu0-ZVzbq-YoEcMyuTywFzMaBddYn1L33RHaKlEE4T61_qbJDWpeQiNm2RUBzzg4jVRcOBui9Q7U_MTQhqMca8hk3s6_0c8U_KAVtM4xJVDX79WynYgFZwF4Ib7kfEHZjsnSpXW2QWavh9qck-w1sHdjej6pnyaSOs7-mQfOhoS_8\"\r\n}";
 
 
     /**
      * recreates the token given the string of it is also controls if is valid
      *
-     * @throws JoseException
-     * @throws MalformedClaimException
+     * @param T string of the token
+     * @throws JoseException           if the token is not valid
+     * @throws MalformedClaimException if the token is not valid
      */
     public TokenJWT(String T) throws JoseException, MalformedClaimException {
         if (rsaJsonWebKey == null) {
@@ -90,10 +108,10 @@ public class TokenJWT {
                 isValid = EXPIRED;
             }
             if (e.hasErrorCode(ErrorCodes.AUDIENCE_INVALID)) {
-                
+
                 isValid = NOT_VALID;
             }
-           
+
         }
     }
 
@@ -103,7 +121,7 @@ public class TokenJWT {
      * @param email    user email
      * @param password password of the user, for now is just having two different constructor
      * @param owner_id id of the owner of the token
-     * @throws JoseException
+     * @throws JoseException if the token is not valid
      */
     public TokenJWT(String email, String password, int owner_id) throws JoseException {
         if (rsaJsonWebKey == null) {
@@ -138,19 +156,37 @@ public class TokenJWT {
 
     }
 
+    /**
+     * get the string of the token with the "Bearer" prefix
+     *
+     * @return the string of the token
+     * @throws JoseException if the token is not valid
+     */
     public String getTokenString() throws JoseException {
         return "Bearer ".concat(token.getCompactSerialization());
     }
 
+    /**
+     * get the email of the user from the token
+     *
+     * @return the email of the user, if the claim is malformed will return null
+     */
     public String getEmail() {
         return claims.getClaimValueAsString("email");
     }
 
+    /**
+     * get the owner id of the user from the token
+     *
+     * @return the owner id of the user, if the claim is malformed will return null
+     */
     public String getOwnerID() {
         return claims.getClaimValueAsString("owner_id");
     }
 
     /**
+     * get the expiration date of the token in Unix timestamp
+     *
      * @return the expiration date in Unix timestamp, if the claim is malformed will return 0
      */
     public long getExpireDate() {
@@ -163,6 +199,8 @@ public class TokenJWT {
     }
 
     /**
+     * get creation date of the token in Unix timestamp
+     *
      * @return the issued date in Unix timestamp, if the claim is malformed will return 0
      */
     public long getCreationDate() {
@@ -174,6 +212,8 @@ public class TokenJWT {
     }
 
     /**
+     * get the validity of the token
+     *
      * @return returns one of this 3 things: VALID EXPIRED NOT_VALID
      */
     public int getIsValid() {
