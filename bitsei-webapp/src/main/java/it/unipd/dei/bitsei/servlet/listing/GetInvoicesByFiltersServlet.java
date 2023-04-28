@@ -42,6 +42,10 @@ import java.sql.Date;
  *
  */
 public final class GetInvoicesByFiltersServlet extends AbstractDatabaseServlet {
+	/**
+	 * Default constructor.
+	 */
+	public GetInvoicesByFiltersServlet(){}
 
 	/**
 	 * Searches invoices by their total.

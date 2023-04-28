@@ -24,6 +24,10 @@ import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidatio
  * @since 1.00
  */
 public final class UpdateProductServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public UpdateProductServlet(){}
 
     /**
      * Updates the product into the database.

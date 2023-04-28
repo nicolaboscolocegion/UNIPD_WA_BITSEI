@@ -20,6 +20,10 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class DeleteProductServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public DeleteProductServlet(){super();}
 
     /**
      * Deletes a product from the database.

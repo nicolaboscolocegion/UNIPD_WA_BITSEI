@@ -22,6 +22,10 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class LoadInvoiceProductForUpdateServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public LoadInvoiceProductForUpdateServlet(){}
 
     /**
      * Searches invoice product by ids.
