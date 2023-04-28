@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * Searches employees by their salary.
+ * Fetches all the customers for pdf listing.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00

@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidation;
 
 /**
- * Updates a customer into the database.
+ * Updates a customer.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00

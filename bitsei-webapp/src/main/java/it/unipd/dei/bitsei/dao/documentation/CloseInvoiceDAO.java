@@ -29,7 +29,7 @@ import static org.apache.taglibs.standard.functions.Functions.trim;
 public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
     /**
-     * The SQL statement to be executed
+     * The SQL statements to be executed
      */
     private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" WHERE company_id = ? and owner_id = ?";
     private static final String STATEMENT_UPDATE = "UPDATE bitsei_schema.\"Invoice\" SET status = ?, warning_date = ?, warning_pdf_file = ?, warning_number = ? WHERE invoice_id = ?;";

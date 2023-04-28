@@ -24,7 +24,7 @@ import static it.unipd.dei.bitsei.utils.ReportClass.exportReport;
 import static org.apache.taglibs.standard.functions.Functions.trim;
 
 /**
- * Creates a new customer into the database.
+ * Closes the invoice to prevent editing and generates warning pdf file.
  *
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
@@ -39,7 +39,7 @@ public class CloseInvoiceRR extends AbstractRR {
     RestURIParser r;
 
     /**
-     * Creates a new customer
+     * Creates a CloseInvoice entity.
      *
      * @param req     the HTTP request.
      * @param res     the HTTP response.
@@ -55,7 +55,7 @@ public class CloseInvoiceRR extends AbstractRR {
 
 
     /**
-     * creates a new customer
+     * Closes the invoice
      */
     @Override
     protected void doServe() throws IOException {

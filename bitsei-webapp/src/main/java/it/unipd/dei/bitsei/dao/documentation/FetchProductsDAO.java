@@ -31,7 +31,7 @@ public final class FetchProductsDAO extends AbstractDAO<List<Product>> {
     private final int company_id;
 
     /**
-     * Creates a new object for searching employees by salary.
+     * Creates a new object fetching all Products.
      *
      * @param con        the connection to the database.
      * @param owner_id   the owner id of the company
