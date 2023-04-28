@@ -20,25 +20,29 @@ Since: 1.0
 
 // Add an event listener to the button,
 // to invoke the function making the AJAX call
-document.getElementById("deleteProductButton").addEventListener("click", delete_product);
-console.log("Event listener added to ajaxButton.")
+document.getElementById("createProductButton").addEventListener("click", create_product);
 
 
 /**
- * DELETE A PRODUCT BY IDS.
+ * CREATE A NEW PRODUCT
  *
  * @returns {boolean} true if the HTTP request was successful; false otherwise.
  */
-function delete_product() {
+function create_product() {
 
     // get the value of the token and parameters from the form field
     const token = document.getElementById("token").value;
-    const id_product = document.getElementById("product_ID").value;
-    const id_company = document.getElementById("company_ID").value;
+    const id_c_company = document.getElementById("company_ID").value;
+    const id_c_title = document.getElementById("title_ID").value;
+    const id_c_defaultPrice = document.getElementById("defaultPrice_ID").value;
+    const id_c_logo = document.getElementById("logo_ID").value;
+    const id_c_measurement_unit = document.getElementById("measurement_unit_ID").value;
+    const id_c_description = document.getElementById("description_ID").value;
+
 
     console.log("token: %d.", token);
 
-    const url = "http://localhost:8080/bitsei-1.0/productdelete";
+    const url = "http://localhost:8080/bitsei-1.0/productinsert";
 
     console.log("Request URL: %s.", url)
 
@@ -52,26 +56,29 @@ function delete_product() {
     }
 
     // set up the call back for handling the request
-    /*xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function () {
         processResponse(this);
-    };*/
+    };
 
     // define params to send
     const params = {
-        product_id: id_product,
-        company_id: id_company
-
+        company_id: id_c_company,
+        title: id_c_title,
+        default_price: id_c_defaultPrice,
+        logo: id_c_logo,
+        measurement_unit: id_c_measurement_unit,
+        description: id_c_description
     }
 
     // perform the request
-    console.log("Performing the HTTP GET request.");
+    console.log("Performing the HTTP POST request.");
 
-    xhr.open("DELETE", url);
+    xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8'");
     xhr.setRequestHeader("Authorization", token);
     xhr.send(JSON.stringify(params));
 
-    console.log("HTTP DELETE request sent.");
+    console.log("HTTP POST request sent.");
 
 
     // listen for `load` event

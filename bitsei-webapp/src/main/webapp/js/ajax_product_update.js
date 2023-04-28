@@ -24,7 +24,7 @@ document.getElementById("updateProductButton").addEventListener("click", update_
 
 
 /**
- * Searches for employee above the given salary.
+ * UPDATE A PRODUCT
  *
  * @returns {boolean} true if the HTTP request was successful; false otherwise.
  */
