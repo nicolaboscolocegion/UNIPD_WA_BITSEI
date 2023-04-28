@@ -31,7 +31,7 @@ console.log("Event listener added to ajaxButton.")
 function reset_password() {
 
     // get the value of the token and new password from the form field
-    const token = document.getElementById("email").value;
+    const token = document.getElementById("token").value;
     const password = document.getElementById("password").value;
 
     console.log("token: %d.", token);
