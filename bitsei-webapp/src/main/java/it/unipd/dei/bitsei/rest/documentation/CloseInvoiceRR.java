@@ -41,9 +41,11 @@ public class CloseInvoiceRR extends AbstractRR {
     /**
      * Creates a new customer
      *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
+     * @param req     the HTTP request.
+     * @param res     the HTTP response.
+     * @param con     the connection to the database.
+     * @param absPath the absolute path of the project
+     * @param r       the RestURIParser
      */
     public CloseInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
@@ -115,7 +117,7 @@ public class CloseInvoiceRR extends AbstractRR {
             List<DetailRow> ldr = (List<DetailRow>) out.get(0);
 
             double total_related_price = 0;
-            for (DetailRow dr :ldr) {
+            for (DetailRow dr : ldr) {
                 double rp = dr.getRelated_price_numeric();
                 total_related_price += rp;
             }
@@ -135,15 +137,14 @@ public class CloseInvoiceRR extends AbstractRR {
                     total += 2;
                 }
                 if (i.getPension_fund_refund() > 0) {
-                    ldr.add(new DetailRow("Rivalsa INPS", "", 1,  "€", Math.round(total*i.getPension_fund_refund())/100, 0, ""));
-                    total += Math.round(total*i.getPension_fund_refund()/100);
+                    ldr.add(new DetailRow("Rivalsa INPS", "", 1, "€", Math.round(total * i.getPension_fund_refund()) / 100, 0, ""));
+                    total += Math.round(total * i.getPension_fund_refund() / 100);
                 }
             }
 
             if (fiscal_company_type == 0) {
                 ldr.add(new DetailRow("TOTALE", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
-            }
-            else {
+            } else {
                 ldr.add(new DetailRow("Totale imponibile", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
                 ldr.add(new DetailRow("Iva (22%)", "", 1, "€", Math.round(total * 22) / 100, 0, ""));
                 total += Math.round(total * 22) / 100;
@@ -174,12 +175,12 @@ public class CloseInvoiceRR extends AbstractRR {
 
             res.setStatus(HttpServletResponse.SC_OK);
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot close invoice: unexpected error while accessing the database." + ex.getStackTrace());
             m = new Message("Cannot close invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner id in token not parsable.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);

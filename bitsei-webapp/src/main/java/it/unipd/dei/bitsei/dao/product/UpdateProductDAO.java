@@ -44,8 +44,10 @@ public final class UpdateProductDAO extends AbstractDAO {
     /**
      * Creates a new object for updating a product present in the database.
      *
-     * @param con the connection to the database.
-     * @param product the product to be updated.
+     * @param con        the connection to the database.
+     * @param product    the product to be updated.
+     * @param owner_id   the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public UpdateProductDAO(final Connection con, final Product product, final int owner_id, final int company_id) {
         super(con);

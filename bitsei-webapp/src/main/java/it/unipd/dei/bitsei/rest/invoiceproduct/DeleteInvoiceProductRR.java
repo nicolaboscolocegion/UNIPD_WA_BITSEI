@@ -62,7 +62,7 @@ public class DeleteInvoiceProductRR extends AbstractRR {
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
             // creates a new object for accessing the database and delete the invoice product
-            ip = (InvoiceProduct) new DeleteInvoiceProductDAO<InvoiceProduct>(con, invoice_id, product_id, owner_id, company_id).access().getOutputParam();
+            ip = (InvoiceProduct) new DeleteInvoiceProductDAO(con, invoice_id, product_id, owner_id, company_id).access().getOutputParam();
 
             m = new Message(String.format("Invoice product successfully deleted."));
             LOGGER.info("Invoice product deleted in the database.");

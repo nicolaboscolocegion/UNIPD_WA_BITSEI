@@ -37,9 +37,11 @@ public class GenerateCustomersReportRR extends AbstractRR {
     /**
      * Creates a new customer
      *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
+     * @param req     the HTTP request.
+     * @param res     the HTTP response.
+     * @param con     the connection to the database.
+     * @param absPath the absolute path of the project
+     * @param r       the RestURIParser
      */
     public GenerateCustomersReportRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
@@ -83,12 +85,12 @@ public class GenerateCustomersReportRR extends AbstractRR {
 
             res.setStatus(HttpServletResponse.SC_OK);
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Customers report: unexpected error while accessing the database.", ex);
             m = new Message("Customers report: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);

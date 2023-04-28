@@ -50,14 +50,12 @@ public class DetailRow {
     /**
      * Creates a new Product.
      *
-     * @param product_description The description of the product sold.
-     *
-     * @param quantity The quantity the product sold.
-     *
-     * @param unit_price The actual unitary price of the product.
-     *
-     * @param related_price The (eventual) related_price of the product.
-     *
+     * @param product_description       The description of the product sold.
+     * @param purchase_date             The date of the purchase.
+     * @param measurement_unit          The measurement unit of the product sold.
+     * @param quantity                  The quantity the product sold.
+     * @param unit_price                The actual unitary price of the product.
+     * @param related_price             The (eventual) related_price of the product.
      * @param related_price_description A textual description of the related_price.
      */
     public DetailRow(final String product_description, final String purchase_date, final int quantity, final String measurement_unit, final double unit_price, final double related_price, final String related_price_description) {
@@ -66,15 +64,13 @@ public class DetailRow {
         if (quantity > 0) {
             this.quantity = Integer.toString(quantity);
             this.measurement_unit = measurement_unit;
-        }
-        else {
+        } else {
             this.quantity = "";
             this.measurement_unit = "";
         }
         if (unit_price > 0) {
             this.unit_price = unit_price;
-        }
-        else {
+        } else {
             this.unit_price = 0.00;
         }
 
@@ -83,8 +79,7 @@ public class DetailRow {
             this.related_price = Double.toString(related_price);
             this.related_price_numeric = related_price;
             this.related_price_description = related_price_description;
-        }
-        else {
+        } else {
             this.related_price = "";
             this.related_price_numeric = 0.0;
             this.related_price_description = "";
@@ -115,7 +110,9 @@ public class DetailRow {
         return unit_price + " €";
     }
 
-    public String getNumericUnit_price() {return String.format(Locale.UK,"%.2f",unit_price);}
+    public String getNumericUnit_price() {
+        return String.format(Locale.UK, "%.2f", unit_price);
+    }
 
     public String getRelated_price() {
         return related_price + " €";

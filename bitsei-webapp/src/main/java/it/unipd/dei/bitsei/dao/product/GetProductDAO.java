@@ -46,8 +46,10 @@ public final class GetProductDAO extends AbstractDAO<Product> {
     /**
      * Creates a new object for searching product by id.
      *
-     * @param con    the connection to the database.
+     * @param con        the connection to the database.
      * @param product_id the id of the product.
+     * @param owner_id   the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public GetProductDAO(final Connection con, final int product_id, final int owner_id, final int company_id) {
         super(con);

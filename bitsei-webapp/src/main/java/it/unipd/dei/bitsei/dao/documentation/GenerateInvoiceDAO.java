@@ -43,7 +43,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
     private int owner_id;
     private int invoice_id;
     private Date today;
-    private  String fileName;
+    private String fileName;
 
     private Customer c;
     private Invoice i;
@@ -59,7 +59,6 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
     private Integer fiscal_company_type;
 
 
-
     private List<DetailRow> ldr = new ArrayList<>();
     private List<Object> output = new ArrayList<>();
     private String company_postal_code;
@@ -71,10 +70,12 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
     /**
      * Generates the actual invoice.
      *
-     * @param con
-     *        the connection to the database.
-     * @param invoice_id
-     *        the id of the invoice to be closed.
+     * @param con        the connection to the database.
+     * @param invoice_id the id of the invoice to be closed.
+     * @param today      the date of the invoice.
+     * @param fileName   the name of the file to be generated.
+     * @param owner_id   the id of the owner of the company.
+     * @param company_id the id of the company.
      */
     public GenerateInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName, int owner_id, int company_id) {
         super(con);
@@ -132,7 +133,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             rs = pstmt.executeQuery();
             int customer_id = 0;
             while (rs.next()) {
-                customer_id =  rs.getInt("customer_id");
+                customer_id = rs.getInt("customer_id");
             }
             LOGGER.info("Invoice data successfully fetched.");
 
@@ -224,7 +225,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt.setInt(1, 2);
             pstmt.setDate(2, (java.sql.Date) today);
             pstmt.setString(3, this.fileName);
-            pstmt.setString(4,c.getVatNumber() + "_" + invoiceNumber + ".xml");
+            pstmt.setString(4, c.getVatNumber() + "_" + invoiceNumber + ".xml");
             pstmt.setInt(5, invoiceNumber);
             pstmt.setInt(6, this.invoice_id);
             LOGGER.info("QUERY: " + pstmt.toString());
@@ -254,9 +255,8 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
                         rs.getBoolean("has_stamp")
                 );
 
-             }
+            }
             LOGGER.info("Invoice data successfully fetched.");
-
 
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_COMPANY);
@@ -363,8 +363,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             if (this.company_vat.contains("IT")) {
                 String parsedVAT = this.company_vat.substring(2, this.company_vat.length());
                 output.add(this.company_vat);
-            }
-            else {
+            } else {
                 output.add(this.company_vat);
             }
             output.add(this.company_tax);

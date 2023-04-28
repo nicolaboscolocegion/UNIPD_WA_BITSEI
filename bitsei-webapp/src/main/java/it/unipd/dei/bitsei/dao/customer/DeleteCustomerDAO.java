@@ -26,7 +26,7 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
     private static final String DELETE = "DELETE FROM bitsei_schema.\"Customer\" WHERE customer_id = ?;";
 
     /**
-     /**
+     * /**
      * The customer to be deleted from the database
      */
     private final int customerID;
@@ -36,12 +36,10 @@ public final class DeleteCustomerDAO<C extends AbstractResource> extends Abstrac
     /**
      * Creates a new object for deleting a customer from the database.
      *
-     * @param con
-     *            the connection to the database.
-     * @param customerID
-     *            the customer to be deleted from the database.
-     * @param owner_id
-     *            the owner of the customer.
+     * @param con        the connection to the database.
+     * @param customerID the customer to be deleted from the database.
+     * @param owner_id   the owner of the customer.
+     * @param company_id the company id
      */
     public DeleteCustomerDAO(final Connection con, final int customerID, final int owner_id, final int company_id) {
         super(con);

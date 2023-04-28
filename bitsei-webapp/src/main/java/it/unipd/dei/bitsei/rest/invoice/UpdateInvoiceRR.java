@@ -35,6 +35,7 @@ public class UpdateInvoiceRR extends AbstractRR {
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
+     * @param r   the URI parser.
      */
     public UpdateInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.UPDATE_INVOICE, req, res, con);
@@ -71,11 +72,14 @@ public class UpdateInvoiceRR extends AbstractRR {
             fieldRegexValidation("[^\\s]+(\\.(?i)(pdf))$", i.getWarning_pdf_file(), "WARNING_PDF_FILE");
             fieldRegexValidation("[^\\s]+(\\.(?i)(pdf))$", i.getInvoice_pdf_file(), "INVOICE_PDF_FILE");
             fieldRegexValidation("[^\\s]+(\\.(?i)(xml))$", i.getInvoice_xml_file(), "INVOICE_XML_FILE");
-            long millis=System.currentTimeMillis();
+            long millis = System.currentTimeMillis();
             Date curr_date = new java.sql.Date(millis);
-            if(i.getWarning_date().compareTo(curr_date) > 0) throw new DateTimeException("ERROR, INVALID DATE. Warning date after current date.");
-            if(i.getInvoice_date().compareTo(curr_date) > 0) throw new DateTimeException("ERROR, INVALID DATE. Invoice date after current date.");
-            if(i.getWarning_date().compareTo(i.getInvoice_date()) > 0) throw new DateTimeException("ERROR, INVALID DATE. Warning date after invoice date.");
+            if (i.getWarning_date().compareTo(curr_date) > 0)
+                throw new DateTimeException("ERROR, INVALID DATE. Warning date after current date.");
+            if (i.getInvoice_date().compareTo(curr_date) > 0)
+                throw new DateTimeException("ERROR, INVALID DATE. Invoice date after current date.");
+            if (i.getWarning_date().compareTo(i.getInvoice_date()) > 0)
+                throw new DateTimeException("ERROR, INVALID DATE. Warning date after invoice date.");
 
 
             // creates a new object for accessing the database and update the invoice
@@ -88,17 +92,17 @@ public class UpdateInvoiceRR extends AbstractRR {
             i.toJSON(res.getOutputStream());
 
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot update invoice: unexpected error while accessing the database.", ex);
             m = new Message("Cannot update invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("No company id provided, will be set to null.", "E5A1", ex.getMessage());
             LOGGER.info("No company id provided, will be set to null.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-        }catch (DateTimeException ex) {
+        } catch (DateTimeException ex) {
             m = new Message(
                     "Cannot create the invoice. Invalid input parameters: invalid date",
                     "E100", ex.getMessage());
@@ -108,7 +112,7 @@ public class UpdateInvoiceRR extends AbstractRR {
                     ex);
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-        }catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             m = new Message(
                     "Invalid input parameters. ",
                     "E100", ex.getMessage());
@@ -117,7 +121,7 @@ public class UpdateInvoiceRR extends AbstractRR {
                     "Invalid input parameters. " + ex.getMessage(), ex);
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-        }catch (IllegalCallerException e) {
+        } catch (IllegalCallerException e) {
             m = new Message(
                     "Error: unexpected call to UpdateInvoice after invoice has been closed or emitted.");
 

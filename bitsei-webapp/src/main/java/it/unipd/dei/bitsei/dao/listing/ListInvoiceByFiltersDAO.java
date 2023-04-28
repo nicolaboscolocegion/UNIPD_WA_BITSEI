@@ -110,11 +110,11 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
      */
     private final List<String> fromProductTitle;
 
-    private String FilterBetween(String field_name, boolean enableNull){
+    private String FilterBetween(String field_name, boolean enableNull) {
         enableNull = false;
         StringBuilder ret = new StringBuilder();
         ret.append(" AND ((" + field_name + " BETWEEN ? AND ?)");
-        if(enableNull)
+        if (enableNull)
             ret.append(" OR (" + field_name + " IS NULL)");
         ret.append(")");
         return ret.toString();
@@ -123,7 +123,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
     private String FilterByStringList(String field_name, int list_size) {
         StringBuilder ret = new StringBuilder();
         ret.append(" AND (");
-        for(int i=0; i<list_size; i++)
+        for (int i = 0; i < list_size; i++)
             ret.append(" (" + field_name + " = ?) OR");
         String ret_string = ret.substring(0, ret.lastIndexOf("OR"));
         return ret_string + ")";
@@ -133,18 +133,37 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
     /**
      * Creates a new object for searching the invoices from filters
      *
-     * @param con           the connection to the database.
-     * @param fromTotal     the total from which to start the filtering
-     * @param toTotal       the total from which to end the filtering
+     * @param con                  the connection to the database.
+     * @param ownerId              the id of the owner of the company
+     * @param companyId            the id of the company
+     * @param fromTotal            the total from which to start the filtering
+     * @param toTotal              the total from which to end the filtering
+     * @param fromDiscount         the discount from which to start the filtering
+     * @param toDiscount           the discount from which to end the filtering
+     * @param fromPfr              the pension fund refund from which to start the filtering
+     * @param toPfr                the pension fund refund from which to end the filtering
+     * @param fromInvoiceDate      the invoice date from which to start the filtering
+     * @param toInvoiceDate        the invoice date from which to end the filtering
+     * @param fromWarningDate      the warning date from which to start the filtering
+     * @param toWarningDate        the warning date from which to end the filtering
+     * @param fromBusinessName     the business name from which to start the filtering
+     * @param fromProductTitle     the product title from which to start the filtering
+     * @param filterByDiscount     true if the discount filter is enabled, false otherwise
+     * @param filterByTotal        true if the total filter is enabled, false otherwise
+     * @param filterByPfr          true if the pension fund refund filter is enabled, false otherwise
+     * @param filterByInvoiceDate  true if the invoice date filter is enabled, false otherwise
+     * @param filterByWarningDate  true if the warning date filter is enabled, false otherwise
+     * @param filterByBusinessName true if the business name filter is enabled, false otherwise
+     * @param filterByProductTitle true if the product title filter is enabled, false otherwise
      */
     public ListInvoiceByFiltersDAO(final Connection con, int ownerId, int companyId,
-                                    final boolean filterByTotal, final double fromTotal, final double toTotal,
-                                    final boolean filterByDiscount, final double fromDiscount, final double toDiscount,
-                                    final boolean filterByPfr, final double fromPfr, final double toPfr,
-                                    final boolean filterByInvoiceDate, final Date fromInvoiceDate, final Date toInvoiceDate,
-                                    final boolean filterByWarningDate, final Date fromWarningDate, final Date toWarningDate,
-                                    final boolean filterByBusinessName, final List<String> fromBusinessName,
-                                    final boolean filterByProductTitle, final List<String> fromProductTitle){
+                                   final boolean filterByTotal, final double fromTotal, final double toTotal,
+                                   final boolean filterByDiscount, final double fromDiscount, final double toDiscount,
+                                   final boolean filterByPfr, final double fromPfr, final double toPfr,
+                                   final boolean filterByInvoiceDate, final Date fromInvoiceDate, final Date toInvoiceDate,
+                                   final boolean filterByWarningDate, final Date fromWarningDate, final Date toWarningDate,
+                                   final boolean filterByBusinessName, final List<String> fromBusinessName,
+                                   final boolean filterByProductTitle, final List<String> fromProductTitle) {
         super(con);
 
         this.ownerId = ownerId;
@@ -207,7 +226,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
                 LOGGER.error("## ListInvoiceByFiltersDAO: Data access violation ##");
                 throw new IllegalAccessException();
             }
-        }   catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException(e);
         }
 
@@ -216,25 +235,25 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             StringBuilder query = new StringBuilder();
             query.append(init_query);
 
-            if(filterByTotal)
+            if (filterByTotal)
                 query.append(FilterBetween("i.total", true));
 
-            if(filterByDiscount)
+            if (filterByDiscount)
                 query.append(FilterBetween("i.discount", true));
 
-            if(filterByPfr)
+            if (filterByPfr)
                 query.append(FilterBetween("i.pension_fund_refund", true));
 
-            if(filterByInvoiceDate)
+            if (filterByInvoiceDate)
                 query.append(FilterBetween("i.invoice_date", true));
 
-            if(filterByWarningDate)
+            if (filterByWarningDate)
                 query.append(FilterBetween("i.warning_date", true));
 
-            if(filterByBusinessName)
+            if (filterByBusinessName)
                 query.append(FilterByStringList("c.business_name", fromBusinessName.size()));
-            
-            if(filterByProductTitle)
+
+            if (filterByProductTitle)
                 query.append(FilterByStringList("p.title", fromProductTitle.size()));
 
             query.append(";");
@@ -245,38 +264,38 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             pstmt.setInt(2, companyId);
             param += "ownerId: " + ownerId + " companyId: " + companyId + " ";
             int i = 3;
-            if(filterByTotal) {
+            if (filterByTotal) {
                 pstmt.setDouble(i++, fromTotal);
                 pstmt.setDouble(i++, toTotal);
                 param += "fromTotal: " + fromTotal + " toTotal: " + toTotal + " ";
             }
-            if(filterByDiscount) {
+            if (filterByDiscount) {
                 pstmt.setDouble(i++, fromDiscount);
                 pstmt.setDouble(i++, toDiscount);
                 param += "fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " ";
             }
-            if(filterByPfr) {
+            if (filterByPfr) {
                 pstmt.setDouble(i++, fromPfr);
                 pstmt.setDouble(i++, toPfr);
                 param += "fromPfr: " + fromPfr + " toPfr: " + toPfr + " ";
             }
-            if(filterByInvoiceDate) {
+            if (filterByInvoiceDate) {
                 pstmt.setDate(i++, fromInvoiceDate);
                 pstmt.setDate(i++, toInvoiceDate);
                 param += "fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " ";
             }
-            if(filterByWarningDate) {
+            if (filterByWarningDate) {
                 pstmt.setDate(i++, fromWarningDate);
                 pstmt.setDate(i++, toWarningDate);
                 param += "fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " ";
             }
-            if(filterByBusinessName) {
-                for(int j=0; j<fromBusinessName.size(); j++) {
+            if (filterByBusinessName) {
+                for (int j = 0; j < fromBusinessName.size(); j++) {
                     param += "fromBusinessName(" + j + "): " + fromBusinessName.get(j) + " ";
                     pstmt.setString(i++, fromBusinessName.get(j));
                 }
             }
-            if(filterByProductTitle) {
+            if (filterByProductTitle) {
                 for (int j = 0; j < fromProductTitle.size(); j++) {
                     param += "fromProductTitle(" + j + "): " + fromProductTitle.get(j) + " ";
                     pstmt.setString(i++, fromProductTitle.get(j));

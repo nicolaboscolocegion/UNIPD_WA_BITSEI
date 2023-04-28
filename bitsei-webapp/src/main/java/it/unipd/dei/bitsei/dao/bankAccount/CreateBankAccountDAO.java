@@ -30,7 +30,7 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  * @version 1.00
  * @since 1.00
  */
-public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
+public class CreateBankAccountDAO extends AbstractDAO<Boolean> {
 
     private final static String STATEMENT = "INSERT INTO bitsei_schema.\"BankAccount\"  (\"IBAN\", bank_name, bankaccount_friendly_name, company_id) VALUES (?, ?, ?, ?)";
     private final static String CONTROLL_STATEMANT = "SELECT * FROM bitsei_schema.\"Company\" WHERE company_id=? AND owner_id=?";
@@ -40,20 +40,20 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
      */
     private BankAccount newBankAccount;
     /**
-     * owner ID 
+     * owner ID
      */
     private int owner_id;
+
     /**
-     * 
-     * @param con
-     * @param ba
-     * @param owner_id
+     * @param con      connection to the database
+     * @param ba       new bank account
+     * @param owner_id owner ID
      */
 
     public CreateBankAccountDAO(Connection con, BankAccount ba, int owner_id) {
         super(con);
         newBankAccount = ba;
-        this.owner_id=owner_id;
+        this.owner_id = owner_id;
     }
 
     /**
@@ -64,29 +64,28 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
         outputParam = false;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
-        ResultSet controll_rs=null;
+        ResultSet controll_rs = null;
         //statemant for the insert
         PreparedStatement pstmt = null;
         int execution;
 
         //controlls if the owner owns the company
-        try{
+        try {
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
-            
+
             controll_statemant.setInt(1, newBankAccount.getCompanyId());
             controll_statemant.setInt(2, owner_id);
 
             controll_rs = controll_statemant.executeQuery();
 
-            if(!controll_rs.next()){
-                LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " + owner_id);
                 return;
             }
 
-            
 
-        }finally{
+        } finally {
             if (controll_rs != null) {
                 controll_rs.close();
             }
@@ -94,30 +93,30 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean>{
             if (controll_statemant != null) {
                 controll_statemant.close();
             }
-            
-        }
-        
 
-        try{
+        }
+
+
+        try {
             //query
-            pstmt= con.prepareStatement(STATEMENT);
+            pstmt = con.prepareStatement(STATEMENT);
 
             pstmt.setString(1, newBankAccount.getIban());
             pstmt.setString(2, newBankAccount.getBankName());
             pstmt.setString(3, newBankAccount.getBankAccountFriendlyName());
             pstmt.setInt(4, newBankAccount.getCompanyId());
 
-            execution= pstmt.executeUpdate();
+            execution = pstmt.executeUpdate();
 
-            if(execution==1)
+            if (execution == 1)
                 outputParam = true;
 
-        }finally{
+        } finally {
 
             if (pstmt != null) {
                 pstmt.close();
             }
         }
     }
-    
+
 }

@@ -16,12 +16,14 @@ import java.util.List;
  */
 public final class ListProductRR extends AbstractRR {
     private final int company_id;
+
     /**
      * Creates a new REST resource for listing {@code Product}s.
      *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
+     * @param req        the HTTP request.
+     * @param res        the HTTP response.
+     * @param con        the connection to the database.
+     * @param company_id the company id to be used for getting the product(s).
      */
     public ListProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id) {
         super(Actions.LIST_PRODUCTS_BY_COMPANY_ID, req, res, con);

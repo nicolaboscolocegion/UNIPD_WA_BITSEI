@@ -44,9 +44,10 @@ public final class CreateProductDAO extends AbstractDAO {
     /**
      * Creates a new object for storing a product into the database.
      *
-     * @param con the connection to the database.
-     *
-     * @param product the product to be stored into the database.
+     * @param con        the connection to the database.
+     * @param product    the product to be stored into the database.
+     * @param owner_id   the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public CreateProductDAO(final Connection con, final Product product, final int owner_id, final int company_id) {
         super(con);

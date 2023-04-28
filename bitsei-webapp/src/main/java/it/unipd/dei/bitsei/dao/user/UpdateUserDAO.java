@@ -19,8 +19,9 @@ public class UpdateUserDAO extends AbstractDAO<User> {
     /**
      * Creates a new object for getting one user.
      *
-     * @param con   the connection to the database.
-     * @param email the email of the user
+     * @param con     the connection to the database.
+     * @param user_id the user id to be used for getting the user.
+     * @param user    the user to be updated.
      */
     public UpdateUserDAO(final Connection con, int user_id, User user) {
         super(con);
@@ -28,11 +29,11 @@ public class UpdateUserDAO extends AbstractDAO<User> {
         this.user_id = user_id;
     }
 
-    private static String GetStatement (User user) {
+    private static String GetStatement(User user) {
         String sql = "UPDATE bitsei_schema.\"Owner\" SET ";
 
         List<String> setClauses = new ArrayList<>();
-        for(Field f : user.getClass().getDeclaredFields()){
+        for (Field f : user.getClass().getDeclaredFields()) {
             setClauses.add(f.getName() + " = ?");
         }
 
@@ -55,7 +56,7 @@ public class UpdateUserDAO extends AbstractDAO<User> {
         try {
             int i = 1;
             pstmt = con.prepareStatement(GetStatement(user));
-            for(Field f : user.getClass().getDeclaredFields()){
+            for (Field f : user.getClass().getDeclaredFields()) {
                 f.setAccessible(true);
                 pstmt.setObject(i++, f.get(this.user));
             }

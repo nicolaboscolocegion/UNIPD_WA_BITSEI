@@ -24,7 +24,7 @@ public final class CreateCustomerDAO extends AbstractDAO {
     private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Customer\" (business_name, vat_number, tax_code, address, city, province, postal_code, email, pec, unique_code, company_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
-     /**
+     * /**
      * The customer to be stored into the database
      */
     private final Customer customer;
@@ -34,12 +34,10 @@ public final class CreateCustomerDAO extends AbstractDAO {
     /**
      * Creates a new object for storing a customer into the database.
      *
-     * @param con
-     *            the connection to the database.
-     * @param customer
-     *            the customer to be stored into the database.
-     * @param owner_id
-     *            the owner of the customer.
+     * @param con        the connection to the database.
+     * @param customer   the customer to be stored into the database.
+     * @param owner_id   the owner of the customer.
+     * @param company_id the company of the customer.
      */
     public CreateCustomerDAO(final Connection con, final Customer customer, final int owner_id, final int company_id) {
         super(con);
@@ -90,7 +88,6 @@ public final class CreateCustomerDAO extends AbstractDAO {
             pstmt.execute();
 
             LOGGER.info("Customer %s successfully stored in the database.", customer.getBusinessName());
-
 
 
         } catch (Exception e) {

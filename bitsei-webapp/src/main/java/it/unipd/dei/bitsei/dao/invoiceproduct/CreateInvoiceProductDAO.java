@@ -44,9 +44,10 @@ public final class CreateInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
     /**
      * Creates a new object for storing an invoice product into the database.
      *
-     * @param con the connection to the database.
-     *
+     * @param con            the connection to the database.
      * @param invoiceProduct the invoice product to be stored into the database.
+     * @param owner_id       the id of the owner of the session.
+     * @param company_id     the id of the company of the owner of the session.
      */
     public CreateInvoiceProductDAO(final Connection con, final InvoiceProduct invoiceProduct, final int owner_id, final int company_id) {
         super(con);

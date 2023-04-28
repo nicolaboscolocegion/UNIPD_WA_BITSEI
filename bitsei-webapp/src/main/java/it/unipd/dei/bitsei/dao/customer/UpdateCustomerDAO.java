@@ -24,7 +24,7 @@ public final class UpdateCustomerDAO extends AbstractDAO {
     private static final String STATEMENT = "UPDATE bitsei_schema.\"Customer\" SET business_name = ?, vat_number = ?, tax_code = ?, address = ?, city = ?, province = ?, postal_code = ?, email = ?, pec = ?, unique_code = ? WHERE customer_id = ?";
 
     /**
-     /**
+     * /**
      * The customer to be updated into the database
      */
     private final Customer customer;
@@ -34,12 +34,10 @@ public final class UpdateCustomerDAO extends AbstractDAO {
     /**
      * Creates a new object for updating a customer into the database.
      *
-     * @param con
-     *            the connection to the database.
-     * @param customer
-     *            the customer to be stored into the database.
-     * @param owner_id
-     *            the owner of the customer.
+     * @param con        the connection to the database.
+     * @param customer   the customer to be stored into the database.
+     * @param owner_id   the owner of the customer.
+     * @param company_id the company of the customer.
      */
     public UpdateCustomerDAO(final Connection con, final Customer customer, final int owner_id, final int company_id) {
         super(con);

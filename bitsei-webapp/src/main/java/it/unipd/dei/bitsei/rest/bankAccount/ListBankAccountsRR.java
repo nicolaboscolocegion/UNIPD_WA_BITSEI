@@ -45,7 +45,6 @@ public class ListBankAccountsRR extends AbstractRR{
     /**
      * lists all bank accounts
      *
-     * @param action the action to log
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.

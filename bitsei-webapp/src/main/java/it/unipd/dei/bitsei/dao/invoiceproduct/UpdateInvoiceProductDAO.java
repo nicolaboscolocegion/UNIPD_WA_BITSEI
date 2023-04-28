@@ -49,8 +49,10 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
     /**
      * Creates a new object for updating an invoice product present in the database.
      *
-     * @param con the connection to the database.
+     * @param con            the connection to the database.
      * @param invoiceProduct the invoice product to be updated.
+     * @param owner_id       the owner_id of this session, to be checked for security reasons.
+     * @param company_id     the company_id of this session, to be checked for security reasons.
      */
     public UpdateInvoiceProductDAO(final Connection con, final InvoiceProduct invoiceProduct, final int owner_id, final int company_id) {
         super(con);

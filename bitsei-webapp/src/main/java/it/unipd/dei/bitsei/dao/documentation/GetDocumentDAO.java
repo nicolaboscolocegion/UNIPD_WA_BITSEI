@@ -38,7 +38,6 @@ public final class GetDocumentDAO extends AbstractDAO<String> {
 
     /**
      * The SQL statement to be executed
-     *
      */
     private static final String STATEMENT = "SELECT bitsei_schema.\"Invoice\".warning_pdf_file, bitsei_schema.\"Invoice\".invoice_pdf_file, bitsei_schema.\"Invoice\".invoice_xml_file FROM bitsei_schema.\"Invoice\" WHERE bitsei_schema.\"Invoice\".invoice_id = ?;";
 
@@ -54,13 +53,14 @@ public final class GetDocumentDAO extends AbstractDAO<String> {
     String doc_name = "";
 
 
-
     /**
      * Creates a new object for listing all the users.
      *
-     * @param con        the connection to the database.
-     * @param company_id the id of the company to delete
-     * @param owner_id   the id of the owner
+     * @param con           the connection to the database.
+     * @param company_id    the id of the company to delete
+     * @param owner_id      the id of the owner
+     * @param invoice_id    the id of the invoice
+     * @param document_type the type of the document
      */
     public GetDocumentDAO(final Connection con, final int company_id, final int owner_id, final int invoice_id, final int document_type) {
         super(con);
@@ -104,11 +104,9 @@ public final class GetDocumentDAO extends AbstractDAO<String> {
             while (rs.next()) {
                 if (document_type == 0) {
                     rs.getString("warning_pdf_file");
-                }
-                else if (document_type == 1) {
+                } else if (document_type == 1) {
                     rs.getString("invoice_pdf_file");
-                }
-                else if (document_type == 2) {
+                } else if (document_type == 2) {
                     rs.getString("invoice_xml_file");
                 }
             }

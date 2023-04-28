@@ -36,6 +36,7 @@ public class LoginResource extends AbstractResource {
     private final String password;
 
     /**
+     * Creates a new object for login
      * @param email    email of the user
      * @param password password of the user
      */

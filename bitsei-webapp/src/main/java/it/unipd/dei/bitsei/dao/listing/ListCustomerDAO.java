@@ -44,13 +44,15 @@ public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
 
     private final int ownerId;
     private final int companyId;
-    /**
+
     /**
      * Creates a new object for searching the invoices from startTotal to endTotal
      *
-     * @param con           the connection to the database.
+     * @param con       the connection to the database.
+     * @param ownerId   the id of the owner of the company
+     * @param companyId the id of the company
      */
-    public ListCustomerDAO(final Connection con, int ownerId, int companyId){
+    public ListCustomerDAO(final Connection con, int ownerId, int companyId) {
         super(con);
         this.ownerId = ownerId;
         this.companyId = companyId;
@@ -86,7 +88,7 @@ public class ListCustomerDAO extends AbstractDAO<List<Customer>> {
                 LOGGER.error("## ListInvoiceDAO: Data access violation ##");
                 throw new IllegalAccessException();
             }
-        }   catch (Exception e) {
+        } catch (Exception e) {
             throw new SQLException(e);
         }
 

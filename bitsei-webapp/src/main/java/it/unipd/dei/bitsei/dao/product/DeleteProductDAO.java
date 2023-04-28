@@ -2,6 +2,7 @@ package it.unipd.dei.bitsei.dao.product;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Product;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,8 +44,10 @@ public final class DeleteProductDAO extends AbstractDAO {
     /**
      * Creates a new object for deleting a product from the database.
      *
-     * @param con the connection to the database.
-     * @param product the product to be deleted from the database.
+     * @param con        the connection to the database.
+     * @param product    the product to be deleted from the database.
+     * @param owner_id   the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public DeleteProductDAO(final Connection con, final Product product, final int owner_id, final int company_id) {
         super(con);

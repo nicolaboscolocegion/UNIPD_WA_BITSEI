@@ -30,12 +30,14 @@ public class UpdateCustomerRR extends AbstractRR {
 
 
     private RestURIParser r = null;
+
     /**
      * Updates the customer from the ID
      *
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
+     * @param r   the URI parser.
      */
     public UpdateCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.UPDATE_CUSTOMER, req, res, con);
@@ -87,12 +89,12 @@ public class UpdateCustomerRR extends AbstractRR {
             c.toJSON(res.getOutputStream());
 
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot update customer: unexpected error while accessing the database.", ex);
             m = new Message("Cannot update customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);

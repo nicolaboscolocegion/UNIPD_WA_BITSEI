@@ -30,6 +30,7 @@ public class DeleteInvoiceRR extends AbstractRR {
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
+     * @param r   the URI parser.
      */
     public DeleteInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.DELETE_INVOICE, req, res, con);
@@ -71,17 +72,17 @@ public class DeleteInvoiceRR extends AbstractRR {
             i.toJSON(res.getOutputStream());
 
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot delete invoice: unexpected error while accessing the database.", ex);
             m = new Message("Cannot delete invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("No company id provided.", "E5A1", ex.getMessage());
             LOGGER.info("No company id provided.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
-        }catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             m = new Message(
                     "Invalid input parameters. ",
                     "E100", ex.getMessage());
@@ -89,7 +90,7 @@ public class DeleteInvoiceRR extends AbstractRR {
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }  catch (IllegalCallerException e) {
+        } catch (IllegalCallerException e) {
             m = new Message(
                     "Error: unexpected call to DeleteInvoice after invoice has been closed or emitted.");
 

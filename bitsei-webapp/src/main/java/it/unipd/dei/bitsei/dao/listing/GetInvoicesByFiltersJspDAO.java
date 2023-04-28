@@ -101,14 +101,14 @@ public class GetInvoicesByFiltersJspDAO extends AbstractDAO<List<Invoice>> {
      */
     private final Date endWarningDate;
 
-    private String FilterBetween(String field_name, boolean firstFilter, boolean enableNull){
+    private String FilterBetween(String field_name, boolean firstFilter, boolean enableNull) {
         StringBuilder ret = new StringBuilder();
-        if(firstFilter)
+        if (firstFilter)
             ret.append(" WHERE ");
         else
             ret.append(" AND ");
         ret.append("((" + field_name + " BETWEEN ? AND ?)");
-        if(enableNull)
+        if (enableNull)
             ret.append(" OR (" + field_name + " IS NULL)");
         ret.append(")");
         return ret.toString();
@@ -118,16 +118,29 @@ public class GetInvoicesByFiltersJspDAO extends AbstractDAO<List<Invoice>> {
     /**
      * Creates a new object for searching the invoices from startTotal to endTotal
      *
-     * @param con           the connection to the database.
-     * @param startTotal     the total from which to start the filtering
-     * @param endTotal       the total from which to end the filtering
+     * @param con                 the connection to the database.
+     * @param startTotal          the total from which to start the filtering
+     * @param endTotal            the total from which to end the filtering
+     * @param startDiscount       the discount from which to start the filtering
+     * @param endDiscount         the discount from which to end the filtering
+     * @param startPfr            the pension fund refund from which to start the filtering
+     * @param endPfr              the pension fund refund from which to end the filtering
+     * @param startInvoiceDate    the invoice date from which to start the filtering
+     * @param endInvoiceDate      the invoice date from which to end the filtering
+     * @param startWarningDate    the warning date from which to start the filtering
+     * @param endWarningDate      the warning date from which to end the filtering
+     * @param filterByDiscount    true if the discount filter is enabled, false otherwise
+     * @param filterByPfr         true if the pension fund refund filter is enabled, false otherwise
+     * @param filterByInvoiceDate true if the invoice date filter is enabled, false otherwise
+     * @param filterByWarningDate true if the warning date filter is enabled, false otherwise
+     * @param filterByTotal       true if the total filter is enabled, false otherwise
      */
     public GetInvoicesByFiltersJspDAO(final Connection con,
                                       final boolean filterByTotal, final double startTotal, final double endTotal,
                                       final boolean filterByDiscount, final double startDiscount, final double endDiscount,
                                       final boolean filterByPfr, final double startPfr, final double endPfr,
                                       final boolean filterByInvoiceDate, final Date startInvoiceDate, final Date endInvoiceDate,
-                                      final boolean filterByWarningDate, final Date startWarningDate, final Date endWarningDate){
+                                      final boolean filterByWarningDate, final Date startWarningDate, final Date endWarningDate) {
         super(con);
 
         this.filterByTotal = filterByTotal;
@@ -206,27 +219,27 @@ public class GetInvoicesByFiltersJspDAO extends AbstractDAO<List<Invoice>> {
             }
             */
 
-            if(filterByTotal){
+            if (filterByTotal) {
                 query.append(FilterBetween("total", firstFilter, true));
                 firstFilter = false;
             }
 
-            if(filterByDiscount){
+            if (filterByDiscount) {
                 query.append(FilterBetween("discount", firstFilter, true));
                 firstFilter = false;
             }
 
-            if(filterByPfr){
+            if (filterByPfr) {
                 query.append(FilterBetween("pension_fund_refund", firstFilter, true));
                 firstFilter = false;
             }
 
-            if(filterByInvoiceDate){
+            if (filterByInvoiceDate) {
                 query.append(FilterBetween("invoice_date", firstFilter, true));
                 firstFilter = false;
             }
 
-            if(filterByWarningDate){
+            if (filterByWarningDate) {
                 query.append(FilterBetween("warning_date", firstFilter, true));
                 firstFilter = false;
             }
@@ -234,27 +247,27 @@ public class GetInvoicesByFiltersJspDAO extends AbstractDAO<List<Invoice>> {
             pstmt = con.prepareStatement(query.toString());
             String param = "";
             int i = 1;
-            if(filterByTotal) {
+            if (filterByTotal) {
                 pstmt.setDouble(i++, startTotal);
                 pstmt.setDouble(i++, endTotal);
                 param += "startTotal: " + startTotal + " endTotal: " + endTotal + " ";
             }
-            if(filterByDiscount) {
+            if (filterByDiscount) {
                 pstmt.setDouble(i++, startDiscount);
                 pstmt.setDouble(i++, endDiscount);
                 param += "startDiscount: " + startDiscount + " endDiscount: " + endDiscount + " ";
             }
-            if(filterByPfr) {
+            if (filterByPfr) {
                 pstmt.setDouble(i++, startPfr);
                 pstmt.setDouble(i++, endPfr);
                 param += "startPfr: " + startPfr + "endPfr: " + endPfr + " ";
             }
-            if(filterByInvoiceDate) {
+            if (filterByInvoiceDate) {
                 pstmt.setDate(i++, startInvoiceDate);
                 pstmt.setDate(i++, endInvoiceDate);
                 param += "startInvoiceDate: " + startInvoiceDate + "endInvoiceDate: " + endInvoiceDate + " ";
             }
-            if(filterByWarningDate) {
+            if (filterByWarningDate) {
                 pstmt.setDate(i++, startWarningDate);
                 pstmt.setDate(i++, endWarningDate);
                 param += "startWarningDate: " + startWarningDate + "endWarningDate: " + endWarningDate + " ";

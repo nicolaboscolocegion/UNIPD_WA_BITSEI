@@ -24,15 +24,15 @@ import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.BankAccount;
 
 /**
- * Updates bank account 
+ * Updates bank account
  *
  * @author Nicola Boscolo
  * @version 1.00
  * @since 1.00
  */
-public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
+public class UpdateBankAccountDAO extends AbstractDAO<Boolean> {
 
-    private static String STATEMENT ="UPDATE bitsei_schema.\"BankAccount\" SET \"IBAN\"=?, bank_name=?, bankaccount_friendly_name=? WHERE bankaccount_id=?";
+    private static String STATEMENT = "UPDATE bitsei_schema.\"BankAccount\" SET \"IBAN\"=?, bank_name=?, bankaccount_friendly_name=? WHERE bankaccount_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT bitsei_schema.\"Company\".owner_id, bitsei_schema.\"BankAccount\".bankaccount_id  FROM bitsei_schema.\"BankAccount\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"BankAccount\".company_id = bitsei_schema.\"Company\".company_id WHERE owner_id=? AND bankaccount_id=?";
 
 
@@ -48,51 +48,52 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
      * owner id of the company
      */
     private int owner_id;
+
     /**
-     * 
-     * @param con the connection
-     * @param oldba the bank account to update
-     * @param newBA the new bank account
+     * @param con     the connection to the database
+     * @param oldBA   the bank account to update
+     * @param newBA   the new bank account
+     * @param ownerID the owner id of the company
      */
     public UpdateBankAccountDAO(Connection con, int oldBA, BankAccount newBA, int ownerID) {
         super(con);
-        this.oldBankAccountID=oldBA;
-        this.newBankAccount=newBA;
-        this.owner_id=ownerID;
+        this.oldBankAccountID = oldBA;
+        this.newBankAccount = newBA;
+        this.owner_id = ownerID;
     }
 
 
     /**
-     * updates the old bank account with a new one, if the process is complete will return true 
+     * updates the old bank account with a new one, if the process is complete will return true
      */
     @Override
     public void doAccess() throws SQLException {
         outputParam = false;
-        //controlls if the owner is correct
+        //controls if the owner is correct
         PreparedStatement controll_statemant = null;
-        ResultSet controll_rs=null;
-        // update statemant
+        ResultSet controll_rs = null;
+        // update statement
         PreparedStatement pstmt = null;
-        //execution controll
+        //execution control
         int execute;
 
-        //controlls if the owner owns the company
-        try{
+        //controls if the owner owns the company
+        try {
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
-            
+
             controll_statemant.setInt(1, owner_id);
             controll_statemant.setInt(2, oldBankAccountID);
 
             controll_rs = controll_statemant.executeQuery();
 
 
-            if(!controll_rs.next()){
-                LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " +owner_id);
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own company, companyID: " + newBankAccount.getCompanyId() + " ownerID: " + owner_id);
                 return;
             }
 
-        }finally{
+        } finally {
             if (controll_rs != null) {
                 controll_rs.close();
             }
@@ -100,12 +101,12 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
             if (controll_statemant != null) {
                 controll_statemant.close();
             }
-            
+
         }
 
-        try{
+        try {
 
-            pstmt= con.prepareStatement(STATEMENT);
+            pstmt = con.prepareStatement(STATEMENT);
 
             pstmt.setString(1, newBankAccount.getIban());
             pstmt.setString(2, newBankAccount.getBankName());
@@ -115,15 +116,15 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean>{
 
             execute = pstmt.executeUpdate();
 
-            if(execute==1)
+            if (execute == 1)
                 outputParam = true;
 
-        }finally{
+        } finally {
 
             if (pstmt != null) {
                 pstmt.close();
             }
         }
     }
-    
+
 }

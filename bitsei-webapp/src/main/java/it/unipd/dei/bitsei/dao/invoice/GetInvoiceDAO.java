@@ -1,7 +1,6 @@
 package it.unipd.dei.bitsei.dao.invoice;
 
 
-
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Invoice;
 
@@ -47,8 +46,10 @@ public final class GetInvoiceDAO extends AbstractDAO<Invoice> {
     /**
      * Creates a new object for searching invoice by id.
      *
-     * @param con    the connection to the database.
+     * @param con        the connection to the database.
      * @param invoice_id the id of the invoice.
+     * @param owner_id   the id of the owner.
+     * @param company_id the id of the company.
      */
     public GetInvoiceDAO(final Connection con, final int invoice_id, final int owner_id, final int company_id) {
         super(con);

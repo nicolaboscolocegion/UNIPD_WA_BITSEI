@@ -35,8 +35,10 @@ public final class GetCustomerDAO extends AbstractDAO<Customer> {
     /**
      * Creates a new object for searching customers by ID.
      *
-     * @param con    the connection to the database.
+     * @param con        the connection to the database.
      * @param customerID the salary of the employee.
+     * @param owner_id   the owner id of the company
+     * @param company_id the company id
      */
     public GetCustomerDAO(final Connection con, final int customerID, final int owner_id, final int company_id) {
         super(con);
@@ -58,7 +60,7 @@ public final class GetCustomerDAO extends AbstractDAO<Customer> {
         try {
 
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
-            pstmt.setInt(1,  company_id);
+            pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             pstmt.setInt(2, customerID);
             rs_check = pstmt.executeQuery();

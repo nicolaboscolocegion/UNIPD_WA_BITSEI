@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
- /**
+/**
  * List invoice rows of a specific invoice.
  *
  * @author Mirco Cazzaro
@@ -26,10 +26,11 @@ public final class ListInvoiceProductRR extends AbstractRR {
     /**
      * Creates a new REST resource for listing {@code Invoice}s.
      *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
-     * @param
+     * @param req        the HTTP request.
+     * @param res        the HTTP response.
+     * @param con        the connection to the database.
+     * @param company_id the company id to be used for getting the invoice(s).
+     * @param invoice_id the invoice id to be used for getting the invoice row(s).
      */
     public ListInvoiceProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id, int invoice_id) {
         super(Actions.LIST_INVOICES_BY_COMPANY_ID, req, res, con);
@@ -42,8 +43,7 @@ public final class ListInvoiceProductRR extends AbstractRR {
         final int owner_id;
         try {
             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
             return;
         }

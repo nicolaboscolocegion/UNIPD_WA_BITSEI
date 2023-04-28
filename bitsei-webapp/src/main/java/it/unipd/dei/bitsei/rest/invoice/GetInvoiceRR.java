@@ -28,6 +28,7 @@ public class GetInvoiceRR extends AbstractRR {
      * @param req the HTTP request.
      * @param res the HTTP response.
      * @param con the connection to the database.
+     * @param r   the URI parser.
      */
     public GetInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
         super(Actions.GET_INVOICE, req, res, con);
@@ -66,12 +67,12 @@ public class GetInvoiceRR extends AbstractRR {
             i.toJSON(res.getOutputStream());
 
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot fetch invoice: unexpected error while accessing the database.", ex);
             m = new Message("Cannot fetch invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("No company id provided.", "E5A1", ex.getMessage());
             LOGGER.info("No company id provided.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);

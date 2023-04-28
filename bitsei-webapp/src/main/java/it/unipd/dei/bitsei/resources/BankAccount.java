@@ -8,9 +8,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class BankAccount extends AbstractResource{
+public class BankAccount extends AbstractResource {
 
-    
+
     /**
      * IBAN identification code
      */
@@ -34,18 +34,20 @@ public class BankAccount extends AbstractResource{
     private int bankAccount_id;
 
     /**
-     * create a bank account by having evry entry
-     * @param iban
-     * @param bankName
-     * @param bankAccountFriendlyName
-     * @param companyId
+     * create a bank account by having every entry
+     *
+     * @param iban                    iban code of the bank account
+     * @param bankName                name of the bank
+     * @param bankAccountFriendlyName friendly name of the bank account
+     * @param companyId               company ID that uses the bank account
+     * @param bankAccount_id          database ID of the bank account
      */
-    public BankAccount(int bankAccount_id, String iban, String bankName, String bankAccountFriendlyName, int companyId ){
+    public BankAccount(int bankAccount_id, String iban, String bankName, String bankAccountFriendlyName, int companyId) {
         this.bankAccount_id = bankAccount_id;
         this.iban = iban;
-        this.bankName= bankName;
-        this.bankAccountFriendlyName=bankAccountFriendlyName;
-        this.companyId=companyId;
+        this.bankName = bankName;
+        this.bankAccountFriendlyName = bankAccountFriendlyName;
+        this.companyId = companyId;
     }
 
     /**
@@ -54,28 +56,32 @@ public class BankAccount extends AbstractResource{
     public String getBankName() {
         return bankName;
     }
+
     /**
      * @return the IBAN code
      */
     public String getIban() {
         return iban;
     }
+
     /**
      * @return the company ID that uses the bank account
      */
     public int getCompanyId() {
         return companyId;
     }
+
     /**
      * @return return the friendly name of the bank account
      */
     public String getBankAccountFriendlyName() {
         return bankAccountFriendlyName;
     }
+
     /**
      * @return bank account ID
      */
-    public int getBankAccountID(){
+    public int getBankAccountID() {
         return bankAccount_id;
     }
 
@@ -98,15 +104,15 @@ public class BankAccount extends AbstractResource{
         jg.writeEndObject();
         jg.flush();
     }
-    
-    
-    public static BankAccount fromJSON(InputStream in) throws IOException{
+
+
+    public static BankAccount fromJSON(InputStream in) throws IOException {
         String jIban = null;
         String jBankName = null;
         String jBankAccountFriendlyName = null;
-        int jbankaccount_id=-1;
+        int jbankaccount_id = -1;
         int jCompanyId = -1;
-        
+
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
@@ -125,7 +131,7 @@ public class BankAccount extends AbstractResource{
 
                 if (jp.getCurrentToken() == JsonToken.FIELD_NAME) {
                     switch (jp.getCurrentName()) {
-                        case "bankaccount_id"->{
+                        case "bankaccount_id" -> {
                             jp.nextToken();
                             jbankaccount_id = jp.getNumberValue().intValue();
                         }
@@ -153,8 +159,8 @@ public class BankAccount extends AbstractResource{
             throw e;
         }
 
-        return new BankAccount(jbankaccount_id,jIban, jBankName, jBankAccountFriendlyName, jCompanyId);
+        return new BankAccount(jbankaccount_id, jIban, jBankName, jBankAccountFriendlyName, jCompanyId);
 
     }
-    
+
 }

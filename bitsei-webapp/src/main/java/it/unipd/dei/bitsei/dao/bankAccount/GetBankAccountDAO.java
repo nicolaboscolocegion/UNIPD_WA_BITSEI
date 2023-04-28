@@ -35,7 +35,7 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
     private final static String CONTROLL_STATEMANT = "SELECT bitsei_schema.\"Company\".owner_id, bitsei_schema.\"BankAccount\".bankaccount_id  FROM bitsei_schema.\"BankAccount\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"BankAccount\".company_id = bitsei_schema.\"Company\".company_id WHERE owner_id=? AND bankaccount_id=?";
 
     /**
-     * bank account to retrive
+     * bank account to retrieve
      */
     private int bankAccount_id;
     /**
@@ -45,7 +45,7 @@ public class GetBankAccountDAO extends AbstractDAO<BankAccount>{
     /**
      * Get the bank account
      * 
-     * @param con
+     * @param con connection to the database
      * @param baID Bank account to get
      * @param owner_id owner of the company
      */

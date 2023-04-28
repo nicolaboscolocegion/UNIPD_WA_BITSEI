@@ -43,12 +43,15 @@ public class GenerateInvoiceRR extends AbstractRR {
     List<Object> out;
 
     RestURIParser r = null;
+
     /**
      * Creates a new customer
      *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
+     * @param req     the HTTP request.
+     * @param res     the HTTP response.
+     * @param con     the connection to the database.
+     * @param absPath the absolute path of the project
+     * @param r       the RestURIParser
      */
     public GenerateInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
         super(Actions.CLOSE_INVOICE, req, res, con);
@@ -115,7 +118,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             map.put("customer_mail", c.getEmailAddress());
 
             //depends on company fiscal type
-                String riferimentoNormativo = "Operazione effettuata ai sensi dell'art. 1 commi da 54 a 89 Legge n. 190/2014 - Regime forfettario";
+            String riferimentoNormativo = "Operazione effettuata ai sensi dell'art. 1 commi da 54 a 89 Legge n. 190/2014 - Regime forfettario";
             //depends on company fiscal type
 
             map.put("footer", riferimentoNormativo);
@@ -123,7 +126,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             List<DetailRow> ldr = (List<DetailRow>) out.get(0);
 
             double total_related_price = 0;
-            for (DetailRow dr :ldr) {
+            for (DetailRow dr : ldr) {
                 double rp = dr.getRelated_price_numeric();
                 total_related_price += rp;
             }
@@ -143,15 +146,14 @@ public class GenerateInvoiceRR extends AbstractRR {
                     total += 2;
                 }
                 if (i.getPension_fund_refund() > 0) {
-                    ldr.add(new DetailRow("Rivalsa INPS", "", 1,  "", Math.round(total*i.getPension_fund_refund())/100, 0, ""));
-                    total += Math.round(total*i.getPension_fund_refund()/100);
+                    ldr.add(new DetailRow("Rivalsa INPS", "", 1, "", Math.round(total * i.getPension_fund_refund()) / 100, 0, ""));
+                    total += Math.round(total * i.getPension_fund_refund() / 100);
                 }
             }
 
             if (fiscal_company_type == 0) {
                 ldr.add(new DetailRow("TOTALE", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
-            }
-            else {
+            } else {
                 iva = (double) (Math.round(total * 22) / 100);
 
                 ldr.add(new DetailRow("Totale imponibile", "", 1, "€", Math.round(total * 100) / 100, 0, ""));
@@ -159,7 +161,7 @@ public class GenerateInvoiceRR extends AbstractRR {
                 ldr.add(new DetailRow("Totale fattura", "", 1, "€", (Math.round(total * 100) / 100) + iva, 0, ""));
                 if (fiscal_company_type == 1) {
                     ritenuta = (double) Math.round(total * 22) / 100;
-                    ldr.add(new DetailRow("Ritenuta d'acconto (20%)", "", 1, "€", ritenuta*(-1) , 0, ""));
+                    ldr.add(new DetailRow("Ritenuta d'acconto (20%)", "", 1, "€", ritenuta * (-1), 0, ""));
                     ldr.add(new DetailRow("Totale da pagare", "", 1, "€", (Math.round(total * 100) / 100) + iva - ritenuta, 0, ""));
                 }
             }
@@ -168,8 +170,8 @@ public class GenerateInvoiceRR extends AbstractRR {
             exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
 
 
-            for (Iterator<DetailRow> it = ldr.iterator(); it.hasNext();) {
-                DetailRow dr =it.next();
+            for (Iterator<DetailRow> it = ldr.iterator(); it.hasNext(); ) {
+                DetailRow dr = it.next();
                 if (dr.getProduct_description().equals("TOTALE") || dr.getProduct_description().equals("Totale imponibile") || dr.getProduct_description().equals("Iva (22%)") || dr.getProduct_description().equals("Totale") || dr.getProduct_description().equals("Ritenuta d'acconto") || dr.getProduct_description().equals("Totale da pagare")) {
                     it.remove();
                 }
@@ -206,8 +208,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             anagrafica.addElement("Denominazione").addText((String) map.get("company_name")); //company business name
             if ((Integer) out.get(11) == 0) {
                 datiAnagrafici.addElement("RegimeFiscale").addText("RF19"); //company fiscal type (forfettario)
-            }
-            else {
+            } else {
                 datiAnagrafici.addElement("RegimeFiscale").addText("RF01"); //company fiscal type (ordinario con/senza ritenuta)
             }
             Element sede = cedentePrestatore.addElement("Sede");
@@ -232,8 +233,6 @@ public class GenerateInvoiceRR extends AbstractRR {
             cSede.addElement("Comune").addText(c.getCity());//customer city
             cSede.addElement("Provincia").addText(c.getProvince()); //customer province
             cSede.addElement("Nazione").addText("IT");
-
-
 
 
             Element fatturaElettronicaBody = pFatturaElettronica.addElement("FatturaElettronicaBody");
@@ -284,8 +283,7 @@ public class GenerateInvoiceRR extends AbstractRR {
                 if ((Integer) out.get(11) == 0) {
                     dettaglioLinee.addElement("AliquotaIVA").addText("0.00"); //depends on company fiscal type
                     dettaglioLinee.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
-                }
-                else {
+                } else {
                     dettaglioLinee.addElement("AliquotaIVA").addText("22.00"); //depends on company fiscal type
                 }
 
@@ -296,17 +294,15 @@ public class GenerateInvoiceRR extends AbstractRR {
             if ((Integer) out.get(11) == 0) {
                 datiRiepilogo.addElement("AliquotaIVA").addText("0.00"); // depends on company fiscal type
                 datiRiepilogo.addElement("Natura").addText("N2.2"); //to specify ONLY in company fiscal type is FORFETTARIO
-            }
-            else {
+            } else {
                 datiRiepilogo.addElement("AliquotaIVA").addText("22.00"); // depends on company fiscal type
             }
-            datiRiepilogo.addElement("ImponibileImporto").addText(String.format(Locale.UK,"%.2f", total)); // total of all detail line above
+            datiRiepilogo.addElement("ImponibileImporto").addText(String.format(Locale.UK, "%.2f", total)); // total of all detail line above
             if ((Integer) out.get(11) == 0) {
                 datiRiepilogo.addElement("Imposta").addText("0.00"); // depends on company fiscal type
                 datiRiepilogo.addElement("RiferimentoNormativo").addText(riferimentoNormativo); //depends on company fiscal type
-            }
-            else {
-                datiRiepilogo.addElement("Imposta").addText(String.format(Locale.UK,"%.2f", iva)); // depends on company fiscal type
+            } else {
+                datiRiepilogo.addElement("Imposta").addText(String.format(Locale.UK, "%.2f", iva)); // depends on company fiscal type
                 datiRiepilogo.addElement("EsigibilitaIVA").addText("I");
             }
 
@@ -315,7 +311,7 @@ public class GenerateInvoiceRR extends AbstractRR {
             datiPagamento.addElement("CondizioniPagamento").addText("TP02"); //standard (immediate payment)
             Element dettaglioPagamento = datiPagamento.addElement("DettaglioPagamento");
             dettaglioPagamento.addElement("ModalitaPagamento").addText("MP05"); //standard: bonifico
-            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format(Locale.UK,"%.2f", total+iva-ritenuta)); //total of all rows above + taxes
+            dettaglioPagamento.addElement("ImportoPagamento").addText(String.format(Locale.UK, "%.2f", total + iva - ritenuta)); //total of all rows above + taxes
             dettaglioPagamento.addElement("IBAN").addText((String) out.get(15)); //bankaccount iban selected
 
             StringWriter sw = new StringWriter();
@@ -343,12 +339,12 @@ public class GenerateInvoiceRR extends AbstractRR {
 
             res.setStatus(HttpServletResponse.SC_OK);
 
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             LOGGER.error("Cannot generate invoice: unexpected error while accessing the database." + ex.getStackTrace());
             m = new Message("Cannot generate invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
-        }catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);

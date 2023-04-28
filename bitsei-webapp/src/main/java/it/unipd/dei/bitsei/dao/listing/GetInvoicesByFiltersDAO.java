@@ -100,16 +100,24 @@ public class GetInvoicesByFiltersDAO extends AbstractDAO<List<Invoice>> {
     /**
      * Creates a new object for searching the invoices from startTotal to endTotal
      *
-     * @param con           the connection to the database.
-     * @param startTotal     the total from which to start the filtering
-     * @param endTotal       the total from which to end the filtering
+     * @param con              the connection to the database.
+     * @param startTotal       the total from which to start the filtering
+     * @param endTotal         the total from which to end the filtering
+     * @param startDiscount    the discount from which to start the filtering
+     * @param endDiscount      the discount from which to end the filtering
+     * @param startPfr         the pension fund refund from which to start the filtering
+     * @param endPfr           the pension fund refund from which to end the filtering
+     * @param startInvoiceDate the invoice date from which to start the filtering
+     * @param endInvoiceDate   the invoice date from which to end the filtering
+     * @param startWarningDate the warning date from which to start the filtering
+     * @param endWarningDate   the warning date from which to end the filtering
      */
     public GetInvoicesByFiltersDAO(final Connection con,
                                    final double startTotal, final double endTotal,
                                    final double startDiscount, final double endDiscount,
                                    final double startPfr, final double endPfr,
                                    final Date startInvoiceDate, final Date endInvoiceDate,
-                                   final Date startWarningDate, final Date endWarningDate){
+                                   final Date startWarningDate, final Date endWarningDate) {
         super(con);
 
         this.startTotal = startTotal;

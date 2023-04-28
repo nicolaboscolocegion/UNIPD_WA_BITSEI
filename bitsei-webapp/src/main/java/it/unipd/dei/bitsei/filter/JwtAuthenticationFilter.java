@@ -59,7 +59,13 @@ public class JwtAuthenticationFilter implements Filter {
         LOG.info("JwtAuthenticationFilter initialized");
     }
 
-    // This method is called for every request
+    /**
+     * This method is called for every request
+     *
+     * @param servletRequest  The request to filter
+     * @param servletResponse The response to filter
+     * @param filterChain     The chain of filters to apply
+     */
     @Override
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,

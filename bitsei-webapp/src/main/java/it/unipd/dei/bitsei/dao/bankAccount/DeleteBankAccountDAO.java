@@ -30,9 +30,9 @@ import it.unipd.dei.bitsei.resources.BankAccount;
  * @version 1.00
  * @since 1.00
  */
-public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
+public class DeleteBankAccountDAO extends AbstractDAO<Boolean> {
 
-    private final static String STATEMENT="DELETE FROM bitsei_schema.\"BankAccount\"  WHERE bankaccount_id=?";
+    private final static String STATEMENT = "DELETE FROM bitsei_schema.\"BankAccount\"  WHERE bankaccount_id=?";
     private final static String CONTROLL_STATEMANT = "SELECT bitsei_schema.\"Company\".owner_id, bitsei_schema.\"BankAccount\".bankaccount_id  FROM bitsei_schema.\"BankAccount\" INNER JOIN bitsei_schema.\"Company\" ON bitsei_schema.\"BankAccount\".company_id = bitsei_schema.\"Company\".company_id WHERE owner_id=? AND bankaccount_id=?";
 
     /**
@@ -46,51 +46,50 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
 
     /**
      * Deletes the bank account
-     * 
-     * @param con
-     * @param baID Bank account ID to delete
+     *
+     * @param con      connection to the database
+     * @param baID     Bank account ID to delete
      * @param owner_id owner of the company
      */
 
-    public DeleteBankAccountDAO(Connection con, int baID,int owner_id) {
+    public DeleteBankAccountDAO(Connection con, int baID, int owner_id) {
         super(con);
-        this.bankAccountID=baID;
-        this.owner_id=owner_id;
+        this.bankAccountID = baID;
+        this.owner_id = owner_id;
     }
 
     /**
-     * delete the bank account 
+     * delete the bank account
      */
     @Override
     protected void doAccess() throws Exception {
         outputParam = false;
         //controlls if the owner is correct
         PreparedStatement controll_statemant = null;
-        ResultSet controll_rs=null;
+        ResultSet controll_rs = null;
 
         PreparedStatement pstmt = null;
         //indicades if the operation had success
         int executed;
 
         //controlls if the owner owns the company
-        try{
+        try {
 
             controll_statemant = con.prepareStatement(CONTROLL_STATEMANT);
-            
+
             controll_statemant.setInt(1, owner_id);
             controll_statemant.setInt(2, bankAccountID);
-            
+
 
             controll_rs = controll_statemant.executeQuery();
 
 
-
-            if(!controll_rs.next()){
-                LOGGER.info("owner dosen't own company, companyID: " + bankAccountID + " ownerID: " +owner_id);
+            if (!controll_rs.next()) {
+                LOGGER.info("owner dosen't own company, companyID: " + bankAccountID + " ownerID: " + owner_id);
                 return;
             }
 
-        }finally{
+        } finally {
             if (controll_rs != null) {
                 controll_rs.close();
             }
@@ -99,20 +98,20 @@ public class DeleteBankAccountDAO extends AbstractDAO<Boolean>{
                 controll_statemant.close();
             }
         }
-        
 
-        try{
+
+        try {
             //execute the query
-            pstmt= con.prepareStatement(STATEMENT);
-            
+            pstmt = con.prepareStatement(STATEMENT);
+
             pstmt.setInt(1, bankAccountID);
 
             executed = pstmt.executeUpdate();
-            if(executed==1){
+            if (executed == 1) {
                 outputParam = true;
             }
 
-        }finally{
+        } finally {
 
             if (pstmt != null) {
                 pstmt.close();

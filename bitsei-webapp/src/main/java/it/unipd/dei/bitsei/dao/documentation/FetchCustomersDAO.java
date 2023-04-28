@@ -34,7 +34,9 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
     /**
      * Creates a new object fetching all Customers.
      *
-     * @param con    the connection to the database.
+     * @param con        the connection to the database.
+     * @param owner_id   the owner id of the company
+     * @param company_id the company id
      */
     public FetchCustomersDAO(final Connection con, int owner_id, int company_id) {
         super(con);
@@ -68,7 +70,6 @@ public final class FetchCustomersDAO extends AbstractDAO<List<Customer>> {
                 LOGGER.error("Company selected does not belong to logged user.");
                 throw new IllegalAccessException();
             }
-
 
 
             pstmt = con.prepareStatement(STATEMENT);

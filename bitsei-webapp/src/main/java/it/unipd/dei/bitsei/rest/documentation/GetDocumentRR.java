@@ -3,6 +3,7 @@ package it.unipd.dei.bitsei.rest.documentation;
 import it.unipd.dei.bitsei.dao.documentation.GetDocumentDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,20 +14,30 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * A REST resource for getting document.
+ *
+ * @author BITSEI GROUP
+ * @version 1.00
+ * @since 1.00
+ */
 public class GetDocumentRR extends AbstractRR {
-
-    /**
-     * Creates a new REST resource for listing {@code Company}s.
-     *
-     * @param req the HTTP request.
-     * @param res the HTTP response.
-     * @param con the connection to the database.
-     */
     private final int company_id;
     private final int invoice_id;
     private final int document_type;
     private final String absPath;
 
+    /**
+     * Creates a new REST resource for listing {@code Company}s.
+     *
+     * @param req           the HTTP request.
+     * @param res           the HTTP response.
+     * @param con           the connection to the database.
+     * @param absPath       the absolute path of the project
+     * @param company_id    the id of the company
+     * @param invoice_id    the id of the invoice
+     * @param document_type the type of the document
+     */
     public GetDocumentRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, final String absPath, final int company_id, final int invoice_id, final int document_type) {
         super(Actions.GET_DOCUMENT, req, res, con);
         this.company_id = company_id;
@@ -35,7 +46,7 @@ public class GetDocumentRR extends AbstractRR {
         this.absPath = absPath;
     }
 
-//uri format /rest/getdocument/{0/1/2}/invoice/{id}/company/{id}
+    //uri format /rest/getdocument/{0/1/2}/invoice/{id}/company/{id}
     @Override
     protected void doServe() throws IOException {
 
@@ -52,14 +63,12 @@ public class GetDocumentRR extends AbstractRR {
             filename = new GetDocumentDAO(con, company_id, owner_id, invoice_id, document_type).access().getOutputParam();
 
 
-
             if (filename != null) {
                 LOGGER.info("Document path successfully get.");
                 File f = new File(absPath + "/pdf/" + filename);
                 if (document_type != 2) {
                     res.setContentType("application/pdf");
-                }
-                else {
+                } else {
                     res.setContentType("application/xml");
                 }
                 res.setStatus(HttpServletResponse.SC_OK);

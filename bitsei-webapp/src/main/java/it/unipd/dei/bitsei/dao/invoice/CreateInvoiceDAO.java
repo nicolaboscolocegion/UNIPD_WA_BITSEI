@@ -2,6 +2,7 @@ package it.unipd.dei.bitsei.dao.invoice;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.Invoice;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,9 +44,10 @@ public final class CreateInvoiceDAO extends AbstractDAO<Invoice> {
     /**
      * Creates a new object for storing an invoice into the database.
      *
-     * @param con the connection to the database.
-     *
-     * @param invoice the invoice to be stored into the database.
+     * @param con        the connection to the database.
+     * @param invoice    the invoice to be stored into the database.
+     * @param owner_id   the id of the owner of the session.
+     * @param company_id the id of the company of the owner of the session.
      */
     public CreateInvoiceDAO(final Connection con, final Invoice invoice, final int owner_id, final int company_id) {
         super(con);

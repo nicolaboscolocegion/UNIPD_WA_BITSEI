@@ -43,7 +43,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private int company_id;
     private int invoice_id;
     private Date today;
-    private  String fileName;
+    private String fileName;
 
     private Customer c;
     private Invoice i;
@@ -59,20 +59,19 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private Integer fiscal_company_type;
 
 
-
     private List<DetailRow> ldr = new ArrayList<>();
     private List<Object> output = new ArrayList<>();
-
-
 
 
     /**
      * Closes the invoice.
      *
-     * @param con
-     *        the connection to the database.
-     * @param invoice_id
-     *        the id of the invoice to be closed.
+     * @param con        the connection to the database.
+     * @param invoice_id the id of the invoice to be closed.
+     * @param today      the date of the closure.
+     * @param fileName   the name of the pdf file.
+     * @param owner_id   the id of the owner.
+     * @param company_id the id of the company.
      */
     public CloseInvoiceDAO(final Connection con, int invoice_id, Date today, String fileName, int owner_id, int company_id) {
         super(con);
@@ -130,7 +129,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
                         rs.getBoolean("has_stamp")
                 );
 
-                customer_id =  rs.getInt("customer_id");
+                customer_id = rs.getInt("customer_id");
             }
             LOGGER.info("Invoice data successfully fetched.");
 
@@ -153,7 +152,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
                         rs.getString("pec"),
                         rs.getString("unique_code"),
                         rs.getInt("company_id")
-                        );
+                );
                 company_id = rs.getInt("company_id");
             }
             LOGGER.info("Customer data successfully fetched.");
@@ -228,8 +227,7 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
 
         } catch (Exception e) {
             throw new SQLException(e);
-        }
-        finally {
+        } finally {
             if (rs != null) {
                 rs.close();
             }
