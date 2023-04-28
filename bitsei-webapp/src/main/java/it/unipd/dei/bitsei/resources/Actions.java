@@ -49,14 +49,34 @@ public final class Actions {
      */
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
-
+    /**
+     * Create company action
+     */
     public static final String CREATE_COMPANY = "CREATE_COMPANY";
+
+    /**
+     * Update company action
+     */
     public static final String UPDATE_COMPANY = "UPDATE_COMPANY";
 
+    /**
+     * List companies action
+     */
     public static final String LIST_COMPANIES = "LIST_COMPANIES";
+
+    /**
+     * Get company action
+     */
     public static final String GET_COMPANY = "GET_COMPANY";
+
+    /**
+     * Delete company action
+     */
     public static final String DELETE_COMPANY = "DELETE_COMPANY";
 
+    /**
+     * Get company image action
+     */
     public static final String GET_COMPANY_IMAGE = "GET_COMPANY_IMAGE";
 
     /**
@@ -94,12 +114,40 @@ public final class Actions {
      * The invoices get by filters
      */
     public static final String GET_INVOICES_BY_FILTERS = "GET_INVOICES_BY_FILTERS";
+
+    /**
+     * The invoices list by filters
+     */
     public static final String LIST_INVOICES_BY_FILTERS = "LIST_INVOICES_BY_FILTERS";
+
+    /**
+     * Create customer action
+     */
     public static final String CREATE_CUSTOMER = "CREATE_CUSTOMER";
+
+    /**
+     * Update customer action
+     */
     public static final String UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
+
+    /**
+     * Get customer action
+     */
     public static final String GET_CUSTOMER = "GET_CUSTOMER";
+
+    /**
+     * Create customer action
+     */
     public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
+
+    /**
+     * CLOSE customer action
+     */
     public static final String CLOSE_INVOICE = "CLOSE_INVOICE";
+
+    /**
+     * Send mail action
+     */
     public static final String SEND_MAIL = "SEND_MAIL";
 
     /**
