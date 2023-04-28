@@ -16,6 +16,13 @@ import java.io.OutputStream;
 public abstract class AbstractResource implements Resource {
 
     /**
+     * Constructs a new {@code AbstractResource}.
+     */
+    public AbstractResource(){
+        // empty constructor
+    }
+
+    /**
      * A LOGGER available for all the subclasses.
      */
     protected static final Logger LOGGER = LogManager.getLogger(AbstractResource.class, StringFormatterMessageFactory.INSTANCE);

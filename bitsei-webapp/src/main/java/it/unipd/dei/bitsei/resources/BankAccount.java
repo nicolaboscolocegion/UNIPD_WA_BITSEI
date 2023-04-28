@@ -58,6 +58,8 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
+     * gets bank account name
+     *
      * @return the bank name
      */
     public String getBankName() {
@@ -65,6 +67,8 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
+     * gets the IBAN code
+     *
      * @return the IBAN code
      */
     public String getIban() {
@@ -72,6 +76,8 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
+     * gets the company ID that uses the bank account
+     *
      * @return the company ID that uses the bank account
      */
     public int getCompanyId() {
@@ -79,6 +85,8 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
+     * gets the friendly name of the bank account
+     *
      * @return return the friendly name of the bank account
      */
     public String getBankAccountFriendlyName() {
@@ -86,6 +94,8 @@ public class BankAccount extends AbstractResource {
     }
 
     /**
+     * gets the bank account ID
+     *
      * @return bank account ID
      */
     public int getBankAccountID() {
@@ -117,6 +127,7 @@ public class BankAccount extends AbstractResource {
 
     /**
      * fetch JSONs with all the data for the bank account
+     *
      * @param in The input stream
      * @return new BankAccount entity
      * @throws IOException if an I/O error occurs
