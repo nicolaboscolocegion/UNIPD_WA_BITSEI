@@ -22,6 +22,10 @@ import java.sql.SQLException;
  * @since 1.00
  */
 public final class GetProductServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public GetProductServlet(){}
 
     /**
      * Searches product by his id.

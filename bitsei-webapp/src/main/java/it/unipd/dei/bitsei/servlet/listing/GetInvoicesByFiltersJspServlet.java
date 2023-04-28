@@ -42,6 +42,10 @@ import java.util.List;
  *
  */
 public final class GetInvoicesByFiltersJspServlet extends AbstractDatabaseServlet {
+	/**
+	 * Default constructor.
+	 */
+	public GetInvoicesByFiltersJspServlet(){}
 
 	/**
 	 * Searches invoices by their total.

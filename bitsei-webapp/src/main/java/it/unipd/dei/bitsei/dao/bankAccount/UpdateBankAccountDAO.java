@@ -50,6 +50,8 @@ public class UpdateBankAccountDAO extends AbstractDAO<Boolean> {
     private int owner_id;
 
     /**
+     * Constructor that allocates an UpdateBankAccountDAO object.
+     *
      * @param con     the connection to the database
      * @param oldBA   the bank account to update
      * @param newBA   the new bank account

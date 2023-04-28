@@ -16,6 +16,8 @@ import java.sql.SQLException;
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
+ *
+ * @param <I> Parameter for invoice object.
  */
 public final class DeleteInvoiceDAO<I extends AbstractResource> extends AbstractDAO<Invoice> {
     private static final String FETCH = "SELECT * FROM bitsei_schema.\"Invoice\" WHERE invoice_id = ?;";

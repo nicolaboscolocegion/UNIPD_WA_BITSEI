@@ -45,6 +45,10 @@ import org.apache.logging.log4j.message.StringFormattedMessage;
 * @since 1.00
 */
 public final class ChartJspServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public ChartJspServlet(){}
 
     /**
      * Plots charts about invoices.

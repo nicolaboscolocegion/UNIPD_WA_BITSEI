@@ -15,6 +15,8 @@ import java.sql.SQLException;
  * @author Mirco Cazzaro (mirco.cazzaro@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
+ *
+ * @param <C> Parameter for customer object.
  */
 public final class DeleteCustomerDAO<C extends AbstractResource> extends AbstractDAO {
 

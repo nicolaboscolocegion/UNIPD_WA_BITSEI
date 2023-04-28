@@ -45,6 +45,8 @@ public class CreateBankAccountDAO extends AbstractDAO<Boolean> {
     private int owner_id;
 
     /**
+     * Constructor that creates an entity of CreateBankAccountDAO.
+     *
      * @param con      connection to the database
      * @param ba       new bank account
      * @param owner_id owner ID

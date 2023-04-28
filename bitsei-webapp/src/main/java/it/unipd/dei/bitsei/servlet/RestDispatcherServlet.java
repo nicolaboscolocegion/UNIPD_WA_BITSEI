@@ -44,6 +44,10 @@ import java.util.stream.Collectors;
  * Dispatches the request to the proper REST resource.
  */
 public final class RestDispatcherServlet extends AbstractDatabaseServlet {
+    /**
+     * Default constructor.
+     */
+    public RestDispatcherServlet(){}
 
     /**
      * The JSON UTF-8 MIME media type

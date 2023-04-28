@@ -24,6 +24,11 @@ import static it.unipd.dei.bitsei.utils.RegexValidationClass.fieldRegexValidatio
  */
 public final class CreateProductServlet extends AbstractDatabaseServlet {
     /**
+     * Default constructor.
+     */
+    public CreateProductServlet(){super();}
+
+    /**
      * Creates a new product into the database.
      *
      * @param req the HTTP request from the client.
