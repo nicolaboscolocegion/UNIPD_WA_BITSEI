@@ -33,7 +33,8 @@ Since: 1.0
 <h1>Reset Password Form</h1>
 
 <div>
-  <input type="hidden" id="token" value="${param.token}"/>
+  <label for="token">Token:</label>
+  <input id="token" type="text"/>
   <label for="password">Password:</label>
   <input id="password" type="password"/><br/><br/>
 
