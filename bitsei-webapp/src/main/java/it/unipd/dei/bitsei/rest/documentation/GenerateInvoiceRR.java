@@ -54,7 +54,7 @@ public class GenerateInvoiceRR extends AbstractRR {
      * @param r       the RestURIParser
      */
     public GenerateInvoiceRR(HttpServletRequest req, HttpServletResponse res, Connection con, String absPath, RestURIParser r) {
-        super(Actions.CLOSE_INVOICE, req, res, con);
+        super(Actions.GENERATE_INVOICE, req, res, con);
         this.absPath = absPath;
         this.r = r;
     }

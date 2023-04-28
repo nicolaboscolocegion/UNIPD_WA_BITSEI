@@ -141,9 +141,14 @@ public final class Actions {
     public static final String DELETE_CUSTOMER = "DELETE_CUSTOMER";
 
     /**
-     * CLOSE customer action
+     * CLOSE customer PDF action
      */
     public static final String CLOSE_INVOICE = "CLOSE_INVOICE";
+
+    /**
+     * GENERATE customer PDF/XML action
+     */
+    public static final String GENERATE_INVOICE = "GENERATE_INVOICE";
 
     /**
      * Send mail action
