@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect} from 'react';
 import {useSelector, connect} from "react-redux";
-import {Routes, Route, Navigate} from "react-router-dom";
+import {Switch, Route, Redirect} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,6 +11,7 @@ import {privateRoutes, routes} from "./routes/routes";
 
 function App() {
     const auth = useSelector((state) => state.auth);
+    console.log(auth)
     useEffect(() => {
         if (auth.isLoggedIn) {
             window.localStorage.setItem("accessToken", auth.accessToken);
@@ -25,19 +26,19 @@ function App() {
         <div className="h-full">
             <Suspense fallback={"...loading"}>
                 {auth.isLoggedIn ? (
-                    <Routes>
+                    <Switch>
                         {privateRoutes.map((route) => (
                             <Route key={route.path} {...route}/>
                         ))}
-                        <Route path="/" element={<Navigate replace to="/companies"/>}/>
-                    </Routes>
+                        <Redirect to={"/companies"} />
+                    </Switch>
                 ) : (
-                    <Routes>
+                    <Switch>
                         {routes.map((route) => (
                             <Route key={route.path} {...route}/>
                         ))}
-                        <Route path="/" element={<Navigate replace to="/login"/>}/>
-                    </Routes>
+                        <Redirect to={"/login"} />
+                    </Switch>
                 )}
             </Suspense>
             <ToastContainer
