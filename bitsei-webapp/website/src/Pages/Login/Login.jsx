@@ -14,7 +14,8 @@ function Login({ userLogin, logout }) {
     logout();
   }, [logout]);
 
-  const submitHandler = (data) => {
+  const submitHandler = (data, e) => {
+    e.preventDefault();
     console.log(data)
     userLogin(data);
   };
