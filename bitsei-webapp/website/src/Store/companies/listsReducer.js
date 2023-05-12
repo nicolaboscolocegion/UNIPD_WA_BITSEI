@@ -2,6 +2,7 @@ import types from "./listsActionTypes";
 
 const INITIAL_STATE = {
   items: [],
+  activeCompany: null,
   pending: true,
   errors: [],
 };
@@ -11,13 +12,15 @@ const companiesReducer = (currentState = INITIAL_STATE, { type, payload }) => {
     case types.GET_LISTS_START:
       return {
         ...currentState,
+        activeCompany: 0,
         pending: true,
       };
     case types.GET_LISTS_SUCCESS:
       return {
         ...currentState,
         pending: false,
-        companies: payload,
+        items: payload,
+        activeCompany: payload.length > 0 ? payload[0].id : 0,
         isLoggedIn: true,
       };
     case types.GET_LISTS_FAIL:
@@ -25,6 +28,7 @@ const companiesReducer = (currentState = INITIAL_STATE, { type, payload }) => {
         ...currentState,
         pending: false,
         errors: payload,
+        activeCompany: 0
       };
     default:
       return currentState;
