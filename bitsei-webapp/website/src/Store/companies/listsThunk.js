@@ -16,3 +16,5 @@ export const getLists = () => {
       });
   };
 };
+
+export const clearCompanies = () => ({ type: types.CLEAR_LISTS_STORE });
