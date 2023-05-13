@@ -5,7 +5,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import {Button} from "react-bootstrap";
 import DropDown from "./DropDown/DropDown";
-function Header({activeCompany = -1}) {
+function Header({activeCompany = -1, children}) {
+    console.log(children)
   const companies = useSelector((state) => state.companies);
 
   const activeCompanyStore = useSelector((state) => state.companies.activeCompany);
@@ -30,7 +31,7 @@ function Header({activeCompany = -1}) {
   // const companyNames = companies.items.map((company) => company.business_name);
 
   return (
-      <header>
+      <>
           <nav className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
               <div className="container-fluid">
                   <Button className={`navbar-toggler ${isExpanded ? "" : "collapsed"}`} type="button" data-mdb-toggle="collapse" data-mdb-target="#navbar" aria-controls="navbarExample01" aria-expanded={isExpanded} aria-label="Toggle navigation" onClick={handleToggle}>
@@ -45,6 +46,7 @@ function Header({activeCompany = -1}) {
                             ))}
                       </ul>
                       <ul className="navbar-nav mb-2 mb-lg-0 ml-0">
+                          {children && <li className={"nav-item active"}>{children}</li>}
                           <li className="nav-item active">
                               <DropDown companies={companies.items} activeCompany={activeCompany}/>
                           </li>
@@ -52,7 +54,7 @@ function Header({activeCompany = -1}) {
                   </div>
               </div>
           </nav>
-      </header>
+      </>
   );
 }
 

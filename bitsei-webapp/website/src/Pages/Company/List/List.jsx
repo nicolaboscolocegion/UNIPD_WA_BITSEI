@@ -15,13 +15,12 @@ function List({getLists}) {
 
     return companies.pending ? ("Loading") : (
         <>
-            <Header/>
-            <section style={{backgroundColor: "#eee"}}>
-                <Link className="w-full" to="/new-company">
-                    <button className="btn btn-outline-primary btn-sm mt-2" type="button">
-                        Add Company
-                    </button>
+            <Header>
+                <Link className="nav-link" to={"/companies/add"} style={{color: "green"}}>
+                    + Add Company
                 </Link>
+            </Header>
+            <section className="py-5" style={{backgroundColor: "#eee"}}>
                 <div className="container py-5">
                     {companies.items.map((company) => (
                         <Item
@@ -37,4 +36,6 @@ function List({getLists}) {
     )
 }
 
-export default connect(null, {getLists})(List);
+export default connect(null, {
+    getLists
+})(List);
