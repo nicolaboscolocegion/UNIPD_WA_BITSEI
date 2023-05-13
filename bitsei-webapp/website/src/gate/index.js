@@ -23,10 +23,18 @@ const me = {
 }
 
 const companies = {
-    createCompany: (data) => api.post("/api/v1/company", data),
+    createCompany: (data) => api.post("rest/company", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        }),
     getCompanies: () => api.get("rest/company"),
     getCompany: (id) => api.get(`/api/v1/company/${id}`),
-    updateCompany: (id, data) => api.put(`/api/v1/company/${id}`, data),
+    updateCompany: (id, data) => api.put(`rest/company/${id}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    }),
     getCompanyImage: (path) => api.get(`rest/company/image/${path}`, {
         responseType: "arraybuffer"
     }),

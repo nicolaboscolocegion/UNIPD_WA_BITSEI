@@ -14,18 +14,9 @@ client.defaults.baseURL = baseUrl;
 /*************************************
  *------* Request Interceptor *------*
  *************************************/
-client.interceptors.request.use(
-  async (config) => {
-    // *------* Set Headers *------*
-    config.headers["Accept"] = "application/json";
-    config.headers["Content-Type"] = "application/json";
+axios.defaults.headers.common["Content-Type"] = "application/json";
+axios.defaults.headers.common["Accept"] = "application/json";
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 /**************************************
  *------* Response Interceptor *------*
@@ -37,11 +28,9 @@ client.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       const { pathname } = window.location;
-      if (pathname !== "/login" && pathname !== "/register") {
+      if (pathname !== "/login") {
         store.dispatch({ type: "RESET_ACTION" });
-
-        const url = env.NODE_ENV === "production" ? siteUrl : ""; // redirect to localhost in development mode
-        window.location.replace(`${url}/login`);
+        window.location.replace(`${siteUrl}/login`);
       }
     }
     return Promise.reject(error);
