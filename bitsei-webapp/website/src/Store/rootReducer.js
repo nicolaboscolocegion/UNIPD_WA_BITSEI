@@ -9,8 +9,8 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
     if (action.type === "RESET_ACTION") {
-        localStorage.removeItem("persist:bitsei");
-        window.localStorage.removeItem("accessToken");
+        localStorage.removeItem("persist:bitsei11");
+        window.localStorage.removeItem("Authorization");
 
         const { routing } = state;
         state = { routing };

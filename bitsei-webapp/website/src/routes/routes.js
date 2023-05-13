@@ -8,12 +8,10 @@ const AddCompany = lazy(() => import("../Pages/Company/AddNewCompany/Add"));
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
-    { exact: true, path: "/companies", component: Companies },
-    { exact: true, path: "/companies/add", component: AddCompany },
-    { exact: true, path: "/companies/:company_id", component: Company },
-    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
 ];
 
 export const privateRoutes = [
-    // { exact: true, path: "/companies", component: Companies },
-];
+    { exact: true, path: "/companies", component: Companies },
+    { exact: true, path: "/companies/add", component: AddCompany },
+    { exact: true, path: "/companies/:company_id", component: Company },
+    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },];

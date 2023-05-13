@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import gate from "../../../../gate";
+import gate from "../../gate";
 import { Buffer } from 'buffer';
 import logo from "./bitseiLogo";
-function Item({id, img, name, details}) {
+function Item({id, name, details}) {
     const [image, setImage] = useState("");
 
     useEffect(() => {
@@ -48,7 +48,7 @@ function Item({id, img, name, details}) {
                                 <div className="mb-2 text-muted small">
                                     {details.map((detail) => (
                                         <>
-                                            <span key={detail.value} className="text-primary"> • </span>
+                                            <span className="text-primary"> • </span>
                                             <span>{detail.name}: {detail.value}<br/></span>
                                         </>
                                     ))}

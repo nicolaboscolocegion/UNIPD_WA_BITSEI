@@ -2,7 +2,7 @@ import api from './config';
 
 const auth = {
     login: (data) =>
-        api.post('/rest/user/login', data),
+        api.post('rest/login', data),
     forgetPass: (data) =>
         api.post('/auth/user/fpwmail', data),
     changePassword: (token, data) =>
@@ -24,9 +24,12 @@ const me = {
 
 const companies = {
     createCompany: (data) => api.post("/api/v1/company", data),
-    getCompanies: () => api.get("/api/v1/company"),
+    getCompanies: () => api.get("rest/company"),
     getCompany: (id) => api.get(`/api/v1/company/${id}`),
     updateCompany: (id, data) => api.put(`/api/v1/company/${id}`, data),
+    getCompanyImage: (path) => api.get(`rest/company/image/${path}`, {
+        responseType: "arraybuffer"
+    }),
 }
 
 const gate = {

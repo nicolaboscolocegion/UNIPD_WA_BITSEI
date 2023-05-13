@@ -20,7 +20,7 @@ const companiesReducer = (currentState = INITIAL_STATE, { type, payload }) => {
         ...currentState,
         pending: false,
         items: payload,
-        activeCompany: payload.length > 0 ? payload[0].id : 0,
+        activeCompany: payload.length > 0 ? payload[0]["company_id"] : 0,
         isLoggedIn: true,
       };
     case types.GET_LISTS_FAIL:

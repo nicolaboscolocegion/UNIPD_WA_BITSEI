@@ -4,32 +4,37 @@ import gate from "../../gate";
 import { history } from "../../index";
 import { toast } from "react-toastify";
 
-axios.defaults.baseURL = "http://localhost:8080/bitsei-v1/api";
+axios.defaults.baseURL = "http://localhost:8080/bitsei-1.0/";
 
 export const userLogin = (data) => {
     return async (dispatch) => {
         dispatch({ type: types.LOGIN_START });
-        setTimeout(function () {
-
         gate
             .login(data)
             .then((response) => {
                 console.log(response);
-                window.localStorage.setItem("accessToken", response.data.accessToken);
-                axios.defaults.headers.common["accessToken"] = response.data.accessToken;
-                gate
-                    .userInfo()
-                    .then((res) => {
-                        console.log(res);
-                        dispatch({
-                            type: types.LOGIN_SUCCESS,
-                            payload: { user: res.data, tokens: response.data },
-                        });
-                        history.push("/companies");
-                    })
-                    .catch((error) => {
-                        console.log(error.response);
-                    });
+                window.localStorage.setItem("Authorization", response.data.token);
+                axios.defaults.headers.common["Authorization"] = response.data.token;
+                // TODO: Remove this
+                dispatch({
+                    type: types.LOGIN_SUCCESS,
+                    payload: { user: {}, token: response.data.token },
+                });
+                history.push("/companies");
+
+                // gate
+                //     .userInfo()
+                //     .then((res) => {
+                //         console.log(res);
+                //         dispatch({
+                //             type: types.LOGIN_SUCCESS,
+                //             payload: { user: res.data, tokens: response.data },
+                //         });
+                //         history.push("/companies");
+                //     })
+                //     .catch((error) => {
+                //         console.log(error.response);
+                //     });
             })
             .catch((error) => {
                 // check if error.response is not null -> maybe the internet is not working
@@ -37,7 +42,7 @@ export const userLogin = (data) => {
                     toast.error("Please check your internet connection.");
                     dispatch({
                         type: types.LOGIN_FAIL,
-                        payload: "internet connection error",
+                        payload: "Internet connection error",
                     });
                     return;
                 }
@@ -47,11 +52,12 @@ export const userLogin = (data) => {
                     payload: error.response.data.messages,
                 });
 
-                if (typeof error.response.data.messages[0] === "string") {
-                    error.response.data.messages.map((item) => toast.error(item));
+                if (error.response.data.message.message){
+                    toast.error(error.response.data.message.message)
+                } else {
+                    toast.error("Something went wrong. Please try again.")
                 }
             });
-        }, 5000);
     };
 };
 
@@ -71,7 +77,7 @@ export const userLogin = (data) => {
 //
 export const logout = () => {
     return (dispatch) => {
-        localStorage.removeItem("accessToken");
+        localStorage.removeItem("Authorization");
 
         dispatch({ type: types.LOGOUT });
     };

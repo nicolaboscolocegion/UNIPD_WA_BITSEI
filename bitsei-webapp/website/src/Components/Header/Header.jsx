@@ -5,9 +5,13 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import {Button} from "react-bootstrap";
 import DropDown from "./DropDown/DropDown";
-function Header() {
+function Header({activeCompany = -1}) {
   const companies = useSelector((state) => state.companies);
-  const activeCompany = useSelector((state) => state.companies.activeCompany);
+
+  const activeCompanyStore = useSelector((state) => state.companies.activeCompany);
+  if (activeCompany === -1) {
+      activeCompany = activeCompanyStore;
+  }
 
   const [isExpanded, setIsExpanded] = useState(false);
   const handleToggle = () => {
@@ -23,7 +27,7 @@ function Header() {
       { name: "Settings", link: `/companies/edit/${activeCompany.id}`}
   ];
 
-  const companyNames = companies.items.map((company) => company.business_name);
+  // const companyNames = companies.items.map((company) => company.business_name);
 
   return (
       <header>

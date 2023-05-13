@@ -14,7 +14,7 @@ function App() {
     console.log(auth)
     useEffect(() => {
         if (auth.isLoggedIn) {
-            window.localStorage.setItem("accessToken", auth.accessToken);
+            window.localStorage.setItem("Authorization", auth.accessToken);
             axios.defaults.headers.common["Authorization"] = auth.accessToken;
         }
     }, [

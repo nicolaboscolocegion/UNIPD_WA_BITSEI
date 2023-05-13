@@ -8,7 +8,7 @@ import rootReducer from "./rootReducer";
 const middleWares = [thunk];
 
 const persistConfig = {
-    key: "bitsei1",
+    key: "bitsei11",
     storage,
 };
 

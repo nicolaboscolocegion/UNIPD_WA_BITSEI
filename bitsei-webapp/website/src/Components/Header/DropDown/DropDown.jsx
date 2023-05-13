@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { useSelector, connect } from "react-redux";
 import {Link, useParams} from "react-router-dom";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
 import {Button} from "react-bootstrap";
-import Header from "../Header";
 
 function DropDown({companies=[], activeCompany= 0}) {
 
     const [isExpanded, setIsExpanded] = useState(false);
-    const company = companies.filter((company) => company.id === activeCompany.id);
+    const company = companies.filter((company) => company.company_id === parseInt(activeCompany));
+    const paramsLength = Object.keys(useParams()).length;
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
     };
@@ -24,12 +21,15 @@ function DropDown({companies=[], activeCompany= 0}) {
                 aria-expanded={isExpanded}
                 onClick={handleToggle}
             >
-                {company.length > 0 ? company[0].business_name : "Select Company"}
+                {paramsLength > 0
+                    ? company.length > 0 ? company[0].business_name : "Select Company"
+                    : "Select Company"
+                }
             </Button>
 
             <ul className={`dropdown-menu ${isExpanded ? "show": ""}`} aria-labelledby="dropdownMenuLink">
                 {companies.map((company) => (
-                    <li><Link className="dropdown-item" to={`/companies/${company.id}`}>{company.name}</Link></li>
+                    <li><Link className="dropdown-item" to={`/companies/${company.company_id}`}>{company.business_name}</Link></li>
                 ))}
             </ul>
         </div>

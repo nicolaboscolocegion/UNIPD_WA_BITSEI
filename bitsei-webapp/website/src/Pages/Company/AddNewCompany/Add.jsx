@@ -1,15 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useSelector, connect} from "react-redux";
-import { getLists } from "../../../Store/companies/listsThunk";
-import Item from "../List/Item/Item";
-import {Link, useParams} from "react-router-dom";
+import Item from "../../../Components/CompanyItem/Item";
+import {useParams} from "react-router-dom";
 
 function AddCompany() {
-    const user = useSelector((state) => state.auth.user);
     const { company_id } = useParams();
     const companies = useSelector((state) => state.companies);
     console.log(company_id)
-    // const company = companies.items.find((company) => company.id === parseInt(company_id));
     const list = [
         {
             "name": "sdfsd",
