@@ -1,7 +1,27 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import gate from "../../../../gate";
+import { Buffer } from 'buffer';
+import logo from "./bitseiLogo";
+function Item({id, img, name, details}) {
+    const [image, setImage] = useState("");
 
-function Item({id, img, business_name, title, details}) {
+    useEffect(() => {
+        gate
+            .getCompanyImage(id)
+            .then((response) => {
+                // check bytes length to see if the image is empty
+                if (response.data.byteLength < 500) {
+                    setImage(logo());
+                    return;
+                }
+                setImage(Buffer.from(response.data).toString('base64'));
+            })
+            .catch(() => {
+                setImage(logo());
+            });
+    }, [id]);
+
     return (
         <div className="row justify-content-center mb-3">
             <div className="col-md-12 col-xl-10">
@@ -11,7 +31,7 @@ function Item({id, img, business_name, title, details}) {
                             <div className="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                                 <div className="bg-image hover-zoom ripple rounded ripple-surface">
                                     <img
-                                        src={img}
+                                        src={`data:image/png;base64, ${image}`}
                                         className="w-100"
                                         alt={"company_logo"}
                                     />
@@ -24,20 +44,20 @@ function Item({id, img, business_name, title, details}) {
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-6 col-xl-6">
-                                <h5>{business_name} | {title}</h5>
+                                <h5>{name}</h5>
                                 <div className="mb-2 text-muted small">
                                     {details.map((detail) => (
                                         <>
-                                            <span className="text-primary"> • </span>
-                                            <span>{detail.name} | {detail.value}<br/></span>
+                                            <span key={detail.value} className="text-primary"> • </span>
+                                            <span>{detail.name}: {detail.value}<br/></span>
                                         </>
                                     ))}
                                 </div>
-                                <p className="text-truncate mb-4 mb-md-0">
-                                    There are many variations of passages of Lorem Ipsum available, but the
-                                    majority have suffered alteration in some form, by injected humour, or
-                                    randomised words which don't look even slightly believable.
-                                </p>
+                                {/*<p className="text-truncate mb-4 mb-md-0">*/}
+                                {/*    There are many variations of passages of Lorem Ipsum available, but the*/}
+                                {/*    majority have suffered alteration in some form, by injected humour, or*/}
+                                {/*    randomised words which don't look even slightly believable.*/}
+                                {/*</p>*/}
                             </div>
                             <div className="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                                 <div className="d-flex flex-column mt-4">
