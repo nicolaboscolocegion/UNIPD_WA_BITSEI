@@ -4,7 +4,7 @@ const auth = {
     login: (data) =>
         api.post('rest/login', data),
     forgetPass: (data) =>
-        api.post('/auth/user/fpwmail', data),
+        api.post('rest/user/reset-password', data),
     changePassword: (token, data) =>
         api.post(`/auth/user/reset/${token}`, data)
 };
