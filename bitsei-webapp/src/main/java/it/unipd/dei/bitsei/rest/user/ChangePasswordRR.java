@@ -52,7 +52,7 @@ public class ChangePasswordRR extends AbstractRR {
 
         try {
             final ChangePassword data = ChangePassword.fromJSON(req.getInputStream());
-            LOGGER.info(data.getReset_token());
+
             is_done = new UpdateUserPasswordDAO(con, data).access().getOutputParam();
 
             if (is_done) {

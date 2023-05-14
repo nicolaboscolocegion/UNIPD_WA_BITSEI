@@ -1,6 +1,7 @@
 import { lazy } from "react";
 
 const Login = lazy(() => import("../Pages/Login/Login"));
+const ResetPassword = lazy(() => import("../Pages/Login/ResetPassword"));
 const Companies = lazy(() => import("../Pages/Company/List/List"));
 const Company = lazy(() => import("../Pages/Company/Item/Item"));
 const EditCompany = lazy(() => import("../Pages/Company/EditCompany/Edit"));
@@ -8,6 +9,7 @@ const AddCompany = lazy(() => import("../Pages/Company/AddNewCompany/Add"));
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
+    { exact: true, path: "/reset-password/:token", component: ResetPassword },
 ];
 
 export const privateRoutes = [

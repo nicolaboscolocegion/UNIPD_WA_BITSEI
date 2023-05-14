@@ -5,8 +5,8 @@ const auth = {
         api.post('rest/login', data),
     forgetPass: (data) =>
         api.post('rest/user/reset-password', data),
-    changePassword: (token, data) =>
-        api.post(`/auth/user/reset/${token}`, data)
+    changePassword: (data) =>
+        api.post(`rest/user/change-password`, data)
 };
 
 const user = {

@@ -15,6 +15,7 @@
  */
 package it.unipd.dei.bitsei.dao.user;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import it.unipd.dei.bitsei.dao.AbstractDAO;
 import it.unipd.dei.bitsei.resources.ChangePassword;
 
@@ -75,7 +76,8 @@ public class UpdateUserPasswordDAO extends AbstractDAO<Boolean> {
 
             // update the password if the token is valid
             pstmt = con.prepareStatement(UPDATE_STATEMENT);
-            pstmt.setString(1, password);
+            // hash the password and set it to the statement
+            pstmt.setString(1, BCrypt.withDefaults().hashToString(12, password.toCharArray()));
             pstmt.setString(2, token);
 
             rs = pstmt.executeUpdate();
