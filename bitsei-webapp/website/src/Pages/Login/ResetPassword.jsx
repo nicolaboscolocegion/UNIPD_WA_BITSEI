@@ -17,7 +17,6 @@ function ChangePassword() {
     const changePasswordHandler = (data, e) => {
         e.preventDefault();
         data.reset_token = token;
-        console.log(data);
         gate
             .changePassword({data})
             .then((response) => {
