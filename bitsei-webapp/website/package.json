@@ -20,6 +20,7 @@
     "redux-thunk": "^2.4.2",
     "react-hook-form": "^7.43.9",
     "react-redux": "^8.0.5",
+    "bootstrap": "^5.2.3",
     "react-bootstrap": "^2.7.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
     "@fortawesome/free-solid-svg-icons": "^6.4.0"
