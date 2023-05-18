@@ -30,46 +30,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>CreateProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.CreateProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CreateProductServlet</servlet-name>
-        <url-pattern>/productinsert</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DeleteProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.DeleteProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>DeleteProductServlet</servlet-name>
-        <url-pattern>/productdelete</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>UpdateProductServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.UpdateProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>UpdateProductServlet</servlet-name>
-        <url-pattern>/productupdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LoadProductForUpdateServlet</servlet-name>
-        <servlet-class>it.unipd.dei.bitsei.servlet.product.GetProductServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoadProductForUpdateServlet</servlet-name>
-        <url-pattern>/loadproduct</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>GetInvoicesByFiltersServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.listing.GetInvoicesByFiltersServlet</servlet-class>
     </servlet>
@@ -132,6 +92,7 @@
         <url-pattern>/rest/company/*</url-pattern>
         <url-pattern>/rest/customer/*</url-pattern>
         <url-pattern>/rest/invoice/*</url-pattern>
+        <url-pattern>/rest/product/*</url-pattern>
         <url-pattern>/rest/user</url-pattern>
         <url-pattern>/rest/invoiceproduct/*</url-pattern>
         <url-pattern>/rest/closeinvoice/*</url-pattern>

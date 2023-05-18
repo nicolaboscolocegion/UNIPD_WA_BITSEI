@@ -20,7 +20,7 @@ public class Product extends AbstractResource{
     /**
      * The unique id of the product.
      */
-    private final Integer product_id;
+    private Integer product_id;
 
     /**
      * The external key pointing to the id of the company that sells the product.
@@ -174,6 +174,12 @@ public class Product extends AbstractResource{
      * @return the textual description of the product.
      */
     public String getDescription() { return description; }
+
+    /**
+     * Sets the product ID of this object to the ID passed as parameter.
+     * @param product_id The value for the product ID we want to set.
+     */
+    public void setProduct_id(int product_id) {this.product_id = product_id;}
 
     @Override
     protected final void writeJSON(final OutputStream out) throws IOException {

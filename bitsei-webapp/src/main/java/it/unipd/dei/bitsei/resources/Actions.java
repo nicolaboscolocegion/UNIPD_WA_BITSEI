@@ -178,6 +178,23 @@ public final class Actions {
     public static final String DELETE_INVOICE = "DELETE_INVOICE";
 
     /**
+     * Creation of new product.
+     */
+    public static final String CREATE_PRODUCT = "CREATE_PRODUCT";
+    /**
+     * Update of product.
+     */
+    public static final String UPDATE_PRODUCT = "UPDATE_PRODUCT";
+    /**
+     * Get of product.
+     */
+    public static final String GET_PRODUCT = "GET_PRODUCT";
+    /**
+     * Deletion of product.
+     */
+    public static final String DELETE_PRODUCT = "DELETE_PRODUCT";
+
+    /**
      * Creation of new invoice.
      */
     public static final String CREATE_INVOICE_PRODUCT = "CREATE_INVOICE_PRODUCT";

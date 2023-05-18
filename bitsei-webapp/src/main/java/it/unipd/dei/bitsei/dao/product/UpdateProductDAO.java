@@ -15,12 +15,13 @@ import java.sql.SQLException;
  * @version 1.00
  * @since 1.00
  */
-public final class UpdateProductDAO extends AbstractDAO {
+public final class UpdateProductDAO extends AbstractDAO<Product> {
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */
     private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Product\" ON bitsei_schema.\"Product\".company_id = bitsei_schema.\"Company\".company_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ? AND bitsei_schema.\"Product\".product_id = ?;";
 
+    private static final String FETCH = "SELECT * FROM bitsei_schema.\"Product\" WHERE product_id = ?;";
     /**
      * The SQL statement to be executed.
      */
@@ -79,8 +80,17 @@ public final class UpdateProductDAO extends AbstractDAO {
             }
 
             if (rs.getInt("c") == 0) {
-                LOGGER.error("Product selected does not belong to logged user.");
+                LOGGER.error("Data access violation");
                 throw new IllegalAccessException();
+            }
+
+            pstmt = con.prepareStatement(FETCH);
+            pstmt.setInt(1, product.getProduct_id());
+            rs = pstmt.executeQuery();
+            Product p = null;
+
+            while (rs.next()) {
+                p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
             }
 
             pstmt = con.prepareStatement(STATEMENT);
@@ -97,8 +107,8 @@ public final class UpdateProductDAO extends AbstractDAO {
             LOGGER.info("query: " + pstmt.toString());
 
             LOGGER.info("Product %s successfully updated in the database.", product.getTitle());
-        } catch (Exception e) {
-            throw new SQLException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();
