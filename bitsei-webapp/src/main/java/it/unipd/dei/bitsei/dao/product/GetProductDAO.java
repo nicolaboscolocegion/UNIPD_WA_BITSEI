@@ -80,27 +80,30 @@ public final class GetProductDAO extends AbstractDAO<Product> {
                 throw new SQLException();
             }
 
+            if (rs.getInt("c") == 0) {
+                LOGGER.error("Data access violation");
+                throw new IllegalAccessException();
+            }
+
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, product_id);
 
             rs = pstmt.executeQuery();
 
-            if (rs.getInt("c") == 0) {
-                LOGGER.error("Product selected does not belong to logged user.");
-                throw new IllegalAccessException();
+            while (rs.next()) {
+                p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
             }
 
-            p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
-
-
-            LOGGER.info("Product with product_id above %d successfully listed.", product_id);
-        } catch (Exception e) {
-            throw new SQLException(e);
+            LOGGER.info("Product with product_id %d successfully listed.", product_id);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (rs != null) {
                 rs.close();
             }
-
+            if (rs_check != null) {
+                rs_check.close();
+            }
             if (pstmt != null) {
                 pstmt.close();
             }

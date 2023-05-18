@@ -1,6 +1,5 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.user.GetUserDAO;
 import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -10,6 +9,10 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.product.CreateProductRR;
+import it.unipd.dei.bitsei.rest.product.DeleteProductRR;
+import it.unipd.dei.bitsei.rest.product.GetProductRR;
+import it.unipd.dei.bitsei.rest.product.UpdateProductRR;
 import it.unipd.dei.bitsei.rest.user.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.documentation.*;
@@ -729,6 +732,82 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                     LOGGER.warn("Unsupported operation for URI /customer: %s.", method);
 
                     m = new Message("Unsupported operation for URI /customer.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+    private boolean processProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("product")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+
+                case "POST":
+                    new CreateProductRR(req, res, getConnection(), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /product: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /product.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+                case "GET":
+                    new GetProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "DELETE":
+                    new DeleteProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "PUT":
+                    new UpdateProductRR(req, res, getConnection(), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /product: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /product.", "E4A5",
                             String.format("Requested operation %s.", method));
                     res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
                     m.toJSON(res.getOutputStream());

@@ -93,8 +93,8 @@ public final class CreateProductDAO extends AbstractDAO {
             pstmt.execute();
 
             LOGGER.info("Product %s successfully stored in the database.", product.getTitle());
-        } catch (Exception e) {
-            throw new SQLException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         } finally {
             if (pstmt != null) {
                 pstmt.close();
