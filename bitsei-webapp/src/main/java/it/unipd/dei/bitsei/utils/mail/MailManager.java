@@ -79,6 +79,8 @@ public final class MailManager {
         // set up the configuration for JavaMail
         final Properties p = new Properties();
 
+        System.out.println("## CFG: " + cfg + " ##");
+        System.out.println("## P: " + p + " ##");
         String tmp = cfg.getProperty(MailManager.class.getName() + ".from");
         if (tmp == null || tmp.isBlank()) {
             LOGGER.error("Property %s missing or empty.", MailManager.class.getName() + ".from");
@@ -359,4 +361,15 @@ public final class MailManager {
         return cfg;
 
     }
+
+    public static void main(String[] args) {
+        System.out.println("##  " + MailManager.class.getName());
+        try {
+            MailManager.sendMail("martinellim45@gmail.com", "Test", "Read this pls", "text/html;charset=UTF-8");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
+

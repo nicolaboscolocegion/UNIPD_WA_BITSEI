@@ -1,6 +1,7 @@
 package it.unipd.dei.bitsei.dao.product;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
+import it.unipd.dei.bitsei.resources.AbstractResource;
 import it.unipd.dei.bitsei.resources.Product;
 
 import java.sql.Connection;
@@ -14,8 +15,13 @@ import java.sql.SQLException;
  * @author Fabio Zanini (fabio.zanini@studenti.unipd.it)
  * @version 1.00
  * @since 1.00
+ *
+ *
+ * @param <P> Parameter for product object.
  */
-public final class DeleteProductDAO extends AbstractDAO {
+public final class DeleteProductDAO<P extends AbstractResource> extends AbstractDAO<Product> {
+    private static final String FETCH = "SELECT * FROM bitsei_schema.\"Product\" WHERE product_id = ?;";
+
     /**
      * SQL statement to be executed to check ownership for security reasons.
      */
@@ -27,9 +33,9 @@ public final class DeleteProductDAO extends AbstractDAO {
     private static final String STATEMENT = "DELETE FROM bitsei_schema.\"Product\" WHERE product_id = ?;";
 
     /**
-     * The Product to be deleted from the database.
+     * The id of the product to be deleted from the database.
      */
-    private final Product product;
+    private final int product_id;
 
     /**
      * The owner_id of this session, to be checked for security reasons.
@@ -45,25 +51,22 @@ public final class DeleteProductDAO extends AbstractDAO {
      * Creates a new object for deleting a product from the database.
      *
      * @param con        the connection to the database.
-     * @param product    the product to be deleted from the database.
+     * @param product_id the id of the product to be deleted from the database.
      * @param owner_id   the id of the owner of the session.
      * @param company_id the id of the company of the owner of the session.
      */
-    public DeleteProductDAO(final Connection con, final Product product, final int owner_id, final int company_id) {
+    public DeleteProductDAO(final Connection con, final int product_id, final int owner_id, final int company_id) {
         super(con);
 
-        if (product == null) {
-            LOGGER.error("The product cannot be null.");
-            throw new NullPointerException("The product cannot be null.");
-        }
+        this.product_id = product_id;
         this.owner_id = owner_id;
         this.company_id = company_id;
-        this.product = product;
     }
 
     @Override
     protected final void doAccess() throws SQLException {
 
+        Product p = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -71,7 +74,7 @@ public final class DeleteProductDAO extends AbstractDAO {
             pstmt = con.prepareStatement(CHECK_OWNERSHIP_STMT);
             pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
-            pstmt.setInt(3, product.getProduct_id());
+            pstmt.setInt(3, product_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {
                 LOGGER.error("Error on fetching data from database");
@@ -83,13 +86,19 @@ public final class DeleteProductDAO extends AbstractDAO {
                 throw new IllegalAccessException();
             }
 
+            pstmt = con.prepareStatement(FETCH);
+            pstmt.setInt(1, product_id);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                p = new Product(rs.getInt("product_id"), rs.getInt("company_id"), rs.getString("title"), rs.getInt("default_price"), rs.getString("logo"), rs.getString("measurement_unit"), rs.getString("description"));
+            }
+
             pstmt = con.prepareStatement(STATEMENT);
-            pstmt.setInt(1, product.getProduct_id());
+            pstmt.setInt(1, product_id);
+            pstmt.executeUpdate();
 
-
-            pstmt.execute();
-
-            LOGGER.info("Product %s successfully deleted from the database.", product.getTitle());
+            LOGGER.info("Product successfully deleted from the database.");
         } catch (Exception e) {
             throw new SQLException(e);
         } finally {
@@ -97,6 +106,8 @@ public final class DeleteProductDAO extends AbstractDAO {
                 pstmt.close();
             }
         }
+
+        this.outputParam = p;
 
     }
 }

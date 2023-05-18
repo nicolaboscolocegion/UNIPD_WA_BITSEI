@@ -6,6 +6,7 @@ const Companies = lazy(() => import("../Pages/Company/List/List"));
 const Company = lazy(() => import("../Pages/Company/Item/Item"));
 const EditCompany = lazy(() => import("../Pages/Company/EditCompany/Edit"));
 const AddCompany = lazy(() => import("../Pages/Company/AddNewCompany/Add"));
+const ShowChart = lazy(() => import("../Pages/Insights/Show"));
 const Customer = lazy(() => import("../Pages/Customers/GetCustomers/Item"));
 const Customers = lazy(() => import("../Pages/Customers/GetCustomers/List"));
 
@@ -21,3 +22,5 @@ export const privateRoutes = [
     { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
     { exact: true, path: "/customers/:customer_id/company/:company_id", component: Customer },
     { exact: true, path: "/list-customer/company/:company_id", component: Customers },];
+    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
+    { exact: true, path: "/insights", component: ShowChart },];
