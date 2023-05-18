@@ -24,7 +24,7 @@ function Header({activeCompany = -1, children}) {
       { name: "Invoice", link: "/about" },
       { name: "Products", link: "/contact" },
       { name: "Customers", link: "/login" },
-      { name: "Insights", link: "/register" },
+      { name: "Insights", link: "/insights" },
       { name: "Settings", link: `/companies/edit/${activeCompany.id}`}
   ];
 
