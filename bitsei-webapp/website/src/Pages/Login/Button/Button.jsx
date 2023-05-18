@@ -7,9 +7,8 @@ function Button({title}) {
     const pending = useSelector((state) => state.auth.pending);
 
     return (
-        <div className="pt-1 mb-4">
             <button
-                className="btn btn-info btn-lg btn-block"
+                className="btn btn-primary"
                 type="submit"
             >
                 {pending
@@ -17,7 +16,6 @@ function Button({title}) {
                         : title
                 }
             </button>
-        </div>
 
     );
 }

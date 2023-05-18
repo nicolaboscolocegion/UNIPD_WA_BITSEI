@@ -61,10 +61,10 @@ function Item({id, name, details}) {
                             </div>
                             <div className="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                                 <div className="d-flex flex-column mt-4">
-                                    <Link className="w-full" to={`/companies/${id}`}>
+                                    <Link className="w-full btn-block" to={`/companies/${id}`}>
                                         <button className="btn btn-primary btn-sm" type="button">Go</button>
                                     </Link>
-                                    <Link className="w-full" to={`/companies/edit/${id}`}>
+                                    <Link className="btn btn-primary btn-lg active" to={`/companies/edit/${id}`}>
                                         <button className="btn btn-outline-primary btn-sm mt-2" type="button">Edit Company</button>
                                     </Link>
                                 </div>

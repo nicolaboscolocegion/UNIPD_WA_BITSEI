@@ -6,8 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 import {userLogin} from "./Store/auth/authThunk";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles.css';
 import axios from "axios";
 import {privateRoutes, routes} from "./routes/routes";
+import Navbar from "./Components/Navbar/Navbar";
+import Sidebar from "./Components/Sidebar/Sidebar";
+import Footer from "./Components/Footer/Footer";
 
 function App() {
     const auth = useSelector((state) => state.auth);
@@ -23,21 +27,32 @@ function App() {
     ]);
 
     return (
-        <div className="h-full">
+        <div className="bg-primary">
             <Suspense fallback={"...loading"}>
                 {auth.isLoggedIn ? (
-                    <Switch>
-                        {privateRoutes.map((route) => (
-                            <Route key={route.path} {...route}/>
-                        ))}
-                        <Redirect to={"/companies"} />
-                    </Switch>
+                    <>
+                        <Navbar/>
+                        <div id="layoutSidenav">
+                            <Sidebar/>
+                            <div id="layoutSidenav_content">
+                                <main>
+                                    <Switch>
+                                        {privateRoutes.map((route) => (
+                                            <Route key={route.path} {...route}/>
+                                        ))}
+                                        <Redirect to={"/companies"}/>
+                                    </Switch>
+                                </main>
+                                <Footer/>
+                            </div>
+                        </div>
+                    </>
                 ) : (
                     <Switch>
                         {routes.map((route) => (
                             <Route key={route.path} {...route}/>
                         ))}
-                        <Redirect to={"/login"} />
+                        <Redirect to={"/login"}/>
                     </Switch>
                 )}
             </Suspense>

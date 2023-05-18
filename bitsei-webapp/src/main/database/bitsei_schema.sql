@@ -223,6 +223,7 @@ CREATE TABLE bitsei_schema."Invoice_Product" (
                                                  unit_price float8 NOT NULL,
                                                  related_price float8 NULL,
                                                  related_price_description bpchar(1024) NULL,
+                                                 purchase_date date NULL,
                                                  CONSTRAINT "Invoice_Product_pkey" PRIMARY KEY (invoice_id, product_id),
                                                  CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE,
                                                  CONSTRAINT "Product" FOREIGN KEY (product_id) REFERENCES bitsei_schema."Product"(product_id) ON DELETE CASCADE ON UPDATE CASCADE

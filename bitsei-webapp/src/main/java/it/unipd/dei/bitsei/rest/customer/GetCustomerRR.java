@@ -64,6 +64,8 @@ public class GetCustomerRR extends AbstractRR {
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
 
+            LOGGER.info("company id = " + r.getCompanyID());
+
             // creates a new object for accessing the database and stores the customer
             c = new GetCustomerDAO(con, customerID, owner_id, r.getCompanyID()).access().getOutputParam();
 

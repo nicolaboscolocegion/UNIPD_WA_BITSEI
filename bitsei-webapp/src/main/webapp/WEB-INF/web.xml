@@ -143,6 +143,7 @@
         <url-pattern>/productupdate</url-pattern>
         <url-pattern>/loadproduct</url-pattern>
         <url-pattern>/rest/list-invoice/*</url-pattern>
+        <url-pattern>/rest/list-customer/*</url-pattern>
         <url-pattern>/rest/list-company/*</url-pattern>
         <url-pattern>/rest/list-product/*</url-pattern>
         <url-pattern>/rest/filter-invoices/*</url-pattern>

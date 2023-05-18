@@ -40,11 +40,17 @@ const companies = {
     }),
 }
 
+const customers = {
+    getCustomer: (customer_id, company_id) => api.get(`rest/customer/${customer_id}/company/${company_id}`),
+    getCustomers: (company_id) => api.get(`rest/list-customer/company/${company_id}`)
+}
+
 const gate = {
     ...me,
     ...user,
     ...auth,
-    ...companies
+    ...companies,
+    ...customers
 };
 
 export default gate;
