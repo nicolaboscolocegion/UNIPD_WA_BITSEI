@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import logo from "../CompanyItem/bitseiLogo";
-import Total from "../../Components/SideBar/Filters/Total";
+import Total from ".//Filters/Total";
 
-function SideBar({id, name, details}) {
+function SidebarFilter({id, name, details}) {
 
     return (
         <div class="offcanvas offcanvas-end show" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
@@ -17,4 +17,4 @@ function SideBar({id, name, details}) {
     );
 }
 
-export default SideBar;
+export default SidebarFilter

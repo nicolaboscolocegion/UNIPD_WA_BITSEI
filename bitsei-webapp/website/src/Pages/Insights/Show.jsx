@@ -6,7 +6,7 @@ import {clearCompanies} from "../../Store/companies/listsThunk";
 import gate from "../../gate";
 import {history} from "../../index";
 import Input from "./Input/Input";
-import SideBar from "../../Components/SideBar/SideBar";
+import SidebarFilter from "../../Components/SidebarFilters/SidebarFilter";
 
 // TODO: Add validation for all fields
 // TODO: Add error handling for all fields
@@ -94,7 +94,7 @@ function AddCompany({clearCompanies}) {
         <section className="py-5"> 
             <div className="container bg-white">
                 <section className="w-100 p-4 text-center pb-4">
-                    <SideBar>Boh</SideBar>
+                    <SidebarFilter>Boh</SidebarFilter>
                     <h1>Amazing charts</h1>
                 </section>
             </div>

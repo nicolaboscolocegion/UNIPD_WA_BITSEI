@@ -3,7 +3,7 @@ import {Table} from "react-bootstrap";
 import {useSelector, connect} from "react-redux";
 import {getLists} from "../../../Store/companies/listsThunk";
 import Navbar from "../../../Components/Navbar/Navbar";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import Sidebar from "../../../Components/SidebarFilters/SidebarFilter";
 import Image from "../../../Components/Image/Image";
 import Item from "../../../Components/CompanyItem/Item";
 import {Link} from "react-router-dom";

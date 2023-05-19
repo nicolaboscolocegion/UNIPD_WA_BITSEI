@@ -10,7 +10,7 @@ import './styles.css';
 import axios from "axios";
 import {privateRoutes, routes} from "./routes/routes";
 import Navbar from "./Components/Navbar/Navbar";
-import Sidebar from "./Components/Sidebar/Sidebar";
+import Sidebar from "./Components/SidebarFilters/SidebarFilter";
 import Footer from "./Components/Footer/Footer";
 
 function App() {
