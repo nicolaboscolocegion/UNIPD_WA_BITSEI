@@ -10,7 +10,7 @@ import './styles.css';
 import axios from "axios";
 import {privateRoutes, routes} from "./routes/routes";
 import Navbar from "./Components/Navbar/Navbar";
-import Sidebar from "./Components/SidebarFilters/SidebarFilter";
+import SideBar from "./Components/SideBar/SideBar";
 import Footer from "./Components/Footer/Footer";
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
                     <>
                         <Navbar/>
                         <div id="layoutSidenav">
-                            <Sidebar/>
+                            <SideBar/>
                             <div id="layoutSidenav_content">
                                 <main>
                                     <Switch>
