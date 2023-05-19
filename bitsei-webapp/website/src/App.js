@@ -4,7 +4,6 @@ import {Switch, Route, Redirect} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {userLogin} from "./Store/auth/authThunk";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 import axios from "axios";
