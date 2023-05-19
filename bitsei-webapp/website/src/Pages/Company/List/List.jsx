@@ -58,7 +58,7 @@ function List({getLists}) {
             <div className="card mb-4">
                 <div className="card-header">
                     <i className="fas fa-table me-1"/>
-                    DataTable Example
+                    Select company
                 </div>
                 <div className="card-body">
                     <Table id="datatablesSimple">
