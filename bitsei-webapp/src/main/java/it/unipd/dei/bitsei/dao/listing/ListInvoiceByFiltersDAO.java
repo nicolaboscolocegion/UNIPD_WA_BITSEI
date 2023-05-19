@@ -17,7 +17,7 @@
 package it.unipd.dei.bitsei.dao.listing;
 
 import it.unipd.dei.bitsei.dao.AbstractDAO;
-import it.unipd.dei.bitsei.resources.Invoice;
+import it.unipd.dei.bitsei.resources.InvoiceContainer;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.List;
  * @version 1.00
  * @since 1.00
  */
-public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
+public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>> {
 
     /**
      * The SQL statement to be executed in order to check user authorization for this resource
@@ -96,19 +96,20 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
      */
     private final Date toWarningDate;
 
-    private final boolean filterByBusinessName;
+    private final boolean filterByCustomerId;
 
     /**
      * List of the business names of the customers associated to the invoices to list
      */
-    private final List<String> fromBusinessName;
+    private final List<Integer> fromCustomerId;
 
-    private final boolean filterByProductTitle;
+    private final boolean filterByProductId;
 
     /**
      * List of the product titles of the products associated to the invoices to list
      */
-    private final List<String> fromProductTitle;
+    private final List<Integer> fromProductId;
+
 
     private String FilterBetween(String field_name, boolean enableNull) {
         enableNull = false;
@@ -146,15 +147,15 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
      * @param toInvoiceDate        the invoice date from which to end the filtering
      * @param fromWarningDate      the warning date from which to start the filtering
      * @param toWarningDate        the warning date from which to end the filtering
-     * @param fromBusinessName     the business name from which to start the filtering
-     * @param fromProductTitle     the product title from which to start the filtering
+     * @param fromCustomerId       the customer id from which to start the filtering
+     * @param fromProductId        the product id from which to start the filtering
      * @param filterByDiscount     true if the discount filter is enabled, false otherwise
      * @param filterByTotal        true if the total filter is enabled, false otherwise
      * @param filterByPfr          true if the pension fund refund filter is enabled, false otherwise
      * @param filterByInvoiceDate  true if the invoice date filter is enabled, false otherwise
      * @param filterByWarningDate  true if the warning date filter is enabled, false otherwise
-     * @param filterByBusinessName true if the business name filter is enabled, false otherwise
-     * @param filterByProductTitle true if the product title filter is enabled, false otherwise
+     * @param filterByCustomerId true if the customer id filter is enabled, false otherwise
+     * @param filterByProductId true if the product id filter is enabled, false otherwise
      */
     public ListInvoiceByFiltersDAO(final Connection con, int ownerId, int companyId,
                                    final boolean filterByTotal, final double fromTotal, final double toTotal,
@@ -162,8 +163,8 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
                                    final boolean filterByPfr, final double fromPfr, final double toPfr,
                                    final boolean filterByInvoiceDate, final Date fromInvoiceDate, final Date toInvoiceDate,
                                    final boolean filterByWarningDate, final Date fromWarningDate, final Date toWarningDate,
-                                   final boolean filterByBusinessName, final List<String> fromBusinessName,
-                                   final boolean filterByProductTitle, final List<String> fromProductTitle) {
+                                   final boolean filterByCustomerId, final List<Integer> fromCustomerId,
+                                   final boolean filterByProductId, final List<Integer> fromProductId) {
         super(con);
 
         this.ownerId = ownerId;
@@ -189,11 +190,11 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
         this.fromWarningDate = fromWarningDate;
         this.toWarningDate = toWarningDate;
 
-        this.filterByBusinessName = filterByBusinessName;
-        this.fromBusinessName = fromBusinessName;
+        this.filterByCustomerId = filterByCustomerId;
+        this.fromCustomerId = fromCustomerId;
 
-        this.filterByProductTitle = filterByProductTitle;
-        this.fromProductTitle = fromProductTitle;
+        this.filterByProductId = filterByProductId;
+        this.fromProductId = fromProductId;
     }
 
     /**
@@ -202,13 +203,13 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
     @Override
     protected void doAccess() throws SQLException {
         //String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
-        String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
+        String init_query = "SELECT i.*, c.business_name, p.title FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ResultSet rs_check = null;
 
         // the results of the search
-        final List<Invoice> invoices = new ArrayList<Invoice>();
+        final List<InvoiceContainer> invoices = new ArrayList<InvoiceContainer>();
 
         // check if the user is allowed for this resource
         try {
@@ -250,11 +251,11 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             if (filterByWarningDate)
                 query.append(FilterBetween("i.warning_date", true));
 
-            if (filterByBusinessName)
-                query.append(FilterByStringList("c.business_name", fromBusinessName.size()));
+            if (filterByCustomerId)
+                query.append(FilterByStringList("c.customer_id", fromCustomerId.size()));
 
-            if (filterByProductTitle)
-                query.append(FilterByStringList("p.title", fromProductTitle.size()));
+            if (filterByProductId)
+                query.append(FilterByStringList("p.product_id", fromProductId.size()));
 
             query.append(";");
 
@@ -289,16 +290,16 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
                 pstmt.setDate(i++, toWarningDate);
                 param += "fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " ";
             }
-            if (filterByBusinessName) {
-                for (int j = 0; j < fromBusinessName.size(); j++) {
-                    param += "fromBusinessName(" + j + "): " + fromBusinessName.get(j) + " ";
-                    pstmt.setString(i++, fromBusinessName.get(j));
+            if (filterByCustomerId) {
+                for (int j = 0; j < fromCustomerId.size(); j++) {
+                    param += "fromCustomerId(" + j + "): " + fromCustomerId.get(j) + " ";
+                    pstmt.setInt(i++, fromCustomerId.get(j));
                 }
             }
-            if (filterByProductTitle) {
-                for (int j = 0; j < fromProductTitle.size(); j++) {
-                    param += "fromProductTitle(" + j + "): " + fromProductTitle.get(j) + " ";
-                    pstmt.setString(i++, fromProductTitle.get(j));
+            if (filterByProductId) {
+                for (int j = 0; j < fromProductId.size(); j++) {
+                    param += "fromProductId(" + j + "): " + fromProductId.get(j) + " ";
+                    pstmt.setInt(i++, fromProductId.get(j));
                 }
             }
 
@@ -308,7 +309,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                invoices.add(new Invoice(
+                invoices.add(new InvoiceContainer(
                         rs.getInt("invoice_id"),
                         rs.getInt("customer_id"),
                         rs.getInt("status"),
@@ -322,7 +323,9 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<Invoice>> {
                         rs.getDouble("total"),
                         rs.getDouble("discount"),
                         rs.getDouble("pension_fund_refund"),
-                        rs.getBoolean("has_stamp"))
+                        rs.getBoolean("has_stamp"),
+                        rs.getString("business_name"),
+                        rs.getString("title"))
                 );
             }
 
