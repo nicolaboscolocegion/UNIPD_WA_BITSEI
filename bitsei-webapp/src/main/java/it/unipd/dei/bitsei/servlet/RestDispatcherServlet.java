@@ -1126,7 +1126,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
         final int company_id = r.getCompanyID();
 
-        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "startPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromBusinessName", "fromProductTitle");
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromCustomerId", "fromProductId");
         // the request URI contains filter(s)
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
 
@@ -1172,27 +1172,33 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             // Parse every key-value pair and add it to the map
             for(String line : requestLines) {
                 String[] keyValue = line.split(":");
-
                 // Clean the data before parsing
                 String key = keyValue[0].trim().replaceAll("\"", "");
                 key = key.replaceAll("\\s+", "");
                 key = key.replaceAll("[\\[\\](){}]","");
-                String value = keyValue[1].trim().replaceAll("\"", "");
-                value = value.replaceAll("[\\[\\](){}]","");
 
-                if(!filterList.contains(key)) {
-                    LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+                if(keyValue.length > 1) {
+                    String value = keyValue[1].trim().replaceAll("\"", "");
+                    value = value.replaceAll("[\\[\\](){}]","");
 
-                    m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
-                            String.format("Requested URI: %s.", req.getRequestURI()));
-                    res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    m.toJSON(res.getOutputStream());
-                    return null;
+                    if(!filterList.contains(key)) {
+                        LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+                        LOGGER.warn("## checkPath func: Available filters: " + filterList + " ##");
+                        m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
+                                String.format("Requested URI: %s.", req.getRequestURI()));
+                        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        m.toJSON(res.getOutputStream());
+                        return null;
+                    }
+                    else {
+                        requestData.put(key, value);
+                        LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
+                    }
                 }
                 else {
-                    requestData.put(key, value);
-                    LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
+                    LOGGER.warn("## checkPath func: KeyValue split for {" + key + "} has length < 1. Requested URI: %s. ##", req.getRequestURI());
                 }
+
             }
         } catch (Exception e) {
             LOGGER.error("## checkPath func: Unexpected exception thrown: " + e + " ##");

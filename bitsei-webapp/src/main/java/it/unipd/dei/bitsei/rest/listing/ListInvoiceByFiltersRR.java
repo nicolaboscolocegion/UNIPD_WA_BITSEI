@@ -12,7 +12,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
     @Override
     protected void doServe() throws IOException {
         final int owner_id;
-        List<Invoice> el = null;
+        List<InvoiceContainer> el = null;
         Message m = null;
 
         try {
@@ -75,11 +74,11 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             Date fromWarningDate = FROM_DATE;
             Date toWarningDate = TO_DATE;
 
-            boolean filterByBusinessName = false;
-            List<String> fromBusinessName = new ArrayList<String>();
+            boolean filterByCustomerId = false;
+            List<Integer> fromCustomerId = new ArrayList<Integer>();
 
-            boolean filterByProductTitle = false;
-            List<String> fromProductTitle = new ArrayList<String>();
+            boolean filterByProductId= false;
+            List<Integer> fromProductId = new ArrayList<Integer>();
 
             for (String filter : requestData.keySet()) {
                 if (filter.equals("fromTotal")) {
@@ -172,23 +171,23 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                         toWarningDate = TO_DATE;
                     }
                 }
-                if (filter.equals("fromBusinessName")) {
-                    filterByBusinessName = true;
-                    String businessNames = requestData.get(filter);
-                    String[] parsedBusinessNames = businessNames.split("---");
-                    for (String s : parsedBusinessNames)
-                        fromBusinessName.add(s);
+                if (filter.equals("fromCustomerId")) {
+                    filterByCustomerId = true;
+                    String customerIds = requestData.get(filter);
+                    String[] parsedcustomerIds = customerIds.split("-");
+                    for (String s : parsedcustomerIds)
+                        fromCustomerId.add(Integer.parseInt(s));
                 }
-                if (filter.equals("fromProductTitle")) {
-                    filterByProductTitle = true;
-                    String productTitles = requestData.get(filter);
-                    String[] parsedProductTitles = productTitles.split("---");
-                    for (String s : parsedProductTitles)
-                        fromProductTitle.add(s);
+                if (filter.equals("fromProductId")) {
+                    filterByProductId = true;
+                    String productIds = requestData.get(filter);
+                    String[] parsedProductIds = productIds.split("-");
+                    for (String s : parsedProductIds)
+                        fromProductId.add(Integer.parseInt(s));
                 }
             }
 
-            LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle);
+            LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromCustomerId: " + fromCustomerId + " fromProductId: " + fromProductId);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
             el = new ListInvoiceByFiltersDAO(con, owner_id, company_id,
@@ -197,8 +196,8 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                     filterByPfr, fromPfr, toPfr,
                     filterByInvoiceDate, fromInvoiceDate, toInvoiceDate,
                     filterByWarningDate, fromWarningDate, toWarningDate,
-                    filterByBusinessName, fromBusinessName,
-                    filterByProductTitle, fromProductTitle
+                    filterByCustomerId, fromCustomerId,
+                    filterByProductId, fromProductId
             ).access().getOutputParam();
 
             if (el != null) {
