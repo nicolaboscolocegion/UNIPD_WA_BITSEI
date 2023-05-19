@@ -18,3 +18,5 @@ export const getLists = () => {
 };
 
 export const clearCompanies = () => ({ type: types.CLEAR_LISTS_STORE });
+
+export const setActiveCompanyId = (company_id) => ({ type: types.CHANGE_ACTIVE_COMPANY, payload: company_id })

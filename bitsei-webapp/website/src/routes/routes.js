@@ -19,8 +19,8 @@ export const privateRoutes = [
     { exact: true, path: "/companies", component: Companies },
     { exact: true, path: "/companies/add", component: AddCompany },
     { exact: true, path: "/companies/:company_id", component: Company },
-    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
-    { exact: true, path: "/customers/:customer_id/company/:company_id", component: Customer },
-    { exact: true, path: "/list-customer/company/:company_id", component: Customers },
-    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
-    { exact: true, path: "/insights", component: ShowChart },];
+    { exact: true, path: "/companies/:company_id/edit", component: EditCompany },
+    { exact: true, path: "/companies/:company_id/customers/:customer_id", component: Customer },
+    { exact: true, path: "/companies/:company_id/list-customer", component: Customers },
+    { exact: true, path: "/companies/:company_id/insights", component: ShowChart },
+];

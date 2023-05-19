@@ -1,52 +1,21 @@
 import React, {useEffect} from "react";
 import {Table} from "react-bootstrap";
 import {useSelector, connect} from "react-redux";
-import {getLists} from "../../../Store/companies/listsThunk";
-import Navbar from "../../../Components/Navbar/Navbar";
-import Sidebar from "../../../Components/SidebarFilters/SidebarFilter";
+import {getLists, setActiveCompanyId} from "../../../Store/companies/listsThunk";
 import Image from "../../../Components/Image/Image";
-import Item from "../../../Components/CompanyItem/Item";
 import {Link} from "react-router-dom";
-import Header from "../../../Components/Header/Header";
-import getCompanyDetails from "../../../helpers/getCompanyDetails";
 
-function List({getLists}) {
+function List({getLists, setActiveCompanyId}) {
     const companies = useSelector((state) => state.companies);
 
     useEffect(() => {
         getLists();
+        setActiveCompanyId(null)
+    }, [getLists, setActiveCompanyId]);
 
-    }, [getLists]);
-
-    /*return companies.pending ? ("Loading") : (
-        <>
-            <Header>
-                <Link className="nav-link" to={"/companies/add"} style={{color: "green"}}>
-                    + Add Company
-                </Link>
-            </Header>
-            <section className="py-5" style={{backgroundColor: "#eee"}}>
-                <div className="container py-5">
-                    {companies.items.map((company) => (
-                        <Item
-                            key={company.company_id}
-                            id={company.company_id}
-                            name={`${company.business_name} | ${company.province}(${company.city})`}
-                            details={getCompanyDetails(company)}
-                        />
-                    ))}
-                </div>
-            </section>
-        </>
-    )*/
-
-
-    /*
-    *  <link
-                href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
-                rel="stylesheet"
-            />
-    * */
+    const handleCompanySubmit = (company_id) => {
+        setActiveCompanyId(company_id)
+    }
 
     return companies.pending ? ("Loading") : (
         <div className="container-fluid px-4">
@@ -82,12 +51,12 @@ function List({getLists}) {
                                 <td>{`${company.address} ${company.postal_code} ${company.city} ${company.province}`}</td>
                                 <td>{company.vat_number}</td>
                                 <td>
-                                    <Link className="w-full" to={`/companies/${company.company_id}`}>
+                                    <Link className="w-full" to={`/companies/${company.company_id}`} onClick={() => handleCompanySubmit(company.company_id)}>
                                         <button className="btn btn-primary btn-sm active btn-block mx-auto"
                                                 type="button">Go
                                         </button>
                                     </Link>
-                                    <Link className="w-full" to={`/companies/edit/${company.company_id}`}>
+                                    <Link className="w-full" to={`/companies/${company.company_id}/edit`} onClick={() => handleCompanySubmit(company.company_id)}>
                                         <button className="btn btn-secondary btn-sm active btn-block mx-auto"
                                                 type="button">Edit Company
                                         </button>
@@ -105,5 +74,5 @@ function List({getLists}) {
 }
 
 export default connect(null, {
-    getLists
+    getLists, setActiveCompanyId
 })(List);
