@@ -10,7 +10,7 @@ function List({getLists, setActiveCompanyId}) {
 
     useEffect(() => {
         getLists();
-        setActiveCompanyId(null)
+        setActiveCompanyId(null);
     }, [getLists, setActiveCompanyId]);
 
     const handleCompanySubmit = (company_id) => {
