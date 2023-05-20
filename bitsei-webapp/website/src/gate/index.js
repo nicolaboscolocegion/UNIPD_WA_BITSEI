@@ -24,10 +24,10 @@ const me = {
 
 const companies = {
     createCompany: (data) => api.post("rest/company", data, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            }
-        }),
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    }),
     getCompanies: () => api.get("rest/company"),
     getCompany: (id) => api.get(`/api/v1/company/${id}`),
     updateCompany: (id, data) => api.put(`rest/company/${id}`, data, {
@@ -40,9 +40,9 @@ const companies = {
     }),
 }
 
-const customers = {
-    getCustomer: (customer_id, company_id) => api.get(`rest/customer/${customer_id}/company/${company_id}`),
-    getCustomers: (company_id) => api.get(`rest/list-customer/company/${company_id}`)
+const insights = {
+    getInvoicesByFilters: (data) => api.post("rest/filter-invoices/company/1", data),
+    listCustomers: () => api.get("rest/list-customer/company/1"),
 }
 
 const gate = {
@@ -50,7 +50,7 @@ const gate = {
     ...user,
     ...auth,
     ...companies,
-    ...customers
+    ...insights
 };
 
 export default gate;

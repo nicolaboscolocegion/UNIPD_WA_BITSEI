@@ -9,6 +9,8 @@ const AddCompany = lazy(() => import("../Pages/Company/AddNewCompany/Add"));
 const ShowChart = lazy(() => import("../Pages/Insights/Show"));
 const Customer = lazy(() => import("../Pages/Customers/GetCustomers/Item"));
 const Customers = lazy(() => import("../Pages/Customers/GetCustomers/List"));
+const GetInvoicesByFilters = lazy(() => import("../Pages/Insights/GetInvoicesByFilters"));
+const ListCustomers = lazy(() => import("../Pages/Insights/GetInvoicesByFilters"));
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
@@ -23,4 +25,8 @@ export const privateRoutes = [
     { exact: true, path: "/companies/:company_id/customers/:customer_id", component: Customer },
     { exact: true, path: "/companies/:company_id/list-customer", component: Customers },
     { exact: true, path: "/companies/:company_id/insights", component: ShowChart },
-];
+    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
+    { exact: true, path: "/insights", component: ShowChart },
+    { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
+    { exact: true, path: "/get-invoices", component: GetInvoicesByFilters },
+    { exact: true, path: "/list-customer", component: ListCustomers },];
