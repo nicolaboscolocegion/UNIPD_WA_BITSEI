@@ -203,7 +203,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
     @Override
     protected void doAccess() throws SQLException {
         //String init_query = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
-        String init_query = "SELECT i.*, c.business_name, p.title FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
+        String init_query = "SELECT i.*, c.business_name, p.product_id, p.title FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ResultSet rs_check = null;
@@ -325,6 +325,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
                         rs.getDouble("pension_fund_refund"),
                         rs.getBoolean("has_stamp"),
                         rs.getString("business_name"),
+                        rs.getInt("product_id"),
                         rs.getString("title"))
                 );
             }
