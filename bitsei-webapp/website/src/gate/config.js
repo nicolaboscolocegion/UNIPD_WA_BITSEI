@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../Store/store";
 
 const env = process.env;
-const baseUrl = env.REACT_APP_API_BASE_URL;
+const baseUrl = env.REACT_APP_API_BASE_URL || "http://localhost:8080/bitsei-1.0/";
 const siteUrl = env.REACT_APP_BASE_URL;
 /*************************************
  *------* Setup Axios Configs *------*
