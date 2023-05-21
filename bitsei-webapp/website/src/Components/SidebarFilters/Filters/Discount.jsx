@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
 
-function Total({id, name, details}) {
+function Discount({id, name, details}) {
 
 
     const [rangeValue1, setRangeValue1] = useState(100);
@@ -21,7 +21,7 @@ function Total({id, name, details}) {
 
     return (
         <form class="border border-2 rounded-4 mb-2">
-            <h4 class="d-flex justify-content-start ms-2 mt-2">By Total</h4>
+            <h4 class="d-flex justify-content-start ms-2 mt-2">By Discount</h4>
             <div class="container mt-4">
                 <div class="row align-items-center">
                     <div class="col-auto">
@@ -31,7 +31,7 @@ function Total({id, name, details}) {
                     </div>
                     <div class="col-auto">
                         <div class="row">
-                            <div class="container p-0 mb-3 text-end">
+                            <div class="container p-0 mb-3 text-emd">
                                 <label for="customRange1" class="form-label">From:</label>
                             </div>
                         </div>
@@ -45,12 +45,12 @@ function Total({id, name, details}) {
                         <div class="row">
                             <div class="container position-relative mb-3">
                                 <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="20" id="customRange1" value={rangeValue1} onChange={handleRangeChange1} disabled={!checkboxChecked}></input>
-                                <output className="form-range-value position-absolute"  style={{top: '-25px', left: `${((rangeValue1 / 3000) * 100)*0.83}%`}}>{rangeValue1}€</output>
+                                <output className="form-range-value position-absolute" style={{top: '-25px', left: `${((rangeValue1 / 3000) * 100)*0.83}%`}}>{rangeValue1}€</output>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container position-relative">
-                                <input style={{marginBottom: 0.5+'rem'}} type="range" className="form-range" min="100" max="3000" step="20" id="customRange2" value={rangeValue2} onChange={handleRangeChange2} disabled={!checkboxChecked}></input>
+                                <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="20" id="customRange2" value={rangeValue2} onChange={handleRangeChange2} disabled={!checkboxChecked}></input>
                                 <output className="form-range-value position-absolute" style={{top: '-25px', left: `${((rangeValue2 / 3000) * 100)*0.83}%`}}>{rangeValue2}€</output>
                             </div>
                         </div>
@@ -61,4 +61,4 @@ function Total({id, name, details}) {
     );
 }
 
-export default Total;
+export default Discount;

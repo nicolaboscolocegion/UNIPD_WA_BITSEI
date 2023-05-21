@@ -89,17 +89,71 @@ function AddCompany({clearCompanies}) {
             });
     };
 
+    /*const [maxHeight, setMaxHeight] = useState(0);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const windowHeight = window.innerHeight;
+            setMaxHeight(windowHeight);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);*/
+
 
     return (
-        <section className="py-5"> 
-            <div className="container bg-white">
-                <section className="w-100 p-4 text-center pb-4">
-                    <SidebarFilter>Boh</SidebarFilter>
-                    <h1>Amazing charts</h1>
-                </section>
+        <section>
+            <div class="container-fluid">
+                <div class="d-flex flex-row">
+                    <div class="main-content">
+                        <div className="container-fluid bg-white py-5">
+                            <section className="w-100 p-4 text-center pb-4">
+                                <h1>Amazing charts</h1>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="sidebar flex-shrink-0">
+                        <SidebarFilter>Boh</SidebarFilter>
+                    </div>
+                </div>
             </div>
         </section>
-
+        
+        /*{<section>
+            <div class="container-fluid m-0 p-0">
+                <div class="row m-0">
+                    <div class="col">
+                        <div class="main-content">
+                            <div className="container-fluid bg-white py-5">
+                                <section className="w-100 p-4 text-center pb-4">
+                                    <h1>Amazing charts</h1>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                            <div class="sidebar">
+                                <SidebarFilter>Boh</SidebarFilter>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>}*/
+        /*{<section>
+            <div class="container-fluid">
+                <SidebarFilter></SidebarFilter>
+                <div className="container-fluid bg-white py-5">
+                    <section className="w-100 p-4 text-center pb-4">
+                        <h1>Amazing charts</h1>
+                    </section>
+                </div>
+            </div>
+        </section>}*/
     )
 }
 
