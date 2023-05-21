@@ -11,28 +11,52 @@ function GetInvoicesByFilters() {
     const [pending, setPending] = useState(false);
 
     const [customerList, setCustomerList] = useState([]);
-    const [optionSelected, setOptionSelected] = useState(null);
+    const [productList, setProductList] = useState([]);
+    const [customerOptionSelected, setCustomerOptionSelected] = useState(null);
+    const [productOptionSelected, setProductOptionSelected] = useState(null);
 
     useEffect(() => {
-        console.log("listing customers list onLoad TO REMOVE");
-        gate
-            .listCustomers()
-            .then((response) => {
-            const customers = response.data['resource-list'].map((item) => item.customer);
-            setCustomerList(customers);
-        })
-        .catch((error) => {
-            toast.error("Something went wrong UseEffect." + error);
-        })
+        console.log("listing customers and products list onLoad TO REMOVE");
+
+        // Call listCustomers
+        gate.listCustomers()
+            .then((customerResponse) => {
+                const customers = customerResponse.data['resource-list'].map((item) => item.customer);
+                setCustomerList(customers);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in listCustomers. " + error);
+            });
+
+        // Call listProducts
+        gate.listProducts()
+            .then((productResponse) => {
+                const products = productResponse.data['resource-list'].map((item) => item.product);
+                console.log("products: " + products);
+                setProductList(products);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in listProducts. " + error);
+            });
     }, []);
+
 
     const customerOptions = customerList.map((customer) => ({
         value: customer.customerID,
         label: customer.businessName,
     }));
 
-    const handleChange = (selected) => {
-        setOptionSelected(selected);
+    const productOptions = productList.map((product) => ({
+        value: product.productID,
+        label: product.productTitle,
+    }))
+
+    const handleCustomerChange = (selected) => {
+        setCustomerOptionSelected(selected);
+    };
+
+    const handleProductChange = (selected) => {
+        setProductOptionSelected(selected);
     };
 
     const Option = (props) => {
@@ -94,15 +118,29 @@ function GetInvoicesByFilters() {
 
         let customerId = ""
         let countCustomerId = 0;
-        for(let option in optionSelected){
-            console.log(optionSelected[option], optionSelected[option].label)
+        for(let option in customerOptionSelected){
+            console.log(customerOptionSelected[option], customerOptionSelected[option].label)
             if(countCustomerId > 0)
                 customerId += "-";
-            customerId += optionSelected[option].value.toString();
+            customerId += customerOptionSelected[option].value.toString();
             countCustomerId++;
         }
         if(countCustomerId > 0)
             data_to_send["fromCustomerId"] = customerId;
+
+
+        let productId = ""
+        let countProductId = 0;
+        for(let option in productOptionSelected){
+            console.log(productOptionSelected[option], productOptionSelected[option].label)
+            if(countProductId > 0)
+                productId += "-";
+            productId += productOptionSelected[option].value.toString();
+            countProductId++;
+        }
+        if(countProductId > 0)
+            data_to_send["fromProductId"] = productId;
+
         gate
             .getInvoicesByFilters(data_to_send)
             .then((response) => {
@@ -237,9 +275,25 @@ function GetInvoicesByFilters() {
                             components={{
                                 Option
                             }}
-                            onChange={handleChange}
+                            onChange={handleCustomerChange}
                             allowSelectAll={true}
-                            value={optionSelected}
+                            value={customerOptionSelected}
+                        />
+                        <br/>
+                        <br/>
+                        <hr/>
+                        <ReactSelect
+                            placeholder='Select Product(s)'
+                            options={productOptions}
+                            isMulti
+                            closeMenuOnSelect={false}
+                            hideSelectedOptions={false}
+                            components={{
+                                Option
+                            }}
+                            onChange={handleProductChange}
+                            allowSelectAll={true}
+                            value={productOptionSelected}
                         />
                         <br/>
                         <br/>

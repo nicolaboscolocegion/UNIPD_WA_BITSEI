@@ -43,6 +43,7 @@ const companies = {
 const insights = {
     getInvoicesByFilters: (data) => api.post("rest/filter-invoices/company/1", data),
     listCustomers: () => api.get("rest/list-customer/company/1"),
+    listProducts: () => api.get("rest/list-product/company/1"),
 }
 
 const gate = {
