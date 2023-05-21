@@ -31,9 +31,10 @@ function GetInvoicesByFilters() {
         // Call listProducts
         gate.listProducts()
             .then((productResponse) => {
+                console.log(productResponse)
                 const products = productResponse.data['resource-list'].map((item) => item.product);
-                console.log("products: " + products);
                 setProductList(products);
+                console.log(products)
             })
             .catch((error) => {
                 toast.error("Something went wrong in listProducts. " + error);
@@ -47,8 +48,8 @@ function GetInvoicesByFilters() {
     }));
 
     const productOptions = productList.map((product) => ({
-        value: product.productID,
-        label: product.productTitle,
+        value: product.product_id,
+        label: product.title,
     }))
 
     const handleCustomerChange = (selected) => {
