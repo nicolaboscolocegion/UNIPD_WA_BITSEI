@@ -44,13 +44,13 @@ function Total({id, name, details}) {
                     <div class="col">
                         <div class="row">
                             <div class="container position-relative mb-3">
-                                <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="20" id="customRange1" value={rangeValue1} onChange={handleRangeChange1} disabled={!checkboxChecked}></input>
+                                <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="50" id="customRange1" value={rangeValue1} onChange={handleRangeChange1} disabled={!checkboxChecked}></input>
                                 <output className="form-range-value position-absolute"  style={{top: '-25px', left: `${((rangeValue1 / 3000) * 100)*0.83}%`}}>{rangeValue1}€</output>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container position-relative">
-                                <input style={{marginBottom: 0.5+'rem'}} type="range" className="form-range" min="100" max="3000" step="20" id="customRange2" value={rangeValue2} onChange={handleRangeChange2} disabled={!checkboxChecked}></input>
+                                <input style={{marginBottom: 0.5+'rem'}} type="range" className="form-range" min="100" max="3000" step="50" id="customRange2" value={rangeValue2} onChange={handleRangeChange2} disabled={!checkboxChecked}></input>
                                 <output className="form-range-value position-absolute" style={{top: '-25px', left: `${((rangeValue2 / 3000) * 100)*0.83}%`}}>{rangeValue2}€</output>
                             </div>
                         </div>
