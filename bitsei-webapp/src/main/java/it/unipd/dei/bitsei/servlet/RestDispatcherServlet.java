@@ -93,6 +93,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
+            // if the requested resource was a product, delegate its processing and return
+            if (processProduct(req, res)) {
+                return;
+            }
+
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoice(req, res)) {
                 return;
