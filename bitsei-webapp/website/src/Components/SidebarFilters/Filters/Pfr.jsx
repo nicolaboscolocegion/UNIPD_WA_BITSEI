@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
+import { Form } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
 
 function Pfr({id, name, details, filter}) {
 
@@ -9,6 +11,12 @@ function Pfr({id, name, details, filter}) {
 
     const handleCheckboxChange = (event) => {
         setCheckboxChecked(event.target.checked);
+    };
+
+    const handleRangeClick = () => {
+        if (!checkboxChecked) {
+          setCheckboxChecked(true);
+        }
     };
 
     const handleRangeChange1 = (event) => {
@@ -30,9 +38,7 @@ function Pfr({id, name, details, filter}) {
             <div class="container mt-3">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={checkboxChecked} onChange={handleCheckboxChange}></input>
-                        </div>
+                        <Form.Switch id="flexSwitchCheckDefault" checked={checkboxChecked} onChange={handleCheckboxChange}/>
                     </div>
                     <div class="col-auto">
                         <div class="row">
@@ -49,18 +55,18 @@ function Pfr({id, name, details, filter}) {
                     <div class="col">
                         <div class="row">
                             <div class="container px-4 mb-3">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="text" class="form-control" placeholder="From Pfr" aria-label="From Pfr" aria-describedby="basic-addon2" value={rangeValue1} disabled={!checkboxChecked} onChange={handleRangeChange1}></input>
-                                    <span style={{marginBottom: 0.5+'rem'}} class="input-group-text" id="basic-addon2">%</span>
-                                </div>
+                                <InputGroup size="sm" onClick={handleRangeClick}>
+                                    <Form.Control style={{marginBottom: 0.5+'rem'}} placeholder="From Pfr" aria-label="From Pfr" aria-describedby="basic-addon1" value={rangeValue1} disabled={!checkboxChecked} onChange={handleRangeChange1}/>
+                                    <InputGroup.Text style={{marginBottom: 0.5+'rem'}} id="basic-addon1">%</InputGroup.Text>
+                                </InputGroup>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container px-4">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="text" class="form-control" placeholder="To Pfr" aria-label="To Pfr" aria-describedby="basic-addon2" value={rangeValue2} disabled={!checkboxChecked} onChange={handleRangeChange2}></input>
-                                    <span style={{marginBottom: 0.5+'rem'}} class="input-group-text" id="basic-addon2">%</span>
-                                </div>
+                                <InputGroup size="sm" onClick={handleRangeClick}>
+                                    <Form.Control style={{marginBottom: 0.5+'rem'}} placeholder="To Pfr" aria-label="To Pfr" aria-describedby="basic-addon2" value={rangeValue2} disabled={!checkboxChecked} onChange={handleRangeChange2}/>
+                                    <InputGroup.Text style={{marginBottom: 0.5+'rem'}} id="basic-addon2">%</InputGroup.Text>
+                                </InputGroup>
                             </div>
                         </div>
                     </div>

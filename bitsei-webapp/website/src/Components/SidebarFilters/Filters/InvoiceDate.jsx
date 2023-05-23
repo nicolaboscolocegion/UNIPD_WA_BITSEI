@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
 import { Form } from 'react-bootstrap';
-import { InputGroup } from 'react-bootstrap';
 
 function InvoiceDate({id, name, details, filter}) {
 
