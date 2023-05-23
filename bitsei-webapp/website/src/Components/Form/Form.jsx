@@ -22,7 +22,7 @@ function Form({title, onSubmit, fields, register, errors, children}) {
                                 {fields.map((field =>
                                         <div className="row justify-content-between text-left">
                                             {field.map((item =>
-                                                    <div className={`form-group flex-column d-flex ${item.length > 1 && "col-sm-6"}`}>
+                                                    <div className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}>
                                                         <label className="form-control-label px-3">
                                                             {item.name}<span className="text-danger"> *</span>
                                                         </label>
