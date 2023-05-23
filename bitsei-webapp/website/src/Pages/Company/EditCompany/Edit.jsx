@@ -7,6 +7,7 @@ import gate from "../../../gate";
 import {history} from "../../../index";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
+import Image from "../../../Components/Image/Image";
 
 function EditCompany({clearCompanies}) {
     const companies = useSelector((state) => state.companies);
@@ -14,7 +15,7 @@ function EditCompany({clearCompanies}) {
     const {company_id} = useParams();
     const company = companies.items.filter((company) => company.company_id === parseInt(company_id))[0];
 
-    const { register, handleSubmit,formState:{errors} } = useForm({
+    const {register, handleSubmit, formState: {errors}} = useForm({
         defaultValues: {
             title: company.title,
             business_name: company.business_name,
@@ -28,7 +29,7 @@ function EditCompany({clearCompanies}) {
     });
 
     const [pending, setPending] = useState(false);
-    const [preview, setPreview] = useState();
+    const [preview, setPreview] = useState(false);
     const [selectedFile, setSelectedFile] = useState();
     const logoRef = useRef();
     const [hasTelegramNotification, setHasTelegramNotification] = useState(company.has_mail_notifications);
@@ -37,7 +38,6 @@ function EditCompany({clearCompanies}) {
 
     useEffect(() => {
         if (!selectedFile) {
-            setPreview(undefined);
             return;
         }
 
@@ -62,8 +62,10 @@ function EditCompany({clearCompanies}) {
         e.preventDefault();
         logoRef.current.value = "";
         logoRef.current.type = "file";
+        setPreview(true);
         setSelectedFile(undefined);
     };
+
     const submitHandler = (data, e) => {
         e.preventDefault();
 
@@ -103,17 +105,31 @@ function EditCompany({clearCompanies}) {
 
 
     const fields = [
-        [{name: "title", type: "string", options: { required: true, maxLength: 30 }}, {name: "business_name", type: "string"}],
+        [{name: "title", type: "string", options: {required: true, maxLength: 30}}, {
+            name: "business_name",
+            type: "string"
+        }],
         [{name: "vat_number", type: "string"}, {name: "tax_code", type: "string"}],
         [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
         [{name: "province", type: "string"}, {name: "address", type: "string"}],
     ]
 
     return (
-        <Form title={"Edit Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
+        <Form title={"Edit Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}
+              errors={errors} pending={pending}>
             {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
             <div className="row justify-content-between text-left">
-                <div className="form-group flex-column d-flex">
+                {company.logo && !preview && (
+                    <>
+                        <div className="form-group col-sm-3 flex-column d-flex">
+                            <Image id={company.company_id}/>
+                        </div>
+                        <div className="form-group col-sm-3 flex-column d-flex">
+                            <button className={"btn btn-danger"} onClick={onDeleteFile}>Delete</button>
+                        </div>
+                    </>
+                )}
+                <div className="form-group col-sm-6 flex-column d-flex ">
                     <label className="form-control-label px-3" htmlFor="logo">Logo</label>
                     <input
                         id="logo"
@@ -129,7 +145,6 @@ function EditCompany({clearCompanies}) {
                 </div>
             </div>
             <div className="row justify-content-between text-left">
-
                 <div className="form-group col-sm-6 flex-column d-flex">
                     <label
                         className="form-control-label px-3"
