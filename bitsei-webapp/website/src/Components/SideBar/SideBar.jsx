@@ -48,7 +48,7 @@ function Sidebar() {
                         ))}
                     </div>
                 </div>
-                <div className="sb-sidenav-footer">
+                <div className="sb-sidenav-footer sticky-bottom">
                     <div className="small">Logged in as:</div>
                     BITSEI USER
                 </div>
