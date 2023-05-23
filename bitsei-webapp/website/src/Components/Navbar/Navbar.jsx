@@ -4,7 +4,7 @@ import {useSelector, connect} from "react-redux";
 function Navbar() {
 
     return (
-        <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
             {/* Navbar Brand*/}
             <a className="navbar-brand ps-3" href="index.html">
                 Start Bootstrap

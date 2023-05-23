@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
+import {useForm} from "react-hook-form";
 import { Form } from 'react-bootstrap';
 
-function Total({id, name, details}) {
-
+function Total({id, name, details, filter}) {
 
     const [rangeValue1, setRangeValue1] = useState(100);
     const [rangeValue2, setRangeValue2] = useState(100);
@@ -23,13 +23,29 @@ function Total({id, name, details}) {
     };
 
     const handleRangeChange1 = (event) => {
-        setRangeValue1(event.target.value);
-        setCheckboxChecked(true);
+        setRangeValue1(parseInt(event.target.value));
+        if(rangeValue1 <= rangeValue2) {
+            setCheckboxChecked(true);
+        }
+        else {
+            setCheckboxChecked(false);
+        }
     };
     const handleRangeChange2 = (event) => {
-        setRangeValue2(event.target.value);
-        setCheckboxChecked(true);
+        setRangeValue2(parseInt(event.target.value));
+        if(rangeValue2 >= rangeValue1) {
+            setCheckboxChecked(true);
+        }
+        else {
+            setCheckboxChecked(false);
+        }
     };
+
+    useEffect(() => {
+        filter.isEnabled = checkboxChecked;
+        filter.fromValue = rangeValue1;
+        filter.toValue = rangeValue2;
+    },[checkboxChecked, rangeValue1, rangeValue2]);
 
     return (
         <form class="border border-2 rounded-4 mb-2">

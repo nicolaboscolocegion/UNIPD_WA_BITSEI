@@ -21,6 +21,7 @@ function Sidebar() {
     if (company_id) {
         sideBarItems["Companies"] = [
             {path: `/companies/${company_id}/customers`, name: "Customers"},
+            {path: `/companies/${company_id}/products`, name: "Products"},
             {path: `/companies/${company_id}/invoices`, name: "Invoices"},
         ]
     }
@@ -48,7 +49,7 @@ function Sidebar() {
                         ))}
                     </div>
                 </div>
-                <div className="sb-sidenav-footer">
+                <div className="sb-sidenav-footer sticky-bottom">
                     <div className="small">Logged in as:</div>
                     BITSEI USER
                 </div>

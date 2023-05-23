@@ -10,7 +10,20 @@ import Product from ".//Filters/Product";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 
-function SidebarFilter({handleShow, handleClose, shows}) {
+function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, dataToSend}) {
+    const handleSubmit = () => {
+        /*
+        console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue);
+        console.log("filterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue);
+        console.log("filterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue);
+        console.log("filterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue);
+        console.log("filterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue);
+        */
+        if(filterByTotal.isEnabled === true) {
+            dataToSend["fromTotal"] = filterByTotal.fromValue;
+            dataToSend["toTotal"] = filterByTotal.toValue;
+        }
+    }
 
     return (
         /*{<div class="Container">
@@ -43,18 +56,18 @@ function SidebarFilter({handleShow, handleClose, shows}) {
             <Customer></Customer>
             <Product></Product>
         </div>}*/
-        
+
         <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px', width: 500+'px'}}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>FILTERS</Offcanvas.Title>
-                <Button variant="outline-success" onClick={handleClose}>Submit filters</Button>
+                <Button variant="outline-success" onClick={handleSubmit}>Submit filters</Button>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                <Total></Total>
-                <Discount></Discount>
-                <InvoiceDate></InvoiceDate>
-                <WarningDate></WarningDate>
-                <Pfr></Pfr>
+                <Total filter={filterByTotal}></Total>
+                <Discount filter={filterByDiscount}></Discount>
+                <InvoiceDate filter={filterByInvoiceDate}></InvoiceDate>
+                <WarningDate filter={filterByWarningDate}></WarningDate>
+                <Pfr filter={filterByPfr}></Pfr>
                 <Customer></Customer>
             </Offcanvas.Body>
         </Offcanvas>

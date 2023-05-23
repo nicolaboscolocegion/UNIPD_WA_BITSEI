@@ -5,14 +5,10 @@ import {toast} from "react-toastify";
 import {clearCompanies} from "../../../Store/companies/listsThunk";
 import gate from "../../../gate";
 import {history} from "../../../index";
-import Input from "./Input/Input";
+import Form from "../../../Components/Form/Form";
 
-// TODO: Add validation for all fields
-// TODO: Add error handling for all fields
-// TODO: Add loading for creating company
-// TODO: HTML CSS for this page
 function AddCompany({clearCompanies}) {
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: { errors }} = useForm();
     const [pending, setPending] = useState(false);
     const [preview, setPreview] = useState();
     const [selectedFile, setSelectedFile] = useState();
@@ -87,148 +83,67 @@ function AddCompany({clearCompanies}) {
             });
     };
 
-
+    const fields = [
+        [{name: "title", type: "string", options: { required: true, maxLength: 30 }}, {name: "business_name", type: "string"}],
+        [{name: "vat_number", type: "string"}, {name: "tax_code", type: "string"}],
+        [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
+        [{name: "province", type: "string"}, {name: "address", type: "string"}],
+    ]
     return (
-        <section className="py-5">
-            <div className="container bg-white">
-                <section className="w-100 p-4 text-center pb-4">
-                    <form onSubmit={handleSubmit(submitHandler)}>
-                        <div className="row mb-4">
-                            <div className="col">
-                                <Input type="text" name="Title" register={{
-                                    ...register("title", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a title",
-                                    })
-                                }}/>
-                            </div>
-                            <div className="col">
-                                <Input type="text" name="Business Name" register={{
-                                    ...register("business_name", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-                            </div>
-                        </div>
-
-                        <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="logo">Logo</label>
-                            <input
-                                id="logo"
-                                className="form-control"
-                                onChange={onSelectFile}
-                                onClick={(e) => {
-                                    e.target.value = null;
-                                }}
-                                ref={logoRef}
-                                name="logo"
-                                type="file"
-                                accept="image/*"
-                            />
-                        </div>
-                        <div className="row mb-4">
-                            <div className="col">
-                                <Input type="text" name="VAT Number" register={{
-                                    ...register("vat_number", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-                            </div>
-                            <div className="col">
-                                <Input type="text" name="TAX Code" register={{
-                                    ...register("tax_code", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-                            </div>
-                            <div className="col">
-                                <Input type="text" name="Unique Code" register={{
-                                    ...register("unique_code", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-                            </div>
-                        </div>
-
-                        <div className="row mb-4">
-                            <div className="col">
-                                <Input type="text" name="City" register={{
-                                    ...register("city", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-
-                            </div>
-                            <div className="col">
-                                <Input type="text" name="Province" register={{
-                                    ...register("province", {
-                                        required: "Required",
-                                        minlength: 3,
-                                        message: "Please enter a business name",
-                                    })
-                                }}/>
-                            </div>
-                        </div>
-                        <Input type="text" name="Address" register={{
-                            ...register("address", {
-                                required: "Required",
-                                minlength: 3,
-                                message: "Please enter a business name",
-                            })
-                        }}/>
-                        <div className="row mb-4">
-                            <div className="col">
-                                <label
-                                    className="form-check-label"
-                                    htmlFor="has_mail_notifications">
-                                    Mail Notification
-                                </label>
-                                <input
-                                    className="form-check-input me-2"
-                                    type="checkbox"
-                                    value=""
-                                    id="has_mail_notifications"
-                                    checked={hasEmailNotification}
-                                    onClick={() => {
-                                        setHasEmailNotification(!hasEmailNotification)
-                                    }}
-                                />
-                            </div>
-                            <div className="col">
-                                <label
-                                    className="form-check-label"
-                                    htmlFor="has_telegram_notifications">
-                                    Telegram Notification
-                                </label>
-                                <input
-                                    className="form-check-input me-2"
-                                    type="checkbox"
-                                    value=""
-                                    id="has_telegram_notifications"
-                                    checked={hasTelegramNotification}
-                                    onClick={() => {
-                                        setHasTelegramNotification(!hasTelegramNotification)
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <button type="submit" className="btn btn-primary btn-block mb-4">Add Company</button>
-                    </form>
-                </section>
+        <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
+            {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
+            <div className="row justify-content-between text-left">
+                <div className="form-group flex-column d-flex">
+                    <label className="form-control-label px-3" htmlFor="logo">Logo</label>
+                    <input
+                        id="logo"
+                        onChange={onSelectFile}
+                        onClick={(e) => {
+                            e.target.value = null;
+                        }}
+                        ref={logoRef}
+                        name="logo"
+                        type="file"
+                        accept="image/*"
+                    />
+                </div>
             </div>
-        </section>
+            <div className="row justify-content-between text-left">
 
+                <div className="form-group col-sm-6 flex-column d-flex">
+                    <label
+                        className="form-control-label px-3"
+                        htmlFor="has_mail_notifications">
+                        Mail Notification
+                    </label>
+                    <input
+                        type="checkbox"
+                        value=""
+                        id="has_mail_notifications"
+                        checked={hasEmailNotification}
+                        onClick={() => {
+                            setHasEmailNotification(!hasEmailNotification)
+                        }}
+                    />
+                </div>
+                <div className="form-group col-sm-6 flex-column d-flex">
+                    <label
+                        className="form-control-label px-3"
+                        htmlFor="has_telegram_notifications">
+                        Telegram Notification
+                    </label>
+                    <input
+                        type="checkbox"
+                        value=""
+                        id="has_telegram_notifications"
+                        checked={hasTelegramNotification}
+                        onClick={() => {
+                            setHasTelegramNotification(!hasTelegramNotification)
+                        }}
+                    />
+                </div>
+            </div>
+        </Form>
     )
 }
 

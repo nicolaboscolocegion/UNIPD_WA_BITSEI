@@ -1,9 +1,9 @@
-image: maven:3.9.0
 pipelines:
   branches:
     master:
       - step:
           name: Build and test
+          image: maven:3.9.0
           max-time: 20
           caches:
             - maven
@@ -13,8 +13,35 @@ pipelines:
             - target/**
       - step:
           name: Deploy to Artifactory
+          image: maven:3.9.0
           max-time: 20
           caches:
             - maven
           script:
             - cd bitsei-webapp && mvn -s .ci/settings.xml tomcat7:redeploy
+    client-side:
+      - step:
+          name: Build React Project
+          image: node:18.16.0
+          script:
+            - cd bitsei-webapp/website
+            - yarn install && yarn build
+            - mkdir packaged
+            - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
+          artifacts:
+            - packaged/**
+      - step:
+          name: Deploy to Server
+          image: atlassian/default-image:latest
+          trigger: manual
+          deployment: production
+          script:
+            - cd bitsei-webapp/website
+            - mkdir upload
+            - tar -xf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C upload
+            - rsync -a --delete upload/ $USERNAME@$SERVER:/home/temp/react-${BITBUCKET_BUILD_NUMBER}
+            - ssh $USERNAME@$SERVER "rm -r /home/www"
+            - ssh $USERNAME@$SERVER "mv '/home/temp/react-${BITBUCKET_BUILD_NUMBER}' '/home/www'"
+            - ssh $USERNAME@$SERVER "chmod -R u +rwX,go+rX,go-w /home/www"
+          artifacts:
+            - upload/**

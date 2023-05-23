@@ -1,13 +1,28 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
 
-function WarningDate({id, name, details}) {
+function WarningDate({id, name, details, filter}) {
 
+    const [rangeValue1, setRangeValue1] = useState("dd-mm-yyyy");
+    const [rangeValue2, setRangeValue2] = useState("dd-mm-yyyy");
     const [checkboxChecked, setCheckboxChecked] = useState(false);
 
     const handleCheckboxChange = (event) => {
         setCheckboxChecked(event.target.checked);
     };
+
+    const handleRangeChange1 = (event) => {
+        setRangeValue1(event.target.value);
+    };
+    const handleRangeChange2 = (event) => {
+        setRangeValue2(event.target.value);
+    };
+
+    useEffect(() => {
+        filter.isEnabled = checkboxChecked;
+        filter.fromValue = rangeValue1;
+        filter.toValue = rangeValue2;
+    },[checkboxChecked, rangeValue1, rangeValue2]);
 
     return (
         <form class="border border-2 rounded-4 mb-2">
@@ -35,14 +50,14 @@ function WarningDate({id, name, details}) {
                         <div class="row">
                             <div class="container px-4 mb-3">
                                 <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" disabled={!checkboxChecked}></input>
+                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" value={rangeValue1} disabled={!checkboxChecked} onChange={handleRangeChange1}></input>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container px-4">
                                 <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" disabled={!checkboxChecked}></input>
+                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" value={rangeValue2} disabled={!checkboxChecked} onChange={handleRangeChange2}></input>
                                 </div>
                             </div>
                         </div>
