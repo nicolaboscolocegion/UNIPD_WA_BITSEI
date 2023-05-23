@@ -46,12 +46,21 @@ const insights = {
     listProducts: () => api.get("rest/list-product/company/1"),
 }
 
+
+const customers = {
+    getCustomer: (customer_id, company_id) => api.get("rest/customer/" + customer_id + "/company/" + company_id),
+    getCustomers: (company_id) => api.get("rest/customer/company/" + company_id),
+    addCustomer: (data, company_id) => api.post("rest/customer/company/" + company_id, data),
+    editCustomer: (data, customer_id, company_id) => api.put("rest/customer/" + customer_id + "/company/" + company_id, data),
+}
+
 const gate = {
     ...me,
     ...user,
     ...auth,
     ...companies,
-    ...insights
+    ...insights,
+    ...customers
 };
 
 export default gate;
