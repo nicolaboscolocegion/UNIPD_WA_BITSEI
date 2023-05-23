@@ -24,6 +24,7 @@ pipelines:
           name: Build React Project
           image: node:10.15.3
           script:
+            - cd bitsei-webapp/src/main/webapp
             - npm install
             - npm run-script build
             - mkdir packaged
