@@ -92,6 +92,7 @@ function AddCompany({clearCompanies}) {
 
     return (
         <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}>
+            {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
             <div className="row justify-content-between text-left">
                 <div className="form-group flex-column d-flex">
                     <label className="form-control-label px-3" htmlFor="logo">Logo</label>
