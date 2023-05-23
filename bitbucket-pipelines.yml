@@ -32,14 +32,15 @@ pipelines:
             - packaged/**
       - step:
           name: Deploy to Server
-          image: alpine
+          image: atlassian/default-image:latest
           trigger: manual
           deployment: production
           script:
             - mkdir upload
             - tar -xf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C upload
-            - apk update && apk add openssh rsync
-            - rsync -a  -e "ssh -o StrictHostKeyChecking=no" --delete upload/ $USERNAME@$SERVER:html/temp/react-${BITBUCKET_BUILD_NUMBER}
-            - ssh -o StrictHostKeyChecking=no $USERNAME@$SERVER "rm -r html/www"
-            - ssh -o StrictHostKeyChecking=no $USERNAME@$SERVER "mv 'html/temp/react-${BITBUCKET_BUILD_NUMBER}' 'html/www'"
-            - ssh -o StrictHostKeyChecking=no $USERNAME@$SERVER "chmod -R u+rwX,go+rX,go-w html/www"
+            - rsync -a --delete upload/ $USERNAME@$SERVER:/home/temp/react-${BITBUCKET_BUILD_NUMBER}
+            - ssh $USERNAME@$SERVER "rm -r /home/www"
+            - ssh $USERNAME@$SERVER "mv '/home/temp/react-${BITBUCKET_BUILD_NUMBER}' '/home/www'"
+            - ssh $USERNAME@$SERVER "chmod -R u +rwX,go+rX,go-w /home/www"
+          artifacts:
+            - upload/**
