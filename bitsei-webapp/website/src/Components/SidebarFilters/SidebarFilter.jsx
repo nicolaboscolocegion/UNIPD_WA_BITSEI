@@ -44,7 +44,7 @@ function SidebarFilter({handleShow, handleClose, shows}) {
             <Product></Product>
         </div>}*/
         
-        <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px'}}>
+        <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px', width: 500+'px'}}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>FILTERS</Offcanvas.Title>
                 <Button variant="outline-success" onClick={handleClose}>Submit filters</Button>
@@ -56,7 +56,6 @@ function SidebarFilter({handleShow, handleClose, shows}) {
                 <WarningDate></WarningDate>
                 <Pfr></Pfr>
                 <Customer></Customer>
-                <Product></Product>
             </Offcanvas.Body>
         </Offcanvas>
     );

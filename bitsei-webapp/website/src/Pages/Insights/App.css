@@ -1,0 +1,67 @@
+/* App.css */
+
+.react-select-container {
+    display: inline-block;
+    position: relative;
+}
+
+.react-select__control {
+    border-color: #c4c4c4;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    box-shadow: none;
+}
+
+.react-select__value-container {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.react-select__single-value {
+    font-size: 14px;
+}
+
+.react-select__indicator-separator {
+    display: none;
+}
+
+.react-select__indicator {
+    color: #6c757d;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.react-select__menu {
+    font-size: 14px;
+}
+
+.react-select__menu-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.react-select__option {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.react-select__option--is-selected {
+    background-color: #f1f1f1;
+}
+
+.react-select__option--is-focused {
+    background-color: #e4e4e4;
+}
+
+.react-select__option--is-disabled {
+    color: #999999;
+    cursor: not-allowed;
+}
+
+.react-select__option--is-disabled:hover {
+    background-color: inherit;
+}

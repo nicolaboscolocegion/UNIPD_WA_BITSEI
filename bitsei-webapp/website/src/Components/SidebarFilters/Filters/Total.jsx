@@ -9,14 +9,19 @@ function Total({id, name, details}) {
     const [checkboxChecked, setCheckboxChecked] = useState(false);
 
     const handleCheckboxChange = (event) => {
+        console.log("handleCheckboxChange called");
         setCheckboxChecked(event.target.checked);
+        setRangeValue1(100);
+        setRangeValue2(100);
     };
 
     const handleRangeChange1 = (event) => {
         setRangeValue1(event.target.value);
+        setCheckboxChecked(true);
     };
     const handleRangeChange2 = (event) => {
         setRangeValue2(event.target.value);
+        setCheckboxChecked(true);
     };
 
     return (
@@ -44,13 +49,13 @@ function Total({id, name, details}) {
                     <div class="col">
                         <div class="row">
                             <div class="container position-relative mb-3">
-                                <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="50" id="customRange1" value={rangeValue1} onChange={handleRangeChange1} disabled={!checkboxChecked}></input>
+                                <input style={{marginBottom: 0.5+'rem'}} type="range" class="form-range" min="100" max="3000" step="50" id="customRange1" value={rangeValue1} onChange={handleRangeChange1}></input>
                                 <output className="form-range-value position-absolute"  style={{top: '-25px', left: `${((rangeValue1 / 3000) * 100)*0.83}%`}}>{rangeValue1}€</output>
                             </div>
                         </div>
                         <div class="row">
                             <div class="container position-relative">
-                                <input style={{marginBottom: 0.5+'rem'}} type="range" className="form-range" min="100" max="3000" step="50" id="customRange2" value={rangeValue2} onChange={handleRangeChange2} disabled={!checkboxChecked}></input>
+                                <input style={{marginBottom: 0.5+'rem'}} type="range" className="form-range" min="100" max="3000" step="50" id="customRange2" value={rangeValue2} onChange={handleRangeChange2}></input>
                                 <output className="form-range-value position-absolute" style={{top: '-25px', left: `${((rangeValue2 / 3000) * 100)*0.83}%`}}>{rangeValue2}€</output>
                             </div>
                         </div>
