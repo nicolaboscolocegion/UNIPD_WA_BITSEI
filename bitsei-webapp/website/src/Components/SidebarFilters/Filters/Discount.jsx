@@ -5,14 +5,14 @@ import { Form } from 'react-bootstrap';
 function Discount({id, name, details, filter}) {
 
     const [rangeValue1, setRangeValue1] = useState(100);
-    const [rangeValue2, setRangeValue2] = useState(100);
+    const [rangeValue2, setRangeValue2] = useState(3000);
     const [checkboxChecked, setCheckboxChecked] = useState(false);
 
     const handleCheckboxChange = (event) => {
         console.log("handleCheckboxChange called");
-        setCheckboxChecked(!checkboxChecked);
+        setCheckboxChecked(event.target.checked);
         setRangeValue1(100);
-        setRangeValue2(100);
+        setRangeValue2(3000);
     };
 
     const handleRangeClick = () => {

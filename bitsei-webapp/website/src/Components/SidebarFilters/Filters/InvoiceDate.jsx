@@ -54,17 +54,13 @@ function InvoiceDate({id, name, details, filter}) {
                     </div>
                     <div class="col">
                         <div class="row">
-                            <div class="container px-4 mb-3">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" value={rangeValue1} disabled={!checkboxChecked} onChange={handleRangeChange1}></input>
-                                </div>
+                            <div class="container px-4 mb-3" onClick={handleRangeClick}>
+                                <Form.Control size="sm" style={{marginBottom: 0.5+'rem'}} type="date" value={rangeValue1} disabled={!checkboxChecked} onChange={handleRangeChange1}/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="container px-4">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" value={rangeValue2} disabled={!checkboxChecked} onChange={handleRangeChange2}></input>
-                                </div>
+                            <div class="container px-4" onClick={handleRangeClick}>
+                                <Form.Control size="sm" style={{marginBottom: 0.5+'rem'}} type="date" value={rangeValue2} disabled={!checkboxChecked} onChange={handleRangeChange2}/>
                             </div>
                         </div>
                     </div>
