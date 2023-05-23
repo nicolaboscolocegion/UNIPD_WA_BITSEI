@@ -26,7 +26,7 @@ pipelines:
           script:
             - cd bitsei-webapp/website
             - yarn install
-            - yarn run build
+            - yarn build
             - mkdir packaged
             - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
           artifacts:
