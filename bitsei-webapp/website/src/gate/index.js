@@ -46,6 +46,9 @@ const insights = {
     listProducts: () => api.get("rest/list-product/company/1"),
 }
 
+const bankAccount ={
+    createBankAccount: (data, company_id) => api.post("rest/bankaccount/company/" + company_id, data )
+}
 
 const customers = {
     getCustomer: (customer_id, company_id) => api.get("rest/customer/" + customer_id + "/company/" + company_id),
@@ -60,7 +63,8 @@ const gate = {
     ...auth,
     ...companies,
     ...insights,
-    ...customers
+    ...customers,
+    ...bankAccount
 };
 
 export default gate;

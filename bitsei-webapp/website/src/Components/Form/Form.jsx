@@ -1,6 +1,13 @@
 import React from "react";
 import "./style.css";
-function Form({title, onSubmit, fields, register, children}) {
+
+const errorMessages = {
+    required: "This field is required",
+    maxLength: "This field exceeds maximum length",
+    minLength: "This field is below minimum length",
+    pattern: "This field doesn't matching the pattern",
+}
+function Form({title, onSubmit, fields, register, errors, children}) {
     return (
             <div className="container-fluid px-1 py-5 mx-auto">
                 <div className="row d-flex justify-content-center">
@@ -15,7 +22,7 @@ function Form({title, onSubmit, fields, register, children}) {
                                 {fields.map((field =>
                                         <div className="row justify-content-between text-left">
                                             {field.map((item =>
-                                                    <div className="form-group col-sm-6 flex-column d-flex">
+                                                    <div className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}>
                                                         <label className="form-control-label px-3">
                                                             {item.name}<span className="text-danger"> *</span>
                                                         </label>
@@ -26,6 +33,15 @@ function Form({title, onSubmit, fields, register, children}) {
                                                             placeholder={item.placeholder || ""}
                                                             {...register(item.name, item.options || {})}
                                                         />
+                                                        {
+                                                            errors[item.name]
+                                                            && errors[item.name].type === "required"
+                                                            && <span className="error">
+                                                                {
+                                                                    errors[item.name].message || errorMessages[errors[item.name].type] || "Not valid"
+                                                                }
+                                                            </span>
+                                                        }
                                                     </div>
                                             ))}
                                         </div>
