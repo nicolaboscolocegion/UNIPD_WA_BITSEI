@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
 
-function Discount({id, name, details}) {
-
+function Discount({id, name, details, filter}) {
 
     const [rangeValue1, setRangeValue1] = useState(100);
     const [rangeValue2, setRangeValue2] = useState(100);
@@ -18,6 +17,12 @@ function Discount({id, name, details}) {
     const handleRangeChange2 = (event) => {
         setRangeValue2(event.target.value);
     };
+
+    useEffect(() => {
+        filter.isEnabled = checkboxChecked;
+        filter.fromValue = rangeValue1;
+        filter.toValue = rangeValue2;
+    },[checkboxChecked, rangeValue1, rangeValue2]);
 
     return (
         <form class="border border-2 rounded-4 mb-2">

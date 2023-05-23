@@ -23,13 +23,13 @@ import {parse} from "@fortawesome/fontawesome-svg-core";
 // TODO: HTML CSS for this page
 function ShowCharts() {
     const [invoices, setInvoices] = useState([]);
+    const [dataToSend, setDataToSend] = useState({});
+
     useEffect(() => {
         console.log("listing invoices onLoad TO REMOVE");
 
-        const data_to_send = {};
-        data_to_send["fromTotal"] = '0';
         gate
-            .getInvoicesByFilters(data_to_send)
+            .getInvoicesByFilters(dataToSend)
             .then((response) => {
                 setInvoices(response.data["resource-list"]);
             })
@@ -37,7 +37,8 @@ function ShowCharts() {
                toast.error("Something went wrong in invoices listing");
             });
 
-    }, []);
+    }, [dataToSend]);
+
 
 
     const [show, setShow] = useState(false);
@@ -46,6 +47,7 @@ function ShowCharts() {
 
     const handleSubmit = () => {
         setShow(false);
+        console.log("## hSubmit called ##");
     }
 
     const [orderByOption, setOrderByOption] = useState([
@@ -56,8 +58,10 @@ function ShowCharts() {
     const [sortedOption, setSortedOption] = useState([
         {value: 1, label: "Ascending"},
         {value: 2, label: "Descending"}]);
+
     const [orderByOptionSelected, setOrderByOptionSelected] = useState(orderByOption[0]);
     const [sortedOptionSelected, setSortedOptionSelected] = useState(sortedOption[0]);
+
     const handleOrderByOptionChange = (selected) => {
         // if the sorted set is supported
         console.log("sortedOptionSelected: " + sortedOptionSelected.value + " - " + sortedOptionSelected.label);
@@ -149,11 +153,6 @@ function ShowCharts() {
         fromValue: null,
         toValue: null
     })
-    const [dataToSend, setDataToSend] = useState({
-        isEmpty: true,
-        data: null
-    })
-
 
     /*const [maxHeight, setMaxHeight] = useState(0);
 
@@ -171,45 +170,7 @@ function ShowCharts() {
         };
     }, []);*/
 
-
     return (
-        /*{<section>
-            <div class="container-fluid">
-                <div class="d-flex flex-row">
-                    <div class="main-content">
-                        <div className="container-fluid bg-white py-5">
-                            <section className="w-100 p-4 text-center pb-4">
-                                <h1>Amazing charts</h1>
-                            </section>
-                        </div>
-                    </div>
-                    <div class="sidebar flex-shrink-0">
-                        <SidebarFilter>Boh</SidebarFilter>
-                    </div>
-                </div>
-            </div>
-        </section>}*/
-
-        /*{<section>
-            <div class="container-fluid m-0 p-0">
-                <div class="row m-0">
-                    <div class="col">
-                        <div class="main-content">
-                            <div className="container-fluid bg-white py-5">
-                                <section className="w-100 p-4 text-center pb-4">
-                                    <h1>Amazing charts</h1>
-                                </section>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                            <div class="sidebar">
-                                <SidebarFilter>Boh</SidebarFilter>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </section>}*/
         <>
         <head>
             <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/css/mdb.min.css" rel="stylesheet" />
@@ -224,7 +185,7 @@ function ShowCharts() {
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
                                         <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} handleSubmit={handleSubmit} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate}/>
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} dataToSend={dataToSend}/>
 
                                             <Button variant="outline-primary" onClick={handleShow}>
                                                 Manage filters
@@ -249,6 +210,18 @@ function ShowCharts() {
                                             onChange={handleSortedOptionChange}
                                             value={sortedOptionSelected}
                                         />
+                                        <Button
+                                            onClick={() => {
+                                                console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue +
+                                                "\nfilterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue +
+                                                "\nfilterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue +
+                                                "\nfilterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue +
+                                                "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue);
+                                            }}
+                                        >
+                                            Console Log filters
+                                        </Button>
+
                                     </div>
                                     <div className="table-responsive">
                                         <table className="table table-hover table-bordered">
