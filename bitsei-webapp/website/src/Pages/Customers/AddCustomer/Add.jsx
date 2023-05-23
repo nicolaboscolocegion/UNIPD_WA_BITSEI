@@ -38,7 +38,7 @@ function AddCustomer() {
     ]
 
     return (
-        <Form onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}/>
+        <Form title={"Customer"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}/>
     )
 }
 
