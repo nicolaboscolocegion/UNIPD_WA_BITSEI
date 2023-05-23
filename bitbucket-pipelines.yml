@@ -27,7 +27,7 @@ pipelines:
             - cd bitsei-webapp/website
             - yarn install && yarn build
             - mkdir packaged
-            - tar -czvf ~/packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
+            - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
           artifacts:
             - packaged/**
       - step:
@@ -38,7 +38,7 @@ pipelines:
           script:
             - cd bitsei-webapp/website
             - mkdir upload
-            - tar -xf ~/packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C upload
+            - tar -xf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C upload
             - rsync -a --delete upload/ $USERNAME@$SERVER:/home/temp/react-${BITBUCKET_BUILD_NUMBER}
             - ssh $USERNAME@$SERVER "rm -r /home/www"
             - ssh $USERNAME@$SERVER "mv '/home/temp/react-${BITBUCKET_BUILD_NUMBER}' '/home/www'"
