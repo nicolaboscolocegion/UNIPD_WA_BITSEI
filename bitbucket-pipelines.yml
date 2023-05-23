@@ -25,7 +25,6 @@ pipelines:
           image: node:16.10.0
           script:
             - cd bitsei-webapp/website
-            - npm install -g yarn
             - yarn install
             - yarn run build
             - mkdir packaged
