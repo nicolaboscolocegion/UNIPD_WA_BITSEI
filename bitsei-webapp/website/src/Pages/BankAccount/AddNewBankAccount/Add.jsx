@@ -1,23 +1,20 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {toast} from "react-toastify";
-import {clearCompanies} from "../../../Store/companies/listsThunk";
 import gate from "../../../gate";
-import {history} from "../../../index";
-import Input from "./Input/Input";
-import Form  from "../../../Components/Form/Form";
+import Form from "../../../Components/Form/Form";
 import {useParams} from "react-router-dom";
 
 function AddBankAccount() {//TODO clear companies?
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: {errors}} = useForm();
     const [pending, setPending] = useState(false);
-    const {company_id}  = useParams();
+    const {company_id} = useParams();
 
     useEffect(() => {
-       
+
     }, []);
 
-    
+
     const submitHandler = (data, e) => {
         e.preventDefault();
 
@@ -42,33 +39,39 @@ function AddBankAccount() {//TODO clear companies?
     };
 
     const fields = [
-        [{name: "IBAN", type: "string", options: {
-            required: "Required",
-            minlength: 27,
-            message: "Please enter a IBAN",
-        }}],
+        [{
+            name: "IBAN", type: "string", options: {
+                required: "Required",
+                minlength: 27,
+                message: "Please enter a IBAN",
+            }
+        }],
 
-        [{name: "bank_name", type: "string", options: {
-            minlength: 3,
-            message: "Please enter a bank name",
-        }}],
+        [{
+            name: "bank_name", type: "string", options: {
+                minlength: 3,
+                message: "Please enter a bank name",
+            }
+        }],
 
-        [{name: "bankaccount_friendly_name", type: "string",options: {
-            required: "Required",
-            minlength: 3,
-            message: "Please enter a frendly name",
-        }}],
-        
+        [{
+            name: "bankaccount_friendly_name", type: "string", options: {
+                required: "Required",
+                minlength: 3,
+                message: "Please enter a frendly name",
+            }
+        }],
+
     ]
 
     return (
-        
-        
-        <Form title={"BankAccount"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}>
-        
-        </Form>
-               
-        
+        <Form
+            title={"BankAccount"}
+            onSubmit={handleSubmit(submitHandler)}
+            fields={fields}
+            register={register}
+            errors={errors}
+        />
     )
 }
 
