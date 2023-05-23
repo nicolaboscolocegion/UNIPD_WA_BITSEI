@@ -28,6 +28,7 @@ pipelines:
             - yarn install && yarn build
             - mkdir packaged
             - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
+            - ls && pwd
           artifacts:
             - packaged/**
       - step:
