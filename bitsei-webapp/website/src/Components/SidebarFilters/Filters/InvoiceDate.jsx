@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import logo from "../../CompanyItem/bitseiLogo";
+import { Form } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
 
 function InvoiceDate({id, name, details}) {
 
@@ -8,6 +10,12 @@ function InvoiceDate({id, name, details}) {
     const handleCheckboxChange = (event) => {
         setCheckboxChecked(event.target.checked);
     };
+    
+    const handleRangeClick = () => {
+        if (!checkboxChecked) {
+          setCheckboxChecked(true);
+        }
+    };
 
     return (
         <form class="border border-2 rounded-4 mb-2">
@@ -15,9 +23,7 @@ function InvoiceDate({id, name, details}) {
             <div class="container mt-3">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={checkboxChecked} onChange={handleCheckboxChange}></input>
-                        </div>
+                        <Form.Switch id="flexSwitchCheckDefault" checked={checkboxChecked} onChange={handleCheckboxChange}/>
                     </div>
                     <div class="col-auto">
                         <div class="row">
@@ -33,17 +39,13 @@ function InvoiceDate({id, name, details}) {
                     </div>
                     <div class="col">
                         <div class="row">
-                            <div class="container px-4 mb-3">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" disabled={!checkboxChecked}></input>
-                                </div>
+                            <div class="container px-4 mb-3" onClick={handleRangeClick}>
+                                <Form.Control size="sm" style={{marginBottom: 0.5+'rem'}} type="date" disabled={!checkboxChecked}/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="container px-4">
-                                <div class="input-group input-group-sm">
-                                    <input style={{marginBottom: 0.5+'rem'}} type="date" class="form-control" disabled={!checkboxChecked}></input>
-                                </div>
+                            <div class="container px-4" onClick={handleRangeClick}>
+                                <Form.Control size="sm" style={{marginBottom: 0.5+'rem'}} type="date" disabled={!checkboxChecked}/>
                             </div>
                         </div>
                     </div>
