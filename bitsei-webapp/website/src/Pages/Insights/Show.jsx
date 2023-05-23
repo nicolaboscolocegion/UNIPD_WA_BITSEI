@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Sidebar from "../../Components/SideBar/SideBar";
 import {components, default as ReactSelect} from "react-select";
+import {parse} from "@fortawesome/fontawesome-svg-core";
 
 
 // TODO: Add validation for all fields
@@ -43,19 +44,71 @@ function ShowCharts() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const handleSubmit = () => {
+        setShow(false);
+    }
+
     const [orderByOption, setOrderByOption] = useState([
         {value: 1, label: "Invoice ID"},
         {value: 2, label: "Customer Name"},
-        {value:3, label: "Invoice Date"},
-        {value:4, label: "Total"}]);
-    const [sorted, setSorted] = useState(["Ascending", "Descending"]);
+        {value: 3, label: "Invoice Date"},
+        {value: 4, label: "Total"}]);
+    const [sortedOption, setSortedOption] = useState([
+        {value: 1, label: "Ascending"},
+        {value: 2, label: "Descending"}]);
     const [orderByOptionSelected, setOrderByOptionSelected] = useState(orderByOption[0]);
+    const [sortedOptionSelected, setSortedOptionSelected] = useState(sortedOption[0]);
     const handleOrderByOptionChange = (selected) => {
         // if the sorted set is supported
+        console.log("sortedOptionSelected: " + sortedOptionSelected.value + " - " + sortedOptionSelected.label);
         if(orderByOption.indexOf(selected) > -1) {
             setOrderByOptionSelected(selected);
+            if(selected.value === 1) {
+                console.log("Order by Invoice ID found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
+                if(parseInt(sortedOptionSelected.value) === 2) {
+                    const sortedInvoices = [...invoices].sort((a, b) => b.invoice.invoice_id - a.invoice.invoice_id);
+                    setInvoices(sortedInvoices);
+                }
+                else {
+                    const sortedInvoices = [...invoices].sort((a, b) => a.invoice.invoice_id - b.invoice.invoice_id);
+                    setInvoices(sortedInvoices);
+                }
+            }
+            if(selected.value === 2) {
+                console.log("Order by Customer Name found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
+                if(parseInt(sortedOptionSelected.value) === 2) {
+                    const sortedInvoices = [...invoices].sort((a, b) => b.invoice.business_name > a.invoice.business_name ? 1 : -1);
+                    setInvoices(sortedInvoices);
+                }
+                else {
+                    const sortedInvoices = [...invoices].sort((a, b) => a.invoice.business_name > b.invoice.business_name ? 1 : -1);
+                    setInvoices(sortedInvoices);
+                }
+            }
+            if(selected.value === 3) {
+                console.log("Order by Invoice Date found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
+                if(parseInt(sortedOptionSelected.value) === 2) {
+                    const sortedInvoices = [...invoices].sort((a, b) => b.invoice.invoice_date > a.invoice.invoice_date ? 1 : -1);
+                    setInvoices(sortedInvoices);
+                }
+                else {
+                    const sortedInvoices = [...invoices].sort((a, b) => a.invoice.invoice_date > b.invoice.invoice_date ? 1 : -1);
+                    setInvoices(sortedInvoices);
+                }
+            }
         }
     }
+    const handleSortedOptionChange = async(sortSelected) => {
+        if(sortedOption.indexOf(sortSelected) > -1) {
+            setSortedOptionSelected(sortSelected);
+            console.log("sortSelected: " + sortSelected.value + " - " + sortSelected.label);
+        }
+    }
+
+    useEffect(() => {
+        handleOrderByOptionChange(orderByOptionSelected);
+    },[sortedOptionSelected]);
+
     const Option = (props) => {
         return (
             <div>
@@ -70,6 +123,36 @@ function ShowCharts() {
             </div>
         );
     };
+
+    const [filterByTotal, setFilterByTotal] = useState({
+        isEnabled: false,
+        fromValue: null,
+        toValue: null
+    })
+    const [filterByDiscount, setFilterByDiscount] = useState({
+        isEnabled: false,
+        fromValue: null,
+        toValue: null
+    })
+    const [filterByPfr, setFilterByPfr] = useState({
+        isEnabled: false,
+        fromValue: null,
+        toValue: null
+    })
+    const [filterByInvoiceDate, setFilterByInvoiceDate] = useState({
+        isEnabled: false,
+        fromValue: null,
+        toValue: null
+    })
+    const [filterByWarningDate, setFilterByWarningDate] = useState({
+        isEnabled: false,
+        fromValue: null,
+        toValue: null
+    })
+    const [dataToSend, setDataToSend] = useState({
+        isEmpty: true,
+        data: null
+    })
 
 
     /*const [maxHeight, setMaxHeight] = useState(0);
@@ -134,23 +217,19 @@ function ShowCharts() {
 
         <body>
             <section>
-                <div className="container-fluid bg-white my-5">
-                    <section className="w-100 p-4 text-center pb-4">
-                        <h1>Amazing charts</h1>
-
-                        <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show}/>
-
-                        <Button variant="outline-primary" onClick={handleShow}>
-                            Manage filters
-                        </Button>
-                    </section>
-                </div>
-
+                <br/>
                 <div className="container">
                     <div className="row">
                         <div className="col">
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
+                                        <section className="text-center">
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} handleSubmit={handleSubmit} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate}/>
+
+                                            <Button variant="outline-primary" onClick={handleShow}>
+                                                Manage filters
+                                            </Button>
+                                        </section>
                                 <div className="card-body">
                                     <div className="dropdown float-left">
                                         <span className="dropdown-label">Order By:</span>
@@ -161,6 +240,14 @@ function ShowCharts() {
                                             options={orderByOption}
                                             onChange={handleOrderByOptionChange}
                                             value={orderByOptionSelected}
+                                        />
+                                        <Select
+                                            className="react-select-container"
+                                            classNamePrefix="react-select"
+                                            isSearchable={false}
+                                            options={sortedOption}
+                                            onChange={handleSortedOptionChange}
+                                            value={sortedOptionSelected}
                                         />
                                     </div>
                                     <div className="table-responsive">
