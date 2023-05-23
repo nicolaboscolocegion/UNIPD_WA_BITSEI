@@ -90,16 +90,6 @@ public class InvoiceContainer extends AbstractResource {
     private final String business_name;
 
     /**
-     * The id of the product associated to the id of the invoice
-     */
-    private final int product_id;
-
-    /**
-     * The title of the product associated to the id of the invoice
-     */
-    private final String product_title;
-
-    /**
      * Creates a new invoice container
      *
      * @param invoice_id        the id of the invoice
@@ -117,10 +107,8 @@ public class InvoiceContainer extends AbstractResource {
      * @param pension_fund_refund   the pension fund refund of the invoice
      * @param has_stamp         the stamp of the invoice
      * @param business_name     the business name associated to the id of the customer
-     * @param product_id        the id of the product associated to the id of the invoice
-     * @param product_title     the title of the product associated to the id of the invoice
      */
-    public InvoiceContainer(final int invoice_id, final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp, final String business_name, final int product_id, final String product_title) {
+    public InvoiceContainer(final int invoice_id, final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp, final String business_name) {
         this.invoice_id = invoice_id;
         if (customer_id != -1) {
             this.customer_id = customer_id;
@@ -141,8 +129,6 @@ public class InvoiceContainer extends AbstractResource {
         this.pension_fund_refund = pension_fund_refund;
         this.has_stamp = has_stamp;
         this.business_name = business_name;
-        this.product_id = product_id;
-        this.product_title = product_title;
     }
 
     /**
@@ -162,10 +148,8 @@ public class InvoiceContainer extends AbstractResource {
      * @param pension_fund_refund   the pension fund refund of the invoice
      * @param has_stamp         the stamp of the invoice
      * @param business_name     the business name associated to the id of the customer
-     * @param product_id        the id of the product associated to the id of the invoice
-     * @param product_title     the title of the product associated to the id of the invoice
      */
-    public InvoiceContainer(final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp, final String business_name, final int product_id, final String product_title) {
+    public InvoiceContainer(final int customer_id, final int status, final int warning_number, final Date warning_date, final String warning_pdf_file, final String invoice_number, final Date invoice_date, final String invoice_pdf_file, final String invoice_xml_file, final double total, final double discount, final double pension_fund_refund, final boolean has_stamp, final String business_name) {
         this.invoice_id = -1;
         if (customer_id != -1) {
             this.customer_id = customer_id;
@@ -186,8 +170,6 @@ public class InvoiceContainer extends AbstractResource {
         this.pension_fund_refund = pension_fund_refund;
         this.has_stamp = has_stamp;
         this.business_name = business_name;
-        this.product_id = product_id;
-        this.product_title = product_title;
     }
 
     /**
@@ -326,24 +308,6 @@ public class InvoiceContainer extends AbstractResource {
     }
 
     /**
-     * Returns the product title of the product associated to the invoice.
-     *
-     * @return the product title of the product associated to the invoice
-     */
-    public final int getProduct_id() {
-        return product_id;
-    }
-
-    /**
-     * Returns the product title of the product associated to the invoice.
-     *
-     * @return the product title of the product associated to the invoice
-     */
-    public final String getProduct_title() {
-        return product_title;
-    }
-
-    /**
      * Sets the invoice ID of this object to the ID passed as parameter.
      * @param invoice_id The value for the invoice ID we want to set.
      */
@@ -363,8 +327,6 @@ public class InvoiceContainer extends AbstractResource {
             jg.writeNumberField("invoice_id", invoice_id);
             jg.writeNumberField("customer_id", customer_id);
             jg.writeStringField("business_name", business_name.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
-            jg.writeNumberField("product_id", product_id);
-            jg.writeStringField("product_title", product_title.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
             jg.writeNumberField("status", status);
             jg.writeNumberField("warning_number", warning_number);
             jg.writeStringField("warning_date", warning_date.toString());
@@ -411,8 +373,6 @@ public class InvoiceContainer extends AbstractResource {
         double jPension_fund_refund = -1;
         boolean jHas_stamp = false;
         String jBusiness_name = null;
-        int jProduct_id = -1;
-        String jProduct_title = null;
 
         try {
             final JsonParser jp = JSON_FACTORY.createParser(in);
@@ -497,14 +457,6 @@ public class InvoiceContainer extends AbstractResource {
                             jp.nextToken();
                             jBusiness_name = jp.getText();
                             jBusiness_name = jBusiness_name.replaceAll("\\s+$", "").trim(); // remove all the whitespaces at the end
-                            break;
-                        case "product_id":
-                            jp.nextToken();
-                            jProduct_id = jp.getIntValue();
-                        case "product_title":
-                            jp.nextToken();
-                            jProduct_title = jp.getText();
-                            jProduct_title = jProduct_title.replaceAll("\\s+$", "").trim(); // remove all the whitespaces at the end
                     }
                 }
             }
@@ -513,7 +465,7 @@ public class InvoiceContainer extends AbstractResource {
             throw e;
         }
 
-        return new InvoiceContainer(jInvoice_id, jCustomer_id, jStatus, jWarning_number, jWarning_date, jWarning_pdf_file, jInvoice_number, jInvoice_date, jInvoice_pdf_file, jInvoice_xml_file, jTotal, jDiscount, jPension_fund_refund, jHas_stamp, jBusiness_name, jProduct_id, jProduct_title);
+        return new InvoiceContainer(jInvoice_id, jCustomer_id, jStatus, jWarning_number, jWarning_date, jWarning_pdf_file, jInvoice_number, jInvoice_date, jInvoice_pdf_file, jInvoice_xml_file, jTotal, jDiscount, jPension_fund_refund, jHas_stamp, jBusiness_name);
     }
 
 }

@@ -21,6 +21,23 @@ import {components, default as ReactSelect} from "react-select";
 // TODO: Add loading for creating company
 // TODO: HTML CSS for this page
 function ShowCharts() {
+    const [invoices, setInvoices] = useState([]);
+    useEffect(() => {
+        console.log("listing invoices onLoad TO REMOVE");
+
+        const data_to_send = {};
+        data_to_send["fromTotal"] = '0';
+        gate
+            .getInvoicesByFilters(data_to_send)
+            .then((response) => {
+                setInvoices(response.data["resource-list"]);
+            })
+            .catch((error) => {
+               toast.error("Something went wrong in invoices listing");
+            });
+
+    }, []);
+
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -160,15 +177,21 @@ function ShowCharts() {
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td className="text-center">INV001</td>
-                                                <td className="text-center">CUST001</td>
-                                                <td className="text-center">John Doe</td>
-                                                <td className="text-center">Paid</td>
-                                                <td className="text-center">2023-05-10</td>
-                                                <td className="text-center">$100.00</td>
-                                                <td className="text-center">$10.00</td>
-                                            </tr>
+                                            {invoices.map((item) => {
+                                                const invoice = item.invoice
+                                                return (
+                                                    <tr>
+                                                        <td className="text-center">{invoice.invoice_id}</td>
+                                                        <td className="text-center">{invoice.customer_id}</td>
+                                                        <td className="text-center">{invoice.business_name}</td>
+                                                        <td className="text-center">{invoice.status}</td>
+                                                        <td className="text-center">{invoice.invoice_date}</td>
+                                                        <td className="text-center">{invoice.total}</td>
+                                                        <td className="text-center">{invoice.discount}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                            }
                                             </tbody>
                                         </table>
                                     </div>
