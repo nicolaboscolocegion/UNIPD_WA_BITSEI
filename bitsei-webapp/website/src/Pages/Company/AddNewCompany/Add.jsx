@@ -89,9 +89,8 @@ function AddCompany({clearCompanies}) {
         [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
         [{name: "province", type: "string"}, {name: "address", type: "string"}],
     ]
-
     return (
-        <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={ errors }>
+        <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
             {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
             <div className="row justify-content-between text-left">
                 <div className="form-group flex-column d-flex">

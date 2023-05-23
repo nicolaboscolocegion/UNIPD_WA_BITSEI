@@ -110,7 +110,7 @@ function EditCompany({clearCompanies}) {
     ]
 
     return (
-        <Form title={"Edit Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={ errors }>
+        <Form title={"Edit Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
             {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
             <div className="row justify-content-between text-left">
                 <div className="form-group flex-column d-flex">
