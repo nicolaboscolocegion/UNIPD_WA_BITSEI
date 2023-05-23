@@ -25,8 +25,9 @@ pipelines:
           image: node:10.15.3
           script:
             - cd bitsei-webapp/website
-            - npm install
-            - npm run-script build
+            - npm install -g yarn
+            - yarn install
+            - yarn run build
             - mkdir packaged
             - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
           artifacts:
