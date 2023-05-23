@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
     return (
-        <footer className="py-4 bg-light mt-auto">
+        <footer className="py-4 bg-light mt-auto sticky-bottom">
             <div className="container-fluid px-4">
                 <div className="d-flex align-items-center justify-content-between small">
                     <div className="text-muted">Copyright © BITSEI 2023</div>
