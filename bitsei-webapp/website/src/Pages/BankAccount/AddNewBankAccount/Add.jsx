@@ -4,8 +4,9 @@ import {toast} from "react-toastify";
 import gate from "../../../gate";
 import Form from "../../../Components/Form/Form";
 import {useParams} from "react-router-dom";
+import {history} from "../../../index";
 
-function AddBankAccount() {//TODO clear companies?
+function AddBankAccount() {
     const {register, handleSubmit, formState: {errors}} = useForm();
     const [pending, setPending] = useState(false);
     const {company_id} = useParams();
@@ -25,7 +26,7 @@ function AddBankAccount() {//TODO clear companies?
             .then((response) => {
                 setPending(false);
                 toast.success("New Bank Account added successfully !");
-                //history.push("/companies");
+                history.push(`/companies/${company_id}`);
             })
             .catch((error) => {
                 setPending(false);
