@@ -6,7 +6,7 @@ import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
 
 function AddCustomer() {
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: { errors }} = useForm();
     const [pending, setPending] = useState(false);
     const {company_id} = useParams();
 
@@ -38,7 +38,7 @@ function AddCustomer() {
     ]
 
     return (
-        <Form title={"Customer"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}/>
+        <Form title={"Customer"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
     )
 }
 
