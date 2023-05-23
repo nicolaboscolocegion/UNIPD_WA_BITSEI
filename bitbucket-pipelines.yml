@@ -22,11 +22,10 @@ pipelines:
     client-side:
       - step:
           name: Build React Project
-          image: node:16.10.0
+          image: node:18.16.0
           script:
             - cd bitsei-webapp/website
-            - yarn install
-            - yarn build
+            - yarn install && yarn build
             - mkdir packaged
             - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
           artifacts:
