@@ -22,7 +22,7 @@ pipelines:
     client-side:
       - step:
           name: Build React Project
-          image: node:10.15.3
+          image: node:16.10.0
           script:
             - cd bitsei-webapp/website
             - npm install -g yarn
