@@ -24,10 +24,10 @@ pipelines:
           name: Build React Project
           image: node:18.16.0
           script:
+            - mkdir packaged
             - cd bitsei-webapp/website
             - yarn install && yarn build
-            - mkdir packaged
-            - tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C build .
+            - cd ../../ && tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C bitsei-webapp/website/build .
           artifacts:
             - packaged/**
       - step:
@@ -36,12 +36,17 @@ pipelines:
           trigger: manual
           deployment: production
           script:
-            - cd bitsei-webapp/website
             - mkdir upload
             - tar -xf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C upload
-            - rsync -a --delete upload/ $USERNAME@$SERVER:/home/temp/react-${BITBUCKET_BUILD_NUMBER}
-            - ssh $USERNAME@$SERVER "rm -r /home/www"
-            - ssh $USERNAME@$SERVER "mv '/home/temp/react-${BITBUCKET_BUILD_NUMBER}' '/home/www'"
-            - ssh $USERNAME@$SERVER "chmod -R u +rwX,go+rX,go-w /home/www"
+            - pipe: atlassian/rsync-deploy:0.8.1
+              variables:
+                USER: bitsei
+                SERVER: 89.40.142.15
+                REMOTE_PATH: 'website/'
+                LOCAL_PATH: 'upload/*'
+                EXTRA_ARGS: '-avz --delete'
+                DELETE_FLAG: 'false'
+                SSH_ARGS: '-o StrictHostKeyChecking=no'
+                DEBUG: 'true'
           artifacts:
             - upload/**
