@@ -21,6 +21,7 @@ function Sidebar() {
     if (company_id) {
         sideBarItems["Companies"] = [
             {path: `/companies/${company_id}/customers`, name: "Customers"},
+            {path: `/companies/${company_id}/products`, name: "Products"},
             {path: `/companies/${company_id}/invoices`, name: "Invoices"},
         ]
     }

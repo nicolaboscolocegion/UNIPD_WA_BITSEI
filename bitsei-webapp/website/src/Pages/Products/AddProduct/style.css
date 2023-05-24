@@ -57,11 +57,3 @@ button:focus {
     box-shadow: none !important;
     outline-width: 0
 }
-
-.error {
-    display: inline-block;
-    padding: 5px 10px;
-    background-color: #ffcccc;
-    color: #ff0000;
-    border-radius: 3px;
-}

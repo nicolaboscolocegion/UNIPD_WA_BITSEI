@@ -8,7 +8,7 @@ import {history} from "../../../index";
 import Form from "../../../Components/Form/Form";
 
 function AddCompany({clearCompanies}) {
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: { errors }} = useForm();
     const [pending, setPending] = useState(false);
     const [preview, setPreview] = useState();
     const [selectedFile, setSelectedFile] = useState();
@@ -84,14 +84,13 @@ function AddCompany({clearCompanies}) {
     };
 
     const fields = [
-        [{name: "title", type: "string"}, {name: "business_name", type: "string"}],
+        [{name: "title", type: "string", options: { required: true, maxLength: 30 }}, {name: "business_name", type: "string"}],
         [{name: "vat_number", type: "string"}, {name: "tax_code", type: "string"}],
         [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
         [{name: "province", type: "string"}, {name: "address", type: "string"}],
     ]
-
     return (
-        <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}>
+        <Form title={"Company"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
             {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
             <div className="row justify-content-between text-left">
                 <div className="form-group flex-column d-flex">
