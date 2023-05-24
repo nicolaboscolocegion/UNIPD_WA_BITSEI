@@ -12,14 +12,14 @@ function List() {
     const [products, setProducts] = useState([]);
     const [pending, setPending] = useState(false);
     useEffect(() => {
-        setPending(true);
+        //setPending(true);
         gate
             .getProducts(company_id)
-            .then(response => {
-                console.log(response.data['resource-list']);
+            .then((response) => {
+                //console.log(response.data['resource-list']);
                 setProducts(response.data['resource-list']);
-                setPending(false);
-            }).catch(() => {
+                //setPending(false);
+            }).catch((error) => {
                 toast.error("Something went wrong.");
             }
         );
