@@ -32,13 +32,7 @@ function Item() {
             : (<div className="container py-5">
 
                     <header className="text-center text-white">
-                        <h1 className="display-4">Bootstrap list</h1>
-                        <p className="lead mb-0 font-italic">A collection of list variants using Bootstrap 4.</p>
-                        <p className="font-italic">Snippet By
-                            <a href="https://bootstrapious.com" className="text-white">
-                                <u>Bootstrapious</u>
-                            </a>
-                        </p>
+                        <h1 className="display-4">{product.title}</h1>
                     </header>
 
                     <div className="row py-5">
@@ -46,10 +40,9 @@ function Item() {
 
                             <div className="card shadow mb-4">
                                 <div className="card-body p-5">
-                                    <h4 className="mb-4">List with bullets</h4>
+                                    <h4 className="mb-4">Product's details</h4>
 
                                     <ul className="list-bullets">
-                                        <li className="mb-2">Lorem ipsum dolor sit amet.</li>
                                         {Object.entries(product).map((e) => <li className="mb-2">{`${e[0]}: ${e[1]}`}</li> )  }
                                     </ul>
                                 </div>
