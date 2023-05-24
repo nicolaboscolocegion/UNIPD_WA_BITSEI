@@ -154,6 +154,35 @@ function ShowCharts() {
         toValue: null
     })
 
+    const setFilters = () => {
+        const tmpDataToSend = {};
+        if(filterByTotal.isEnabled === true) {
+            tmpDataToSend["fromTotal"] = filterByTotal.fromValue;
+            tmpDataToSend["toTotal"] = filterByTotal.toValue;
+        }
+
+        if(filterByDiscount.isEnabled === true) {
+            tmpDataToSend["fromDiscount"] = filterByDiscount.fromValue;
+            tmpDataToSend["toDiscount"] = filterByDiscount.toValue;
+        }
+
+        if(filterByPfr.isEnabled === true) {
+            tmpDataToSend["fromPfr"] = filterByPfr.fromValue;
+            tmpDataToSend["toPfr"] = filterByPfr.toValue;
+        }
+
+        if(filterByInvoiceDate.isEnabled === true) {
+            tmpDataToSend["fromInvoiceDate"] = filterByInvoiceDate.fromValue;
+            tmpDataToSend["toInvoiceDate"] = filterByInvoiceDate.toValue;
+        }
+
+        if(filterByWarningDate.isEnabled === true) {
+            tmpDataToSend["fromWarningDate"] = filterByWarningDate.fromValue;
+            tmpDataToSend["toWarningDate"] = filterByWarningDate.toValue;
+        }
+        setDataToSend(tmpDataToSend);
+    }
+
     /*const [maxHeight, setMaxHeight] = useState(0);
 
     useEffect(() => {
@@ -185,7 +214,7 @@ function ShowCharts() {
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
                                         <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} dataToSend={dataToSend}/>
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} setFilters={setFilters}/>
 
                                             <Button variant="outline-primary" onClick={handleShow}>
                                                 Manage filters

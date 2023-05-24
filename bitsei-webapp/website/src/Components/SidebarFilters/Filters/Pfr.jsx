@@ -5,9 +5,9 @@ import { InputGroup } from 'react-bootstrap';
 
 function Pfr({id, name, details, filter}) {
 
-    const [rangeValue1, setRangeValue1] = useState(0.0);
-    const [rangeValue2, setRangeValue2] = useState(0.0);
-    const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [checkboxChecked, setCheckboxChecked] = useState(filter.isEnabled);
+    const [rangeValue1, setRangeValue1] = useState(filter.fromValue ? filter.fromValue : 0.0);
+    const [rangeValue2, setRangeValue2] = useState(filter.toValue? filter.toValue : 0.0);
 
     const handleCheckboxChange = (event) => {
         setCheckboxChecked(event.target.checked);

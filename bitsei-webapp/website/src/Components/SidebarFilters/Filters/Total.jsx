@@ -3,11 +3,11 @@ import logo from "../../CompanyItem/bitseiLogo";
 import {useForm} from "react-hook-form";
 import { Form } from 'react-bootstrap';
 
-function Total({id, name, details, filter}) {
+function Total({filter}) {
 
-    const [rangeValue1, setRangeValue1] = useState(100);
-    const [rangeValue2, setRangeValue2] = useState(3000);
-    const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [checkboxChecked, setCheckboxChecked] = useState(filter.isEnabled);
+    const [rangeValue1, setRangeValue1] = useState(filter.fromValue ? filter.fromValue : 100);
+    const [rangeValue2, setRangeValue2] = useState(filter.toValue? filter.toValue : 3000);
 
     const handleCheckboxChange = (event) => {
         console.log("handleCheckboxChange called");

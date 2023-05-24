@@ -4,9 +4,9 @@ import { Form } from 'react-bootstrap';
 
 function InvoiceDate({id, name, details, filter}) {
 
-    const [rangeValue1, setRangeValue1] = useState("dd-mm-yyyy");
-    const [rangeValue2, setRangeValue2] = useState("dd-mm-yyyy");
-    const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [checkboxChecked, setCheckboxChecked] = useState(filter.isEnabled);
+    const [rangeValue1, setRangeValue1] = useState(filter.fromValue ? filter.fromValue : "dd-mm-yyyy");
+    const [rangeValue2, setRangeValue2] = useState(filter.toValue? filter.toValue : "dd-mm-yyyy");
 
     const handleCheckboxChange = (event) => {
         setCheckboxChecked(event.target.checked);

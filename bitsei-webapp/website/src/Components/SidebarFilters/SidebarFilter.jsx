@@ -10,7 +10,7 @@ import Product from ".//Filters/Product";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 
-function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, dataToSend}) {
+function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, setFilters}) {
     const handleSubmit = () => {
         /*
         console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue);
@@ -19,10 +19,26 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
         console.log("filterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue);
         console.log("filterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue);
         */
-        if(filterByTotal.isEnabled === true) {
-            dataToSend["fromTotal"] = filterByTotal.fromValue;
-            dataToSend["toTotal"] = filterByTotal.toValue;
-        }
+        setFilters();
+        handleClose();
+    }
+    
+    const handleReset = () => {
+        filterByTotal.isEnabled = false;
+        filterByTotal.fromValue = filterByTotal.toValue = null;
+
+        filterByDiscount.isEnabled = false;
+        filterByDiscount.fromValue = filterByDiscount.toValue = null;
+
+        filterByPfr.isEnabled = false;
+        filterByPfr.fromValue = filterByPfr.toValue = null;
+
+        filterByInvoiceDate.isEnabled = false;
+        filterByInvoiceDate.fromValue = filterByInvoiceDate.toValue = null;
+
+        filterByWarningDate.isEnabled = false;
+        filterByWarningDate.fromValue = filterByWarningDate.toValue = null;
+        handleClose();
     }
 
     return (
@@ -61,6 +77,7 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>FILTERS</Offcanvas.Title>
                 <Button variant="outline-success" onClick={handleSubmit}>Submit filters</Button>
+                <Button variant="outline-success" onClick={handleReset}>Reset filters</Button>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Total filter={filterByTotal}></Total>

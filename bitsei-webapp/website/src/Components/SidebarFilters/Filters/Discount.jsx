@@ -4,9 +4,9 @@ import { Form } from 'react-bootstrap';
 
 function Discount({id, name, details, filter}) {
 
-    const [rangeValue1, setRangeValue1] = useState(100);
-    const [rangeValue2, setRangeValue2] = useState(3000);
-    const [checkboxChecked, setCheckboxChecked] = useState(false);
+    const [checkboxChecked, setCheckboxChecked] = useState(filter.isEnabled);
+    const [rangeValue1, setRangeValue1] = useState(filter.fromValue ? filter.fromValue : 100);
+    const [rangeValue2, setRangeValue2] = useState(filter.toValue? filter.toValue : 3000);
 
     const handleCheckboxChange = (event) => {
         console.log("handleCheckboxChange called");
