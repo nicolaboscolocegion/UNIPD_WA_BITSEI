@@ -90,6 +90,12 @@ public final class CreateProductDAO extends AbstractDAO {
             pstmt.setString(5, product.getMeasurement_unit());
             pstmt.setString(6, product.getDescription());
 
+            LOGGER.info ("Company id: " + product.getCompany_id());
+            LOGGER.info ("Title: " + product.getTitle());
+            LOGGER.info ("Default price: " + product.getDefault_price());
+            LOGGER.info ("Logo: " + product.getLogo());
+            LOGGER.info ("Measurement unit: " + product.getMeasurement_unit());
+            LOGGER.info ("Description: " + product.getDescription());
             pstmt.execute();
 
             LOGGER.info("Product %s successfully stored in the database.", product.getTitle());
