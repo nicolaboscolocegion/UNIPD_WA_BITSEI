@@ -220,10 +220,10 @@ function ShowChart() {
                                         </div>
 
                                         <div className="container"> 
-                                            <span className="text-center">{chart.labels}    </span>
-                                            <span className="text-center">{chart.data}   </span>
-                                            <span className="text-center">{chart.type}   </span>
-                                            <span className="text-center">{chart.period}   </span>
+                                            <span className="text-center">Type: {chart.type}     </span>
+                                            <span className="text-center">Period: {chart.period}     </span>
+                                            <span className="text-center">Labels: {chart.labels}      </span>
+                                            <span className="text-center">Data: {chart.data}     </span> 
                                         </div>
 
                                     </div>
