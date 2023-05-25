@@ -12,41 +12,61 @@ function List() {
     const [products, setProducts] = useState([]);
     const [pending, setPending] = useState(false);
     useEffect(() => {
-        setPending(true);
+        //setPending(true);
         gate
             .getProducts(company_id)
-            .then(response => {
-                console.log(response.data['resource-list']);
+            .then((response) => {
+                //console.log(response.data['resource-list']);
                 setProducts(response.data['resource-list']);
-                setPending(false);
-            }).catch(() => {
+                //setPending(false);
+            }).catch((error) => {
                 toast.error("Something went wrong.");
             }
         );
     }, [company_id]);
 
-    return pending ? ("Loading") : (
-        <>
-            <Header>
-                <Link className="nav-link" to={"/companies/add"} style={{color: "green"}}>
-                    + Add Company
-                </Link>
-            </Header>
-            <section className="py-5" style={{backgroundColor: "#eee"}}>
-                <div className="container py-5">
-                    {products.map((item) => {
-                        let product = item.product
-                        return (
-                            <>
-                                <h1>{product.productID} </h1>
-                                <h1>{product.title} </h1>
-                            </>
-                            )
-                        }
-                    )}
-                </div>
-            </section>
-        </>
+
+    return (
+            <>
+            {pending
+                ? (<h1>pending...</h1>)
+                : (<div className="container py-5">
+
+                      <header className="text-center text-white">
+                      <h1 className="display-4">Product list</h1>
+                      </header>
+
+                        <div className="row py-5">
+                            <div className="col-lg-7 mx-auto">
+
+                                <div className="card shadow mb-4">
+                                    <div className="card-body p-5">
+                                        <h4 className="mb-4">Products list:</h4>
+
+                                        <ul className="list-bullets">
+                                            {products.map((item) => {
+                                            let product = item.product
+                                                return (
+                                                    <li>
+                                                        <h5>{product.productID} </h5>
+                                                        <h5>{product.title} </h5>
+                                                    </li>
+                                                )
+                                            }
+                                            )}
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                )
+            }
+            </>
     )
 
 }

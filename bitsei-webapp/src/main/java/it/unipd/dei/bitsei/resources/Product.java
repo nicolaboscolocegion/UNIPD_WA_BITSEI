@@ -262,6 +262,7 @@ public class Product extends AbstractResource{
                         case "logo":
                             jp.nextToken();
                             jLogo = jp.getText();
+                            break;
                         case "measurement_unit":
                             jp.nextToken();
                             jMeasurement_unit = jp.getText();
