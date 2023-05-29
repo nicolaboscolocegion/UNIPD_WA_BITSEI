@@ -1,71 +1,110 @@
-import React, {useEffect, useRef, useState} from "react";
-import Select from 'react-select';
+import React, {useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Invoices/App.css';
-import {useForm} from "react-hook-form";
-import {connect} from "react-redux";
 import {toast} from "react-toastify";
-import {clearCompanies} from "../../Store/companies/listsThunk";
 import gate from "../../gate";
-import {history} from "../../index";
 import SidebarFilter from "../../Components/SidebarFilters/SidebarFilter";
 import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import Sidebar from "../../Components/SideBar/SideBar";
-import {components, default as ReactSelect} from "react-select";
-import {parse} from "@fortawesome/fontawesome-svg-core";
+import Chart from 'chart.js/auto'
+import Nav from 'react-bootstrap/Nav';
 
-
-// TODO: Add validation for all fields
-// TODO: Add error handling for all fields
-// TODO: Add loading for creating company
-// TODO: HTML CSS for this page
+// TODO: Refactor the logic section of code
+// TODO: Use functions to generate the chart based on that
+// TODO: Find a way to remove the link and script tags from the component, it's not a good practice
+// TODO: Suggestions: 1. Use complex objects to store the setting for the chart
+// TODO:              2. Think about another way to implement setFilters() function
 function ShowChart() {
-    const [invoices, setInvoices] = useState([]);
-    const [dataToSend, setDataToSend] = useState({});
+    const [chart, setChart] = useState([]);             //Data for drawing the chart (obtained with the response)
+    const [dataToSend, setDataToSend] = useState({"chart_type": 1, "chart_period": 1});   //Data to send in the request
+    const [chartType, setChartType] = useState(1)
+    const [chartPeriod, setChartPeriod] = useState(1)
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
-        console.log("listing invoices onLoad TO REMOVE");
-
+        //Process request (the payload is dataToSend) to get data for drawing chart
         gate
-            .getInvoicesByFilters(dataToSend)
+            .getChartInvoiceByFilters(dataToSend)
             .then((response) => {
-                setInvoices(response.data["resource-list"]);
+                console.log(response.data["chart"]);
+                setChart(response.data["chart"]);
             })
             .catch((error) => {
-               toast.error("Something went wrong in invoices listing");
+                toast.error("Something went wrong in invoices listing");
             });
-
     }, [dataToSend]);
 
-    const [show, setShow] = useState(false);
+    useEffect(() => {
+        const ctx = document.getElementById('myChart');
+        if (chart.type === 1) {
+            console.log("TYPE 1");
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chart.labels,
+                    datasets: [{
+                        label: '# of Invoices',
+                        data: chart.data,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            return () => {
+                myChart.destroy();
+            };
+        } else if (chart.type === 2) {
+            console.log("TYPE 2");
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chart.labels,
+                    datasets: [{
+                        label: 'Total profit',
+                        data: chart.data,
+                        borderWidth: 1,
+                        borderColor: 'rgb(75, 192, 192)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            return () => {
+                myChart.destroy();
+            };
+        }
+
+    }, [chart]);
+
+    useEffect(() => {
+        setFilters();
+    }, [chartType]);
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const handleSubmit = () => {
         setShow(false);
-        console.log("## hSubmit called ##");
+        console.log("## Submit called ##");
     }
 
-    /*useEffect(() => {
-        handleOrderByOptionChange(orderByOptionSelected);
-    },[sortedOptionSelected]);
+    const handleTabSelect = (selectedTab) => {
+        setChartType(parseInt(selectedTab));
+    }
 
-    const Option = (props) => {
-        return (
-            <div>
-                <components.Option {...props}>
-                    <input
-                        type="checkbox"
-                        checked={props.isSelected}
-                        onChange={() => null}
-                    />{" "}
-                    <label>{props.label}</label>
-                </components.Option>
-            </div>
-        );
-    };*/
-
+    //Request data (stored in dataToSend)
     const [filterByTotal, setFilterByTotal] = useState({
         isEnabled: false,
         fromValue: null,
@@ -92,13 +131,47 @@ function ShowChart() {
         toValue: null
     })
 
+
+    //Function that fills dataToSend
+    const setFilters = () => {
+        const tmpDataToSend = {};
+        if (filterByTotal.isEnabled === true) {
+            tmpDataToSend["fromTotal"] = filterByTotal.fromValue;
+            tmpDataToSend["toTotal"] = filterByTotal.toValue;
+        }
+
+        if (filterByDiscount.isEnabled === true) {
+            tmpDataToSend["fromDiscount"] = filterByDiscount.fromValue;
+            tmpDataToSend["toDiscount"] = filterByDiscount.toValue;
+        }
+
+        if (filterByPfr.isEnabled === true) {
+            tmpDataToSend["fromPfr"] = filterByPfr.fromValue;
+            tmpDataToSend["toPfr"] = filterByPfr.toValue;
+        }
+
+        if (filterByInvoiceDate.isEnabled === true) {
+            tmpDataToSend["fromInvoiceDate"] = filterByInvoiceDate.fromValue;
+            tmpDataToSend["toInvoiceDate"] = filterByInvoiceDate.toValue;
+        }
+
+        if (filterByWarningDate.isEnabled === true) {
+            tmpDataToSend["fromWarningDate"] = filterByWarningDate.fromValue;
+            tmpDataToSend["toWarningDate"] = filterByWarningDate.toValue;
+        }
+        tmpDataToSend["chart_type"] = chartType;
+        tmpDataToSend["chart_period"] = chartPeriod;
+        setDataToSend(tmpDataToSend);
+    }
+
     return (
         <>
-        <head>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/css/mdb.min.css" rel="stylesheet" />
-        </head>
+            <head>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/css/mdb.min.css"
+                      rel="stylesheet"/>
+            </head>
 
-        <body>
+            <body>
             <section>
                 <br/>
                 <div className="container">
@@ -106,23 +179,27 @@ function ShowChart() {
                         <div className="col">
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Insights</h5>
-                                        <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} dataToSend={dataToSend}/>
+                                <section className="text-center">
+                                    <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show}
+                                                   filterByTotal={filterByTotal} filterByDiscount={filterByDiscount}
+                                                   filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate}
+                                                   filterByWarningDate={filterByWarningDate} setFilters={setFilters}/>
 
-                                            <Button variant="outline-primary" onClick={handleShow}>
-                                                Manage filters
-                                            </Button>
-                                        </section>
+                                    <Button variant="outline-primary" onClick={handleShow}>
+                                        Manage filters
+                                    </Button>
+                                </section>
                                 <div className="card-body">
                                     <div className="dropdown float-left">
-                                        
+
                                         <Button
                                             onClick={() => {
                                                 console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue +
-                                                "\nfilterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue +
-                                                "\nfilterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue +
-                                                "\nfilterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue +
-                                                "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue);
+                                                    "\nfilterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue +
+                                                    "\nfilterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue +
+                                                    "\nfilterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue +
+                                                    "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue +
+                                                    "\nType: " + chartType + " Period: " + chartPeriod);
                                             }}
                                         >
                                             Console Log filters
@@ -130,7 +207,28 @@ function ShowChart() {
 
                                     </div>
                                     <div className="container-fluid">
-                                        
+
+                                        <Nav fill variant="tabs" activeKey={chartType} defaultActiveKey="1"
+                                             onSelect={handleTabSelect}>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="1">Invoices by Period</Nav.Link>
+                                            </Nav.Item>
+                                            <Nav.Item>
+                                                <Nav.Link eventKey="2">Total by Period</Nav.Link>
+                                            </Nav.Item>
+                                        </Nav>
+
+                                        <div className="chart-container">
+                                            <canvas id="myChart"/>
+                                        </div>
+
+                                        <div className="container">
+                                            <span className="text-center">Type: {chart.type}     </span>
+                                            <span className="text-center">Period: {chart.period}     </span>
+                                            <span className="text-center">Labels: {chart.labels}      </span>
+                                            <span className="text-center">Data: {chart.data}     </span>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +240,7 @@ function ShowChart() {
             </section>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/js/mdb.min.js"></script>
-        </body>
+            </body>
         </>
     )
 }

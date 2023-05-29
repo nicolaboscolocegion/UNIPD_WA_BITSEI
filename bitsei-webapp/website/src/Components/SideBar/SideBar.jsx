@@ -1,29 +1,50 @@
 import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo} from "@fortawesome/free-solid-svg-icons";
+
+import types from "./sideBarItemsType";
 
 function Sidebar() {
     const company_id = useSelector((state) => state.companies.activeCompany)
         || window.location.pathname.split("/")[2];
 
+    const [isExpanded, setIsExpanded] = React.useState([
+        {name: types.PRODUCTS, isExpanded: true},
+        {name: types.INVOICES, isExpanded: true},
+        {name: types.CUSTOMERS, isExpanded: true},
+    ]);
+
+
     let sideBarItems = {
-        "Core": [
-            {path: "/companies", name: "Dashboard"}
+        [types.CORE]: [
+            {path: "/companies", name: "Dashboard", icon: faHippo}
         ],
     }
 
-    // check the company id is integer or not
-    // if (company_id && isNaN(parseInt(company_id))) {
-    //     console.log("company id is not integer");
-    //     // history.push("/companies");
-    // }
-
     if (company_id) {
-        sideBarItems["Companies"] = [
-            {path: `/companies/${company_id}/customers`, name: "Customers"},
-            {path: `/companies/${company_id}/products`, name: "Products"},
-            {path: `/companies/${company_id}/invoices`, name: "Invoices"},
+        sideBarItems[types.COMPANIES] = [
+            {
+                path: `/companies/${company_id}/customers`, name: types.CUSTOMERS, icon: faBuilding, subItems: [
+                    {path: `/companies/${company_id}/customer/add`, name: "Add Customer"},
+                ]
+            },
+            {
+                path: `/companies/${company_id}/products`, name: types.PRODUCTS, icon: faFolder, subItems: [
+                    {path: `/companies/${company_id}/product/add`, name: "Add Products"},
+                ]
+            },
+            {
+                path: `/companies/${company_id}/invoices`, name: types.INVOICES, icon: faFileInvoice, subItems: [
+                    {path: `/companies/${company_id}/invoices/add`, name: "Add Invoices"},
+                ]
+            },
         ]
+    }
+
+    const collapseMenu = (item_name) => {
+        setIsExpanded({...isExpanded, [item_name]: !isExpanded[item_name]})
     }
 
     return (
@@ -38,12 +59,38 @@ function Sidebar() {
                             <>
                                 <div className="sb-sidenav-menu-heading">{key}</div>
                                 {sideBarItems[key].map((item) => (
-                                    <Link className="nav-link" to={item.path}>
-                                        <div className="sb-nav-link-icon">
-                                            <i className="fas fa-tachometer-alt"/>
+                                    <>
+                                        <div className="nav-link">
+                                            <Link className="nav-link" to={item.path}>
+                                                <div className="sb-nav-link-icon">
+                                                    <FontAwesomeIcon icon={item.icon} color="white"/>
+                                                </div>
+                                                {item.name}
+                                            </Link>
+                                            {item.subItems && (
+                                                <div className="sb-sidenav-collapse-arrow"
+                                                     onClick={() => collapseMenu(item.name)}>
+                                                    <FontAwesomeIcon icon={faAngleDown} color="white"/>
+                                                </div>
+                                            )}
                                         </div>
-                                        {item.name}
-                                    </Link>
+                                        {item.subItems && (
+                                            <div
+                                                className={`collapse ${isExpanded[item.name] ? "show" : ""}`}
+                                                id="collapseLayouts"
+                                                aria-labelledby="headingOne"
+                                                data-bs-parent="#sidenavAccordion"
+                                            >
+                                                <nav className="sb-sidenav-menu-nested nav">
+                                                    {item.subItems.map((subItem) => (
+                                                        <Link className="nav-link" to={subItem.path}>
+                                                            {subItem.name}
+                                                        </Link>
+                                                    ))}
+                                                </nav>
+                                            </div>
+                                        )}
+                                    </>
                                 ))}
                             </>
                         ))}

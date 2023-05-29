@@ -2,9 +2,7 @@ import types from "./authActionTypes";
 import axios from "axios";
 import gate from "../../gate";
 import { history } from "../../index";
-import { toast } from "react-toastify";
-
-axios.defaults.baseURL = "http://localhost:8080/bitsei-1.0/";
+import { toast } from "react-toastify"
 
 export const userLogin = (data) => {
     return async (dispatch) => {
@@ -78,7 +76,6 @@ export const userLogin = (data) => {
 export const logout = () => {
     return (dispatch) => {
         localStorage.removeItem("Authorization");
-
         dispatch({ type: types.LOGOUT });
     };
 };
