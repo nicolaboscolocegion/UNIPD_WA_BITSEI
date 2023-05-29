@@ -51,7 +51,9 @@ const insights = {
 }
 
 const bankAccount ={
-    createBankAccount: (data, company_id) => api.post("rest/bankaccount/company/" + company_id, data )
+    createBankAccount: (data, company_id) => api.post("rest/bankaccount/company/" + company_id, data ),
+    getBankAccount: (bankAccount_id, company_id) => api.get("rest/bankaccount/" + bankAccount_id + "/company/" + company_id),
+    editBankAccount: (data, bankAccount_id, company_id) => api.put("rest/bankaccount/"+bankAccount_id+"/company/" + company_id, data)
 }
 
 const customers = {

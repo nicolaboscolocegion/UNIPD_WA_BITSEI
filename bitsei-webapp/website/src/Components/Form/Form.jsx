@@ -10,7 +10,7 @@ const errorMessages = {
     pattern: "This field doesn't matching the pattern",
 }
 
-function Form({title, onSubmit, fields, register, errors, pending, children}) {
+function Form({title, onSubmit, fields, register, errors={}, pending=false, children}) {
     console.log(pending)
     return (
         <div className="container-fluid px-1 py-5 mx-auto">
@@ -25,7 +25,9 @@ function Form({title, onSubmit, fields, register, errors, pending, children}) {
                         >
                             {fields.map((field =>
                                     <div className="row justify-content-between text-left">
-                                        {field.map((item =>
+                                        {field.map((item => {
+                                            console.log(item.name);
+                                                return(
                                                 <div
                                                     className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}>
                                                     <label className="form-control-label px-3">
@@ -48,7 +50,9 @@ function Form({title, onSubmit, fields, register, errors, pending, children}) {
                                                             </span>
                                                     }
                                                 </div>
+                                        )}
                                         ))}
+
                                     </div>
                             ))}
                             {children && children}
