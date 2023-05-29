@@ -1,66 +1,37 @@
 import React, {useState} from "react";
 import {useSelector, connect} from "react-redux";
+import logo from "../../assets/bitseiLogo";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPersonFalling} from "@fortawesome/free-solid-svg-icons";
+import {Button} from "react-bootstrap";
+import {logout} from "../../Store/auth/authThunk";
 
-function Navbar() {
+function Navbar({logout}) {
 
     return (
         <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
             {/* Navbar Brand*/}
             <a className="navbar-brand ps-3" href="index.html">
-                Start Bootstrap
+                <img
+                    width="100"
+                    className="d-inline-block align-text-top"
+                    src={`data:image/png;base64, ${logo()}`}
+                    alt={"company_logo"}
+                />
             </a>
-            {/* Sidebar Toggle*/}
-            <button
-                className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
-                id="sidebarToggle"
-                href="#!"
-            >
-                <i className="fas fa-bars"/>
-            </button>
-            {/* Navbar Search*/}
 
-            {/* Navbar*/}
-            <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li className="nav-item dropdown">
-                    <a
-                        className="nav-link dropdown-toggle"
-                        id="navbarDropdown"
-                        href="#"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        <i className="fas fa-user fa-fw"/>
-                    </a>
-                    <ul
-                        className="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="navbarDropdown"
-                    >
-                        <li>
-                            <a className="dropdown-item" href="#!">
-                                Settings
-                            </a>
-                        </li>
-                        <li>
-                            <a className="dropdown-item" href="#!">
-                                Activity Log
-                            </a>
-                        </li>
-                        <li>
-                            <hr className="dropdown-divider"/>
-                        </li>
-                        <li>
-                            <a className="dropdown-item" href="#!">
-                                Logout
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+
+            <Button
+                type="button"
+                onClick={() => logout()}
+            >
+                <FontAwesomeIcon icon={faPersonFalling}/>
+            </Button>
+
         </nav>
 
 
     );
 }
 
-export default connect(null, {})(Navbar);
+export default connect(null, {logout})(Navbar);

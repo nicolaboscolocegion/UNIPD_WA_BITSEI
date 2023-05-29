@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import gate from "../../gate";
 import {Buffer} from 'buffer';
-import logo from "./bitseiLogo";
+import logo from "../../assets/bitseiLogo";
 
 function Image({id}) {
     const [image, setImage] = useState("");

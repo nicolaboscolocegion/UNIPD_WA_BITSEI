@@ -78,7 +78,6 @@ export const userLogin = (data) => {
 export const logout = () => {
     return (dispatch) => {
         localStorage.removeItem("Authorization");
-
         dispatch({ type: types.LOGOUT });
     };
 };
