@@ -24,9 +24,9 @@ pipelines:
           name: Build React Project
           image: node:18.16.0
           script:
-            - export BITBUCKET_PIPELINE=true
             - mkdir packaged
             - cd bitsei-webapp/website
+            - export NODE_ENV=prod
             - yarn install && yarn build
             - cd ../../ && tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C bitsei-webapp/website/build .
           artifacts:
