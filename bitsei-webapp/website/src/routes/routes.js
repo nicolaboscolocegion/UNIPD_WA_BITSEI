@@ -41,9 +41,10 @@ export const privateRoutes = [
     { exact: true, path: "/insights", component: ShowChart },
     { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
     { exact: true, path: "/companies/:company_id/get-invoices", component: GetInvoicesByFilters },
-    { exact: true, path: "/companies/:company_id//list-customer", component: ListCustomers },
+    { exact: true, path: "/companies/:company_id/list-customer", component: ListCustomers },
     { exact: true, path: "/companies/:company_id/customer/add", component: AddCustomer },
     { exact: true, path: "/companies/:company_id/customer/edit/:customer_id", component: EditCustomer },
     { exact: true, path: "/list-product", component: ListProducts },
     { exact: true, path: "/companies/:company_id/product/add", component: AddProduct },
-    { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },];
+    { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },
+];
