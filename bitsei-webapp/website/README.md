@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+# Bitsei Webapp
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Dependency Graph
+<img src="dependency-graph.svg" alt="dependency-graph"/>
+
+
 
 ## Available Scripts
 
