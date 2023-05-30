@@ -41,7 +41,7 @@ function EditBankAccount() {
         console.log(data);
 
         gate
-            .editBankAccount({bankAccount: {...data, bankaccount_id: parseInt(bankaccount_id)}}, company_id, bankaccount_id)
+            .editBankAccount(  {...data},bankaccount_id, company_id)
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
