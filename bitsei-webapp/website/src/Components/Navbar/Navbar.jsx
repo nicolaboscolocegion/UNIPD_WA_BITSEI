@@ -18,7 +18,7 @@ function Navbar({logout}) {
                     src={`data:image/png;base64, ${logo()}`}
                     alt={"company_logo"}
                 />
-            </a>
+            </Link>
 
 
             <Button
