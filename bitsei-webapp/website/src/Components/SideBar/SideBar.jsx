@@ -26,22 +26,26 @@ function Sidebar() {
     if (company_id) {
         sideBarItems[types.COMPANIES] = [
             {
-                path: `/companies/${company_id}/customers`, name: types.CUSTOMERS, icon: faBuilding, subItems: [
+                path: `#`, name: types.CUSTOMERS, icon: faBuilding, subItems: [
+                    {path: `/companies/${company_id}/list-customer`, name: "List Customers"},
                     {path: `/companies/${company_id}/customer/add`, name: "Add Customer"},
                 ]
             },
             {
-                path: `/companies/${company_id}/products`, name: types.PRODUCTS, icon: faFolder, subItems: [
-                    {path: `/companies/${company_id}/product/add`, name: "Add Products"},
+                path: `#`, name: types.PRODUCTS, icon: faFolder, subItems: [
+                    {path: `/companies/${company_id}/products`, name: "List Products"},
+                    {path: `/companies/${company_id}/product/add`, name: "Add Product"},
                 ]
             },
             {
-                path: `/companies/${company_id}/invoices`, name: types.INVOICES, icon: faFileInvoice, subItems: [
-                    {path: `/companies/${company_id}/invoices/add`, name: "Add Invoices"},
+                path: `#`, name: types.INVOICES, icon: faFileInvoice, subItems: [
+                    {path: `/companies/${company_id}/invoices`, name: "List Invoices"},
+                    {path: `/companies/${company_id}/invoices/add`, name: "Add Invoice"},
                 ]
             },
             {
-                path: `/companies/${company_id}/bankAccount/`, name: types.BANKACCOUNT, icon: faBank, subItems: [
+                path: `#`, name: types.BANKACCOUNT, icon: faBank, subItems: [
+                    {path: `/companies/${company_id}/bankAccount/`, name: "List Bank Accounts"},
                     {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
                 ]
             },
