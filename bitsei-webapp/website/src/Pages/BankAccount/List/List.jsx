@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
+import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {useParams} from "react-router-dom";
 import gate from "../../../gate";
 import {toast} from "react-toastify";
-import {Table} from "react-bootstrap";
+import {Table, Modal, Button } from "react-bootstrap";
 import {useSelector, connect} from "react-redux";
 import {getLists, setActiveCompanyId} from "../../../Store/companies/listsThunk";
 import Image from "../../../Components/Image/Image";
@@ -11,9 +12,27 @@ import {Link} from "react-router-dom";
 function ListBankAccounts() {
     const [pending, setPending] = useState(false);
     const [bankAccounts, setBankAccount] = useState([]);
-    const {company_id} = useParams();
+    const [bankAccountToDelete, setBankAccountToDelete ] = useState()
 
-    
+    const {company_id} = useParams();
+    const [show, setShow] = useState(false);
+
+    const handleDeleteModal = (bankAccount_id) => {
+        setBankAccountToDelete(bankAccount_id)
+        setShow(true)
+    }
+
+    const handleClose = () => setShow(false);
+
+    const handleDelete = (bankaccount_id) => {
+        console.log(bankaccount_id);
+
+        gate.deleteBankAccount(company_id, bankaccount_id);
+        console.log([...bankAccounts], [...bankAccounts].filter(item => item.bankaccount_id !== bankaccount_id));
+        setBankAccount([...bankAccounts].filter(item => item.bankaccount_id !== bankaccount_id))
+        setShow(false)
+    }
+
     useEffect(() => {
         setPending(true);
         gate
@@ -55,7 +74,7 @@ function ListBankAccounts() {
                             <th>IBAN</th>
                             <th>Bank name</th>
                             <th>Friendly name</th>
-                            <th>Edit options</th>
+                            <th className="text-center">Edit options</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,17 +87,29 @@ function ListBankAccounts() {
                                 <td>{bankAccount.IBAN} </td>
                                 <td>{bankAccount.bank_name} </td>
                                 <td>{bankAccount.bankaccount_friendly_name} </td>
-                                <td>
+                                <td className="text-center">
                                     <Link className="w-full" to={`/companies/edit/${bankAccount.company_id}/bankAccount/${bankAccount.bankaccount_id}`} onClick={() => handleCompanySubmit(bankAccount.company_id)}>
-                                        <button className="btn btn-secondary btn-sm active btn-block mx-auto"
+                                        <button className="btn btn-primary btn-sm active btn-block mx-2 "
                                                 type="button">Edit
                                         </button>
                                     </Link>
-                                    <Link className="w-full" >
-                                        <button className="btn btn-secondary btn-sm active btn-block mx-auto"
-                                                type="button">Delete
-                                        </button>
-                                    </Link>
+                                
+                                    <button 
+                                        className="btn btn-danger btn-sm active btn-block mx-2"
+                                        onClick={() => handleDeleteModal(bankAccount.bankaccount_id)}  
+                                        type="button"
+                                    >
+                                        Delete
+                                    </button>  
+                                 
+                                    <DeleteConfirm 
+                                       show={show}
+                                       handleClose={handleClose}
+                                       handleSumbit={handleDelete}
+                                       heading="ATTENTION" 
+                                       body="Are you sure to delete this bank account?" 
+                                       item_id={bankAccountToDelete}
+                                    />
 
                                 </td>
                             </tr>
