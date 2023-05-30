@@ -41,9 +41,12 @@ const companies = {
 }
 
 const invoices = {
-    getInvoicesByFilters: (data) => api.post("rest/filter-invoices/company/1", data),
-    listCustomers: () => api.get("rest/list-customer/company/1"),
-    listProducts: () => api.get("rest/list-product/company/1"),
+    getInvoicesByFilters: (id, data) => api.post("rest/filter-invoices/company/" + id, data),
+    listCustomers: (id) => api.get("rest/list-customer/company/" + id),
+    listProducts: (id) => api.get("rest/list-product/company/" + id),
+    closeInvoice: (company_id, invoice_id) => api.put("rest/closeinvoice/" + invoice_id + "/company/" + company_id, null, {
+        headers: { 'Content-Type': 'application/json' },
+    }),
 }
 
 const insights = {
@@ -71,6 +74,7 @@ const products = {
     getProducts: (company_id) => api.get("rest/list-product/company/" + company_id),
     addProduct: (data, company_id) => api.post("rest/product/company/" + company_id, data),
     editProduct: (data, product_id, company_id) => api.put("rest/product/" + product_id + "/company/" + company_id, data),
+    deleteProduct: (product_id, company_id) => api.delete("rest/product/" + product_id + "/company/" + company_id),
 }
 
 const gate = {

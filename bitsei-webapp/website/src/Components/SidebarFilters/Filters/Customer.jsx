@@ -4,9 +4,10 @@ import gate from "../../../gate";
 import {toast} from "react-toastify";
 import {default as ReactSelect } from "react-select";
 import {components} from "react-select";
+import {useParams} from "react-router-dom";
 
 function Customer({filter}) {
-
+    const {company_id} = useParams();
     const [checkboxChecked, setCheckboxChecked] = useState(false);
     const [customerList, setCustomerList] = useState([]);
     const [customerOptionSelected, setCustomerOptionSelected] = useState(filter.fromCustomerId ? filter.fromCustomerId : null);
@@ -16,7 +17,7 @@ function Customer({filter}) {
         console.log("listing customers onLoad TO REMOVE");
 
         // Call listCustomers
-        gate.listCustomers()
+        gate.listCustomers(company_id)
             .then((customerResponse) => {
                 const customers = customerResponse.data['resource-list'].map((item) => item.customer);
                 setCustomerList(customers);
