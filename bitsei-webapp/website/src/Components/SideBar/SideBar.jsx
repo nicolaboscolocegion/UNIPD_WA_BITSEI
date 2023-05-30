@@ -41,7 +41,7 @@ function Sidebar() {
                 ]
             },
             {
-                path: `/companies/${company_id}/bankaccount`, name: types.BANKACCOUNT, icon: faBank, subItems: [
+                path: `/companies/${company_id}/bankAccount/`, name: types.BANKACCOUNT, icon: faBank, subItems: [
                     {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
                 ]
             },
