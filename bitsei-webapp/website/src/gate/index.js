@@ -74,6 +74,7 @@ const products = {
     getProducts: (company_id) => api.get("rest/list-product/company/" + company_id),
     addProduct: (data, company_id) => api.post("rest/product/company/" + company_id, data),
     editProduct: (data, product_id, company_id) => api.put("rest/product/" + product_id + "/company/" + company_id, data),
+    deleteProduct: (product_id, company_id) => api.delete("rest/product/" + product_id + "/company/" + company_id),
 }
 
 const gate = {
