@@ -15,7 +15,10 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Sidebar from "../../Components/SideBar/SideBar";
 import {components, default as ReactSelect} from "react-select";
 import {parse} from "@fortawesome/fontawesome-svg-core";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import {FaCheck, FaDollarSign, FaEye, FaFilePdf, FaLock, FaLockOpen, FaPencilAlt, FaTrash} from "react-icons/fa";
+import {AiFillLock} from "react-icons/ai";
+import {useParams} from "react-router-dom";
+import {BsFiletypeXml} from "react-icons/bs";
 
 
 // TODO: Add validation for all fields
@@ -23,14 +26,16 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 // TODO: Add loading for creating company
 // TODO: HTML CSS for this page
 function ListInvoices() {
+    const {company_id} = useParams();
     const [invoices, setInvoices] = useState([]);
     const [dataToSend, setDataToSend] = useState({});
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         console.log("listing invoices onLoad TO REMOVE");
 
         gate
-            .getInvoicesByFilters(dataToSend)
+            .getInvoicesByFilters(company_id, dataToSend)
             .then((response) => {
                 setInvoices(response.data["resource-list"]);
             })
@@ -38,9 +43,7 @@ function ListInvoices() {
                toast.error("Something went wrong in invoices listing");
             });
 
-    }, [dataToSend]);
-
-
+    }, [dataToSend, refresh]);
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -204,21 +207,18 @@ function ListInvoices() {
         setDataToSend(tmpDataToSend);
     }
 
-    /*const [maxHeight, setMaxHeight] = useState(0);
-
-    useEffect(() => {
-        const handleResize = () => {
-            const windowHeight = window.innerHeight;
-            setMaxHeight(windowHeight);
-        };
-
-        window.addEventListener('resize', handleResize);
-        handleResize();
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);*/
+    const handleCloseInvoice = (invoice_id) => {
+        gate
+            .closeInvoice(company_id, invoice_id)
+            .then((response) => {
+                toast.success("Invoice closed correctly!");
+                setRefresh(!refresh);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in closing invoice");
+                setRefresh(!refresh);
+            });
+    }
 
     return (
         <>
@@ -284,8 +284,9 @@ function ListInvoices() {
                                                         <th className="text-center">Customer Name</th>
                                                         <th className="text-center">Status</th>
                                                         <th className="text-center">Invoice Date</th>
-                                                        <th className="text-center">Total</th>
+                                                        <th className="text-center">Warning Date</th>
                                                         <th className="text-center">Discount</th>
+                                                        <th className="text-center">Total</th>
                                                         <th className="text-center">Actions</th>
                                                     </tr>
                                                     </thead>
@@ -301,41 +302,99 @@ function ListInvoices() {
                                                     <th className="text-center">Customer Name</th>
                                                     <th className="text-center">Status</th>
                                                     <th className="text-center">Invoice Date</th>
-                                                    <th className="text-center">Total</th>
+                                                    <th className="text-center">Warning Date</th>
                                                     <th className="text-center">Discount</th>
+                                                    <th className="text-center">Total</th>
                                                     <th className="text-center">Actions</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 {invoices.map((item) => {
                                                     const invoice = item.invoice;
+                                                    let statusInvoice;
+                                                    let statusIcon;
+                                                    let warningPdfIcon;
+                                                    let invoicePdfIcon;
+                                                    let invoiceXmlIcon;
                                                     if (invoice.status === 0) {
-                                                        invoice.status = "Open";
+                                                        statusInvoice = "Open";
+                                                        statusIcon =
+                                                                <button
+                                                                    onClick={() => handleCloseInvoice(invoice.invoice_id)}
+                                                                    title = "Click to change the status to 'Pending'"
+                                                                >
+                                                                    <AiFillLock />
+                                                                </button>;
                                                     } else if (invoice.status === 1) {
-                                                        invoice.status = "Pending";
+                                                        statusInvoice = "Pending";
+                                                        statusIcon =
+                                                            <button
+                                                                onClick={() => toast.success("handleSetInvoiceStatus2(invoice.invoice_id)")}
+                                                                title = "Click to change the status to 'Closed'"
+                                                            >
+                                                                <FaDollarSign />
+                                                            </button>;
+                                                        warningPdfIcon =
+                                                            <button
+                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                title = "Click to open the Warning File PDF"
+                                                            >
+                                                                <FaFilePdf />
+                                                            </button>;
                                                     } else {
-                                                        invoice.status = "Closed";
+                                                        statusInvoice = "Closed";
+                                                        statusIcon = <FaCheck />;
+                                                        warningPdfIcon =
+                                                            <button
+                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                title = "Click to open the Warning File PDF"
+                                                            >
+                                                                <FaFilePdf />
+                                                            </button>;
+                                                        invoicePdfIcon =
+                                                            <button
+                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                title = "Click to open the Invoice File PDF"
+                                                            >
+                                                                <FaFilePdf />
+                                                            </button>;
+                                                        invoiceXmlIcon =
+                                                            <button
+                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                title = "Click to open the Invoice File XML"
+                                                            >
+                                                                <BsFiletypeXml />
+                                                            </button>;
                                                     }
 
-                                                    const isEditable = (invoice.status === "Open");
+                                                    const isEditable = (invoice.status === 0);
 
                                                     return (
                                                         <tr key={invoice.invoice_id}>
                                                             <td className="text-center">{invoice.invoice_id}</td>
                                                             <td className="text-center">{invoice.business_name}</td>
-                                                            <td className="text-center">{invoice.status}</td>
-                                                            <td className="text-center">{invoice.invoice_date}</td>
-                                                            <td className="text-center">{invoice.total}</td>
+                                                            <td className="text-center">{statusInvoice} {statusIcon}</td>
+                                                            <td className="text-center">{invoice.invoice_date} {invoicePdfIcon} {invoiceXmlIcon}</td>
+                                                            <td className="text-center">{invoice.warning_date} {warningPdfIcon}</td>
                                                             <td className="text-center">{invoice.discount}</td>
+                                                            <td className="text-center">{invoice.total}</td>
                                                             <td className="text-center" style={{ verticalAlign: 'top' }}>
                                                                     <button
+                                                                        onClick={() => toast.success("handleShowInvoiceDetails(invoice.invoice_id)")}
+                                                                        title = "Click to see the invoice's details"
+                                                                    >
+                                                                        <FaEye />
+                                                                    </button>
+                                                                    <button
                                                                         onClick={() => toast.success("handleEditInvoice(invoice.invoice_id)")}
+                                                                        title = "Click to edit the invoice"
                                                                         disabled={!isEditable}
                                                                     >
                                                                         <FaPencilAlt />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => toast.success("handleDeleteInvoice(invoice.invoice_id)")}
+                                                                        title = "Click to delete the invoice"
                                                                         disabled={!isEditable}
                                                                     >
                                                                         <FaTrash />

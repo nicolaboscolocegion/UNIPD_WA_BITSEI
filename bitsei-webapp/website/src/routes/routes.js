@@ -21,7 +21,7 @@ const AddProduct = lazy(() => import("../Pages/Products/AddProduct/Add"));
 const AddBankAccount = lazy(() => import("../Pages/BankAccount/AddNewBankAccount/Add")); 
 const EditBankAccount = lazy(() => import("../Pages/BankAccount/EditBankAccount/Edit"));
 const ListBankAccount = lazy(() => import("../Pages/BankAccount/List/List"));
-
+const CloseInvoice = lazy(() => import("../Pages/Invoices/List"));
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
@@ -51,4 +51,5 @@ export const privateRoutes = [
     { exact: true, path: "/list-product", component: ListProducts },
     { exact: true, path: "/companies/:company_id/product/add", component: AddProduct },
     { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },
+    { exact: true, path: "/companies/:company_id/closeinvoice/", component: CloseInvoice },
 ];
