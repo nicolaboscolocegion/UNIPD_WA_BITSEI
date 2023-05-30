@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo} from "@fortawesome/free-solid-svg-icons";
+import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from "@fortawesome/free-solid-svg-icons";
 
 import types from "./sideBarItemsType";
 
@@ -40,6 +40,12 @@ function Sidebar() {
                     {path: `/companies/${company_id}/invoices/add`, name: "Add Invoices"},
                 ]
             },
+            {
+                path: `/companies/${company_id}/bankaccount`, name: types.BANKACCOUNT, icon: faBank, subItems: [
+                    {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
+                ]
+            },
+            
         ]
     }
 
