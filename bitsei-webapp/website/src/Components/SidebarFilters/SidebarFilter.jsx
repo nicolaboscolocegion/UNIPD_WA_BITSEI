@@ -10,7 +10,7 @@ import Product from ".//Filters/Product";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 
-function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, setFilters}) {
+function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, filterByCustomerId, setFilters, listInvoice}) {
     const handleSubmit = () => {
         /*
         console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue);
@@ -38,7 +38,11 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
 
         filterByWarningDate.isEnabled = false;
         filterByWarningDate.fromValue = filterByWarningDate.toValue = null;
-        handleClose();
+
+        filterByCustomerId.isEnabled = false;
+        filterByCustomerId.fromCustomerId = null;
+
+        handleSubmit();
     }
 
     return (
@@ -85,7 +89,7 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
                 <InvoiceDate filter={filterByInvoiceDate}></InvoiceDate>
                 <WarningDate filter={filterByWarningDate}></WarningDate>
                 <Pfr filter={filterByPfr}></Pfr>
-                <Customer></Customer>
+                <Customer filter={filterByCustomerId}></Customer>
             </Offcanvas.Body>
         </Offcanvas>
     );

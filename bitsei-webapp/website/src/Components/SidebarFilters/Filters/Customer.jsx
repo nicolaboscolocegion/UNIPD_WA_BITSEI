@@ -5,11 +5,11 @@ import {toast} from "react-toastify";
 import {default as ReactSelect } from "react-select";
 import {components} from "react-select";
 
-function Customer({id, name, details}) {
+function Customer({filter}) {
 
     const [checkboxChecked, setCheckboxChecked] = useState(false);
     const [customerList, setCustomerList] = useState([]);
-    const [customerOptionSelected, setCustomerOptionSelected] = useState(null);
+    const [customerOptionSelected, setCustomerOptionSelected] = useState(filter.fromCustomerId ? filter.fromCustomerId : null);
 
 
     useEffect(() => {
@@ -27,6 +27,15 @@ function Customer({id, name, details}) {
 
     }, []);
 
+    useEffect(() => {
+        if(customerOptionSelected !== null && customerOptionSelected.length > 0) {
+            filter.isEnabled = true;
+        }
+        else {
+            filter.isEnabled = false;
+        }
+        filter.fromCustomerId = customerOptionSelected;
+    },[customerOptionSelected]);
 
     const customerOptions = customerList.map((customer) => ({
         value: customer.customerID,

@@ -15,6 +15,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Sidebar from "../../Components/SideBar/SideBar";
 import {components, default as ReactSelect} from "react-select";
 import {parse} from "@fortawesome/fontawesome-svg-core";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 
 // TODO: Add validation for all fields
@@ -154,6 +155,11 @@ function ListInvoices() {
         toValue: null
     })
 
+    const [filterByCustomerId, setFilterByCustomerId] = useState({
+        isEnabled: false,
+        fromCustomerId: null
+    })
+
     const setFilters = () => {
         const tmpDataToSend = {};
         if(filterByTotal.isEnabled === true) {
@@ -180,6 +186,21 @@ function ListInvoices() {
             tmpDataToSend["fromWarningDate"] = filterByWarningDate.fromValue;
             tmpDataToSend["toWarningDate"] = filterByWarningDate.toValue;
         }
+
+        if(filterByCustomerId.isEnabled) {
+            let customerId = ""
+            let countCustomerId = 0;
+            for(let option in filterByCustomerId.fromCustomerId){
+                console.log(filterByCustomerId.fromCustomerId[option], filterByCustomerId.fromCustomerId[option].label)
+                if(countCustomerId > 0)
+                    customerId += "-";
+                customerId += filterByCustomerId.fromCustomerId[option].value.toString();
+                countCustomerId++;
+            }
+            if(countCustomerId > 0)
+                tmpDataToSend["fromCustomerId"] = customerId;
+        }
+
         setDataToSend(tmpDataToSend);
     }
 
@@ -214,7 +235,7 @@ function ListInvoices() {
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
                                         <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} setFilters={setFilters}/>
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId} setFilters={setFilters} listInvoice={ListInvoices}/>
 
                                             <Button variant="outline-primary" onClick={handleShow}>
                                                 Manage filters
@@ -245,7 +266,8 @@ function ListInvoices() {
                                                 "\nfilterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue +
                                                 "\nfilterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue +
                                                 "\nfilterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue +
-                                                "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue);
+                                                "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue +
+                                                "\nfilterByCustomerId: " + filterByCustomerId.isEnabled + ", " + filterByCustomerId.fromCustomerId);
                                             }}
                                         >
                                             Console Log filters
@@ -253,37 +275,80 @@ function ListInvoices() {
 
                                     </div>
                                     <div className="table-responsive">
-                                        <table className="table table-hover table-bordered">
-                                            <thead className="indigo lighten-5">
-                                            <tr>
-                                                <th className="text-center">Invoice ID</th>
-                                                <th className="text-center">Customer ID</th>
-                                                <th className="text-center">Customer Name</th>
-                                                <th className="text-center">Status</th>
-                                                <th className="text-center">Invoice Date</th>
-                                                <th className="text-center">Total</th>
-                                                <th className="text-center">Discount</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {invoices.map((item) => {
-                                                const invoice = item.invoice
-                                                return (
+                                        {invoices.length === 0 ? (
+                                            <div className="container">
+                                                <table className="table table-hover table-bordered">
+                                                    <thead className="indigo lighten-5">
                                                     <tr>
-                                                        <td className="text-center">{invoice.invoice_id}</td>
-                                                        <td className="text-center">{invoice.customer_id}</td>
-                                                        <td className="text-center">{invoice.business_name}</td>
-                                                        <td className="text-center">{invoice.status}</td>
-                                                        <td className="text-center">{invoice.invoice_date}</td>
-                                                        <td className="text-center">{invoice.total}</td>
-                                                        <td className="text-center">{invoice.discount}</td>
+                                                        <th className="text-center">Invoice ID</th>
+                                                        <th className="text-center">Customer Name</th>
+                                                        <th className="text-center">Status</th>
+                                                        <th className="text-center">Invoice Date</th>
+                                                        <th className="text-center">Total</th>
+                                                        <th className="text-center">Discount</th>
+                                                        <th className="text-center">Actions</th>
                                                     </tr>
-                                                )
-                                            })
-                                            }
-                                            </tbody>
-                                        </table>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                                <h4 style={{ flex: 1, justifyContent: 'center', textAlign: "center", alignItems:"center", lineHeight:"100px"}}>No invoice retrieved</h4>
+                                            </div>
+                                        ) : (
+                                            <table className="table table-hover table-bordered">
+                                                <thead className="indigo lighten-5">
+                                                <tr>
+                                                    <th className="text-center">Invoice ID</th>
+                                                    <th className="text-center">Customer Name</th>
+                                                    <th className="text-center">Status</th>
+                                                    <th className="text-center">Invoice Date</th>
+                                                    <th className="text-center">Total</th>
+                                                    <th className="text-center">Discount</th>
+                                                    <th className="text-center">Actions</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {invoices.map((item) => {
+                                                    const invoice = item.invoice;
+                                                    if (invoice.status === 0) {
+                                                        invoice.status = "Open";
+                                                    } else if (invoice.status === 1) {
+                                                        invoice.status = "Pending";
+                                                    } else {
+                                                        invoice.status = "Closed";
+                                                    }
+
+                                                    const isEditable = (invoice.status === "Open");
+
+                                                    return (
+                                                        <tr key={invoice.invoice_id}>
+                                                            <td className="text-center">{invoice.invoice_id}</td>
+                                                            <td className="text-center">{invoice.business_name}</td>
+                                                            <td className="text-center">{invoice.status}</td>
+                                                            <td className="text-center">{invoice.invoice_date}</td>
+                                                            <td className="text-center">{invoice.total}</td>
+                                                            <td className="text-center">{invoice.discount}</td>
+                                                            <td className="text-center" style={{ verticalAlign: 'top' }}>
+                                                                    <button
+                                                                        onClick={() => toast.success("handleEditInvoice(invoice.invoice_id)")}
+                                                                        disabled={!isEditable}
+                                                                    >
+                                                                        <FaPencilAlt />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => toast.success("handleDeleteInvoice(invoice.invoice_id)")}
+                                                                        disabled={!isEditable}
+                                                                    >
+                                                                        <FaTrash />
+                                                                    </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                                </tbody>
+                                            </table>
+                                        )}
                                     </div>
+
                                 </div>
                             </div>
                         </div>
