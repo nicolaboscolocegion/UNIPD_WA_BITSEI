@@ -12,16 +12,8 @@ function CompanyDetail() {
 
     return companies.pending ? ("Loading") : (
         <>
-        <Header activeCompany={company_id}/>
-        <section style={{backgroundColor: "#eee", marginTop: "58px"}}>
-            <div className="container py-5">
-                <Item
-                    id={company.company_id}
-                    name={`${company.business_name} | ${company.province}(${company.city})`}
-                    details={getCompanyDetails(company)}
-                />
-            </div>
-        </section>
+
+
         </>
     )
 }

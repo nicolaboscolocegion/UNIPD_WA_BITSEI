@@ -19,15 +19,19 @@ function Navbar({logout}) {
                     alt={"company_logo"}
                 />
             </Link>
-            <div className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <Button
-                    type="button"
-                    onClick={() => logout()}
-                >
-                    <FontAwesomeIcon icon={faPersonFalling}/>
-                </Button>
-            </div>
+
+
+            <Button
+                type="button"
+                className="ml-auto mr-1"
+                onClick={() => logout()}
+            >
+                <FontAwesomeIcon icon={faPersonFalling}/>
+            </Button>
+
         </nav>
+
+
     );
 }
 

@@ -63,9 +63,10 @@ const bankAccount ={
 
 const customers = {
     getCustomer: (customer_id, company_id) => api.get("rest/customer/" + customer_id + "/company/" + company_id),
-    getCustomers: (company_id) => api.get("rest/customer/company/" + company_id),
+    getCustomers: (company_id) => api.get("rest/list-customer/company/" + company_id),
     addCustomer: (data, company_id) => api.post("rest/customer/company/" + company_id, data),
     editCustomer: (data, customer_id, company_id) => api.put("rest/customer/" + customer_id + "/company/" + company_id, data),
+    deleteCustomer: (customer_id, company_id) => api.delete("rest/customer/" + customer_id + "/company/" + company_id),
 }
 
 const products = {
