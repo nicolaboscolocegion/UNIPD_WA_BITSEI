@@ -72,11 +72,12 @@ public class GetBankAccountRR extends AbstractRR{
             
 
             int company_id = uri.getCompanyID();
+            int bankAccount_id = uri.getResourceID();
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
             
 
             // creates a new DAO for accessing the database and lists the user(s)
-            el = new GetBankAccountDAO(con, company_id, owner_id).access().getOutputParam();
+            el = new GetBankAccountDAO(con, bankAccount_id, owner_id).access().getOutputParam();
 
             if (el != null) {
                 LOGGER.info("bank account(s) successfully listed.");
