@@ -26,7 +26,7 @@ function App() {
     ]);
 
     return (
-        <div className="bg-primary">
+        <>
             <Suspense fallback={"...loading"}>
                 {auth.isLoggedIn ? (
                     <>
@@ -64,7 +64,7 @@ function App() {
                 pauseOnFocusLoss
                 draggable
             />
-        </div>
+        </>
     );
 }
 

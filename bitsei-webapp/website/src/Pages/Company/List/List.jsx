@@ -47,9 +47,9 @@ function List({getLists, setActiveCompanyId}) {
                                 <td>
                                     <Image id={company.company_id}/>
                                 </td>
-                                <td>{company.business_name}</td>
-                                <td>{`${company.address} ${company.postal_code} ${company.city} ${company.province}`}</td>
-                                <td>{company.vat_number}</td>
+                                <td>{company.business_name ? company.business_name : ''}</td>
+                                <td>{`${company.address ? company.address : ''} ${company.postal_code ? company.postal_code : '' } ${company.city ? company.city : ''} ${company.province ? company.province : '' }`}</td>
+                                <td>{company.vat_number ? company.vat_number : ''}</td>
                                 <td>
                                     <Link className="w-full" to={`/companies/${company.company_id}`} onClick={() => handleCompanySubmit(company.company_id)}>
                                         <button className="btn btn-primary btn-sm active btn-block mx-auto"

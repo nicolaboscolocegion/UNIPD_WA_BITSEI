@@ -26,6 +26,7 @@ pipelines:
           script:
             - mkdir packaged
             - cd bitsei-webapp/website
+            - export NODE_ENV=prod
             - yarn install && yarn build
             - cd ../../ && tar -czvf packaged/package-${BITBUCKET_BUILD_NUMBER}.tar.gz -C bitsei-webapp/website/build .
           artifacts:

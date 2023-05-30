@@ -13,12 +13,15 @@ const Customers = lazy(() => import("../Pages/Customers/GetCustomers/List"));
 const Product = lazy(() => import("../Pages/Products/GetProducts/Item"));
 const Products = lazy(() => import("../Pages/Products/GetProducts/List"));
 const GetInvoicesByFilters = lazy(() => import("../Pages/Invoices/GetInvoicesByFilters"));
-const ListCustomers = lazy(() => import("../Pages/Invoices/GetInvoicesByFilters"));
+//const ListCustomers = lazy(() => import("../Pages/Invoices/GetInvoicesByFilters"));
 const ListProducts = lazy(() => import("../Pages/Invoices/GetInvoicesByFilters"));
 const AddCustomer = lazy(() => import("../Pages/Customers/AddCustomer/Add"));
 const EditCustomer = lazy(() => import("../Pages/Customers/EditCustomer/Edit"));
 const AddProduct = lazy(() => import("../Pages/Products/AddProduct/Add"));
-const AddBankAccount = lazy(() => import("../Pages/BankAccount/AddNewBankAccount/Add"));
+const AddBankAccount = lazy(() => import("../Pages/BankAccount/AddNewBankAccount/Add")); 
+const EditBankAccount = lazy(() => import("../Pages/BankAccount/EditBankAccount/Edit"));
+const ListBankAccount = lazy(() => import("../Pages/BankAccount/List/List"));
+
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
@@ -37,13 +40,15 @@ export const privateRoutes = [
     { exact: true, path: "/companies/:company_id/list-invoices", component: ListInvoices },
     { exact: true, path: "/companies/:company_id/insights", component: ShowChart },
     { exact: true, path: "/companies/:company_id/bankAccount/add", component: AddBankAccount },
+    { exact: true, path: "/companies/edit/:company_id/bankAccount/:bankaccount_id", component: EditBankAccount },
+    { exact: true, path: "/companies/:company_id/bankAccount/", component: ListBankAccount },
     { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
     { exact: true, path: "/insights", component: ShowChart },
     { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
     { exact: true, path: "/companies/:company_id/get-invoices", component: GetInvoicesByFilters },
-    { exact: true, path: "/companies/:company_id//list-customer", component: ListCustomers },
     { exact: true, path: "/companies/:company_id/customer/add", component: AddCustomer },
     { exact: true, path: "/companies/:company_id/customer/edit/:customer_id", component: EditCustomer },
     { exact: true, path: "/list-product", component: ListProducts },
     { exact: true, path: "/companies/:company_id/product/add", component: AddProduct },
-    { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },];
+    { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },
+];
