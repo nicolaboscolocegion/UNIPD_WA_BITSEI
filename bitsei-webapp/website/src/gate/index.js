@@ -55,7 +55,7 @@ const bankAccount ={
     getBankAccount: (bankAccount_id, company_id) => api.get("rest/bankaccount/" + bankAccount_id + "/company/" + company_id),
     editBankAccount: (data, bankAccount_id, company_id) => api.put("rest/bankaccount/"+bankAccount_id+"/company/" + company_id, data),
     listBankAccount: (company_id) => api.get("rest/bankaccount/company/" + company_id),
-
+    deleteBankAccount: (company_id, bankAccount_id) => api.delete("/rest/bankaccount/"+ bankAccount_id +"/company/"+ company_id),
 }
 
 const customers = {

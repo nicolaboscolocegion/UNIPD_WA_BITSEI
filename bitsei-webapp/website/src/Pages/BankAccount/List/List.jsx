@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
+import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {useParams} from "react-router-dom";
 import gate from "../../../gate";
 import {toast} from "react-toastify";
-import {Table} from "react-bootstrap";
+import {Table, Modal, Button } from "react-bootstrap";
 import {useSelector, connect} from "react-redux";
 import {getLists, setActiveCompanyId} from "../../../Store/companies/listsThunk";
 import Image from "../../../Components/Image/Image";
@@ -11,9 +12,27 @@ import {Link} from "react-router-dom";
 function ListBankAccounts() {
     const [pending, setPending] = useState(false);
     const [bankAccounts, setBankAccount] = useState([]);
-    const {company_id} = useParams();
+    const [bankAccountToDelete, setBankAccountToDelete ] = useState()
 
-    
+    const {company_id} = useParams();
+    const [show, setShow] = useState(false);
+
+    const handleDeleteModal = (bankAccount_id) => {
+        setBankAccountToDelete(bankAccount_id)
+        setShow(true)
+    }
+
+    const handleClose = () => setShow(false);
+
+    const handleDelete = (bankaccount_id) => {
+        console.log(bankaccount_id);
+
+        gate.deleteBankAccount(company_id, bankaccount_id);
+        console.log([...bankAccounts], [...bankAccounts].filter(item => item.bankaccount_id !== bankaccount_id));
+        setBankAccount([...bankAccounts].filter(item => item.bankaccount_id !== bankaccount_id))
+        setShow(false)
+    }
+
     useEffect(() => {
         setPending(true);
         gate
@@ -74,11 +93,22 @@ function ListBankAccounts() {
                                                 type="button">Edit
                                         </button>
                                     </Link>
-                                    <Link className="w-full" >
-                                        <button className="btn btn-secondary btn-sm active btn-block mx-auto"
-                                                type="button">Delete
+                                        <button 
+                                            className="btn btn-danger btn-sm active btn-block mx-auto"
+                                            onClick={() => handleDeleteModal(bankAccount.bankaccount_id)}  
+                                            type="button"
+                                        >
+                                            Delete
                                         </button>
-                                    </Link>
+                                       
+                                    <DeleteConfirm 
+                                       show={show}
+                                       handleClose={handleClose}
+                                       handleSumbit={handleDelete}
+                                       heading="ATTENTION" 
+                                       body="Are you sure to delete this bank account?" 
+                                       item_id={bankAccountToDelete}
+                                    />
 
                                 </td>
                             </tr>
