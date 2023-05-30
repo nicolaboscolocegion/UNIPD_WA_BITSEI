@@ -5,13 +5,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPersonFalling} from "@fortawesome/free-solid-svg-icons";
 import {Button} from "react-bootstrap";
 import {logout} from "../../Store/auth/authThunk";
+import {Link} from "react-router-dom";
 
 function Navbar({logout}) {
 
     return (
         <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
-            {/* Navbar Brand*/}
-            <a className="navbar-brand ps-3" href="index.html">
+            <Link className="navbar-brand ps-3" to={'/companies'}>
                 <img
                     width="100"
                     className="d-inline-block align-text-top"
