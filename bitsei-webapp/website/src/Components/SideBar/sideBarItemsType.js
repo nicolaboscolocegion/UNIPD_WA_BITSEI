@@ -4,5 +4,6 @@ const types = {
   CUSTOMERS: "Customers",
   PRODUCTS: "Products",
   INVOICES: "Invoices",
+  BANKACCOUNT: "Bank Account",
 };
 export default types;
