@@ -74,7 +74,7 @@ function ListBankAccounts() {
                             <th>IBAN</th>
                             <th>Bank name</th>
                             <th>Friendly name</th>
-                            <th>Edit options</th>
+                            <th className="text-center">Edit options</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,20 +87,21 @@ function ListBankAccounts() {
                                 <td>{bankAccount.IBAN} </td>
                                 <td>{bankAccount.bank_name} </td>
                                 <td>{bankAccount.bankaccount_friendly_name} </td>
-                                <td>
+                                <td className="text-center">
                                     <Link className="w-full" to={`/companies/edit/${bankAccount.company_id}/bankAccount/${bankAccount.bankaccount_id}`} onClick={() => handleCompanySubmit(bankAccount.company_id)}>
-                                        <button className="btn btn-secondary btn-sm active btn-block mx-auto"
+                                        <button className="btn btn-primary btn-sm active btn-block mx-2 "
                                                 type="button">Edit
                                         </button>
                                     </Link>
-                                        <button 
-                                            className="btn btn-danger btn-sm active btn-block mx-auto"
-                                            onClick={() => handleDeleteModal(bankAccount.bankaccount_id)}  
-                                            type="button"
-                                        >
-                                            Delete
-                                        </button>
-                                       
+                                
+                                    <button 
+                                        className="btn btn-danger btn-sm active btn-block mx-2"
+                                        onClick={() => handleDeleteModal(bankAccount.bankaccount_id)}  
+                                        type="button"
+                                    >
+                                        Delete
+                                    </button>  
+                                 
                                     <DeleteConfirm 
                                        show={show}
                                        handleClose={handleClose}
