@@ -57,6 +57,8 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
     private String company_pec;
     private String company_unique_code;
     private Integer fiscal_company_type;
+    private Boolean has_telegram_notifications;
+    private Boolean has_mail_notifications;
 
 
     private List<DetailRow> ldr = new ArrayList<>();
@@ -186,6 +188,8 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
                 this.company_pec = rs.getString("pec");
                 this.company_unique_code = rs.getString("unique_code");
                 this.fiscal_company_type = rs.getInt("fiscal_company_type");
+                this.has_telegram_notifications = rs.getBoolean("has_telegram_notifications");
+                this.has_mail_notifications = rs.getBoolean("has_mail_notifications");
             }
             LOGGER.info("Customer data successfully fetched.");
 
@@ -223,6 +227,9 @@ public final class CloseInvoiceDAO extends AbstractDAO<List<Object>> {
             }
 
             output.add(telegram_chat_id);
+
+            output.add(this.has_telegram_notifications);
+            output.add(this.has_mail_notifications);
 
 
         } catch (Exception e) {
