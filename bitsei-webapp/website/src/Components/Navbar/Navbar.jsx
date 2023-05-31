@@ -23,7 +23,7 @@ function Navbar({logout}) {
 
             <Button
                 type="button"
-                className="ml-auto mr-1"
+                className="ms-auto me-4"
                 onClick={() => logout()}
             >
                 <FontAwesomeIcon icon={faPersonFalling}/>
