@@ -52,6 +52,9 @@ const invoices = {
     }),
     getInvoiceDocument: (company_id, invoice_id, document_type) => api.get("rest/getdocument/" + document_type + "/invoice/" + invoice_id  + "/company/" + company_id),
     getInvoiceProducts: (company_id, invoice_id) => api.get(`rest/invoice/${company_id}/${invoice_id}`),
+    editInvoiceItem: (company_id, invoice_id, data) => api.put(`rest/invoice/${company_id}/${invoice_id}`, data),
+    deleteInvoiceItem: (company_id, invoice_id) => api.delete(`rest/invoice/${company_id}/${invoice_id}`),
+    addInvoiceItem: (company_id, data) => api.post(`rest/invoice/${company_id}/`, data),
 }
 
 const insights = {
