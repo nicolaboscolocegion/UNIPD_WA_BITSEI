@@ -7,6 +7,11 @@ import gate from "../../../gate";
 import {toast} from "react-toastify";
 import {Table} from "react-bootstrap";
 
+// TODO: Handle Edit
+// TODO: Handle Add new Item
+// TODO: Link it to previous page
+// TODO: Handle it on the navBar
+
 function InvoiceProduct() {
 
     const {register, handleSubmit, formState: {errors}} = useForm();
@@ -31,7 +36,8 @@ function InvoiceProduct() {
                     .catch(() => {
                         toast.error("Something went wrong")
                     });
-
+                // TODO: remove flatMap & change it to map
+                // TODO: map the names of the products inside here
                 setInvoiceProducts(
                     response.data['resource-list'].flatMap(item => [
                         {...item.invoiceproduct, product_name: "fds"},
@@ -45,9 +51,6 @@ function InvoiceProduct() {
 
     }, []);
 
-    useEffect(() => {
-
-    }, []);
 
     useEffect(() => {
         gate
