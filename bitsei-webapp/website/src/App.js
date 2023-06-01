@@ -39,7 +39,7 @@ function App() {
                                         {privateRoutes.map((route) => (
                                             <Route key={route.path} {...route}/>
                                         ))}
-                                        {/*<Redirect to={"/companies"}/>*/}
+                                        <Redirect to={"/companies"}/>
                                     </Switch>
                                 </main>
                                 <Footer/>
