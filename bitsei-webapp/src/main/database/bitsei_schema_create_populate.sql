@@ -964,7 +964,7 @@ ALTER TABLE ONLY bitsei_schema."Invoice"
 --
 
 ALTER TABLE ONLY bitsei_schema."Log"
-    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id);
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON DELETE CASCADE;
 
 
 --
@@ -973,7 +973,7 @@ ALTER TABLE ONLY bitsei_schema."Log"
 --
 
 ALTER TABLE ONLY bitsei_schema."Invoice_Product"
-    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE;
+    ADD CONSTRAINT "Invoice" FOREIGN KEY (invoice_id) REFERENCES bitsei_schema."Invoice"(invoice_id) ON UPDATE CASCADE ON DELETE CASCADE;;
 
 
 --
