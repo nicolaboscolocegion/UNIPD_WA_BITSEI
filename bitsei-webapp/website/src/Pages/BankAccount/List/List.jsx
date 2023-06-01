@@ -84,7 +84,7 @@ function ListBankAccounts() {
                                 <td>{bankAccount.bankaccount_friendly_name} </td>
                                 <td className="text-center">
                                     <Link className="w-full"
-                                          to={`/companies/edit/${bankAccount.company_id}/bankAccount/${bankAccount.bankaccount_id}`}
+                                          to={`/companies/${bankAccount.company_id}/bankAccount/${bankAccount.bankaccount_id}/edit`}
                                           onClick={() => handleCompanySubmit(bankAccount.company_id)}>
                                         <button className="btn btn-primary btn-sm active btn-block mx-2 "
                                                 type="button">Edit

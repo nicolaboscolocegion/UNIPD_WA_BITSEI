@@ -4,6 +4,7 @@ import {toast} from "react-toastify";
 import gate from "../../../gate";
 import Form  from "../../../Components/Form/Form";
 import {useParams} from "react-router-dom";
+import {history} from "../../../index";
 
 
 function EditBankAccount() {
@@ -26,6 +27,7 @@ function EditBankAccount() {
                     company_id: bankAccount.company_id,
                 })
                 setPending(false);
+                
             }).catch( () => {
                 toast.error("Something went wrong.");}
             );
@@ -45,6 +47,7 @@ function EditBankAccount() {
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
+                history.push(`/companies/${company_id}/bankAccount`);
             })
             .catch((error) => {
                 console.log(error)
@@ -76,7 +79,7 @@ function EditBankAccount() {
 
     return (
         
-        <Form title={"BankAccount"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
+        <Form title={"BankAccount"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
         
         
     )

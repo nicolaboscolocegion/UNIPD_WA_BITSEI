@@ -45,7 +45,7 @@ export const privateRoutes = [
     { exact: true, path: "/companies/:company_id/list-invoices", component: ListInvoices },
     { exact: true, path: "/companies/:company_id/insights", component: ShowChart },
     { exact: true, path: "/companies/:company_id/bankAccount/add", component: AddBankAccount },
-    { exact: true, path: "/companies/edit/:company_id/bankAccount/:bankaccount_id", component: EditBankAccount },
+    { exact: true, path: "/companies/:company_id/bankAccount/:bankaccount_id/edit", component: EditBankAccount },
     { exact: true, path: "/companies/:company_id/bankAccount/", component: ListBankAccount },
     { exact: true, path: "/companies/edit/:company_id", component: EditCompany },
     { exact: true, path: "/insights", component: ShowChart },
