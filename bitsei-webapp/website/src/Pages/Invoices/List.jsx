@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {useForm} from "react-hook-form";
 import {connect} from "react-redux";
-import {toast} from "react-toastify";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {clearCompanies} from "../../Store/companies/listsThunk";
 import gate from "../../gate";
 import {history} from "../../index";
@@ -245,30 +246,47 @@ function ListInvoices() {
     }
 
     const handleCloseInvoice = (invoice_id) => {
+        toast.dark('Closing invoice...', { toastId: 'closing-loading-toast', autoClose: false });
+
         gate
             .closeInvoice(company_id, invoice_id)
             .then((response) => {
-                toast.success("Invoice closed correctly!");
                 setRefresh(!refresh);
+                toast.dismiss('closing-loading-toast'); // Hide the loading toast
+                toast.success('Invoice closed correctly!', {
+                    toastId: 'successClosing',
+                });
             })
             .catch((error) => {
-                toast.error("Something went wrong in closing invoice");
                 setRefresh(!refresh);
+                toast.dismiss('closing-loading-toast'); // Hide the loading toast
+                toast.error('Something went wrong in closing invoice', {
+                    toastId: 'errorClosing',
+                });
             });
-    }
+    };
+
 
     const handleGenerateInvoice = (invoice_id) => {
+        toast.dark('Generating invoice...', { toastId: 'generating-loading-toast', autoClose: false });
+
         gate
-            .generateInvoice(company_id, invoice_id)
+            .closeInvoice(company_id, invoice_id)
             .then((response) => {
-                toast.success("Invoice generated correctly!");
                 setRefresh(!refresh);
+                toast.dismiss('generating-loading-toast'); // Hide the loading toast
+                toast.success('Invoice closed correctly!', {
+                    toastId: 'successClosing',
+                });
             })
             .catch((error) => {
-                toast.error("Something went wrong in generating invoice");
                 setRefresh(!refresh);
+                toast.dismiss('generating-loading-toast'); // Hide the loading toast
+                toast.error('Something went wrong in closing invoice', {
+                    toastId: 'errorClosing',
+                });
             });
-    }
+    };
 
     const handleDeleteInvoice = (invoice_id) => {
         gate
@@ -335,6 +353,8 @@ function ListInvoices() {
         </head>
 
         <body>
+
+        <ToastContainer position="top-right" />
             <section>
                 <br/>
                 <div className="container">
@@ -521,7 +541,6 @@ function ListInvoices() {
                         </div>
                     </div>
                 </div>
-
 
             </section>
 
