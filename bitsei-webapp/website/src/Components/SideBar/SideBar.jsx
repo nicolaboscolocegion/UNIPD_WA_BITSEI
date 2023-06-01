@@ -39,8 +39,8 @@ function Sidebar() {
             },
             {
                 path: `#`, name: types.INVOICES, icon: faFileInvoice, subItems: [
-                    {path: `/companies/${company_id}/invoices`, name: "List Invoices"},
-                    {path: `/companies/${company_id}/invoices/add`, name: "Add Invoice"},
+                    {path: `/companies/${company_id}/list-invoices`, name: "List Invoices"},
+                    {path: `/companies/${company_id}/invoice/add`, name: "Add Invoice"},
                 ]
             },
             {
