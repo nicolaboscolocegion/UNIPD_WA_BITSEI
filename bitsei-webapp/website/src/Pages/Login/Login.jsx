@@ -9,6 +9,7 @@ import axios from "axios";
 import gate from "../../gate";
 import types from "../../Store/auth/authActionTypes";
 import Footer from "../../Components/Footer/Footer";
+import logo from "../../assets/bitseiLogo";
 
 function Login({userLogin, logout}) {
     const [isRestPassword, setIsRestPassword] = React.useState(false);
@@ -44,6 +45,17 @@ function Login({userLogin, logout}) {
                 <main>
                     <div className="container">
                         <div className="row justify-content-center">
+
+                            <img
+                            className=" align-text-top my-4 w-25 mx-auto"
+                            src={`data:image/png;base64, ${logo()}`}
+                            alt={"company_logo"}
+                            />
+                        </div>
+                    </div>
+                    <div className="container">
+                        <div className="row justify-content-center">
+
                             <div className="col-lg-5">
                                 <div className="card shadow-lg border-0 rounded-lg mt-5">
                                     <div className="card-header">
