@@ -6,11 +6,12 @@ import InvoiceDate from ".//Filters/InvoiceDate";
 import WarningDate from ".//Filters/WarningDate";
 import Pfr from ".//Filters/Pfr";
 import Customer from ".//Filters/Customer";
+import Status from ".//Filters/Status";
 import Product from ".//Filters/Product";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 
-function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, filterByCustomerId, setFilters, listInvoice}) {
+function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByDiscount, filterByInvoiceDate, filterByWarningDate, filterByPfr, filterByCustomerId, filterByStatus, setFilters, listInvoice}) {
     const handleSubmit = () => {
         /*
         console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue);
@@ -46,37 +47,6 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
     }
 
     return (
-        /*{<div class="Container">
-            <h5 class="text-center">FILTERS</h5>
-            <Total></Total>
-            <Discount></Discount>
-            <InvoiceDate></InvoiceDate>
-            <WarningDate></WarningDate>
-            <Pfr></Pfr>
-            <Customer></Customer>
-            <Product></Product>
-        </div>}*/
-        /*{<div class="container position-fixed end-0 top-0" style={{width: 400+'px'}}>
-            <h5 class="text-center">FILTERS</h5>
-            <Total></Total>
-            <Discount></Discount>
-            <InvoiceDate></InvoiceDate>
-            <WarningDate></WarningDate>
-            <Pfr></Pfr>
-            <Customer></Customer>
-            <Product></Product>
-        </div>}*/
-        /*{<div class="d-flex flex-column p-3 text-white bg-black position-fixed end-0 overflow-auto" style={{ top: 56+'px', bottom: 69+'px'}}>
-            <h5 class="text-center">FILTERS</h5>
-            <Total></Total>
-            <Discount></Discount>
-            <InvoiceDate></InvoiceDate>
-            <WarningDate></WarningDate>
-            <Pfr></Pfr>
-            <Customer></Customer>
-            <Product></Product>
-        </div>}*/
-
         <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px', width: 500+'px'}}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>FILTERS</Offcanvas.Title>
@@ -84,6 +54,7 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
                 <Button variant="outline-success" onClick={handleReset}>Reset filters</Button>
             </Offcanvas.Header>
             <Offcanvas.Body>
+                <Status filter={filterByStatus}></Status>
                 <Total filter={filterByTotal}></Total>
                 <Discount filter={filterByDiscount}></Discount>
                 <InvoiceDate filter={filterByInvoiceDate}></InvoiceDate>

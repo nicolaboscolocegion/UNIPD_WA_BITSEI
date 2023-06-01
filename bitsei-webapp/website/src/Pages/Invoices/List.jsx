@@ -163,6 +163,11 @@ function ListInvoices() {
         fromCustomerId: null
     })
 
+    const [filterByStatus, setFilterByStatus] = useState({
+        isEnabled: false,
+        fromStatus: null
+    })
+
     const setFilters = () => {
         const tmpDataToSend = {};
         if(filterByTotal.isEnabled === true) {
@@ -204,6 +209,20 @@ function ListInvoices() {
                 tmpDataToSend["fromCustomerId"] = customerId;
         }
 
+        if(filterByStatus.isEnabled) {
+            let status = ""
+            let countStatus = 0;
+            for(let option in filterByStatus.fromStatus){
+                console.log(filterByStatus.fromStatus[option], filterByStatus.fromStatus[option].label)
+                if(countStatus > 0)
+                    status += "-";
+                status += filterByStatus.fromStatus[option].value.toString();
+                countStatus++;
+            }
+            if(countStatus > 0)
+                tmpDataToSend["fromStatus"] = status;
+        }
+
         setDataToSend(tmpDataToSend);
     }
 
@@ -235,7 +254,7 @@ function ListInvoices() {
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
                                         <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId} setFilters={setFilters} listInvoice={ListInvoices}/>
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId} filterByStatus={filterByStatus} setFilters={setFilters} listInvoice={ListInvoices}/>
 
                                             <Button variant="outline-primary" onClick={handleShow}>
                                                 Manage filters
