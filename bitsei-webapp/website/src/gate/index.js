@@ -51,6 +51,7 @@ const invoices = {
         headers: { 'Content-Type': 'application/json' },
     }),
     getInvoiceDocument: (company_id, invoice_id, document_type) => api.get("rest/getdocument/" + document_type + "/invoice/" + invoice_id  + "/company/" + company_id),
+    getInvoiceProducts: (company_id, invoice_id) => api.get(`rest/invoice/${company_id}/${invoice_id}`),
 }
 
 const insights = {

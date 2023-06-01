@@ -29,7 +29,7 @@ public final class GetInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ? AND product_id = ?;";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ? AND product_id = ?";
 
     /**
      * The invoice_id of the invoice product to be deleted from the database.
