@@ -26,7 +26,7 @@ function AddBankAccount() {
             .then((response) => {
                 setPending(false);
                 toast.success("New Bank Account added successfully !");
-                history.push(`/companies/${company_id}`);
+                history.push(`/companies/${company_id}/bankAccount`);
             })
             .catch((error) => {
                 setPending(false);
@@ -43,7 +43,7 @@ function AddBankAccount() {
         [{
             name: "IBAN", type: "string", options: {
                 required: "Required",
-                minlength: 27,
+                minlength: 3,
                 message: "Please enter a IBAN",
             }
         }],
@@ -72,6 +72,7 @@ function AddBankAccount() {
             fields={fields}
             register={register}
             errors={errors}
+            pending={pending}
         />
     )
 }

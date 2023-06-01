@@ -30,6 +30,7 @@ function ListInvoices() {
     const [invoices, setInvoices] = useState([]);
     const [dataToSend, setDataToSend] = useState({});
     const [refresh, setRefresh] = useState(false);
+    const [refreshSort, setRefreshSort] = useState(false);
 
     useEffect(() => {
         console.log("listing invoices onLoad TO REMOVE");
@@ -38,10 +39,12 @@ function ListInvoices() {
             .getInvoicesByFilters(company_id, dataToSend)
             .then((response) => {
                 setInvoices(response.data["resource-list"]);
+                setRefreshSort(!refreshSort);
             })
             .catch((error) => {
                toast.error("Something went wrong in invoices listing");
             });
+
 
     }, [dataToSend, refresh]);
 
@@ -55,6 +58,7 @@ function ListInvoices() {
     }
 
     const [orderByOption, setOrderByOption] = useState([
+        {value: 0, label: "Status"},
         {value: 1, label: "Invoice ID"},
         {value: 2, label: "Customer Name"},
         {value: 3, label: "Invoice Date"},
@@ -63,7 +67,7 @@ function ListInvoices() {
         {value: 1, label: "Ascending"},
         {value: 2, label: "Descending"}]);
 
-    const [orderByOptionSelected, setOrderByOptionSelected] = useState(orderByOption[0]);
+    const [orderByOptionSelected, setOrderByOptionSelected] = useState(orderByOption[1]);
     const [sortedOptionSelected, setSortedOptionSelected] = useState(sortedOption[0]);
 
     const handleOrderByOptionChange = (selected) => {
@@ -71,6 +75,18 @@ function ListInvoices() {
         console.log("sortedOptionSelected: " + sortedOptionSelected.value + " - " + sortedOptionSelected.label);
         if(orderByOption.indexOf(selected) > -1) {
             setOrderByOptionSelected(selected);
+            if(selected.value === 0) {
+                console.log("Order by Status found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
+                if(parseInt(sortedOptionSelected.value) === 2) {
+                    const sortedInvoices = [...invoices].sort((a, b) => b.invoice.status - a.invoice.status);
+                    setInvoices(sortedInvoices);
+                }
+                else {
+                    const sortedInvoices = [...invoices].sort((a, b) => a.invoice.status - b.invoice.status);
+                    setInvoices(sortedInvoices);
+                }
+            }
+
             if(selected.value === 1) {
                 console.log("Order by Invoice ID found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
                 if(parseInt(sortedOptionSelected.value) === 2) {
@@ -82,6 +98,7 @@ function ListInvoices() {
                     setInvoices(sortedInvoices);
                 }
             }
+
             if(selected.value === 2) {
                 console.log("Order by Customer Name found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
                 if(parseInt(sortedOptionSelected.value) === 2) {
@@ -93,6 +110,7 @@ function ListInvoices() {
                     setInvoices(sortedInvoices);
                 }
             }
+
             if(selected.value === 3) {
                 console.log("Order by Invoice Date found - sortedOptionSelected: " + sortedOptionSelected.value + ", " + sortedOptionSelected.label);
                 if(parseInt(sortedOptionSelected.value) === 2) {
@@ -115,7 +133,7 @@ function ListInvoices() {
 
     useEffect(() => {
         handleOrderByOptionChange(orderByOptionSelected);
-    },[sortedOptionSelected]);
+    },[sortedOptionSelected, refreshSort]);
 
     const Option = (props) => {
         return (
@@ -163,6 +181,11 @@ function ListInvoices() {
         fromCustomerId: null
     })
 
+    const [filterByStatus, setFilterByStatus] = useState({
+        isEnabled: false,
+        fromStatus: null
+    })
+
     const setFilters = () => {
         const tmpDataToSend = {};
         if(filterByTotal.isEnabled === true) {
@@ -204,6 +227,20 @@ function ListInvoices() {
                 tmpDataToSend["fromCustomerId"] = customerId;
         }
 
+        if(filterByStatus.isEnabled) {
+            let status = ""
+            let countStatus = 0;
+            for(let option in filterByStatus.fromStatus){
+                console.log(filterByStatus.fromStatus[option], filterByStatus.fromStatus[option].label)
+                if(countStatus > 0)
+                    status += "-";
+                status += filterByStatus.fromStatus[option].value.toString();
+                countStatus++;
+            }
+            if(countStatus > 0)
+                tmpDataToSend["fromStatus"] = status;
+        }
+
         setDataToSend(tmpDataToSend);
     }
 
@@ -216,6 +253,32 @@ function ListInvoices() {
             })
             .catch((error) => {
                 toast.error("Something went wrong in closing invoice");
+                setRefresh(!refresh);
+            });
+    }
+
+    const handleGenerateInvoice = (invoice_id) => {
+        gate
+            .generateInvoice(company_id, invoice_id)
+            .then((response) => {
+                toast.success("Invoice generated correctly!");
+                setRefresh(!refresh);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in generating invoice");
+                setRefresh(!refresh);
+            });
+    }
+
+    const handleGetInvoiceDocument = (invoice_id, document_type) => {
+        gate
+            .getInvoiceDocument(company_id, invoice_id, document_type)
+            .then((response) => {
+                toast.success("Invoice documentation fetched correctly!");
+                setRefresh(!refresh);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in fetching invoice documentation");
                 setRefresh(!refresh);
             });
     }
@@ -235,7 +298,7 @@ function ListInvoices() {
                             <div className="card">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Invoices</h5>
                                         <section className="text-center">
-                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId} setFilters={setFilters} listInvoice={ListInvoices}/>
+                                            <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show} filterByTotal={filterByTotal} filterByDiscount={filterByDiscount} filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate} filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId} filterByStatus={filterByStatus} setFilters={setFilters} listInvoice={ListInvoices}/>
 
                                             <Button variant="outline-primary" onClick={handleShow}>
                                                 Manage filters
@@ -329,7 +392,7 @@ function ListInvoices() {
                                                         statusInvoice = "Pending";
                                                         statusIcon =
                                                             <button
-                                                                onClick={() => toast.success("handleSetInvoiceStatus2(invoice.invoice_id)")}
+                                                                onClick={() => handleGenerateInvoice(invoice.invoice_id)}
                                                                 title = "Click to change the status to 'Closed'"
                                                             >
                                                                 <FaDollarSign />
@@ -346,21 +409,21 @@ function ListInvoices() {
                                                         statusIcon = <FaCheck />;
                                                         warningPdfIcon =
                                                             <button
-                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 0)}
                                                                 title = "Click to open the Warning File PDF"
                                                             >
                                                                 <FaFilePdf />
                                                             </button>;
                                                         invoicePdfIcon =
                                                             <button
-                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 1)}
                                                                 title = "Click to open the Invoice File PDF"
                                                             >
                                                                 <FaFilePdf />
                                                             </button>;
                                                         invoiceXmlIcon =
                                                             <button
-                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 2)}
                                                                 title = "Click to open the Invoice File XML"
                                                             >
                                                                 <BsFiletypeXml />

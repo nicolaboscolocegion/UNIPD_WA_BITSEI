@@ -312,9 +312,13 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         String URI = req.getRequestURI();
         String[] parts = URI.split("/");
-        Integer company_id = Integer.parseInt(parts[7]);
-        Integer invoice_id = Integer.parseInt(parts[5]);
-        Integer document_type = Integer.parseInt(parts[3]);
+        String tmp = "\"URI: \" + URI + \" Parts:";
+        for(int i=0; i < parts.length; i++)
+            tmp += i + " " + parts[i] + " ";
+        LOGGER.info(tmp);
+        Integer document_type = Integer.parseInt(parts[4]);
+        Integer company_id = Integer.parseInt(parts[6]);
+        Integer invoice_id = Integer.parseInt(parts[8]);
         int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         if (document_type < 0 || document_type > 2) {
             LOGGER.error("Document type not valid: " + parts[3]);
@@ -1131,7 +1135,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
         final int company_id = r.getCompanyID();
 
-        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromCustomerId", "fromProductId");
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromCustomerId", "fromProductId", "fromStatus");
         // the request URI contains filter(s)
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
 

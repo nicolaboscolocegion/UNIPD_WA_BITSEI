@@ -80,6 +80,9 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             boolean filterByProductId= false;
             List<Integer> fromProductId = new ArrayList<Integer>();
 
+            boolean filterByStatus = false;
+            List<Integer> fromStatus = new ArrayList<Integer>();
+
             for (String filter : requestData.keySet()) {
                 if (filter.equals("fromTotal")) {
                     filterByTotal = true;
@@ -185,6 +188,13 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                     for (String s : parsedProductIds)
                         fromProductId.add(Integer.parseInt(s));
                 }
+                if (filter.equals("fromStatus")) {
+                    filterByStatus = true;
+                    String status = requestData.get(filter);
+                    String[] parsedStatus = status.split("-");
+                    for (String s : parsedStatus)
+                        fromStatus.add(Integer.parseInt(s));
+                }
             }
 
             LOGGER.info("## ListInvoiceByFiltersRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromCustomerId: " + fromCustomerId + " fromProductId: " + fromProductId);
@@ -197,7 +207,8 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
                     filterByInvoiceDate, fromInvoiceDate, toInvoiceDate,
                     filterByWarningDate, fromWarningDate, toWarningDate,
                     filterByCustomerId, fromCustomerId,
-                    filterByProductId, fromProductId
+                    filterByProductId, fromProductId,
+                    filterByStatus, fromStatus
             ).access().getOutputParam();
 
             if (el != null) {
