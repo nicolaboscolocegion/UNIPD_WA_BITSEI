@@ -270,6 +270,19 @@ function ListInvoices() {
             });
     }
 
+    const handleDeleteInvoice = (invoice_id) => {
+        gate
+            .deleteInvoice(company_id, invoice_id)
+            .then((response) => {
+                toast.success("Invoice deleted successfully!");
+                setRefresh(!refresh);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in deleting invoice");
+                setRefresh(!refresh);
+            });
+    }
+
     const handleGetInvoiceDocument = (invoice_id, document_type) => {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
@@ -488,7 +501,7 @@ function ListInvoices() {
                                                                         <FaPencilAlt />
                                                                     </button>
                                                                     <button
-                                                                        onClick={() => toast.success("handleDeleteInvoice(invoice.invoice_id)")}
+                                                                        onClick={() => handleDeleteInvoice(invoice.invoice_id)}
                                                                         title = "Click to delete the invoice"
                                                                         disabled={!isEditable}
                                                                     >
