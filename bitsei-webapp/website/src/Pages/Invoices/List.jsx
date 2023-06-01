@@ -289,6 +289,32 @@ function ListInvoices() {
             });
     }
 
+    const handleSaveInvoiceDocument = (invoice_id, document_type) => {
+        gate
+            .getInvoiceDocument(company_id, invoice_id, document_type)
+            .then((response) => {
+                toast.success("Invoice documentation fetched correctly!");
+                // Create a Blob from the PDF Stream
+                const file = new Blob([response.data], { type: "application/pdf" });
+                // Build a URL from the file with a customized name
+                const fileURL = URL.createObjectURL(file);
+                // Create a temporary anchor element
+                const anchorElement = document.createElement("a");
+                anchorElement.href = fileURL;
+                // Set the desired name for the downloaded file
+                anchorElement.download = "custom_filename.pdf";
+                // Trigger a click event to simulate a download
+                anchorElement.click();
+                // Clean up the URL and anchor element
+                URL.revokeObjectURL(fileURL);
+                anchorElement.remove();
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in fetching invoice documentation");
+                setRefresh(!refresh);
+            });
+    }
+
     return (
         <>
         <head>
