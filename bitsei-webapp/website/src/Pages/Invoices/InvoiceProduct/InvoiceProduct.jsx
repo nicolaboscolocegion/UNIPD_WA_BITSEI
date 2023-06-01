@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {useParams} from "react-router-dom";
-
-import gate from "../../../gate";
-
 import {toast} from "react-toastify";
 import {Table} from "react-bootstrap";
-import Form from "./Form";
 
+import Form from "./Form";
+import gate from "../../../gate";
+
+
+// TODO: Add the endpoints and check them work
+// TODO: Add a button to go back to the invoices Page
 function InvoiceProduct() {
     const {
         register,
         handleSubmit,
         formState: {errors},
         setValue,
-        getValues,
         reset,
     } = useForm();
     const [pending, setPending] = useState(false);
@@ -28,14 +29,11 @@ function InvoiceProduct() {
         gate
             .getProducts(company_id)
             .then((response) => {
-                setProducts(response.data["resource-list"].flatMap((item) => [item.product, {
-                    ...item.product,
-                    product_id: 2,
-                    title: "test_data"
-                }]));
-            }).catch(() => {
-            toast.error("Something went wrong");
-        });
+                setProducts(response.data["resource-list"].map((item) => item.product));
+            })
+            .catch(() => {
+                toast.error("Something went wrong");
+            });
 
     }, []);
 
@@ -46,14 +44,12 @@ function InvoiceProduct() {
             .getInvoiceProducts(company_id, invoice_id)
             .then((response) => {
                 setInvoiceProducts(
-                    response.data["resource-list"].flatMap((item) => [
-                        {
+                    response.data["resource-list"].map((item) => {
+                        return {
                             ...item.invoiceproduct,
                             product_name: products.filter(product => product.product_id === 1)[0].title
-                        },
-                        {...item.invoiceproduct, product_name: "fds", invoice_id: 2},
-                        {...item.invoiceproduct, product_name: "fget", invoice_id: 3},
-                    ])
+                        }
+                    })
                 );
             }).catch((error) => {
             toast.error("Something went wrong");
@@ -159,7 +155,6 @@ function InvoiceProduct() {
                                             register={register}
                                             products={products}
                                             setValue={setValue}
-                                            values={getValues}
                                         />
                                     </td>
                                 </tr>
@@ -198,7 +193,6 @@ function InvoiceProduct() {
                                         register={register}
                                         products={products}
                                         setValue={setValue}
-                                        values={getValues}
                                     />
                                 </td>
                             </tr>
