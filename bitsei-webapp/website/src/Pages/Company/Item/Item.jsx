@@ -8,6 +8,7 @@ import gate from "../../../gate";
 import {toast} from "react-toastify";
 import { Data } from "./Data";
 import PieChart from "../../../Components/HomeChart/PieChart";
+import Image from "../../../Components/Image/Image";
 function CompanyDetail() {
     const { company_id } = useParams();
     const companies = useSelector((state) => state.companies);
@@ -54,6 +55,12 @@ function CompanyDetail() {
 
     return companies.pending ? ("Loading") : (
         <>
+            <div className="container-fluid mx-auto mt-3">
+                <a className="navbar-brand" href="#">
+                    <Image id={company.company_id}/>
+                    <p className="d-inline mx-5 fs-4 fw-bold">Welcome back, <span className="badge bg-info text-dark">{company.business_name}</span></p>
+                </a>
+            </div>
             <div className={"container-fluid mx-auto mt-3 "}>
                 <div className={"card homecard mb-1 w-49 "}>
                     <div className={"card-header"}>
