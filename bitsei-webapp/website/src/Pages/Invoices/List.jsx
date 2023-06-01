@@ -30,6 +30,7 @@ function ListInvoices() {
     const [invoices, setInvoices] = useState([]);
     const [dataToSend, setDataToSend] = useState({});
     const [refresh, setRefresh] = useState(false);
+    const [refreshSort, setRefreshSort] = useState(false);
 
     useEffect(() => {
         console.log("listing invoices onLoad TO REMOVE");
@@ -38,7 +39,7 @@ function ListInvoices() {
             .getInvoicesByFilters(company_id, dataToSend)
             .then((response) => {
                 setInvoices(response.data["resource-list"]);
-                setRefresh(!refresh);
+                setRefreshSort(!refreshSort);
             })
             .catch((error) => {
                toast.error("Something went wrong in invoices listing");
@@ -132,7 +133,7 @@ function ListInvoices() {
 
     useEffect(() => {
         handleOrderByOptionChange(orderByOptionSelected);
-    },[sortedOptionSelected, invoices, refresh]);
+    },[sortedOptionSelected, refreshSort]);
 
     const Option = (props) => {
         return (
