@@ -275,7 +275,13 @@ function ListInvoices() {
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
                 toast.success("Invoice documentation fetched correctly!");
-                setRefresh(!refresh);
+                //Create a Blob from the PDF Stream
+                const file = new Blob([response.data], { type: "application/pdf" });
+                //Build a URL from the file
+                const fileURL = URL.createObjectURL(file);
+                //Open the URL on new Window
+                const pdfWindow = window.open();
+                pdfWindow.location.href = fileURL;
             })
             .catch((error) => {
                 toast.error("Something went wrong in fetching invoice documentation");
@@ -399,7 +405,7 @@ function ListInvoices() {
                                                             </button>;
                                                         warningPdfIcon =
                                                             <button
-                                                                onClick={() => toast.success("handleGetWarningPdfFile(invoice.invoice_id)")}
+                                                                onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 0)}
                                                                 title = "Click to open the Warning File PDF"
                                                             >
                                                                 <FaFilePdf />

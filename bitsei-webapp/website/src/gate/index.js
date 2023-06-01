@@ -50,7 +50,9 @@ const invoices = {
     generateInvoice: (company_id, invoice_id) => api.put("rest/generateinvoice/" + invoice_id + "/company/" + company_id, null, {
         headers: { 'Content-Type': 'application/json' },
     }),
-    getInvoiceDocument: (company_id, invoice_id, document_type) => api.get("rest/getdocument/" + document_type + "/invoice/" + invoice_id  + "/company/" + company_id),
+    getInvoiceDocument: (company_id, invoice_id, document_type) => api.get("rest/getdocument/" + document_type + "/company/" + company_id  + "/invoice/" + invoice_id, {
+        responseType: "blob"
+    }),
 }
 
 const insights = {
