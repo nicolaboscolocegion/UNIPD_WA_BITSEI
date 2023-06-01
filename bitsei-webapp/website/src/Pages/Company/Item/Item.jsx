@@ -55,21 +55,21 @@ function CompanyDetail() {
     return companies.pending ? ("Loading") : (
         <>
             <div className={"container-fluid mx-auto mt-3 "}>
-                <div className={"card mb-1 w-49 "}>
+                <div className={"card homecard mb-1 w-49 "}>
                     <div className={"card-header"}>
                         <i class="fas fa-table me-1"></i>
                         Line Chart
                     </div>
                     <LineChart chartData={chartData} />
                 </div>
-                <div className={"card mb-1 w-24 mx-1 "}>
+                <div className={"card homecard mb-1 w-24 mx-1 "}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
                     </div>
                     <PieChart chartData={chartData}/>
                 </div>
-                <div className={"card mb-1 w-24 "}>
+                <div className={"card homecard mb-1 w-24 "}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
