@@ -4194,6 +4194,8 @@ textarea.form-control-lg {
     border: var(--bs-card-border-width) solid var(--bs-card-border-color);
     border-radius: var(--bs-card-border-radius);
 }
+.card {display:inline-block;}
+
 .card > hr {
     margin-right: 0;
     margin-left: 0;
@@ -7271,6 +7273,14 @@ textarea.form-control-lg {
 
 .border-opacity-100 {
     --bs-border-opacity: 1;
+}
+
+.w-24 {
+    width: 24.5% !important;
+}
+
+.w-49 {
+    width: 49% !important;
 }
 
 .w-25 {

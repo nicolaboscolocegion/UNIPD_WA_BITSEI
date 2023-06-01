@@ -26,7 +26,7 @@ function AddBankAccount() {
             .then((response) => {
                 setPending(false);
                 toast.success("New Bank Account added successfully !");
-                history.push(`/companies/${company_id}`);
+                history.push(`/companies/${company_id}/bankAccount`);
             })
             .catch((error) => {
                 setPending(false);

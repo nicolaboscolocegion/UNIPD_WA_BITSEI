@@ -161,7 +161,7 @@ public class CloseInvoiceRR extends AbstractRR {
             exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
 
             //sending mail with attachment notification to customer
-            MailManager.sendAttachmentMail(c.getEmailAddress(), "New invoice warning from " + map.get("customer_name"), "Dear " + c.getBusinessName() + "\na new invoice warning has been sent from " + map.get("customer_name") + " to you. Please do not reply to this message.", "text/html;charset=UTF-8", absPath + "/pdf/" + fileName, "application/pdf", fileName);
+            MailManager.sendAttachmentMail(c.getEmailAddress(), "New invoice warning from " + map.get("customer_name"), "Dear " + c.getBusinessName() + "\na new invoice warning has been sent from " + map.get("company_name") + " to you. Please do not reply to this message.", "text/html;charset=UTF-8", absPath + "/pdf/" + fileName, "application/pdf", fileName);
 
             //sending mail notification to company owner
             if (Boolean.parseBoolean(out.get(14).toString())) {

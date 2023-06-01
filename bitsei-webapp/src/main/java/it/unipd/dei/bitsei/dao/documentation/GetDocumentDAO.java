@@ -103,11 +103,11 @@ public final class GetDocumentDAO extends AbstractDAO<String> {
 
             while (rs.next()) {
                 if (document_type == 0) {
-                    rs.getString("warning_pdf_file");
+                    doc_name = rs.getString("warning_pdf_file");
                 } else if (document_type == 1) {
-                    rs.getString("invoice_pdf_file");
+                    doc_name = rs.getString("invoice_pdf_file");
                 } else if (document_type == 2) {
-                    rs.getString("invoice_xml_file");
+                    doc_name = rs.getString("invoice_xml_file");
                 }
             }
 

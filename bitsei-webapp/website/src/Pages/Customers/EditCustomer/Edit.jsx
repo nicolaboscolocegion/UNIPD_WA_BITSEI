@@ -60,7 +60,7 @@ function EditCustomer() {
         console.log(data)
 
         gate
-            .editCustomer({customer: {companyID: company_id, ...data}}, company_id, customer_id)
+            .editCustomer({customer: {companyID: parseInt(company_id), ...data}}, company_id, customer_id)
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
