@@ -33,7 +33,7 @@ function Sidebar() {
             },
             {
                 path: `#`, name: types.PRODUCTS, icon: faFolder, subItems: [
-                    {path: `/companies/${company_id}/products`, name: "List Products"},
+                    {path: `/companies/${company_id}/list-products/`, name: "List Products"},
                     {path: `/companies/${company_id}/product/add`, name: "Add Product"},
                 ]
             },
