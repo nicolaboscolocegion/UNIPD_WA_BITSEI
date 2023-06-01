@@ -110,6 +110,12 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
      */
     private final List<Integer> fromProductId;
 
+    private final boolean filterByStatus;
+
+    /**
+     * List of the status of the invoices to be considered
+     */
+    private final List<Integer> fromStatus;
 
     private String FilterBetween(String field_name, boolean enableNull) {
         enableNull = false;
@@ -149,6 +155,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
      * @param toWarningDate        the warning date from which to end the filtering
      * @param fromCustomerId       the customer id from which to start the filtering
      * @param fromProductId        the product id from which to start the filtering
+     * @param fromStatus           the statuses from which to filter
      * @param filterByDiscount     true if the discount filter is enabled, false otherwise
      * @param filterByTotal        true if the total filter is enabled, false otherwise
      * @param filterByPfr          true if the pension fund refund filter is enabled, false otherwise
@@ -156,6 +163,7 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
      * @param filterByWarningDate  true if the warning date filter is enabled, false otherwise
      * @param filterByCustomerId true if the customer id filter is enabled, false otherwise
      * @param filterByProductId true if the product id filter is enabled, false otherwise
+     * @param  filterByStatus true if the status filter is enabled, false otherwise
      */
     public ListInvoiceByFiltersDAO(final Connection con, int ownerId, int companyId,
                                    final boolean filterByTotal, final double fromTotal, final double toTotal,
@@ -164,7 +172,8 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
                                    final boolean filterByInvoiceDate, final Date fromInvoiceDate, final Date toInvoiceDate,
                                    final boolean filterByWarningDate, final Date fromWarningDate, final Date toWarningDate,
                                    final boolean filterByCustomerId, final List<Integer> fromCustomerId,
-                                   final boolean filterByProductId, final List<Integer> fromProductId) {
+                                   final boolean filterByProductId, final List<Integer> fromProductId,
+                                   final boolean filterByStatus, final List<Integer> fromStatus) {
         super(con);
 
         this.ownerId = ownerId;
@@ -195,6 +204,9 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
 
         this.filterByProductId = filterByProductId;
         this.fromProductId = fromProductId;
+
+        this.filterByStatus = filterByStatus;
+        this.fromStatus = fromStatus;
     }
 
     /**
@@ -257,6 +269,9 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
             if (filterByProductId)
                 query.append(FilterByStringList("p.product_id", fromProductId.size()));
 
+            if(filterByStatus)
+                query.append(FilterByStringList("i.status", fromStatus.size()));
+
             query.append(";");
 
             pstmt = con.prepareStatement(query.toString());
@@ -300,6 +315,12 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
                 for (int j = 0; j < fromProductId.size(); j++) {
                     param += "fromProductId(" + j + "): " + fromProductId.get(j) + " ";
                     pstmt.setInt(i++, fromProductId.get(j));
+                }
+            }
+            if(filterByStatus) {
+                for (int j = 0; j < fromStatus.size(); j++) {
+                    param += "fromStatus(" + j + "): " + fromStatus.get(j) + " ";
+                    pstmt.setInt(i++, fromStatus.get(j));
                 }
             }
 
