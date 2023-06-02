@@ -81,11 +81,14 @@ public final class PlotChartRR extends AbstractRR {
             Date fromWarningDate = FROM_DATE;
             Date toWarningDate = TO_DATE;
 
-            boolean filterByBusinessName = false;
-            List<String> fromBusinessName = new ArrayList<String>();
+            boolean filterByCustomerId = false;
+            List<Integer> fromCustomerId = new ArrayList<Integer>();
 
-            boolean filterByProductTitle = false;
-            List<String> fromProductTitle = new ArrayList<String>();
+            boolean filterByProductId= false;
+            List<Integer> fromProductId = new ArrayList<Integer>();
+
+            boolean filterByStatus = false;
+            List<Integer> fromStatus = new ArrayList<Integer>();
 
             int chart_type = 1;
             int chart_period = 1;
@@ -181,19 +184,19 @@ public final class PlotChartRR extends AbstractRR {
                         toWarningDate = TO_DATE;
                     }
                 }
-                if (filter.equals("fromBusinessName")) {
-                    filterByBusinessName = true;
-                    String businessNames = requestData.get(filter);
-                    String[] parsedBusinessNames = businessNames.split("---");
-                    for (String s : parsedBusinessNames)
-                        fromBusinessName.add(s);
+                if (filter.equals("fromCustomerId")) {
+                    filterByCustomerId = true;
+                    String customerIds = requestData.get(filter);
+                    String[] parsedcustomerIds = customerIds.split("-");
+                    for (String s : parsedcustomerIds)
+                        fromCustomerId.add(Integer.parseInt(s));
                 }
-                if (filter.equals("fromProductTitle")) {
-                    filterByProductTitle = true;
-                    String productTitles = requestData.get(filter);
-                    String[] parsedProductTitles = productTitles.split("---");
-                    for (String s : parsedProductTitles)
-                        fromProductTitle.add(s);
+                if (filter.equals("fromProductId")) {
+                    filterByProductId = true;
+                    String productIds = requestData.get(filter);
+                    String[] parsedProductIds = productIds.split("-");
+                    for (String s : parsedProductIds)
+                        fromProductId.add(Integer.parseInt(s));
                 }
                 if (filter.equals("chart_type")) {
                     try {
@@ -211,9 +214,16 @@ public final class PlotChartRR extends AbstractRR {
                         chart_period = CHART_PERIOD;
                     }
                 }
+                if (filter.equals("fromStatus")) {
+                    filterByStatus = true;
+                    String status = requestData.get(filter);
+                    String[] parsedStatus = status.split("-");
+                    for (String s : parsedStatus)
+                        fromStatus.add(Integer.parseInt(s));
+                }
             }
 
-            LOGGER.info("## PlotChartRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromBusinessName: " + fromBusinessName + " fromProductTitle: " + fromProductTitle + " chartType: " + chart_type + " chartType: " + chart_period);
+            LOGGER.info("## PlotChartRR: filterByTotal: " + filterByTotal + " fromTotal: " + fromTotal + " toTotal: " + toTotal + " filterByDiscount: " + filterByDiscount + " fromDiscount: " + fromDiscount + " toDiscount: " + toDiscount + " filterByPfr: " + filterByPfr + " fromPfr: " + fromPfr + " toPfr: " + toPfr + " filterByInvoiceDate: " + filterByInvoiceDate + " fromInvoiceDate: " + fromInvoiceDate + " toInvoiceDate: " + toInvoiceDate + " filterByWarningDate: " + filterByWarningDate + " fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " fromCustomerId: " + fromCustomerId + " fromProductId: " + fromProductId + " chartType: " + chart_type + " chartType: " + chart_period);
 
             // creates a new DAO for accessing the database and lists the invoice(s)
             el = new ListInvoiceForChartsDAO(con, owner_id, company_id,
@@ -222,8 +232,9 @@ public final class PlotChartRR extends AbstractRR {
                     filterByPfr, fromPfr, toPfr,
                     filterByInvoiceDate, fromInvoiceDate, toInvoiceDate,
                     filterByWarningDate, fromWarningDate, toWarningDate,
-                    filterByBusinessName, fromBusinessName,
-                    filterByProductTitle, fromProductTitle
+                    filterByCustomerId, fromCustomerId,
+                    filterByProductId, fromProductId,
+                    filterByStatus, fromStatus
             ).access().getOutputParam();
 
             if (el != null) {

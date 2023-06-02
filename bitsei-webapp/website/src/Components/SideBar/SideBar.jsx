@@ -2,19 +2,12 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {
-    faBuilding,
-    faAngleDown,
-    faFileInvoice,
-    faFolder,
-    faHippo,
-    faBank,
-    faAnalytics, faLineChart
-} from "@fortawesome/free-solid-svg-icons";
+import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from "@fortawesome/free-solid-svg-icons";
 
 import types from "./sideBarItemsType";
 
 function Sidebar() {
+    const user = useSelector((state) => state.auth.user) || {firstname: "Bitsei", lastname: "User"};
     const company_id = useSelector((state) => state.companies.activeCompany)
         || window.location.pathname.split("/")[2];
 
@@ -63,7 +56,7 @@ function Sidebar() {
 
                 ]
             },
-            
+
         ]
     }
 
@@ -122,7 +115,7 @@ function Sidebar() {
                 </div>
                 <div className="sb-sidenav-footer sticky-bottom">
                     <div className="small">Logged in as:</div>
-                    BITSEI USER
+                    {`${user.firstname} ${user.lastname}`}
                 </div>
             </nav>
         </div>
