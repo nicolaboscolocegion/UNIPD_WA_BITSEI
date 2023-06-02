@@ -45,9 +45,11 @@ const invoices = {
     listCustomers: (id) => api.get("rest/list-customer/company/" + id),
     listProducts: (id) => api.get("rest/list-product/company/" + id),
     closeInvoice: (company_id, invoice_id) => api.put("rest/closeinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 10000,
         headers: { 'Content-Type': 'application/json' },
     }),
     generateInvoice: (company_id, invoice_id) => api.put("rest/generateinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 10000,
         headers: { 'Content-Type': 'application/json' },
     }),
     deleteInvoice: (company_id, invoice_id) => api.delete("rest/invoice/" + invoice_id + "/company/" + company_id, {
@@ -86,6 +88,11 @@ const products = {
     getProduct: (product_id, company_id) => api.get("rest/product/" + product_id + "/company/" + company_id),
     getProducts: (company_id) => api.get("rest/list-product/company/" + company_id),
     addProduct: (data, company_id) => api.post("rest/product/company/" + company_id, data),
+    createProduct: (data, company_id) => api.post("rest/product/company/" + company_id, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    }),
     editProduct: (data, product_id, company_id) => api.put("rest/product/" + product_id + "/company/" + company_id, data),
     deleteProduct: (product_id, company_id) => api.delete("rest/product/" + product_id + "/company/" + company_id),
 }
