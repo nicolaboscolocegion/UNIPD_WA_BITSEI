@@ -8,7 +8,8 @@ import Form from "./Form";
 import gate from "../../../gate";
 
 
-// TODO: Add the endpoints and check them work
+// TODO: Refactor sending the request section
+// TODO: Error Handling section -> duplicated entry or things like that
 // TODO: Add a button to go back to the invoices Page
 function InvoiceProduct() {
     const {
@@ -70,25 +71,74 @@ function InvoiceProduct() {
     };
 
     const onEditItem = (data) => {
-        console.log("Form Data:", data);
+        console.log( data);
         gate
-            .editInvoiceItem(company_id, data.invoice_id, {...data, product_id: parseInt(data.product_id)})
+            .editInvoiceItem(
+                {
+                    invoiceproduct: {
+                        ...data,
+                        invoice_id: parseInt(invoice_id),
+                        related_price: data.related_price ? parseFloat(data.related_price) : 0,
+                        product_id: parseInt(data.product_id),
+                        quantity: parseInt(data.quantity),
+                        unit_price: parseFloat(data.unit_price),
+                    }
+                },
+                company_id,
+                invoice_id,
+                data.product_id
+            )
             .then((response => {
-
+                setInvoiceProducts(invoiceProducts.map((ip) => {
+                    if (ip.product_id === data.product_id) {
+                        return {
+                            ...ip,
+                            ...data,
+                            product_name: products.filter(product => product.product_id === 1)[0].title,
+                            related_price: data.related_price ? parseFloat(data.related_price) : 0,
+                            product_id: parseInt(data.product_id),
+                            quantity: parseInt(data.quantity),
+                            unit_price: parseFloat(data.unit_price),
+                        }
+                    }
+                    return ip;
+                }))
+                console.log(response)
             }))
             .catch(error => {
-
+                console.log(error)
             })
         reset();
         setActionHandler(0);
     };
 
     const onAddItem = (data) => {
-        console.log("Form Data:", data);
+        console.log(data);
         gate
-            .addInvoiceItem(company_id, {...data, product_id: parseInt(data.product_id)})
+            .addInvoiceItem({
+                    invoiceproduct: {
+                        ...data,
+                        invoice_id: parseInt(invoice_id),
+                        related_price: data.related_price ? parseFloat(data.related_price) : 0,
+                        product_id: parseInt(data.product_id),
+                        quantity: parseInt(data.quantity),
+                        unit_price: parseFloat(data.unit_price),
+                    }
+                },
+                company_id,
+                invoice_id,
+                parseInt(data.product_id)
+            )
             .then((response => {
-
+                console.log(data.product_id)
+                setInvoiceProducts([...invoiceProducts, {
+                    ...data,
+                    product_name: products.filter(product => product.product_id === 1)[0].title,
+                    related_price: data.related_price ? parseFloat(data.related_price) : 0,
+                    product_id: parseInt(data.product_id),
+                    quantity: parseInt(data.quantity),
+                    unit_price: parseFloat(data.unit_price),
+                }])
             }))
             .catch(error => {
 
@@ -98,14 +148,14 @@ function InvoiceProduct() {
     };
 
 
-    const itemDeleteHandler = (invoice_item) => {
+    const itemDeleteHandler = (invoice_item, product_id) => {
         gate
-            .deleteInvoiceItem(company_id, invoice_id)
+            .deleteInvoiceItem(company_id, invoice_id, product_id)
             .then((response => {
-
+                setInvoiceProducts(invoiceProducts.filter((ip) => ip.product_id !== product_id))
             }))
             .catch(error => {
-
+                console.log(error)
             })
         console.log(invoice_item)
     }
@@ -177,7 +227,7 @@ function InvoiceProduct() {
                                         <button
                                             className="btn btn-danger btn-sm active btn-block mx-auto"
                                             type="button"
-                                            onClick={() => itemDeleteHandler(ip.invoice_id)}
+                                            onClick={() => itemDeleteHandler(ip.invoice_id, ip.product_id)}
                                         >
                                             Delete
                                         </button>

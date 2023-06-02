@@ -89,10 +89,6 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
-            if(processListInvoiceProduct(req, res)){
-                return;
-            }
-
             // if the requested resource was an User, delegate its processing and return
             if (processCustomer(req, res)) {
                 return;
@@ -110,6 +106,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoiceProduct(req, res)) {
+                return;
+            }
+
+            if(processListInvoiceProduct(req, res)){
                 return;
             }
 
@@ -946,6 +946,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         companyID = Integer.parseInt(parts[7]);
 
+        LOGGER.warn(String.valueOf(companyID), invoiceID, productID);
 
         switch (method) {
             case "GET":

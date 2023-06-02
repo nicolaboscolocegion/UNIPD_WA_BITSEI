@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 
 
 // TODO: Handle errors
-// TODO: Check the default value on option select for product
 function Form({onSubmit, product_id = -1, register, products, setValue}) {
     const [firstLoad, setFirstLoad] = useState(true);
     const [selectedProduct, setSelectedProduct] = useState(product_id);
@@ -41,7 +40,7 @@ function Form({onSubmit, product_id = -1, register, products, setValue}) {
             </div>
             <div className="col-md-1">
                 <label className="form-label">Unit Price:</label>
-                <input type="number" {...register("unit_price")}
+                <input type="number" step="any" {...register("unit_price")}
                        className="form-control"/>
             </div>
             <div className="col-md-1">

@@ -57,9 +57,9 @@ const invoices = {
         responseType: "blob"
     }),
     getInvoiceProducts: (company_id, invoice_id) => api.get(`rest/invoice/${company_id}/${invoice_id}`),
-    editInvoiceItem: (company_id, invoice_id, data) => api.put(`rest/invoice/${company_id}/${invoice_id}`, data),
-    deleteInvoiceItem: (company_id, invoice_id) => api.delete(`rest/invoice/${company_id}/${invoice_id}`),
-    addInvoiceItem: (company_id, data) => api.post(`rest/invoice/${company_id}/`, data),
+    editInvoiceItem: (data, company_id, invoice_id, product_id) => api.put(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`, data),
+    deleteInvoiceItem: (company_id, invoice_id, product_id) => api.delete(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`),
+    addInvoiceItem: (data, company_id, invoice_id, product_id) => api.post(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`, data),
 }
 
 const insights = {
