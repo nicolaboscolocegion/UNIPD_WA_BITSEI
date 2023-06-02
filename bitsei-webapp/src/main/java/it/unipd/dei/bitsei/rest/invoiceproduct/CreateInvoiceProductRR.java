@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.DateTimeException;
+import java.util.logging.Logger;
 
 
 /**
@@ -61,7 +62,8 @@ public class CreateInvoiceProductRR extends AbstractRR {
         try {
 
             ip = InvoiceProduct.fromJSON(requestStream);
-
+            LOGGER.info("InvoiceProduct successfully created from JSON.");
+            LOGGER.warn(ip.getInvoice_id());
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 

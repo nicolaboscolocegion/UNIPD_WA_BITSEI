@@ -20,8 +20,6 @@ import java.util.List;
  * @since 1.00
  */
 public final class ListInvoiceProductRR extends AbstractRR {
-    private final int company_id;
-    private final int invoice_id;
 
     /**
      * Creates a new REST resource for listing {@code Invoice}s.
@@ -29,22 +27,23 @@ public final class ListInvoiceProductRR extends AbstractRR {
      * @param req        the HTTP request.
      * @param res        the HTTP response.
      * @param con        the connection to the database.
-     * @param company_id the company id to be used for getting the invoice(s).
-     * @param invoice_id the invoice id to be used for getting the invoice row(s).
      */
-    public ListInvoiceProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con, int company_id, int invoice_id) {
+    public ListInvoiceProductRR(final HttpServletRequest req, final HttpServletResponse res, Connection con) {
         super(Actions.LIST_INVOICES_BY_COMPANY_ID, req, res, con);
-        this.company_id = company_id;
-        this.invoice_id = invoice_id;
     }
 
     @Override
     protected void doServe() throws IOException {
-        final int owner_id;
+        final int owner_id, company_id, invoice_id;
+
         try {
             owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
+            LOGGER.warn(owner_id);
+            String[] paths = req.getRequestURI().split("/");
+            company_id = Integer.parseInt(paths[4]);
+            invoice_id = Integer.parseInt(paths[5]);
         } catch (Exception e) {
-            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##");
+            LOGGER.warn("## ListInvoiceByFiltersRR: Illegal value for attribute {owner_id} ##" + e);
             return;
         }
 

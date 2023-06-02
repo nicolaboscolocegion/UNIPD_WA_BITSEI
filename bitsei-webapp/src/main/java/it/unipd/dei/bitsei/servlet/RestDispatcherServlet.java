@@ -1,5 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
+import it.unipd.dei.bitsei.dao.listing.ListInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -105,6 +106,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoiceProduct(req, res)) {
+                return;
+            }
+
+            if(processListInvoiceProduct(req, res)){
                 return;
             }
 
@@ -941,6 +946,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         companyID = Integer.parseInt(parts[7]);
 
+        LOGGER.warn(String.valueOf(companyID), invoiceID, productID);
 
         switch (method) {
             case "GET":
@@ -972,6 +978,42 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
     }
 
+
+    /**
+     * Checks whether the request is for a list of {@link Invoice}s resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for a list of {@code Invoice}s; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+        private boolean processListInvoiceProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+            final String method = req.getMethod();
+
+            String path = req.getRequestURI();
+            Message m = null;
+
+            // the requested resource was not a company
+            if (path.lastIndexOf("rest/invoice") <= 0) {
+                return false;
+            }
+
+            // strip everything until after the /invoice
+            path = path.substring(path.lastIndexOf("invoice") + 7);
+
+            // the request URI is: /company
+            // if method GET, list companies
+            // if method POST, create company
+            if (path.matches("/\\d+/\\d+")) {
+                // the request URI is: /company/image/{id}
+                // if method GET, get company image
+                if (method.equals("GET")) {
+                    new ListInvoiceProductRR(req, res, getConnection()).serve();
+                }
+            }
+            return true;
+
+        }
 
     /**
      * Checks whether the request is for a list of {@link Invoice}s resource and, in case, processes it.

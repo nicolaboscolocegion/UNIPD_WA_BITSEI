@@ -13,26 +13,19 @@ export const userLogin = (data) => {
                 console.log(response);
                 window.localStorage.setItem("Authorization", response.data.token);
                 axios.defaults.headers.common["Authorization"] = response.data.token;
-                // TODO: Remove this
-                dispatch({
-                    type: types.LOGIN_SUCCESS,
-                    payload: { user: {}, token: response.data.token },
-                });
-                history.push("/companies");
 
-                // gate
-                //     .userInfo()
-                //     .then((res) => {
-                //         console.log(res);
-                //         dispatch({
-                //             type: types.LOGIN_SUCCESS,
-                //             payload: { user: res.data, tokens: response.data },
-                //         });
-                //         history.push("/companies");
-                //     })
-                //     .catch((error) => {
-                //         console.log(error.response);
-                //     });
+                gate
+                    .userInfo()
+                    .then((res) => {
+                        dispatch({
+                            type: types.LOGIN_SUCCESS,
+                            payload: { user: res.data.user, token: response.data.token },
+                        });
+                        history.push("/companies");
+                    })
+                    .catch((error) => {
+                        console.log(error.response);
+                    });
             })
             .catch((error) => {
                 // check if error.response is not null -> maybe the internet is not working
