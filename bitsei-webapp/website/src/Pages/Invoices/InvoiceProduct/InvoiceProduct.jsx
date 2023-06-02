@@ -205,7 +205,7 @@ function InvoiceProduct() {
                                             onSubmit={handleSubmit(onEditItem)}
                                             product_id={ip.product_id}
                                             register={register}
-                                            products={products}
+                                            products={products.filter((product) => { return !invoiceProducts.some((ipp) => ipp.product_id === product.product_id && ip.product_id !== product.product_id) })}
                                             setValue={setValue}
                                         />
                                     </td>
@@ -243,7 +243,7 @@ function InvoiceProduct() {
                                     <Form
                                         onSubmit={handleSubmit(onAddItem)}
                                         register={register}
-                                        products={products}
+                                        products={products.filter((product) => { return !invoiceProducts.some((ip) => ip.product_id === product.product_id) })}
                                         setValue={setValue}
                                     />
                                 </td>
