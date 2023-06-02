@@ -64,10 +64,12 @@ public class GetDocumentRR extends AbstractRR {
 
             if (filename != null) {
                 LOGGER.info("Document path successfully get.");
-                File f = new File(absPath + "/pdf/" + filename);
+                File f = null;
                 if (document_type != 2) {
+                    f = new File(absPath + "/pdf/" + filename);
                     res.setContentType("application/pdf");
                 } else {
+                    f = new File(absPath + "/xml/" + filename);
                     res.setContentType("application/xml");
                 }
                 res.setStatus(HttpServletResponse.SC_OK);
