@@ -4194,7 +4194,7 @@ textarea.form-control-lg {
     border: var(--bs-card-border-width) solid var(--bs-card-border-color);
     border-radius: var(--bs-card-border-radius);
 }
-.card {display:inline-block;}
+.homecard {display:inline-block;}
 
 .card > hr {
     margin-right: 0;
