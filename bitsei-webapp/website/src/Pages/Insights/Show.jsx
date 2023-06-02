@@ -44,6 +44,18 @@ function ShowChart() {
             });
     }, [dataToSend]);
 
+    const plugin = {
+        id: 'customCanvasBackgroundColor',
+        beforeDraw: (chart, args, options) => {
+          const {ctx} = chart;
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = options.color || '#99ffff';
+          ctx.fillRect(0, 0, chart.width, chart.height);
+          ctx.restore();
+        }
+    };
+
     useEffect(() => {
         const ctx = document.getElementById('myChart');
         if (chart.type === 1) {
@@ -62,8 +74,14 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        customCanvasBackgroundColor: {
+                          color: 'white',
+                        }
                     }
-                }
+                },
+                plugins: [plugin]
             });
             return () => {
                 myChart.destroy();
@@ -196,6 +214,16 @@ function ShowChart() {
         return mapPeriods.hasOwnProperty(chart.period) ? (mapPeriods[chart.period]) : (console.log("Error"));
     }
 
+    const handleClick = () => {
+        var canvas = document.getElementById("myChart");
+        const dataURL = canvas.toDataURL("image/png");
+        
+        const link = document.createElement("a");
+        link.href = dataURL;//canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");;
+        link.download = "chart.png";
+        link.click();
+    }
+
     //Request data (stored in dataToSend)
     const [filterByTotal, setFilterByTotal] = useState({
         isEnabled: false,
@@ -314,7 +342,7 @@ function ShowChart() {
                                                    filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId}
                                                    filterByStatus={filterByStatus} setFilters={setFilters}/>
                                     <div className="d-flex justify-content-between mt-3 mx-5">
-                                        <Button variant="outline-primary">
+                                        <Button variant="outline-primary" id="downButton" onClick={handleClick}>
                                             Download
                                         </Button>
                                         <Button variant="outline-primary">
