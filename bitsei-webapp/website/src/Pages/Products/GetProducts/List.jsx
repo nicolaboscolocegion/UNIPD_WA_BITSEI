@@ -9,6 +9,8 @@ import Item from "../../../Components/CompanyItem/Item";
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
+import ImageTest from "../../../Components/Image/ImageTest";
+import Image from "../../../Components/Image/Image";
 
 
 
@@ -55,13 +57,14 @@ function List() {
 
     return pending ? ("Loading") : (
         <div className="container-fluid px-4">
-            <h1 className="mt-4">Products Dashboard</h1>
+            <h1 className="mt-4">Products</h1>
+            <br />
 
 
             <div className="card mb-4">
                 <div className="card-header">
                     <i className="fas fa-table me-1"/>
-                    Products
+                    List Products
                 </div>
                 <div className="card-body">
                     <Table id="datatablesSimple">
@@ -83,7 +86,11 @@ function List() {
                                 return (
 
                                     <tr>
-                                            <td>{product.product.logo}</td>
+                                            <td><ImageTest
+                                                src={product.product.logo}
+                                                alt={product.product.logo}
+                                                fallback=<Image id={company_id}/>
+                                            /></td>
                                             <td>{product.product.title} </td>
                                             <td>{product.product.defaultPrice} </td>
                                             <td>

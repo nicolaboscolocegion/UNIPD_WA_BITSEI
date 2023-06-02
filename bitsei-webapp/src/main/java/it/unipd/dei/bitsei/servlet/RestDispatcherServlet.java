@@ -1288,7 +1288,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
         final int company_id = r.getCompanyID();
 
-        List<String> filterList = List.of("filterByTotal", "fromTotal", "toTotal", "filterByDiscount", "fromDiscount", "toDiscount", "filterByPfr", "startPfr", "toPfr", "filterByInvoiceDate", "fromInvoiceDate", "toInvoiceDate", "filterByWarningDate", "fromWarningDate", "toWarningDate", "filterByBusinessName", "fromBusinessName", "filterByProductTitle", "fromProductTitle", "owner_id", "chart_type", "chart_period");
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromCustomerId", "fromProductId", "fromStatus", "chart_type", "chart_period");
         // the request URI contains filters or the chart type/period
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);
 
