@@ -16,43 +16,168 @@ function CompanyDetail() {
     const { company_id } = useParams();
     const companies = useSelector((state) => state.companies);
     const company = companies.items.filter((company) => company.company_id === parseInt(company_id))[0];
-    //const [dataToSend, setDataToSend] = useState({"chart_type": 1, "chart_period": 1});
+    const [dataToSend1, setDataToSend1] = useState({"chart_type": 2, "chart_period": 1});
+    const [dataToSend2, setDataToSend2] = useState({"chart_type": 4, "chart_period": 1});
+    const [dataToSend3, setDataToSend3] = useState({"chart_type": 5, "chart_period": 1});
+    const [chart1, setChart1] = useState([]);
+    const [chart2, setChart2] = useState([]);
+    const [chart3, setChart3] = useState([]);
 
-    //const [chartData, setChartData] = useState({});
-
-
-
-    const [chartData, setChartData] = useState({
-        labels: Data.map((data) => data.year),
-        datasets: [
-            {
-                label: "Users Gained ",
-                data: Data.map((data) => data.userGain),
-                backgroundColor: [
-                        "rgba(75,192,192,1)",
-                    "&quot;#ecf0f1",
-                "#50AF95",
-                "#f3ba2f",
-                "#2a71d0"
-        ],
-        borderColor: "black",
-        borderWidth: 2
-    }
-    ]
-});
-
-    /*useEffect(() => {
-        gate.getChartInvoiceByFilters(dataToSend)
+    useEffect(() => {
+        console.log("Company ID: " + company_id);
+        //Process request (the payload is dataToSend) to get data for drawing chart
+        gate
+            .getChartInvoiceByFilters(company_id, dataToSend1)
             .then((response) => {
                 console.log(response.data["chart"]);
-                setChartData(response.data["chart"]);
+                setChart1(response.data["chart"]);
             })
             .catch((error) => {
                 toast.error("Something went wrong in invoices listing");
             });
 
-    }, [dataToSend]);*/
+        gate
+            .getChartInvoiceByFilters(company_id, dataToSend2)
+            .then((response) => {
+                console.log(response.data["chart"]);
+                setChart2(response.data["chart"]);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in invoices listing");
+            });
 
+        gate
+            .getChartInvoiceByFilters(company_id, dataToSend3)
+            .then((response) => {
+                console.log(response.data["chart"]);
+                setChart3(response.data["chart"]);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in invoices listing");
+            });
+    }, []);
+
+    const [chartData1, setChartData1] = useState({
+        labels: chart1.labels,
+        datasets: [
+            {
+                label: "Total profit",
+                data: chart1.data,
+                backgroundColor: [
+                    "rgba(75,192,192,1)",
+                    "&quot;#ecf0f1",
+                    "#50AF95",
+                    "#f3ba2f",
+                    "#2a71d0"
+                ],
+                borderColor: "black",
+                borderWidth: 2
+            }
+        ]
+    });
+
+    const [chartData2, setChartData2] = useState({
+        labels: chart2.labels,
+        datasets: [
+            {
+                label: "Total profit",
+                data: chart2.data,
+                backgroundColor: [
+                    "rgba(75,192,192,1)",
+                    "&quot;#ecf0f1",
+                    "#50AF95",
+                    "#f3ba2f",
+                    "#2a71d0"
+                ],
+                borderColor: "black",
+                borderWidth: 2
+            }
+        ]
+    });
+
+    const [chartData3, setChartData3] = useState({
+        labels: chart3.labels,
+        datasets: [
+            {
+                label: "Total profit",
+                data: chart3.data,
+                backgroundColor: [
+                    "rgba(75,192,192,1)",
+                    "&quot;#ecf0f1",
+                    "#50AF95",
+                    "#f3ba2f",
+                    "#2a71d0"
+                ],
+                borderColor: "black",
+                borderWidth: 2
+            }
+        ]
+    });
+
+    useEffect(() => {
+        setChartData1({
+            labels: chart1.labels,
+            datasets: [
+                {
+                    label: "Total profit",
+                    data: chart1.data,
+                    backgroundColor: [
+                        "rgba(75,192,192,1)",
+                        "&quot;#ecf0f1",
+                        "#50AF95",
+                        "#f3ba2f",
+                        "#2a71d0"
+                    ],
+                    borderColor: "black",
+                    borderWidth: 2
+                }
+            ]
+        });  
+    },[chart1]);
+
+    useEffect(() => {
+        setChartData2({
+            labels: chart2.labels,
+            datasets: [
+                {
+                    label: "# of Invoices",
+                    data: chart2.data,
+                    backgroundColor: [
+                        "rgba(75,192,192,1)",
+                        "&quot;#ecf0f1",
+                        "#50AF95",
+                        "#f3ba2f",
+                        "#2a71d0"
+                    ],
+                    borderColor: "black",
+                    borderWidth: 2,
+                    hoverOffset: 9
+                }
+            ]
+        });  
+    },[chart2]);
+
+    useEffect(() => {
+        setChartData3({
+            labels: chart3.labels,
+            datasets: [
+                {
+                    label: "Total profit",
+                    data: chart3.data,
+                    backgroundColor: [
+                        "rgba(75,192,192,1)",
+                        "&quot;#ecf0f1",
+                        "#50AF95",
+                        "#f3ba2f",
+                        "#2a71d0"
+                    ],
+                    borderColor: "black",
+                    borderWidth: 2,
+                    hoverOffset: 9
+                }
+            ]
+        });  
+    },[chart3]);
 
     Chart.register(CategoryScale);
 
@@ -70,21 +195,21 @@ function CompanyDetail() {
                         <i class="fas fa-table me-1"></i>
                         Line Chart
                     </div>
-                    <LineChart chartData={chartData} />
+                    <LineChart chartData={chartData1} />
                 </div>
                 <div className={"card homecard mb-1 w-24 mx-1 "}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
                     </div>
-                    <PieChart chartData={chartData}/>
+                    <PieChart chartData={chartData2}/>
                 </div>
                 <div className={"card homecard mb-1 w-24 "}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
                     </div>
-                    <PieChart chartData={chartData}/>
+                    <PieChart chartData={chartData3}/>
                 </div>
             </div>
 
