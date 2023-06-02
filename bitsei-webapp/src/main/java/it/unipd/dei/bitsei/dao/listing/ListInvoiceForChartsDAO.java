@@ -96,19 +96,26 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
      */
     private final Date toWarningDate;
 
-    private final boolean filterByBusinessName;
-
+    private final boolean filterByCustomerId;
+ 
     /**
      * List of the business names of the customers associated to the invoices to list
-     */
-    private final List<String> fromBusinessName;
+    */
+    private final List<Integer> fromCustomerId;
 
-    private final boolean filterByProductTitle;
+    private final boolean filterByProductId;
 
     /**
      * List of the product titles of the products associated to the invoices to list
+    */
+    private final List<Integer> fromProductId;
+
+    private final boolean filterByStatus;
+
+    /**
+     * List of the status of the invoices to be considered
      */
-    private final List<String> fromProductTitle;
+    private final List<Integer> fromStatus;
 
     private String FilterBetween(String field_name, boolean enableNull) {
         enableNull = false;
@@ -146,8 +153,9 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
      * @param toInvoiceDate        the invoice date from which to end the filtering
      * @param fromWarningDate      the warning date from which to start the filtering
      * @param toWarningDate        the warning date from which to end the filtering
-     * @param fromBusinessName     the business name from which to start the filtering
-     * @param fromProductTitle     the product title from which to start the filtering
+     * @param fromCustomerId       the customer id from which to start the filtering
+     * @param fromProductId        the product id from which to start the filtering
+     * @param fromStatus           the statuses from which to filter
      * @param filterByDiscount     true if the discount filter is enabled, false otherwise
      * @param filterByTotal        true if the total filter is enabled, false otherwise
      * @param filterByPfr          true if the pension fund refund filter is enabled, false otherwise
@@ -155,6 +163,7 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
      * @param filterByWarningDate  true if the warning date filter is enabled, false otherwise
      * @param filterByBusinessName true if the business name filter is enabled, false otherwise
      * @param filterByProductTitle true if the product title filter is enabled, false otherwise
+     * @param filterByStatus true if the status filter is enabled, false otherwise
      */
     public ListInvoiceForChartsDAO(final Connection con, int ownerId, int companyId,
                                    final boolean filterByTotal, final double fromTotal, final double toTotal,
@@ -162,8 +171,9 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
                                    final boolean filterByPfr, final double fromPfr, final double toPfr,
                                    final boolean filterByInvoiceDate, final Date fromInvoiceDate, final Date toInvoiceDate,
                                    final boolean filterByWarningDate, final Date fromWarningDate, final Date toWarningDate,
-                                   final boolean filterByBusinessName, final List<String> fromBusinessName,
-                                   final boolean filterByProductTitle, final List<String> fromProductTitle) {
+                                   final boolean filterByCustomerId, final List<Integer> fromCustomerId,
+                                   final boolean filterByProductId, final List<Integer> fromProductId,
+                                   final boolean filterByStatus, final List<Integer> fromStatus) {
         super(con);
 
         this.ownerId = ownerId;
@@ -189,11 +199,14 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
         this.fromWarningDate = fromWarningDate;
         this.toWarningDate = toWarningDate;
 
-        this.filterByBusinessName = filterByBusinessName;
-        this.fromBusinessName = fromBusinessName;
+        this.filterByCustomerId = filterByCustomerId;
+        this.fromCustomerId = fromCustomerId;
 
-        this.filterByProductTitle = filterByProductTitle;
-        this.fromProductTitle = fromProductTitle;
+        this.filterByProductId = filterByProductId;
+        this.fromProductId = fromProductId;
+
+        this.filterByStatus = filterByStatus;
+        this.fromStatus = fromStatus;
     }
 
     /**
@@ -201,7 +214,8 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
      */
     @Override
     protected void doAccess() throws SQLException {
-        String init_query = "SELECT i.*,c.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
+        //String init_query = "SELECT i.*,c.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
+        String init_query = "SELECT i.*,c.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ResultSet rs_check = null;
@@ -252,11 +266,14 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
             if (filterByWarningDate)
                 query.append(FilterBetween("i.warning_date", true));
 
-            if (filterByBusinessName)
-                query.append(FilterByStringList("c.business_name", fromBusinessName.size()));
+            if (filterByCustomerId)
+                query.append(FilterByStringList("c.customer_id", fromCustomerId.size()));
 
-            if (filterByProductTitle)
-                query.append(FilterByStringList("p.title", fromProductTitle.size()));
+            if (filterByProductId)
+                query.append(FilterByStringList("p.product_id", fromProductId.size()));
+
+            if(filterByStatus)
+                query.append(FilterByStringList("i.status", fromStatus.size()));
 
             query.append(";");
 
@@ -291,16 +308,22 @@ public class ListInvoiceForChartsDAO extends AbstractDAO<List<InvoiceCustomer>> 
                 pstmt.setDate(i++, toWarningDate);
                 param += "fromWarningDate: " + fromWarningDate + " toWarningDate: " + toWarningDate + " ";
             }
-            if (filterByBusinessName) {
-                for (int j = 0; j < fromBusinessName.size(); j++) {
-                    param += "fromBusinessName(" + j + "): " + fromBusinessName.get(j) + " ";
-                    pstmt.setString(i++, fromBusinessName.get(j));
+            if (filterByCustomerId) {
+                for (int j = 0; j < fromCustomerId.size(); j++) {
+                    param += "fromCustomerId(" + j + "): " + fromCustomerId.get(j) + " ";
+                    pstmt.setInt(i++, fromCustomerId.get(j));
                 }
             }
-            if (filterByProductTitle) {
-                for (int j = 0; j < fromProductTitle.size(); j++) {
-                    param += "fromProductTitle(" + j + "): " + fromProductTitle.get(j) + " ";
-                    pstmt.setString(i++, fromProductTitle.get(j));
+            if (filterByProductId) {
+                for (int j = 0; j < fromProductId.size(); j++) {
+                    param += "fromProductId(" + j + "): " + fromProductId.get(j) + " ";
+                    pstmt.setInt(i++, fromProductId.get(j));
+                }
+            }
+            if(filterByStatus) {
+                for (int j = 0; j < fromStatus.size(); j++) {
+                    param += "fromStatus(" + j + "): " + fromStatus.get(j) + " ";
+                    pstmt.setInt(i++, fromStatus.get(j));
                 }
             }
 
