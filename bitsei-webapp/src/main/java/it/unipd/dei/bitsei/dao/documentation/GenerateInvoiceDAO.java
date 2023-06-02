@@ -232,7 +232,7 @@ public final class GenerateInvoiceDAO extends AbstractDAO<List<Object>> {
             pstmt.setInt(6, this.invoice_id);
             LOGGER.info("QUERY: " + pstmt.toString());
             pstmt.executeUpdate();
-            LOGGER.info("Invoice status successfully set to 1.");
+            LOGGER.info("Invoice status successfully set to 2.");
 
 
             pstmt = con.prepareStatement(STATEMENT_SELECT_INVOICE);

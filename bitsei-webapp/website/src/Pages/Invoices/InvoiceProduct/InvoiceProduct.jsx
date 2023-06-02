@@ -46,9 +46,10 @@ function InvoiceProduct() {
             .then((response) => {
                 setInvoiceProducts(
                     response.data["resource-list"].map((item) => {
+                        console.log(item)
                         return {
                             ...item.invoiceproduct,
-                            product_name: products.filter(product => product.product_id === 1)[0].title
+                            product_name: products.filter(product => product.product_id === item.invoiceproduct.product_id)[0].title
                         }
                     })
                 );
@@ -59,7 +60,8 @@ function InvoiceProduct() {
 
 
     const editHandler = (id) => {
-        const invoiceProduct = invoiceProducts.find((ip) => ip.invoice_id === id);
+        const invoiceProduct = invoiceProducts.find((ip) => ip.invoice_id === parseInt(invoice_id) && ip.product_id === id);
+        console.log(invoiceProduct)
         if (invoiceProduct) {
             Object.keys(invoiceProduct).forEach((key) => {
                 setValue(key, invoiceProduct[key]);
@@ -71,7 +73,7 @@ function InvoiceProduct() {
     };
 
     const onEditItem = (data) => {
-        console.log( data);
+        console.log(data);
         gate
             .editInvoiceItem(
                 {
@@ -86,7 +88,7 @@ function InvoiceProduct() {
                 },
                 company_id,
                 invoice_id,
-                data.product_id
+                actionHandler
             )
             .then((response => {
                 setInvoiceProducts(invoiceProducts.map((ip) => {
@@ -94,7 +96,7 @@ function InvoiceProduct() {
                         return {
                             ...ip,
                             ...data,
-                            product_name: products.filter(product => product.product_id === 1)[0].title,
+                            product_name: products.filter(product => product.product_id === data.product_id)[0].title,
                             related_price: data.related_price ? parseFloat(data.related_price) : 0,
                             product_id: parseInt(data.product_id),
                             quantity: parseInt(data.quantity),
@@ -133,7 +135,7 @@ function InvoiceProduct() {
                 console.log(data.product_id)
                 setInvoiceProducts([...invoiceProducts, {
                     ...data,
-                    product_name: products.filter(product => product.product_id === 1)[0].title,
+                    product_name: products.filter(product => product.product_id === data.product_id)[0].title,
                     related_price: data.related_price ? parseFloat(data.related_price) : 0,
                     product_id: parseInt(data.product_id),
                     quantity: parseInt(data.quantity),
@@ -196,14 +198,14 @@ function InvoiceProduct() {
 
                         <tbody>
                         {invoiceProducts.map((ip) => {
-                            return ip.invoice_id === actionHandler ? (
+                            return ip.product_id === actionHandler ? (
                                 <tr key={ip.invoice_id}>
                                     <td colSpan={7}>
                                         <Form
                                             onSubmit={handleSubmit(onEditItem)}
                                             product_id={ip.product_id}
                                             register={register}
-                                            products={products}
+                                            products={products.filter((product) => { return !invoiceProducts.some((ipp) => ipp.product_id === product.product_id && ip.product_id !== product.product_id) })}
                                             setValue={setValue}
                                         />
                                     </td>
@@ -220,7 +222,7 @@ function InvoiceProduct() {
                                         <button
                                             className="btn btn-primary btn-sm active btn-block mx-auto"
                                             type="button"
-                                            onClick={() => editHandler(ip.invoice_id)}
+                                            onClick={() => editHandler(ip.product_id)}
                                         >
                                             Edit
                                         </button>
@@ -241,7 +243,7 @@ function InvoiceProduct() {
                                     <Form
                                         onSubmit={handleSubmit(onAddItem)}
                                         register={register}
-                                        products={products}
+                                        products={products.filter((product) => { return !invoiceProducts.some((ip) => ip.product_id === product.product_id) })}
                                         setValue={setValue}
                                     />
                                 </td>
