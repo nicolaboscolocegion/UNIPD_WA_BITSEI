@@ -19,7 +19,7 @@ const user = {
 }
 
 const me = {
-    userInfo: () => api.get("/api/v1/user/me"),
+    userInfo: () => api.get("rest/user"),
 }
 
 const companies = {
