@@ -29,7 +29,7 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
     /**
      * The SQL statement to be executed.
      */
-    private static final String STATEMENT = "UPDATE bitsei_schema.\"Invoice_Product\" SET quantity = ?, unit_price = ?, related_price = ?, related_price_description = ?, purchase_date = ? WHERE invoice_id = ? AND product_id = ?";
+    private static final String STATEMENT = "UPDATE bitsei_schema.\"Invoice_Product\" SET quantity = ?, unit_price = ?, related_price = ?, related_price_description = ?, product_id = ? WHERE invoice_id = ? AND product_id = ?";
     private static final String FETCH_INVOICE_PRODUCTS = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ?;";
     private static final String INVOICE_TOTAL_STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET total = ? WHERE invoice_id = ?;";
 
@@ -49,6 +49,11 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
     private final int company_id;
 
     /**
+     * The product_id of this session, to be checked for security reasons.
+     */
+    private final int product_id;
+
+    /**
      * Creates a new object for updating an invoice product present in the database.
      *
      * @param con            the connection to the database.
@@ -56,7 +61,7 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
      * @param owner_id       the owner_id of this session, to be checked for security reasons.
      * @param company_id     the company_id of this session, to be checked for security reasons.
      */
-    public UpdateInvoiceProductDAO(final Connection con, final InvoiceProduct invoiceProduct, final int owner_id, final int company_id) {
+    public UpdateInvoiceProductDAO(final Connection con, final InvoiceProduct invoiceProduct, final int owner_id, final int company_id, final int product_id) {
         super(con);
 
         if (invoiceProduct == null) {
@@ -67,6 +72,7 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
         this.invoiceProduct = invoiceProduct;
         this.owner_id = owner_id;
         this.company_id = company_id;
+        this.product_id = product_id;
     }
 
     @Override
@@ -81,7 +87,7 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
             pstmt.setInt(1, company_id);
             pstmt.setInt(2, owner_id);
             pstmt.setInt(3, invoiceProduct.getInvoice_id());
-            pstmt.setInt(4, invoiceProduct.getProduct_id());
+            pstmt.setInt(4, product_id);
             rs = pstmt.executeQuery();
             if (!rs.next()) {
                 LOGGER.error("Error on fetching data from database");
@@ -109,7 +115,7 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
 
             pstmt = con.prepareStatement(FETCH);
             pstmt.setInt(1, invoiceProduct.getInvoice_id());
-            pstmt.setInt(2, invoiceProduct.getProduct_id());
+            pstmt.setInt(2, product_id);
             rs = pstmt.executeQuery();
             InvoiceProduct ip = null;
 
@@ -122,9 +128,20 @@ public final class UpdateInvoiceProductDAO extends AbstractDAO {
             pstmt.setDouble(2, invoiceProduct.getUnit_price());
             pstmt.setDouble(3, invoiceProduct.getRelated_price());
             pstmt.setString(4, invoiceProduct.getRelated_price_description());
-            pstmt.setDate(5, invoiceProduct.getPurchase_date());
+            pstmt.setInt(5, invoiceProduct.getProduct_id());
             pstmt.setInt(6, invoiceProduct.getInvoice_id());
-            pstmt.setInt(7, invoiceProduct.getProduct_id());
+            pstmt.setInt(7, product_id);
+
+            LOGGER.warn(
+                            invoiceProduct.getQuantity() + " " +
+                            invoiceProduct.getUnit_price() + " " +
+                            invoiceProduct.getRelated_price() + " " +
+                            invoiceProduct.getRelated_price_description() + " " +
+                            invoiceProduct.getProduct_id() + " " +
+                            invoiceProduct.getInvoice_id() + " " +
+                            product_id
+            );
+
 
             pstmt.execute();
 

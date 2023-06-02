@@ -73,7 +73,7 @@ function InvoiceProduct() {
     };
 
     const onEditItem = (data) => {
-        console.log( data);
+        console.log(data);
         gate
             .editInvoiceItem(
                 {
@@ -88,7 +88,7 @@ function InvoiceProduct() {
                 },
                 company_id,
                 invoice_id,
-                data.product_id
+                actionHandler
             )
             .then((response => {
                 setInvoiceProducts(invoiceProducts.map((ip) => {

@@ -63,7 +63,7 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
             ip = InvoiceProduct.fromJSON(requestStream);
 
             ip.setInvoice_id(invoice_id);
-            ip.setProduct_id(product_id);
+//            ip.setProduct_id(product_id);
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
@@ -76,7 +76,7 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
 
 
             // creates a new object for accessing the database and update the invoice product
-            new UpdateInvoiceProductDAO(con, ip, owner_id, company_id).access();
+            new UpdateInvoiceProductDAO(con, ip, owner_id, company_id, product_id).access();
 
             m = new Message(String.format("Invoice product successfully updated."));
             LOGGER.info("Invoice product successfully updated in the database.");
