@@ -30,9 +30,9 @@ function AddProduct() {
     };
 
     const fields = [
-        [{name: "title", type: "string"}, {name: "defaultPrice", type: "int"}],
-        [{name: "logo", type: "string"}, {name: "measurementUnit", type: "string"}],
-        [{name: "description", type: "string"}],
+        [{name: "title", type: "string"}, {name: "default_price", type: "int"}],
+        [{name: "measurement_unit", type: "string"}, {name: "description", type: "string"} ],
+        [{name: "logo", type: "image"}],
     ]
 
     return (
