@@ -1,9 +1,13 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
+import {connect, useSelector} from "react-redux";
+import {toast} from "react-toastify";
+import {clearCompanies} from "../../../Store/companies/listsThunk";
 import gate from "../../../gate";
+import {history} from "../../../index";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
-import {toast} from "react-toastify";
+import Image from "../../../Components/Image/Image";
 
 function EditProduct() {
     const [pending, setPending] = useState(false);
@@ -11,26 +15,25 @@ function EditProduct() {
     const { register, handleSubmit, reset } = useForm();
 
     useEffect(() => {
-        setPending(true);
-        gate
-            .getProduct(product_id,company_id)
-            .then(response => {
-                console.log(response.data.product);
-                const product = response.data.product;
-                console.log(product)
-                reset({
-                    title: product.title,
-                        defaultPrice: product.defaultPrice,
-                        logo: product.logo,
-                        measurementUnit: product.measurementUnit,
-                        description: product.description,
-                })
-                setPending(false);
-            }).catch( () => {
-                toast.error("Something went wrong.");
-            }
+            setPending(true);
+            gate
+                .getProduct(product_id,company_id)
+                .then(response => {
+                    console.log(response.data.product);
+                    const product = response.data.product;
+                    console.log(product)
+                    reset({
+                        title: product.title,
+                            default_price: product.default_price,
+                            measurement_unit: product.measurement_unit,
+                            description: product.description,
+                    })
+                    setPending(false);
+                }).catch( () => {
+                    toast.error("Something went wrong.");
+                }
 
-        );
+            );
     }, [product_id, company_id]);
 
 
@@ -42,15 +45,15 @@ function EditProduct() {
 
         const formData = new FormData();
         formData.append("title", data.title);
-        formData.append("defaultPrice", data.defaultPrice);
-        formData.append("logo", data.logo);
-        formData.append("measurementUnit", data.measurementUnit);
+        formData.append("default_price", data.default_price);
+        formData.append("measurement_unit", data.measurement_unit);
         formData.append("description", data.description);
+        //logoRef.current.files[0] && data.append("logo", logoRef.current.files[0]);
 
         console.log(data)
 
         gate
-            .editProduct({product: {companyID: company_id, ...data}}, company_id, product_id)
+            .editProduct({product: {companyID: parseInt(company_id), ...data}}, company_id, product_id)
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
@@ -62,9 +65,8 @@ function EditProduct() {
 
 
     const fields = [
-        [{name: "title", type: "string"}, {name: "defaultPrice", type: "int"}],
-        [{name: "logo", type: "string"}, {name: "measurementUnit", type: "string"}],
-        [{name: "description", type: "string"}],
+        [{name: "title", type: "string"}, {name: "default_price", type: "int"}],
+        [{name: "measurement_unit", type: "string"}, {name: "description", type: "string"}]
     ]
 
     return (

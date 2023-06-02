@@ -330,20 +330,30 @@ public class ListInvoiceByFiltersDAO extends AbstractDAO<List<InvoiceContainer>>
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
+
+                int tmpWarning_number = rs.getInt("warning_number") != 0 ? rs.getInt("warning_number") : -1;
+                String tmpWarning_pdf_file = rs.getString("warning_pdf_file") != null ? rs.getString("warning_pdf_file") : "";
+                String tmpInvoice_number = rs.getString("invoice_number") != null ? rs.getString("invoice_number") : "";
+                String tmpInvoice_pdf_file = rs.getString("invoice_pdf_file") != null ? rs.getString("invoice_pdf_file") : "";
+                String tmpInvoice_xml_file = rs.getString("invoice_xml_file") != null ? rs.getString("invoice_xml_file") : "";
+                Double tmpTotal = rs.getDouble("total") != 0 ? rs.getDouble("total") : 0.00;
+                Double tmpDiscount = rs.getDouble("discount") != 0 ? rs.getDouble("discount") : 0.00;
+                Double tmpPension_fund_refund = rs.getDouble("pension_fund_refund") != 0 ? rs.getDouble("pension_fund_refund") : 0.00;
+
                 invoices.add(new InvoiceContainer(
                         rs.getInt("invoice_id"),
                         rs.getInt("customer_id"),
                         rs.getInt("status"),
-                        rs.getInt("warning_number"),
+                        tmpWarning_number,
                         rs.getDate("warning_date"),
-                        rs.getString("warning_pdf_file"),
-                        rs.getString("invoice_number"),
+                        tmpWarning_pdf_file,
+                        tmpInvoice_number,
                         rs.getDate("invoice_date"),
-                        rs.getString("invoice_pdf_file"),
-                        rs.getString("invoice_xml_file"),
-                        rs.getDouble("total"),
-                        rs.getDouble("discount"),
-                        rs.getDouble("pension_fund_refund"),
+                        tmpInvoice_pdf_file,
+                        tmpInvoice_xml_file,
+                        tmpTotal,
+                        tmpDiscount,
+                        tmpPension_fund_refund,
                         rs.getBoolean("has_stamp"),
                         rs.getString("business_name")
                 ));

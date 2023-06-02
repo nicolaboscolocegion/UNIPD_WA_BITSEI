@@ -65,7 +65,7 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
     @Override
     protected void doAccess() throws SQLException {
         //final String STATEMENT = "SELECT p.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE ((cmp.owner_id = ?) OR 1=1) AND ((cmp.company_id = ?) OR 1=1)";
-        final String STATEMENT = "SELECT DISTINCT p.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id JOIN bitsei_schema.\"Product\" AS p ON cmp.company_id = p.company_id WHERE cmp.owner_id = ? AND cmp.company_id = ?;";
+        final String STATEMENT = "SELECT * FROM bitsei_schema.\"Product\" WHERE company_id = ?;";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ResultSet rs_check = null;
@@ -96,8 +96,7 @@ public class ListProductDAO extends AbstractDAO<List<Product>> {
         // perform the actual search
         try {
             pstmt = con.prepareStatement(STATEMENT);
-            pstmt.setInt(1, ownerId);
-            pstmt.setInt(2, companyId);
+            pstmt.setInt(1, companyId);
             rs = pstmt.executeQuery();
 
             products = parseProductRS(rs);
