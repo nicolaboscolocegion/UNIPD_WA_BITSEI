@@ -28,7 +28,7 @@
             <staticText>
                 <reportElement style="Title" x="0" y="13" width="263" height="33" uuid="3eb8e1ab-7e38-4368-89db-62b6501a8c67"/>
                 <textElement verticalAlignment="Middle"/>
-                <text><![CDATA[Customer List]]></text>
+                <text><![CDATA[Customer Item]]></text>
             </staticText>
             <textField>
                 <reportElement x="0" y="50" width="240" height="20" uuid="78e860d4-5cb1-4f1f-a54b-0bd9b587ec28"/>

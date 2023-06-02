@@ -115,12 +115,12 @@ Since: 1.0
 
     <div id="listCustomersByCompanyID-div" class="column">
         <h3>Filter Invoices By Customer(s)</h3>
-        <button type="button" id="listCustomersByCompanyID-button">List all the customers</button><br/>
+        <button type="button" id="listCustomersByCompanyID-button">Item all the customers</button><br/>
     </div>
 
     <div id="listProductsByCompanyID-div" class="column">
         <h3>Filter Invoices By Product(s)</h3>
-        <button type="button" id="listProductsByCompanyID-button">List all the products</button><br/>
+        <button type="button" id="listProductsByCompanyID-button">Item all the products</button><br/>
     </div>
 </div>
 

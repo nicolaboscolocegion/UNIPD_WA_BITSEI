@@ -15,13 +15,11 @@
  */
 package it.unipd.dei.bitsei.utils;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 /**
- * HashGenerator Generates a random hash with SHA-256 algorithm.
- * This class is used to generate a random hash for the reset-password of a user.
+ * HashGenerator Generates a random UUID.
+ * This class is used to generate a random UUID for the reset-password of a user.
  *
  * @author BITSEI GROUP
  * @version 1.00
@@ -36,18 +34,15 @@ public class HashGenerator {
         // empty constructor
     }
 
-    /** Generate a random hash based on the random UUID and the SHA-256 algorithm.
+    /** Generate a random UUID.
      *
-     * @return a random hash with SHA-256 algorithm
+     * @return a random UUID.
      */
     public static String generateHash() {
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] hash = digest.digest(java.util.UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8));
-        return new String(hash, StandardCharsets.UTF_8);
+        return UUID.randomUUID().toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(generateHash());
     }
 }

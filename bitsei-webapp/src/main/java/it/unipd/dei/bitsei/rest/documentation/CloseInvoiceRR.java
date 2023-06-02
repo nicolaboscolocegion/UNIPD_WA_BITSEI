@@ -161,18 +161,21 @@ public class CloseInvoiceRR extends AbstractRR {
             exportReport(ldr, absPath, "/jrxml/Invoice.jrxml", fileName, map);
 
             //sending mail with attachment notification to customer
-            MailManager.sendAttachmentMail(c.getEmailAddress(), "New invoice warning from " + map.get("customer_name"), "Dear " + c.getBusinessName() + "\na new invoice warning has been sent from " + map.get("customer_name") + " to you. Please do not reply to this message.", "text/html;charset=UTF-8", absPath + "/pdf/" + fileName, "application/pdf", fileName);
+            MailManager.sendAttachmentMail(c.getEmailAddress(), "New invoice warning from " + map.get("customer_name"), "Dear " + c.getBusinessName() + "\na new invoice warning has been sent from " + map.get("company_name") + " to you. Please do not reply to this message.", "text/html;charset=UTF-8", absPath + "/pdf/" + fileName, "application/pdf", fileName);
 
             //sending mail notification to company owner
-            MailManager.sendMail(req.getSession().getAttribute("email").toString(), "New invoice warning for " + map.get("customer_name"), "Attention: the invoice warning " + fileName + " has been sent to " + c.getBusinessName() + "(" + c.getEmailAddress() + ").", "text/html;charset=UTF-8");
+            if (Boolean.parseBoolean(out.get(14).toString())) {
+                MailManager.sendMail(req.getSession().getAttribute("email").toString(), "New invoice warning for " + map.get("customer_name"), "Attention: the invoice warning " + fileName + " has been sent to " + c.getBusinessName() + "(" + c.getEmailAddress() + ").", "text/html;charset=UTF-8");
+            }
 
             //sending telegram notification to company owner
             String telegram_chat_id = (String) out.get(12);
             if (telegram_chat_id != null && !telegram_chat_id.equals("")) {
-                BitseiBot bt = new BitseiBot();
-                bt.sendMessageWithAttachments((String) out.get(12), "New invoice warning for " + map.get("customer_name") + "\n\nAttention: the invoice warning " + fileName + " has been sent to " + c.getBusinessName() + "(" + trim(c.getEmailAddress()) + ").", absPath + "/pdf/" + fileName);
+                if (Boolean.parseBoolean(out.get(13).toString())) {
+                    BitseiBot bt = new BitseiBot();
+                    bt.sendMessageWithAttachments((String) out.get(12), "New invoice warning for " + map.get("customer_name") + "\n\nAttention: the invoice warning " + fileName + " has been sent to " + c.getBusinessName() + "(" + trim(c.getEmailAddress()) + ").", absPath + "/pdf/" + fileName);
+                }
             }
-
             res.setStatus(HttpServletResponse.SC_OK);
 
         } catch (SQLException ex) {

@@ -3,7 +3,6 @@ package it.unipd.dei.bitsei.rest.documentation;
 import it.unipd.dei.bitsei.dao.documentation.GetDocumentDAO;
 import it.unipd.dei.bitsei.resources.Actions;
 import it.unipd.dei.bitsei.resources.Message;
-import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,6 +1,6 @@
 package it.unipd.dei.bitsei.servlet;
 
-import it.unipd.dei.bitsei.dao.user.GetUserDAO;
+import it.unipd.dei.bitsei.dao.listing.ListInvoiceProductDAO;
 import it.unipd.dei.bitsei.resources.User;
 import it.unipd.dei.bitsei.resources.LogContext;
 import it.unipd.dei.bitsei.resources.Message;
@@ -10,6 +10,10 @@ import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
 import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.product.CreateProductRR;
+import it.unipd.dei.bitsei.rest.product.DeleteProductRR;
+import it.unipd.dei.bitsei.rest.product.GetProductRR;
+import it.unipd.dei.bitsei.rest.product.UpdateProductRR;
 import it.unipd.dei.bitsei.rest.user.*;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import it.unipd.dei.bitsei.rest.documentation.*;
@@ -90,6 +94,11 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
                 return;
             }
 
+            // if the requested resource was a product, delegate its processing and return
+            if (processProduct(req, res)) {
+                return;
+            }
+
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoice(req, res)) {
                 return;
@@ -97,6 +106,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoiceProduct(req, res)) {
+                return;
+            }
+
+            if(processListInvoiceProduct(req, res)){
                 return;
             }
 
@@ -304,9 +317,13 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         String URI = req.getRequestURI();
         String[] parts = URI.split("/");
-        Integer company_id = Integer.parseInt(parts[7]);
-        Integer invoice_id = Integer.parseInt(parts[5]);
-        Integer document_type = Integer.parseInt(parts[3]);
+        String tmp = "\"URI: \" + URI + \" Parts:";
+        for(int i=0; i < parts.length; i++)
+            tmp += i + " " + parts[i] + " ";
+        LOGGER.info(tmp);
+        Integer document_type = Integer.parseInt(parts[4]);
+        Integer company_id = Integer.parseInt(parts[6]);
+        Integer invoice_id = Integer.parseInt(parts[8]);
         int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
         if (document_type < 0 || document_type > 2) {
             LOGGER.error("Document type not valid: " + parts[3]);
@@ -748,6 +765,82 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
      * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
      * @throws Exception if any error occurs.
      */
+    private boolean processProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+
+        Message m = null;
+
+        final String method = req.getMethod();
+        RestURIParser r = null;
+
+        try {
+            r = new RestURIParser(req.getRequestURI());
+        } catch (IllegalArgumentException ex) {
+            LOGGER.error("URI INVALID: \n" + req.getRequestURI());
+            return false;
+        }
+
+
+
+        if (!r.getResource().equals("product")) {
+            LOGGER.info("Risorsa richiesta: " + r.getResource());
+            return false;
+        }
+
+
+        if (r.getResourceID() == -1) {
+
+            switch (method) {
+
+                case "POST":
+                    new CreateProductRR(req, res, getConnection(), r).serve();
+                    break;
+                default:
+                    LOGGER.warn("Unsupported operation for URI /product: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /product.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        else {
+            switch (method) {
+                case "GET":
+                    new GetProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "DELETE":
+                    new DeleteProductRR(req, res, getConnection(), r).serve();
+                    break;
+                case "PUT":
+                    new UpdateProductRR(req, res, getConnection(), r).serve();
+                    break;
+
+
+                default:
+                    LOGGER.warn("Unsupported operation for URI /product: %s.", method);
+
+                    m = new Message("Unsupported operation for URI /product.", "E4A5",
+                            String.format("Requested operation %s.", method));
+                    res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    m.toJSON(res.getOutputStream());
+                    break;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Checks whether the request if for an {@link User} resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for an {@code User}; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
     private boolean processInvoice(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
 
         Message m = null;
@@ -853,6 +946,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         companyID = Integer.parseInt(parts[7]);
 
+        LOGGER.warn(String.valueOf(companyID), invoiceID, productID);
 
         switch (method) {
             case "GET":
@@ -884,6 +978,42 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
     }
 
+
+    /**
+     * Checks whether the request is for a list of {@link Invoice}s resource and, in case, processes it.
+     *
+     * @param req the HTTP request.
+     * @param res the HTTP response.
+     * @return {@code true} if the request was for a list of {@code Invoice}s; {@code false} otherwise.
+     * @throws Exception if any error occurs.
+     */
+        private boolean processListInvoiceProduct(final HttpServletRequest req, final HttpServletResponse res) throws Exception {
+            final String method = req.getMethod();
+
+            String path = req.getRequestURI();
+            Message m = null;
+
+            // the requested resource was not a company
+            if (path.lastIndexOf("rest/invoice") <= 0) {
+                return false;
+            }
+
+            // strip everything until after the /invoice
+            path = path.substring(path.lastIndexOf("invoice") + 7);
+
+            // the request URI is: /company
+            // if method GET, list companies
+            // if method POST, create company
+            if (path.matches("/\\d+/\\d+")) {
+                // the request URI is: /company/image/{id}
+                // if method GET, get company image
+                if (method.equals("GET")) {
+                    new ListInvoiceProductRR(req, res, getConnection()).serve();
+                }
+            }
+            return true;
+
+        }
 
     /**
      * Checks whether the request is for a list of {@link Invoice}s resource and, in case, processes it.
@@ -1047,7 +1177,7 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         }
         final int company_id = r.getCompanyID();
 
-        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "startPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromBusinessName", "fromProductTitle");
+        List<String> filterList = List.of("fromTotal", "toTotal", "fromDiscount", "toDiscount", "fromPfr", "toPfr", "fromInvoiceDate", "toInvoiceDate", "fromWarningDate", "toWarningDate", "fromCustomerId", "fromProductId", "fromStatus");
         // the request URI contains filter(s)
         Map<String, String> requestData = checkFilterPath(filterList, req, res, m);;
 
@@ -1093,27 +1223,33 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             // Parse every key-value pair and add it to the map
             for(String line : requestLines) {
                 String[] keyValue = line.split(":");
-
                 // Clean the data before parsing
                 String key = keyValue[0].trim().replaceAll("\"", "");
                 key = key.replaceAll("\\s+", "");
                 key = key.replaceAll("[\\[\\](){}]","");
-                String value = keyValue[1].trim().replaceAll("\"", "");
-                value = value.replaceAll("[\\[\\](){}]","");
 
-                if(!filterList.contains(key)) {
-                    LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+                if(keyValue.length > 1) {
+                    String value = keyValue[1].trim().replaceAll("\"", "");
+                    value = value.replaceAll("[\\[\\](){}]","");
 
-                    m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
-                            String.format("Requested URI: %s.", req.getRequestURI()));
-                    res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    m.toJSON(res.getOutputStream());
-                    return null;
+                    if(!filterList.contains(key)) {
+                        LOGGER.warn("## checkPath func: Filter {" + key + "} Not Supported. Requested URI: %s. ##", req.getRequestURI());
+                        LOGGER.warn("## checkPath func: Available filters: " + filterList + " ##");
+                        m = new Message("## checkPath func: Filter {" + key + "} Not Supported. ##", "E4A7",
+                                String.format("Requested URI: %s.", req.getRequestURI()));
+                        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        m.toJSON(res.getOutputStream());
+                        return null;
+                    }
+                    else {
+                        requestData.put(key, value);
+                        LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
+                    }
                 }
                 else {
-                    requestData.put(key, value);
-                    LOGGER.info("##  checkPath func: Filter {" + key + "} found! Value {" + value + "} ##");
+                    LOGGER.warn("## checkPath func: KeyValue split for {" + key + "} has length < 1. Requested URI: %s. ##", req.getRequestURI());
                 }
+
             }
         } catch (Exception e) {
             LOGGER.error("## checkPath func: Unexpected exception thrown: " + e + " ##");
