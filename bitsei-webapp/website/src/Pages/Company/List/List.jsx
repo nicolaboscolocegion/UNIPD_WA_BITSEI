@@ -33,7 +33,6 @@ function List({getLists, setActiveCompanyId}) {
                     <Table id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>Logo</th>
                             <th>Name</th>
                             <th>Address</th>
                             <th>VAT Number</th>
@@ -44,9 +43,6 @@ function List({getLists, setActiveCompanyId}) {
                         <tbody>
                         {companies.items.map((company) => (
                             <tr>
-                                <td>
-                                    <Image id={company.company_id}/>
-                                </td>
                                 <td>{company.business_name ? company.business_name : ''}</td>
                                 <td>{`${company.address ? company.address : ''} ${company.postal_code ? company.postal_code : '' } ${company.city ? company.city : ''} ${company.province ? company.province : '' }`}</td>
                                 <td>{company.vat_number ? company.vat_number : ''}</td>
