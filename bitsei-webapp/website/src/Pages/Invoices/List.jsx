@@ -16,10 +16,24 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Sidebar from "../../Components/SideBar/SideBar";
 import {components, default as ReactSelect} from "react-select";
 import {parse} from "@fortawesome/fontawesome-svg-core";
-import {FaCheck, FaDollarSign, FaEye, FaFilePdf, FaLock, FaLockOpen, FaPencilAlt, FaTrash} from "react-icons/fa";
+import {
+    FaCheck,
+    FaDog,
+    FaDollarSign,
+    FaDolly,
+    FaEye,
+    FaFilePdf,
+    FaLock,
+    FaLockOpen,
+    FaPencilAlt,
+    FaTrash
+} from "react-icons/fa";
 import {AiFillLock} from "react-icons/ai";
+import {BiError} from "react-icons/bi";
 import {useParams} from "react-router-dom";
 import {BsFiletypeXml} from "react-icons/bs";
+import {ProgressBar} from "react-bootstrap";
+import {faBarsProgress} from "@fortawesome/free-solid-svg-icons";
 
 
 // TODO: Add validation for all fields
@@ -53,10 +67,6 @@ function ListInvoices() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const handleSubmit = () => {
-        setShow(false);
-        console.log("## hSubmit called ##");
-    }
 
     const [orderByOption, setOrderByOption] = useState([
         {value: 0, label: "Status"},
@@ -135,6 +145,7 @@ function ListInvoices() {
     useEffect(() => {
         handleOrderByOptionChange(orderByOptionSelected);
     },[sortedOptionSelected, refreshSort]);
+
 
     const Option = (props) => {
         return (
@@ -245,67 +256,76 @@ function ListInvoices() {
         setDataToSend(tmpDataToSend);
     }
 
+
+    const [isLoading, setIsLoading] = useState(false);
     const handleCloseInvoice = (invoice_id) => {
-        toast.dark('Closing invoice...', { toastId: 'closing-loading-toast', autoClose: false });
+        setIsLoading(true);
+        toast('Closing invoice...', { toastId: 'closing-loading-toast', autoClose: false });
 
         gate
             .closeInvoice(company_id, invoice_id)
             .then((response) => {
+                setIsLoading(false);
                 setRefresh(!refresh);
                 toast.dismiss('closing-loading-toast'); // Hide the loading toast
-                toast.success('Invoice closed correctly!', {
-                    toastId: 'successClosing',
+                toast.success(<>Invoice closed successfully! <AiFillLock /> </>, {
+                    duration: 5000,
+                    closeOnClick: true,
                 });
             })
             .catch((error) => {
+                setIsLoading(false);
                 setRefresh(!refresh);
                 toast.dismiss('closing-loading-toast'); // Hide the loading toast
-                toast.error('Something went wrong in closing invoice', {
-                    toastId: 'errorClosing',
-                });
+                toast.error(<><BiError /> Something went wrong in closing invoice</>);
             });
     };
 
 
     const handleGenerateInvoice = (invoice_id) => {
-        toast.dark('Generating invoice...', { toastId: 'generating-loading-toast', autoClose: false });
+        setIsLoading(true);
+        toast('Generating invoice...', { toastId: 'generating-loading-toast', autoClose: false });
 
         gate
-            .closeInvoice(company_id, invoice_id)
+            .generateInvoice(company_id, invoice_id)
             .then((response) => {
+                setIsLoading(false);
                 setRefresh(!refresh);
                 toast.dismiss('generating-loading-toast'); // Hide the loading toast
-                toast.success('Invoice closed correctly!', {
-                    toastId: 'successClosing',
-                });
+                toast.success(<>Invoice generated successfully! <FaDollarSign/></>);
             })
             .catch((error) => {
+                setIsLoading(false);
                 setRefresh(!refresh);
                 toast.dismiss('generating-loading-toast'); // Hide the loading toast
-                toast.error('Something went wrong in closing invoice', {
-                    toastId: 'errorClosing',
-                });
+                toast.error(<><BiError /> Something went wrong in generating invoice</>);
             });
     };
 
+
     const handleDeleteInvoice = (invoice_id) => {
+        setIsLoading(true);
+
         gate
             .deleteInvoice(company_id, invoice_id)
             .then((response) => {
-                toast.success("Invoice deleted successfully!");
+                setIsLoading(false);
+                toast.success(<>Invoice deleted successfully! <FaTrash /></>);
                 setRefresh(!refresh);
             })
             .catch((error) => {
-                toast.error("Something went wrong in deleting invoice");
+                setIsLoading(false);
+                toast.error(<><BiError /> Something went wrong in deleting invoice</>);
                 setRefresh(!refresh);
             });
     }
+
 
     const handleGetInvoiceDocument = (invoice_id, document_type) => {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
-                toast.success("Invoice documentation fetched correctly!");
+                toast.success(<>Invoice documentation fetched successfully! <FaFilePdf /></>);
                 //Create a Blob from the PDF Stream
                 const file = new Blob([response.data], { type: "application/pdf" });
                 //Build a URL from the file
@@ -315,16 +335,17 @@ function ListInvoices() {
                 pdfWindow.location.href = fileURL;
             })
             .catch((error) => {
-                toast.error("Something went wrong in fetching invoice documentation");
+                toast.error(<><BiError /> Something went wrong in fetching invoice documentation</>);
                 setRefresh(!refresh);
             });
     }
+
 
     const handleSaveInvoiceDocument = (invoice_id, document_type) => {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
-                toast.success("Invoice documentation fetched correctly!");
+                toast.success(<>Invoice documentation fetched successfully! <FaFilePdf /></>);
                 // Create a Blob from the PDF Stream
                 const file = new Blob([response.data], { type: "application/pdf" });
                 // Build a URL from the file with a customized name
@@ -341,7 +362,7 @@ function ListInvoices() {
                 anchorElement.remove();
             })
             .catch((error) => {
-                toast.error("Something went wrong in fetching invoice documentation");
+                toast.error(<><BiError />Something went wrong in fetching invoice documentation</>);
                 setRefresh(!refresh);
             });
     }
@@ -353,8 +374,6 @@ function ListInvoices() {
         </head>
 
         <body>
-
-        <ToastContainer position="top-right" />
             <section>
                 <br/>
                 <div className="container">
@@ -450,6 +469,7 @@ function ListInvoices() {
                                                                 <button
                                                                     onClick={() => handleCloseInvoice(invoice.invoice_id)}
                                                                     title = "Click to change the status to 'Pending'"
+                                                                    disabled={isLoading}
                                                                 >
                                                                     <AiFillLock />
                                                                 </button>;
@@ -459,6 +479,7 @@ function ListInvoices() {
                                                             <button
                                                                 onClick={() => handleGenerateInvoice(invoice.invoice_id)}
                                                                 title = "Click to change the status to 'Closed'"
+                                                                disabled={isLoading}
                                                             >
                                                                 <FaDollarSign />
                                                             </button>;
@@ -466,6 +487,7 @@ function ListInvoices() {
                                                             <button
                                                                 onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 0)}
                                                                 title = "Click to open the Warning File PDF"
+                                                                disabled={isLoading}
                                                             >
                                                                 <FaFilePdf />
                                                             </button>;
@@ -510,20 +532,21 @@ function ListInvoices() {
                                                                     <button
                                                                         onClick={() => toast.success("handleShowInvoiceDetails(invoice.invoice_id)")}
                                                                         title = "Click to see the invoice's details"
+                                                                        disabled={isLoading}
                                                                     >
                                                                         <FaEye />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => toast.success("handleEditInvoice(invoice.invoice_id)")}
                                                                         title = "Click to edit the invoice"
-                                                                        disabled={!isEditable}
+                                                                        disabled={!isEditable || isLoading}
                                                                     >
                                                                         <FaPencilAlt />
                                                                     </button>
                                                                     <button
                                                                         onClick={() => handleDeleteInvoice(invoice.invoice_id)}
                                                                         title = "Click to delete the invoice"
-                                                                        disabled={!isEditable}
+                                                                        disabled={!isEditable || isLoading}
                                                                     >
                                                                         <FaTrash />
                                                                     </button>
