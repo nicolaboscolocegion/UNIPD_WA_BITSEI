@@ -1,15 +1,11 @@
 package it.unipd.dei.bitsei.servlet;
 
 import it.unipd.dei.bitsei.dao.listing.ListInvoiceProductDAO;
-import it.unipd.dei.bitsei.resources.User;
-import it.unipd.dei.bitsei.resources.LogContext;
-import it.unipd.dei.bitsei.resources.Message;
+import it.unipd.dei.bitsei.resources.*;
 import it.unipd.dei.bitsei.rest.*;
 import it.unipd.dei.bitsei.rest.company.*;
-import it.unipd.dei.bitsei.rest.customer.CreateCustomerRR;
-import it.unipd.dei.bitsei.rest.customer.DeleteCustomerRR;
-import it.unipd.dei.bitsei.rest.customer.GetCustomerRR;
-import it.unipd.dei.bitsei.rest.customer.UpdateCustomerRR;
+import it.unipd.dei.bitsei.rest.customer.*;
+import it.unipd.dei.bitsei.rest.listing.GetHomeDataRR;
 import it.unipd.dei.bitsei.rest.product.CreateProductRR;
 import it.unipd.dei.bitsei.rest.product.DeleteProductRR;
 import it.unipd.dei.bitsei.rest.product.GetProductRR;
@@ -33,10 +29,6 @@ import it.unipd.dei.bitsei.rest.bankAccount.ListBankAccountsRR;
 import it.unipd.dei.bitsei.rest.bankAccount.UpdateBankAccoutRR;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import it.unipd.dei.bitsei.resources.Invoice;
-import it.unipd.dei.bitsei.resources.Customer;
-import it.unipd.dei.bitsei.resources.Product;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -66,6 +58,10 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
         final OutputStream out = res.getOutputStream();
 
         try {
+
+            if(processHomeData(req, res)) {
+                return;
+            }
 
             // if the requested resource was an invoice, delegate its processing and return
             if(processCustomersReport(req, res)) {
@@ -103,6 +99,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
             if (processInvoice(req, res)) {
                 return;
             }
+
+
 
             // if the requested resource was an invoice, delegate its processing and return
             if (processInvoiceProduct(req, res)) {
@@ -909,6 +907,49 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
     }
 
+    private boolean processHomeData(HttpServletRequest req, HttpServletResponse res) throws Exception{
+        final String method = req.getMethod();
+
+        String path = req.getRequestURI();
+        Message m = null;
+        RestURIParser uri;
+
+        LOGGER.info(path);
+        try{
+            uri = new RestURIParser(path);
+
+        }catch(Exception e){
+            return false;
+        }
+
+        if(!uri.getResource().equals("home-data")){
+            return false;
+        }
+
+        /*
+         * GET: gets all the bank accounts of a given company
+         * POST: creates a BANK account
+         */
+        switch (method) {
+            case "GET":
+                new GetHomeDataRR(req, res, getConnection(), uri).serve();
+                break;
+            default:
+                LOGGER.warn("Unsupported operation for URI /home-data: {}.", method);
+
+                m = new Message("Unsupported operation for URI /home-data.", "E4A5",
+                        String.format("Requested operation %s.", method));
+                res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                res.setContentType("text/plain");
+                m.toJSON(res.getOutputStream());
+                break;
+        }
+
+
+
+
+        return true;
+    }
 
     /**
      * Checks whether the request if for an {@link User} resource and, in case, processes it.
@@ -1308,6 +1349,8 @@ public final class RestDispatcherServlet extends AbstractDatabaseServlet {
 
         return true;
     }
+
+
 
 
 

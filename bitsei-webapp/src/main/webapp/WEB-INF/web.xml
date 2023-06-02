@@ -109,6 +109,7 @@
         <url-pattern>/rest/filter-invoices/*</url-pattern>
         <url-pattern>/rest/charts/*</url-pattern>
         <url-pattern>/rest/getdocument/*</url-pattern>
+        <url-pattern>/rest/home-data/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>
