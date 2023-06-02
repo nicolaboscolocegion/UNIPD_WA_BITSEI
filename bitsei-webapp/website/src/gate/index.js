@@ -45,9 +45,11 @@ const invoices = {
     listCustomers: (id) => api.get("rest/list-customer/company/" + id),
     listProducts: (id) => api.get("rest/list-product/company/" + id),
     closeInvoice: (company_id, invoice_id) => api.put("rest/closeinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 10000,
         headers: { 'Content-Type': 'application/json' },
     }),
     generateInvoice: (company_id, invoice_id) => api.put("rest/generateinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 10000,
         headers: { 'Content-Type': 'application/json' },
     }),
     deleteInvoice: (company_id, invoice_id) => api.delete("rest/invoice/" + invoice_id + "/company/" + company_id, {
