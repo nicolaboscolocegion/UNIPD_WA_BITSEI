@@ -19,7 +19,7 @@ const user = {
 }
 
 const me = {
-    userInfo: () => api.get("/api/v1/user/me"),
+    userInfo: () => api.get("rest/user"),
 }
 
 const companies = {
@@ -56,6 +56,10 @@ const invoices = {
     getInvoiceDocument: (company_id, invoice_id, document_type) => api.get("rest/getdocument/" + document_type + "/company/" + company_id  + "/invoice/" + invoice_id, {
         responseType: "blob"
     }),
+    getInvoiceProducts: (company_id, invoice_id) => api.get(`rest/invoice/${company_id}/${invoice_id}`),
+    editInvoiceItem: (data, company_id, invoice_id, product_id) => api.put(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`, data),
+    deleteInvoiceItem: (company_id, invoice_id, product_id) => api.delete(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`),
+    addInvoiceItem: (data, company_id, invoice_id, product_id) => api.post(`rest/invoiceproduct/${invoice_id}/${product_id}/company/${company_id}`, data),
 }
 
 const insights = {

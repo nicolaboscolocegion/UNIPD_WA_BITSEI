@@ -47,7 +47,7 @@ public class ListInvoiceProductDAO extends AbstractDAO<List<InvoiceProduct>> {
     /**
      * The SQL statement to be executed
      */
-    private static final String STATEMENT = "SELECT i.* FROM bitsei_schema.\"Invoice\" AS i JOIN bitsei_schema.\"Customer\" AS c ON i.customer_id = c.customer_id JOIN bitsei_schema.\"Company\" AS cmp ON c.company_id = cmp.company_id WHERE ((cmp.company_id = ?) OR 1=1)";
+    private static final String STATEMENT = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ?";
 
     private final int ownerId;
     private final int companyId;

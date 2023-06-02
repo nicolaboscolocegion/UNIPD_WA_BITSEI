@@ -7,6 +7,7 @@ import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from 
 import types from "./sideBarItemsType";
 
 function Sidebar() {
+    const user = useSelector((state) => state.auth.user) || {firstname: "Bitsei", lastname: "User"};
     const company_id = useSelector((state) => state.companies.activeCompany)
         || window.location.pathname.split("/")[2];
 
@@ -49,7 +50,13 @@ function Sidebar() {
                     {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
                 ]
             },
-            
+
+            {
+                path: `/insights`, name: types.INSIGHTS, icon: faLineChart, subItems: [
+
+                ]
+            },
+
         ]
     }
 
@@ -108,7 +115,7 @@ function Sidebar() {
                 </div>
                 <div className="sb-sidenav-footer sticky-bottom">
                     <div className="small">Logged in as:</div>
-                    BITSEI USER
+                    {`${user.firstname} ${user.lastname}`}
                 </div>
             </nav>
         </div>
