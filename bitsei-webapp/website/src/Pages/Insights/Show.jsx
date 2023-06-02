@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Chart from 'chart.js/auto'
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
+import {useParams} from "react-router-dom";
 
 // TODO: Refactor the logic section of code
 // TODO: Use functions to generate the chart based on that
@@ -21,6 +22,7 @@ function ShowChart() {
     const [chartPeriod, setChartPeriod] = useState(1)
     const [show, setShow] = useState(false);
     const [showTable, setShowTable] = useState(false);
+    const {company_id} = useParams();
     var count = 0;
     const mapPeriods = {
         1: "Months",
@@ -29,9 +31,10 @@ function ShowChart() {
     };
 
     useEffect(() => {
+        console.log("Company ID: " + company_id);
         //Process request (the payload is dataToSend) to get data for drawing chart
         gate
-            .getChartInvoiceByFilters(dataToSend)
+            .getChartInvoiceByFilters(company_id, dataToSend)
             .then((response) => {
                 console.log(response.data["chart"]);
                 setChart(response.data["chart"]);
@@ -219,6 +222,14 @@ function ShowChart() {
         fromValue: null,
         toValue: null
     })
+    const [filterByCustomerId, setFilterByCustomerId] = useState({
+        isEnabled: false,
+        fromCustomerId: null
+    })
+    const [filterByStatus, setFilterByStatus] = useState({
+        isEnabled: false,
+        fromStatus: null
+    })
 
 
     //Function that fills dataToSend
@@ -248,6 +259,34 @@ function ShowChart() {
             tmpDataToSend["fromWarningDate"] = filterByWarningDate.fromValue;
             tmpDataToSend["toWarningDate"] = filterByWarningDate.toValue;
         }
+
+        if(filterByCustomerId.isEnabled) {
+            let customerId = ""
+            let countCustomerId = 0;
+            for(let option in filterByCustomerId.fromCustomerId){
+                console.log(filterByCustomerId.fromCustomerId[option], filterByCustomerId.fromCustomerId[option].label)
+                if(countCustomerId > 0)
+                    customerId += "-";
+                customerId += filterByCustomerId.fromCustomerId[option].value.toString();
+                countCustomerId++;
+            }
+            if(countCustomerId > 0)
+                tmpDataToSend["fromCustomerId"] = customerId;
+        }
+
+        if(filterByStatus.isEnabled) {
+            let status = ""
+            let countStatus = 0;
+            for(let option in filterByStatus.fromStatus){
+                console.log(filterByStatus.fromStatus[option], filterByStatus.fromStatus[option].label)
+                if(countStatus > 0)
+                    status += "-";
+                status += filterByStatus.fromStatus[option].value.toString();
+                countStatus++;
+            }
+            if(countStatus > 0)
+                tmpDataToSend["fromStatus"] = status;
+        }
         tmpDataToSend["chart_type"] = chartType;
         tmpDataToSend["chart_period"] = chartPeriod;
         setDataToSend(tmpDataToSend);
@@ -272,7 +311,8 @@ function ShowChart() {
                                     <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show}
                                                    filterByTotal={filterByTotal} filterByDiscount={filterByDiscount}
                                                    filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate}
-                                                   filterByWarningDate={filterByWarningDate} setFilters={setFilters}/>
+                                                   filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId}
+                                                   filterByStatus={filterByStatus} setFilters={setFilters}/>
                                     <div className="d-flex justify-content-between mt-3 mx-5">
                                         <Button variant="outline-primary">
                                             Download
