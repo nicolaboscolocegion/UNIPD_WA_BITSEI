@@ -60,7 +60,7 @@ public class HomeData extends AbstractResource {
 
         jg.writeStartObject(); // {
 
-        jg.writeFieldName("customer"); // 'message':
+        jg.writeFieldName("home-data"); // 'message':
 
         jg.writeStartObject(); // {
 

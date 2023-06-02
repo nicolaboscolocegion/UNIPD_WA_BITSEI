@@ -9,7 +9,20 @@ import {toast} from "react-toastify";
 import { Data } from "./Data";
 import PieChart from "../../../Components/HomeChart/PieChart";
 import Image from "../../../Components/Image/Image";
-import {faShoppingCart, faUsers, faTicketAlt, faDollarSign} from "@fortawesome/free-solid-svg-icons";
+import {
+    faEuroSign,
+    faUsers,
+    faTicketAlt,
+    faDollarSign,
+    faUserClock,
+    faBriefcaseClock,
+    faClockFour,
+    faMoneyBills,
+    faMoneyBillTrendUp,
+    faPeoplePulling,
+    faPeopleArrowsLeftRight,
+    faPeopleRoof, faPeopleGroup
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function CompanyDetail() {
@@ -22,6 +35,7 @@ function CompanyDetail() {
     const [chart1, setChart1] = useState([]);
     const [chart2, setChart2] = useState([]);
     const [chart3, setChart3] = useState([]);
+    const [homeData, setHomeData] = useState([]);
 
     useEffect(() => {
         console.log("Company ID: " + company_id);
@@ -55,7 +69,20 @@ function CompanyDetail() {
             .catch((error) => {
                 toast.error("Something went wrong in invoices listing");
             });
+
+        gate
+            .getHomeData(company_id)
+            .then((response) => {
+                console.log(response.data["home-data"]);
+                setHomeData(response.data["home-data"]);
+            })
+            .catch((error) => {
+                toast.error("Something went wrong in invoices listing");
+            });
+
     }, []);
+
+
 
     const [chartData1, setChartData1] = useState({
         labels: chart1.labels,
@@ -217,21 +244,22 @@ function CompanyDetail() {
             <div className="bottomcol-md-10 ">
                 <div className="row ">
                     <div className="col-xl-3 col-lg-6">
-                        <div className="bottomcard l-bg-cherry">
+                        <div className="bottomcard l-bg-blue-dark">
                             <div className="card-statistic-3 p-4">
                                 <div className="card-icon card-icon-large">
-                                    <FontAwesomeIcon icon={faShoppingCart} className="fs-icon m-1"/>
+                                    <FontAwesomeIcon icon={faEuroSign} className="fs-icon mx-3"/>
                                 </div>
                                 <div className="mb-4">
-                                    <h5 className="card-title mb-0">New Orders</h5>
+                                    <h5 className="card-title mb-0">Total revenues</h5>
                                 </div>
                                 <div className="row align-items-center mb-2 d-flex">
-                                    <div className="col-8">
-                                        <h2 className="d-flex align-items-center mb-0">3,243</h2>
+                                    <div className="col-8 d-flex">
+                                        <h2 className="d-flex align-items-center mb-0 d-inline">{(homeData.total*1).toFixed(2)}&euro;</h2>
+                                        <p className="d-flex align-items-center mb-0 d-inline align-text-bottom">&nbsp;&nbsp;(goal 85.000&euro;)</p>
                                     </div>
                                     <div className="col-4 text-right">
               <span>
-                12.5% <i className="fa fa-arrow-up" />
+                {(homeData.total / 850).toFixed(2)}%<i className="fa fa-arrow-up" />
               </span>
                                     </div>
                                 </div>
@@ -239,36 +267,38 @@ function CompanyDetail() {
                                     <div
                                         className="progress-bar l-bg-cyan"
                                         role="progressbar"
-                                        data-width="25%"
-                                        aria-valuenow={25}
+                                        data-width={homeData.total/850}
+                                        aria-valuenow={homeData.total}
                                         aria-valuemin={0}
-                                        aria-valuemax={100}
-                                        style={{ width: "25%" }}
+                                        aria-valuemax={85000}
+                                        style={{ width: homeData.total/850 + "%" }}
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-6">
-                        <div className="bottomcard l-bg-blue-dark">
+                        {homeData.closed_inv == 0 ? (
+                            <div className="bottomcard l-bg-green">
+
                             <div className="card-statistic-3 p-4">
                                 <div className="card-icon card-icon-large">
-                                    <FontAwesomeIcon icon={faUsers} className="fs-icon m-1"/>
+                                    <FontAwesomeIcon icon={faClockFour} className="fs-icon m-1 mx-2"/>
                                 </div>
                                 <div className="mb-4">
-                                    <h5 className="card-title mb-0">Customers</h5>
+                                    <h5 className="card-title mb-0">Expiring closed invoices</h5>
                                 </div>
                                 <div className="row align-items-center mb-2 d-flex">
                                     <div className="col-8">
-                                        <h2 className="d-flex align-items-center mb-0">15.07k</h2>
+                                        <h2 className="d-flex align-items-center mb-0">{homeData.closed_inv}</h2>
                                     </div>
                                     <div className="col-4 text-right">
               <span>
-                9.23% <i className="fa fa-arrow-up" />
+                 <i className="fa fa-arrow-up" />
               </span>
                                     </div>
                                 </div>
-                                <div className="progress mt-1 " data-height={8} style={{ height: 8 }}>
+                                <div className="progress mt-1 invisible" data-height={8} style={{ height: 8 }}>
                                     <div
                                         className="progress-bar l-bg-green"
                                         role="progressbar"
@@ -281,27 +311,62 @@ function CompanyDetail() {
                                 </div>
                             </div>
                         </div>
+                            ) : (
+                            <div className="bottomcard l-bg-red">
+
+                                <div className="card-statistic-3 p-4">
+                                    <div className="card-icon card-icon-large">
+                                        <FontAwesomeIcon icon={faClockFour} className="fs-icon m-1 mx-2"/>
+                                    </div>
+                                    <div className="mb-4">
+                                        <h5 className="card-title mb-0">Expiring closed invoices</h5>
+                                    </div>
+                                    <div className="row align-items-center mb-2 d-flex">
+                                        <div className="col-8">
+                                            <h2 className="d-flex align-items-center mb-0">{homeData.closed_inv}</h2>
+                                        </div>
+                                        <div className="col-4 text-right">
+              <span>
+                 <i className="fa fa-arrow-up" />
+              </span>
+                                        </div>
+                                    </div>
+                                    <div className="progress mt-1 invisible" data-height={8} style={{ height: 8 }}>
+                                        <div
+                                            className="progress-bar l-bg-green"
+                                            role="progressbar"
+                                            data-width="25%"
+                                            aria-valuenow={25}
+                                            aria-valuemin={0}
+                                            aria-valuemax={100}
+                                            style={{ width: "25%" }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="col-xl-3 col-lg-6">
-                        <div className="bottomcard l-bg-green-dark">
+                        <div className="bottomcard l-bg-cherry">
                             <div className="card-statistic-3 p-4">
                                 <div className="card-icon card-icon-large">
-                                    <FontAwesomeIcon icon={faTicketAlt} className="fs-icon m-1"/>
+                                    <FontAwesomeIcon icon={faMoneyBillTrendUp} className="fs-icon m-1 mx-2"/>
                                 </div>
-                                <div className="mb-4">
-                                    <h5 className="card-title mb-0">Ticket Resolved</h5>
+                                <div className="mb-1">
+                                    <h5 className="card-title mb-0">Most profitable customer</h5>
                                 </div>
-                                <div className="row align-items-center mb-2 d-flex">
+                                <div className="row align-items-center mb-1 d-flex">
                                     <div className="col-8">
-                                        <h2 className="d-flex align-items-center mb-0">578</h2>
+                                        <p className="d-flex align-items-center mb-0 fw-bold">{homeData.most_money_cust}</p>
+                                        <h2 className="d-flex align-items-center mb-0">{(homeData.most_money_cust_val*1).toFixed(2)} &euro;</h2>
                                     </div>
                                     <div className="col-4 text-right">
               <span>
-                10% <i className="fa fa-arrow-up" />
+                 <i className="fa fa-arrow-up" />
               </span>
                                     </div>
                                 </div>
-                                <div className="progress mt-1 " data-height={8} style={{ height: 8 }}>
+                                <div className="progress mt-1 invisible" data-height={8} style={{ height: 8 }}>
                                     <div
                                         className="progress-bar l-bg-orange"
                                         role="progressbar"
@@ -316,21 +381,24 @@ function CompanyDetail() {
                         </div>
                     </div>
                     <div className="col-xl-3 col-lg-6">
-                        <div className="bottomcard l-bg-orange-dark">
+                        <div className="bottomcard l-bg-orange">
                             <div className="card-statistic-3 p-4">
                                 <div className="card-icon card-icon-large">
-                                    <FontAwesomeIcon icon={faDollarSign} className="fs-icon m-1"/>
+                                    <FontAwesomeIcon icon={faPeopleGroup} className="fs-icon m-1 mx-2"/>
                                 </div>
                                 <div className="mb-4">
-                                    <h5 className="card-title mb-0">Revenue Today</h5>
+                                    <h5 className="card-title mb-0">Active customers</h5>
                                 </div>
                                 <div className="row align-items-center mb-2 d-flex">
                                     <div className="col-8">
-                                        <h2 className="d-flex align-items-center mb-0">$11.61k</h2>
+                                        <div className="col-8 d-flex">
+                                            <h2 className="d-flex align-items-center mb-0 d-inline">{homeData.active_cust}</h2>
+                                            <p className="d-flex align-items-center mb-0 d-inline align-text-bottom">&nbsp;(goal 50)</p>
+                                        </div>
                                     </div>
                                     <div className="col-4 text-right">
               <span>
-                2.5% <i className="fa fa-arrow-up" />
+                {(homeData.active_cust / 0.5).toFixed(2)}% <i className="fa fa-arrow-up" />
               </span>
                                     </div>
                                 </div>
