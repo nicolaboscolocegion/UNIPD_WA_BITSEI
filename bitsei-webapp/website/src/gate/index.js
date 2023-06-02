@@ -63,7 +63,7 @@ const invoices = {
 }
 
 const insights = {
-    getChartInvoiceByFilters: (data) => api.post("rest/charts/company/1", data)
+    getChartInvoiceByFilters: (id, data) => api.post("rest/charts/company/" + id, data)
 }
 
 const bankAccount ={

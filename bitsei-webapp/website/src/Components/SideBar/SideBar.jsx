@@ -52,9 +52,7 @@ function Sidebar() {
             },
 
             {
-                path: `/insights`, name: types.INSIGHTS, icon: faLineChart, subItems: [
-
-                ]
+                path: `/companies/${company_id}/insights`, name: types.INSIGHTS, icon: faLineChart
             },
 
         ]
