@@ -23,7 +23,7 @@ function ShowChart() {
     const [show, setShow] = useState(false);
     const [showTable, setShowTable] = useState(false);
     const {company_id} = useParams();
-    var count = 0;
+    var count = -1;
     const mapPeriods = {
         1: "Months",
         2: "Years",
@@ -116,7 +116,7 @@ function ShowChart() {
                     labels: chart.labels,
                     datasets: [{
                         label: 'Average discount',
-                        data: chart.type,
+                        data: chart.data,
                         borderWidth: 1,
                         borderColor: 'rgb(75, 192, 192)'
                     }]
@@ -184,7 +184,7 @@ function ShowChart() {
     }, [chart]);
 
     useEffect(() => {
-        count = 0;
+        count = -1;
         setShowTable(true);
     },[chart]);
 
@@ -424,13 +424,13 @@ function ShowChart() {
                                                 {
                                                     
                                                     (chart.labels)?.map((item) => {
+                                                        count++;
                                                         return (
                                                             <tr>
                                                                 <td className="text-center">{item}</td>
                                                                 <td className="text-center">{chart.data[count]}</td>
                                                             </tr>
                                                         )
-                                                        count++;
                                                     })
                                                 }
                                                 </tbody>
