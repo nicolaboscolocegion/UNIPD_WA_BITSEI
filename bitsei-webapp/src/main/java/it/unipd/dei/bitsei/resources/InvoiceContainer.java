@@ -329,10 +329,10 @@ public class InvoiceContainer extends AbstractResource {
             jg.writeStringField("business_name", business_name.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
             jg.writeNumberField("status", status);
             jg.writeNumberField("warning_number", warning_number);
-            jg.writeStringField("warning_date", warning_date.toString());
+            jg.writeStringField("warning_date", warning_date != null ? warning_date.toString() : "");
             jg.writeStringField("warning_pdf_file", warning_pdf_file.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
             jg.writeStringField("invoice_number", invoice_number.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
-            jg.writeStringField("invoice_date", invoice_date.toString());
+            jg.writeStringField("invoice_date", invoice_date != null ? invoice_date.toString() : "");
             jg.writeStringField("invoice_pdf_file", invoice_pdf_file.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
             jg.writeStringField("invoice_xml_file", invoice_xml_file.replaceAll("\\s+$", "").trim()); // remove all the whitespaces at the end
             jg.writeNumberField("total", total);
