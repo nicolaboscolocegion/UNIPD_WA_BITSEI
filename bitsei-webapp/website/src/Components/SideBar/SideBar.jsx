@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from "@fortawesome/free-solid-svg-icons";
+import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank, faLineChart} from "@fortawesome/free-solid-svg-icons";
 
 import types from "./sideBarItemsType";
 

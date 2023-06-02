@@ -25,6 +25,8 @@ public final class CreateInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
      * SQL statement to be executed.
      */
     private static final String STATEMENT = "INSERT INTO bitsei_schema.\"Invoice_Product\" (invoice_id, product_id, quantity, unit_price, related_price, related_price_description, purchase_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String FETCH_INVOICE_PRODUCTS = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ?;";
+    private static final String INVOICE_TOTAL_STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET total = ? WHERE invoice_id = ?;";
 
     /**
      * The invoice product to be stored into the database.
@@ -92,6 +94,24 @@ public final class CreateInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
             pstmt.setString(6, invoiceProduct.getRelated_price_description());
             pstmt.setDate(7, invoiceProduct.getPurchase_date());
             pstmt.execute();
+
+
+            pstmt = con.prepareStatement(FETCH_INVOICE_PRODUCTS);
+            pstmt.setInt(1, invoiceProduct.getInvoice_id());
+            rs = pstmt.executeQuery();
+            double total = 0;
+
+            while (rs.next()) {
+                total = total + (rs.getInt("quantity") * rs.getDouble("unit_price")) + rs.getDouble("related_price");
+            }
+
+
+            pstmt = con.prepareStatement(INVOICE_TOTAL_STATEMENT);
+            pstmt.setDouble(1, total);
+            pstmt.setInt(2, invoiceProduct.getInvoice_id());
+
+            pstmt.execute();
+
 
             LOGGER.info("Invoice product successfully stored in the database.");
         } catch (IllegalAccessException e) {
