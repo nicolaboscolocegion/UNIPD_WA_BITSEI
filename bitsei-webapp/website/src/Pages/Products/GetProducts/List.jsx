@@ -9,8 +9,6 @@ import Item from "../../../Components/CompanyItem/Item";
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
-import ImageTest from "../../../Components/Image/ImageTest";
-import Image from "../../../Components/Image/Image";
 
 
 
@@ -36,7 +34,7 @@ function List() {
 
 
         gate.deleteProduct(product_id, company_id);
-        setProducts([...products].filter(item => item.product.productID !== product_id))
+        setProducts([...products].filter(item => item.product.product_id !== product_id))
         setShow(false)
     }
 
@@ -69,12 +67,11 @@ function List() {
                     <Table id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>LOGO</th>
                             <th>TITLE</th>
-                            <th>DEFAULT PRICE</th>
-                            <th>MEASUREMENT UNIT</th>
-                            <th>DESCRIPTION</th>
-                            <th>ACTIONS</th>
+                            <th className="text-center">DEFAULT PRICE</th>
+                            <th className="text-center">MEASUREMENT UNIT</th>
+                            <th className="text-center">DESCRIPTION</th>
+                            <th className="text-center">ACTIONS</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,17 +82,15 @@ function List() {
                                 return (
 
                                     <tr>
-                                            <td><ImageTest
-                                                src={product.product.logo}
-                                                alt={product.product.logo}
-                                                fallback=<Image id={company_id}/>
-                                            /></td>
+
                                             <td>{product.product.title} </td>
-                                            <td>{product.product.default_price} </td>
-                                            <td>{product.product.measurement_unit}</td>
-                                            <td>{product.product.description}</td>
-                                            <td>
-                                                <Link className="w-full" to={`/companies/${company_id}/product/edit/${product.product.productID}`} onClick={() => handleCompanySubmit(company_id)}>
+                                            <td className="text-center">{product.product.default_price} </td>
+                                            <td className="text-center">{product.product.measurement_unit}</td>
+                                            <td className="text-center">
+                                                {product.product.description}
+                                            </td>
+                                            <td className="text-center">
+                                                <Link className="w-full" to={`/companies/${company_id}/product/edit/${product.product.product_id}`} onClick={() => handleCompanySubmit(company_id)}>
                                                     <button className="btn btn-primary btn-sm active btn-block mx-2 "
                                                             type="button">Edit
                                                     </button>

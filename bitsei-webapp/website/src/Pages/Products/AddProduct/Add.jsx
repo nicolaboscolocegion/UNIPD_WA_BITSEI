@@ -1,4 +1,4 @@
-/*import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {connect} from "react-redux";
 import gate from "../../../gate";
@@ -32,7 +32,6 @@ function AddProduct() {
     const fields = [
         [{name: "title", type: "string"}, {name: "default_price", type: "int"}],
         [{name: "measurement_unit", type: "string"}, {name: "description", type: "string"} ],
-        [{name: "logo", type: "string"}],
     ]
 
     return (
@@ -40,9 +39,9 @@ function AddProduct() {
     )
 }
 
-export default AddProduct;*/
+export default AddProduct;
 
-import React, {useEffect, useRef, useState} from "react";
+/*import React, {useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {connect} from "react-redux";
 import {toast} from "react-toastify";
@@ -127,10 +126,10 @@ function AddProduct({clearProducts}) {
     ]
     return (
         <Form title={"Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}>
-            {/** Another fields like image or selects that you can't use the default things that we are written in the fields **/}
+            {}
             <div className="row justify-content-between text-left">
                 <div className="form-group flex-column d-flex">
-                    <label className="form-control-label px-3" htmlFor="logo">Logo</label>
+                    <label className="form-control-label px-3" htmlFor="logo">logo</label>
                     <input
                         id="logo"
                         onChange={onSelectFile}
@@ -149,4 +148,4 @@ function AddProduct({clearProducts}) {
 }
 
 //export default connect(null, {clearProducts})(AddProduct);
-export default connect(null)(AddProduct);
+export default connect(null)(AddProduct);*/

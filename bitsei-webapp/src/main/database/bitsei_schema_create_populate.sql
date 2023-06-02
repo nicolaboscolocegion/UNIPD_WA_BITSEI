@@ -536,6 +536,12 @@ INSERT INTO bitsei_schema."Product" VALUES (3, 2, ' Corso Carroponte', 80, 'aaa'
 INSERT INTO bitsei_schema."Product" VALUES (4, 2, ' Corso Piattaforme Elevatrici senza Stabilizzatori', 20, 'aaa', 'hr   ', 'Svolto ai sensi dell’ art. 71 - 73  del D.Lgs n.81/2008 e s.m.i. e Allegato VI e Allegato A punto 6 dell'' Accordo 53/CSR del 22 febbraio 2012');
 
 
+INSERT INTO bitsei_schema."BankAccount" VALUES (1, 'IT25674893201252722926', 'Intesa San Paolo', 'ISP', 2);
+INSERT INTO bitsei_schema."BankAccount" VALUES (2, 'RS22589574115252722926', 'Antonveneta', 'MPS', 2);
+INSERT INTO bitsei_schema."BankAccount" VALUES (3, 'NO7354026602729', 'Unicredit', 'Uni', 2);
+INSERT INTO bitsei_schema."BankAccount" VALUES (4, 'LB6194303ZRZFRZCSIUA9VSAA4IL', 'Banca Popolare Emilia-Romagna', 'BPER', 2);
+
+
 --
 -- TOC entry 3428 (class 0 OID 0)
 -- Dependencies: 216
