@@ -345,27 +345,42 @@ function ListInvoices() {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
-                toast.success(<>Invoice documentation fetched successfully! <FaFilePdf /></>);
-                // Create a Blob from the PDF Stream
-                const file = new Blob([response.data], { type: "application/pdf" });
-                // Build a URL from the file with a customized name
+                toast.success(
+                    <>
+                        Invoice documentation fetched successfully! <FaFilePdf />
+                    </>
+                );
+
+                // Create a Blob from the XML data
+                const file = new Blob([response.data], { type: "application/xml" });
+
+                // Build a URL from the file
                 const fileURL = URL.createObjectURL(file);
+
                 // Create a temporary anchor element
                 const anchorElement = document.createElement("a");
                 anchorElement.href = fileURL;
+
                 // Set the desired name for the downloaded file
-                anchorElement.download = "custom_filename.pdf";
-                // Trigger a click event to simulate a download
+                anchorElement.download = "Invoice" + invoice_id + ".xml";
+
+                // Trigger a click event to start the download
                 anchorElement.click();
+
                 // Clean up the URL and anchor element
                 URL.revokeObjectURL(fileURL);
                 anchorElement.remove();
             })
             .catch((error) => {
-                toast.error(<><BiError />Something went wrong in fetching invoice documentation</>);
+                toast.error(
+                    <>
+                        <BiError /> Something went wrong in fetching invoice documentation
+                    </>
+                );
                 setRefresh(!refresh);
             });
-    }
+    };
+
 
     return (
         <>
@@ -510,8 +525,8 @@ function ListInvoices() {
                                                             </button>;
                                                         invoiceXmlIcon =
                                                             <button
-                                                                onClick={() => handleGetInvoiceDocument(invoice.invoice_id, 2)}
-                                                                title = "Click to open the Invoice File XML"
+                                                                onClick={() => handleSaveInvoiceDocument(invoice.invoice_id, 2)}
+                                                                title = "Click to download the Invoice File XML"
                                                             >
                                                                 <BsFiletypeXml />
                                                             </button>;
