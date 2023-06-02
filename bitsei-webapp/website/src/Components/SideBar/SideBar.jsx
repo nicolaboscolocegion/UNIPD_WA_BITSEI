@@ -2,7 +2,15 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from "@fortawesome/free-solid-svg-icons";
+import {
+    faBuilding,
+    faAngleDown,
+    faFileInvoice,
+    faFolder,
+    faHippo,
+    faBank,
+    faAnalytics, faLineChart
+} from "@fortawesome/free-solid-svg-icons";
 
 import types from "./sideBarItemsType";
 
@@ -47,6 +55,12 @@ function Sidebar() {
                 path: `#`, name: types.BANKACCOUNT, icon: faBank, subItems: [
                     {path: `/companies/${company_id}/bankAccount/`, name: "List Bank Accounts"},
                     {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
+                ]
+            },
+
+            {
+                path: `/insights`, name: types.INSIGHTS, icon: faLineChart, subItems: [
+
                 ]
             },
             
