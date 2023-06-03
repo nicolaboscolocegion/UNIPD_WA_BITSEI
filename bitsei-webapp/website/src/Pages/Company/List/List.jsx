@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import {Table} from "react-bootstrap";
 import {useSelector, connect} from "react-redux";
 import {getLists, setActiveCompanyId} from "../../../Store/companies/listsThunk";
-import Image from "../../../Components/Image/Image";
 import {Link} from "react-router-dom";
 
 function List({getLists, setActiveCompanyId}) {
@@ -42,7 +41,7 @@ function List({getLists, setActiveCompanyId}) {
 
                         <tbody>
                         {companies.items.map((company) => (
-                            <tr>
+                            <tr key={company.business_name}>
                                 <td>{company.business_name ? company.business_name : ''}</td>
                                 <td>{`${company.address ? company.address : ''} ${company.postal_code ? company.postal_code : '' } ${company.city ? company.city : ''} ${company.province ? company.province : '' }`}</td>
                                 <td>{company.vat_number ? company.vat_number : ''}</td>

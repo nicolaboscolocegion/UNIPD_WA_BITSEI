@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {useSelector, connect} from "react-redux";
-import {Link, useParams} from "react-router-dom";
+import {connect} from "react-redux";
+import {useParams} from "react-router-dom";
 import gate from "../../../gate"
 import {toast} from "react-toastify";
 import "./style.css"
@@ -54,8 +54,6 @@ function Item() {
                                     </ul>
                                 </div>
                             </div>
-
-
 
                         </div>
                     </div>

@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {useSelector, connect} from "react-redux";
+import {connect} from "react-redux";
 import {Link, useParams} from "react-router-dom";
 import gate from "../../../gate"
 import {toast} from "react-toastify";
 import "./style.css"
-import Header from "../../../Components/Header/Header";
-import Item from "../../../Components/CompanyItem/Item";
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
-
-
-
 
 
 function List() {
@@ -31,8 +26,6 @@ function List() {
     }
 
     const handleDelete = (customer_id) => {
-
-
         gate.deleteCustomer(customer_id, company_id);
         setCustomers([...customers].filter(item => item.customer.customerID !== customer_id))
         setShow(false)
@@ -44,7 +37,6 @@ function List() {
         gate
             .getCustomers(company_id)
             .then(response => {
-                console.log(response.data['resource-list']);
                 setCustomers(response.data['resource-list']);
                 setPending(false);
             }).catch(() => {
@@ -77,46 +69,45 @@ function List() {
                         </thead>
                         <tbody>
                         {customers.map((item) => {
-                                console.log(item.customer.businessName)
                                 let customer = item
 
                                 return (
-
-                                    <tr>
-
-                                            <td>{customer.customer.businessName} </td>
-                                            <td>{customer.customer.vatNumber} </td>
-                                            <td>{customer.customer.address} - {customer.customer.postalCode} {customer.customer.city} ({customer.customer.province})</td>
-                                            <td className="text-center">
-                                                {customer.customer.emailAddress}
-                                            </td>
-                                            <td className="text-center">
-                                                {customer.customer.uniqueCode}
-                                            </td>
-                                            <td className="text-center">
-                                                <Link className="w-full" to={`/companies/${company_id}/customer/edit/${customer.customer.customerID}`} onClick={() => handleCompanySubmit(company_id)}>
-                                                    <button className="btn btn-primary btn-sm active btn-block mx-2 "
-                                                            type="button">Edit
-                                                    </button>
-                                                </Link>
-
-                                                <button
-                                                    className="btn btn-danger btn-sm active btn-block mx-2"
-                                                    onClick={() => handleDeleteModal(customer.customer.customerID)}
-                                                    type="button"
-                                                >
-                                                    Delete
+                                    <tr key={customer.customer.businessName}>
+                                        <td>{customer.customer.businessName} </td>
+                                        <td>{customer.customer.vatNumber} </td>
+                                        <td>{customer.customer.address} - {customer.customer.postalCode} {customer.customer.city} ({customer.customer.province})</td>
+                                        <td className="text-center">
+                                            {customer.customer.emailAddress}
+                                        </td>
+                                        <td className="text-center">
+                                            {customer.customer.uniqueCode}
+                                        </td>
+                                        <td className="text-center">
+                                            <Link className="w-full"
+                                                  to={`/companies/${company_id}/customer/edit/${customer.customer.customerID}`}
+                                                  onClick={() => handleCompanySubmit(company_id)}>
+                                                <button className="btn btn-primary btn-sm active btn-block mx-2 "
+                                                        type="button">Edit
                                                 </button>
+                                            </Link>
 
-                                                <DeleteConfirm
-                                                    show={show}
-                                                    handleClose={handleClose}
-                                                    handleSumbit={handleDelete}
-                                                    heading="ATTENTION"
-                                                    body="Are you sure to delete this customer?"
-                                                    item_id={customerToDelete}
-                                                />
-                                            </td>
+                                            <button
+                                                className="btn btn-danger btn-sm active btn-block mx-2"
+                                                onClick={() => handleDeleteModal(customer.customer.customerID)}
+                                                type="button"
+                                            >
+                                                Delete
+                                            </button>
+
+                                            <DeleteConfirm
+                                                show={show}
+                                                handleClose={handleClose}
+                                                handleSumbit={handleDelete}
+                                                heading="ATTENTION"
+                                                body="Are you sure to delete this customer?"
+                                                item_id={customerToDelete}
+                                            />
+                                        </td>
                                     </tr>
 
                                 )

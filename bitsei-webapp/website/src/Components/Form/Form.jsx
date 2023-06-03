@@ -5,8 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {errorMessages} from "../../helpers/errorMessages";
 
 
-function Form({title, onSubmit, fields, register, errors={}, pending=false, children}) {
-    console.log(pending)
+function Form({title, onSubmit, fields, register, errors = {}, pending = false, children}) {
     return (
         <div className="container-fluid px-1 py-5 mx-auto">
             <div className="row d-flex justify-content-center">
@@ -19,11 +18,12 @@ function Form({title, onSubmit, fields, register, errors={}, pending=false, chil
                             className="form-card"
                         >
                             {fields.map((field =>
-                                    <div className="row justify-content-between text-left">
-                                        {field.map((item => {
-                                                return(
+                                    <div key={field[0].name} className="row justify-content-between text-left">
+                                        {field.map((item =>
                                                 <div
-                                                    className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}>
+                                                    key={item.name}
+                                                    className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}
+                                                >
                                                     <label className="form-control-label px-3">
                                                         {item.name}<span className="text-danger"> *</span>
                                                     </label>
@@ -44,9 +44,7 @@ function Form({title, onSubmit, fields, register, errors={}, pending=false, chil
                                                             </span>
                                                     }
                                                 </div>
-                                        )}
                                         ))}
-
                                     </div>
                             ))}
                             {children && children}

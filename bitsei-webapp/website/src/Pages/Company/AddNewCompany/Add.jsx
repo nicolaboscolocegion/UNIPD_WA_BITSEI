@@ -10,7 +10,6 @@ import Form from "../../../Components/Form/Form";
 function AddCompany({clearCompanies}) {
     const {register, handleSubmit, formState: {errors}} = useForm();
     const [pending, setPending] = useState(false);
-    const [preview, setPreview] = useState();
     const [selectedFile, setSelectedFile] = useState();
     const logoRef = useRef();
     const [hasTelegramNotification, setHasTelegramNotification] = useState(false);
@@ -19,12 +18,10 @@ function AddCompany({clearCompanies}) {
 
     useEffect(() => {
         if (!selectedFile) {
-            setPreview(undefined);
             return;
         }
 
         const objectUrl = URL.createObjectURL(selectedFile);
-        setPreview(objectUrl);
 
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl);
@@ -40,12 +37,6 @@ function AddCompany({clearCompanies}) {
         setSelectedFile(e.target.files[0]);
     };
 
-    const onDeleteFile = (e) => {
-        e.preventDefault();
-        logoRef.current.value = "";
-        logoRef.current.type = "file";
-        setSelectedFile(undefined);
-    };
     const submitHandler = (data, e) => {
         e.preventDefault();
 
