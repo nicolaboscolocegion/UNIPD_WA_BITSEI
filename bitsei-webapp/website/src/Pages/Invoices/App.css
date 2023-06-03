@@ -36,6 +36,7 @@
 }
 
 /* Add the following styles for the button next to the container */
+/*
 .react-select-container::after {
     content: "";
     position: absolute;
@@ -52,6 +53,7 @@
 .react-select-container:hover::after {
     background-color: #e4e4e4;
 }
+*/
 
 /* Add the following styles for the message on hover of the button */
 .react-select-container:hover::after::before {
