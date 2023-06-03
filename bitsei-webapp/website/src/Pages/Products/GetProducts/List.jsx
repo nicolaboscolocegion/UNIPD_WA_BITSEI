@@ -7,6 +7,7 @@ import "./style.css"
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 
 
 function List() {
@@ -26,11 +27,10 @@ function List() {
     }
 
     const handleDelete = (product_id) => {
-        gate.deleteProduct(product_id, company_id).then(response => {
+            gate.deleteProduct(product_id, company_id);
+            setProducts([...products].filter(item => item.product.product_id !== product_id))
             setShow(false)
-        });
-        setProducts([...products].filter(item => item.product.product_id !== product_id))
-    }
+        }
 
 
     useEffect(() => {
@@ -87,16 +87,14 @@ function List() {
 
                                             <button
                                                 className="btn btn-danger btn-sm active btn-block mx-2"
-                                                onClick={() => handleDeleteModal(product.product.productID)}
-                                                type="button"
-                                            >
-                                                Delete
+                                                onClick={() => handleDeleteModal(product.product.product_id)}
+                                                type="button"> <FaTrash/>
                                             </button>
 
                                             <DeleteConfirm
                                                 show={show}
                                                 handleClose={handleClose}
-                                                handleSumbit={handleDelete}
+                                                handleSubmit={handleDelete}
                                                 heading="ATTENTION"
                                                 body="Are you sure to delete this product?"
                                                 item_id={productToDelete}
