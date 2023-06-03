@@ -15,9 +15,9 @@ function AddProduct() {
 
         setPending(true);
         console.log(data)
-
+        data.default_price = parseFloat(data.default_price);
         gate
-            .addProduct({product: {companyID: company_id, ...data}}, company_id)
+            .addProduct({product: {company_id: parseInt(company_id), ...data}}, parseInt(company_id))
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
@@ -30,7 +30,7 @@ function AddProduct() {
     };
 
     const fields = [
-        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "int"}],
+        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "double"}],
         [{value: "Measurement Unit", name: "measurement_unit", type: "string"}, {value: "Description", name: "description", type: "string"} ],
     ]
 

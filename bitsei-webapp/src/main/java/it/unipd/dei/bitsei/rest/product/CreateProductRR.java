@@ -59,9 +59,7 @@ public class CreateProductRR extends AbstractRR {
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
-            fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", p.getLogo(), "LOGO");
-
-
+            //fieldRegexValidation("[^\\s]+(\\.(?i)(jpg|jpeg|png|gif|bmp))$", p.getLogo(), "LOGO");
             // creates a new object for accessing the database and store the product
             new CreateProductDAO(con, p, owner_id, r.getCompanyID()).access();
 

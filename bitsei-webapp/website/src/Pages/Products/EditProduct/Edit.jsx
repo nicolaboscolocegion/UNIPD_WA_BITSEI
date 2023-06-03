@@ -44,9 +44,9 @@ function EditProduct() {
         formData.append("description", data.description);
 
         console.log(formData)
-
+        data.default_price = parseFloat(data.default_price);
         gate
-            .editProduct({product: {companyID: parseInt(company_id), ...data}}, product_id, company_id)
+            .editProduct({product: {company_id: parseInt(company_id), ...data}}, parseInt(product_id), parseInt(company_id))
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
@@ -58,7 +58,7 @@ function EditProduct() {
 
 
     const fields = [
-        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "int"}],
+        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "double"}],
         [{value: "Measurement Unit", name: "measurement_unit", type: "string"}, {value: "Description", name: "description", type: "string"} ],
     ]
 
