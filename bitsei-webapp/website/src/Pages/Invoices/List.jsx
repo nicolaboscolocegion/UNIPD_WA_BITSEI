@@ -8,6 +8,8 @@ import gate from "../../gate";
 import SidebarFilter from "../../Components/SidebarFilters/SidebarFilter";
 import Button from 'react-bootstrap/Button';
 import {components} from "react-select";
+
+
 import {
     FaCheck,
     FaDollarSign,
@@ -21,6 +23,7 @@ import {BiError} from "react-icons/bi";
 import {Link, useParams} from "react-router-dom";
 import {BsFiletypeXml} from "react-icons/bs";
 
+
 // TODO: Add validation for all fields
 // TODO: Add error handling for all fields
 // TODO: Add loading for creating company
@@ -31,6 +34,7 @@ function ListInvoices() {
     const [dataToSend, setDataToSend] = useState({});
     const [refresh, setRefresh] = useState(false);
     const [refreshSort, setRefreshSort] = useState(false);
+
 
     useEffect(() => {
         console.log("listing invoices onLoad TO REMOVE");
