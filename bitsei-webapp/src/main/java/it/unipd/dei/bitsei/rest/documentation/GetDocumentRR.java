@@ -69,7 +69,7 @@ public class GetDocumentRR extends AbstractRR {
                     f = new File(absPath + "/pdf/" + filename);
                     res.setContentType("application/pdf");
                 } else {
-                    f = new File(absPath + "/xml/" + filename);
+                    f = new File(absPath + "/xml/IT" + filename);
                     res.setContentType("application/xml");
                 }
                 res.setStatus(HttpServletResponse.SC_OK);
