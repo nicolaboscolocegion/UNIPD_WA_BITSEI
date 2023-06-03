@@ -212,6 +212,7 @@ function InvoiceProduct() {
                                                 return !invoiceProducts.some((ipp) => ipp.product_id === product.product_id && ip.product_id !== product.product_id)
                                             })}
                                             setValue={setValue}
+                                            errors={errors}
                                         />
                                     </td>
                                 </tr>
@@ -252,6 +253,7 @@ function InvoiceProduct() {
                                             return !invoiceProducts.some((ip) => ip.product_id === product.product_id)
                                         })}
                                         setValue={setValue}
+                                        errors={errors}
                                     />
                                 </td>
                             </tr>

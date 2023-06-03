@@ -2,13 +2,8 @@ import React from "react";
 import "./style.css";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {errorMessages} from "../../helpers/errorMessages";
 
-const errorMessages = {
-    required: "This field is required",
-    maxLength: "This field exceeds maximum length",
-    minLength: "This field is below minimum length",
-    pattern: "This field doesn't matching the pattern",
-}
 
 function Form({title, onSubmit, fields, register, errors={}, pending=false, children}) {
     console.log(pending)
@@ -26,7 +21,6 @@ function Form({title, onSubmit, fields, register, errors={}, pending=false, chil
                             {fields.map((field =>
                                     <div className="row justify-content-between text-left">
                                         {field.map((item => {
-                                            console.log(item.name);
                                                 return(
                                                 <div
                                                     className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}>
@@ -42,7 +36,7 @@ function Form({title, onSubmit, fields, register, errors={}, pending=false, chil
                                                     />
                                                     {
                                                         errors[item.name]
-                                                        && errors[item.name].type === "required"
+                                                        // && errors[item.name].type === "required"
                                                         && <span className="error">
                                                                 {
                                                                     errors[item.name].message || errorMessages[errors[item.name].type] || "Not valid"
