@@ -28,7 +28,7 @@ import {
     FaPencilAlt,
     FaTrash
 } from "react-icons/fa";
-import {AiFillLock} from "react-icons/ai";
+import {AiFillLock, AiOutlineLoading3Quarters} from "react-icons/ai";
 import {BiError} from "react-icons/bi";
 import {useParams} from "react-router-dom";
 import {BsFiletypeXml} from "react-icons/bs";
@@ -260,7 +260,7 @@ function ListInvoices() {
     const [isLoading, setIsLoading] = useState(false);
     const handleCloseInvoice = (invoice_id) => {
         setIsLoading(true);
-        toast('Closing invoice...', { toastId: 'closing-loading-toast', autoClose: false });
+        toast(<>Closing invoice <AiOutlineLoading3Quarters /></>, { toastId: 'closing-loading-toast', autoClose: false });
 
         gate
             .closeInvoice(company_id, invoice_id)
@@ -284,7 +284,7 @@ function ListInvoices() {
 
     const handleGenerateInvoice = (invoice_id) => {
         setIsLoading(true);
-        toast('Generating invoice...', { toastId: 'generating-loading-toast', autoClose: false });
+        toast(<>Generating invoice <AiOutlineLoading3Quarters /></>, { toastId: 'generating-loading-toast', autoClose: false });
 
         gate
             .generateInvoice(company_id, invoice_id)
@@ -325,7 +325,15 @@ function ListInvoices() {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
-                toast.success(<>Invoice documentation fetched successfully! <FaFilePdf /></>);
+                if(document_type === 0) {
+                    toast.success(<>Warning PDF fetched successfully! <FaFilePdf /></>);
+                }
+                if(document_type === 1) {
+                    toast.success(<>Invoice PDF fetched successfully! <FaFilePdf /></>);
+                }
+                else {
+                    toast.success(<>Invoice XML fetched successfully! <BsFiletypeXml /></>);
+                }
                 //Create a Blob from the PDF Stream
                 const file = new Blob([response.data], { type: "application/pdf" });
                 //Build a URL from the file
@@ -345,11 +353,15 @@ function ListInvoices() {
         gate
             .getInvoiceDocument(company_id, invoice_id, document_type)
             .then((response) => {
-                toast.success(
-                    <>
-                        Invoice documentation fetched successfully! <FaFilePdf />
-                    </>
-                );
+                if(document_type === 0) {
+                    toast.success(<>Warning PDF fetched successfully! <FaFilePdf /></>);
+                }
+                if(document_type === 1) {
+                    toast.success(<>Invoice PDF fetched successfully! <FaFilePdf /></>);
+                }
+                else {
+                    toast.success(<>Invoice XML fetched successfully! <BsFiletypeXml /></>);
+                }
 
                 // Create a Blob from the XML data
                 const file = new Blob([response.data], { type: "application/xml" });
