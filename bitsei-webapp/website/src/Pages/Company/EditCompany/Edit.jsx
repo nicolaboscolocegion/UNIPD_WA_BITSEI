@@ -107,11 +107,24 @@ function EditCompany({clearCompanies}) {
     const fields = [
         [{name: "title", type: "string", options: {required: true, maxLength: 30}}, {
             name: "business_name",
-            type: "string"
+            type: "string",
+            options: {required: true, maxLength: 30}
         }],
-        [{name: "vat_number", type: "string"}, {name: "tax_code", type: "string"}],
-        [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
-        [{name: "province", type: "string"}, {name: "address", type: "string"}],
+        [{name: "vat_number", type: "string", options: {required: true, minLength:11, maxLength: 11}}, {
+            name: "tax_code",
+            type: "string",
+            options: {required: true, minLength:16, maxLength: 16}
+        }],
+        [{name: "unique_code", type: "string", options: {required: true, maxLength: 30}}, {
+            name: "city",
+            type: "string",
+            options: {required: true, maxLength: 30}
+        }],
+        [{name: "province", type: "string", options: {required: true, minLength: 2, maxLength:2}}, {
+            name: "address",
+            type: "string",
+            options: {required: true, maxLength: 30}
+        }],
     ]
 
     return (
