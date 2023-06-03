@@ -10908,7 +10908,7 @@ body {
     transition: opacity 0.3s ease-in-out;
 }
 
-@media (min-width: 250px) {
+@media (min-width: 992px) {
     #layoutSidenav #layoutSidenav_nav {
         transform: translateX(0);
     }
@@ -10924,6 +10924,10 @@ body {
     }
     .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
         display: none;
+    }
+    /*Show-Hide Menu in alternative to sidebar*/
+    .menu-button-resize {
+        visibility: hidden;
     }
 }
 .sb-nav-fixed .sb-topnav {
