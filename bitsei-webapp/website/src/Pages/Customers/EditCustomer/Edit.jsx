@@ -40,7 +40,7 @@ function EditCustomer() {
         e.preventDefault();
         setPending(true);
         gate
-            .editCustomer({customer: {companyID: parseInt(company_id), ...data}}, company_id, customer_id)
+            .editCustomer({customer: {companyID: parseInt(company_id), ...data}}, customer_id, company_id)
             .then((response) => {
                 setPending(false)
             })
