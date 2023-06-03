@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import gate from "../../../gate";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
+import {history} from "../../../index";
+import {toast} from "react-toastify";
 
 function AddCustomer() {
     const {register, handleSubmit, formState: { errors }} = useForm();
@@ -20,10 +22,12 @@ function AddCustomer() {
             .addCustomer({customer: {companyID: company_id, ...data}}, company_id)
             .then((response) => {
                 console.log(response.data)
+                history.push(`/companies/${company_id}/list-customer`);
                 setPending(false)
             })
             .catch((error) => {
                 console.log(error)
+                toast.error("Something went wrong in customer creation.")
             })
 
 

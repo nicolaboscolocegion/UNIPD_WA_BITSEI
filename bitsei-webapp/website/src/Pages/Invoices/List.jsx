@@ -381,9 +381,6 @@ function ListInvoices() {
 
     return (
         <>
-        <head>
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/css/mdb.min.css" rel="stylesheet" />
-        </head>
 
         <body>
             <section>
