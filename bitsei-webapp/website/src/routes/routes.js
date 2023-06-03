@@ -28,6 +28,7 @@ const DeleteInvoice = lazy(() => import("../Pages/Invoices/List"));
 const AddInvoice = lazy(() => import("../Pages/Invoices/Add"));
 const GetInvoiceDocument = lazy(() => import("../Pages/Invoices/List"));
 const InvoiceProduct = lazy(() => import("../Pages/Invoices/InvoiceProduct/InvoiceProduct"));
+const EditInvoice = lazy(() => import("../Pages/Invoices/Edit"));
 
 export const routes = [
     { exact: true, path: "/login", component: Login },
@@ -59,6 +60,7 @@ export const privateRoutes = [
     { exact: true, path: "/companies/:company_id/product/add", component: AddProduct },
     { exact: true, path: "/companies/:company_id/list-product", component: ListProducts },
     { exact: true, path: "/companies/:company_id/invoice/:invoice_id/item", component: InvoiceProduct},
+    { exact: true, path: "/companies/:company_id/invoice/:invoice_id/edit", component: EditInvoice},
     { exact: true, path: "/companies/:company_id/invoice/close", component: CloseInvoice },
     { exact: true, path: "/companies/:company_id/invoice/generate", component: GenerateInvoice},
     { exact: true, path: "/companies/:company_id/invoice/delete", component: DeleteInvoice},
