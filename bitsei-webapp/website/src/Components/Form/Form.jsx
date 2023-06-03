@@ -28,6 +28,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
                                                         {item.name}<span className="text-danger"> *</span>
                                                     </label>
                                                     <input
+                                                        className='cinput'
                                                         type={item.type}
                                                         id={item.name}
                                                         name={item.name}
@@ -54,7 +55,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
                                         ? <FontAwesomeIcon icon={faSpinner} color="blue" spin/>
                                         : <input
                                             type="submit"
-                                            className={`btn btn-primary ${pending && "disabled"}}`}
+                                            className={`cinput btn btn-primary ${pending && "disabled"}}`}
                                             value="Submit"
                                         />
                                     }

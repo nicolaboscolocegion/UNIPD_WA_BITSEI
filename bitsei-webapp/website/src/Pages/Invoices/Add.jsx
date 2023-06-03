@@ -75,6 +75,7 @@ function AddInvoice() {
                             Has Stamp
                         </label>
                         <input
+                            className="cinput"
                             type="checkbox"
                             value=""
                             id="has_stamp"
