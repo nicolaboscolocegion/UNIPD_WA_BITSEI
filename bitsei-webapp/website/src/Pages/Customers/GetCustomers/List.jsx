@@ -7,6 +7,7 @@ import "./style.css"
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 
 
 function List() {
@@ -87,16 +88,14 @@ function List() {
                                                   to={`/companies/${company_id}/customer/edit/${customer.customer.customerID}`}
                                                   onClick={() => handleCompanySubmit(company_id)}>
                                                 <button className="btn btn-primary btn-sm active btn-block mx-2 "
-                                                        type="button">Edit
+                                                        type="button"><FaPencilAlt />
                                                 </button>
                                             </Link>
 
                                             <button
                                                 className="btn btn-danger btn-sm active btn-block mx-2"
                                                 onClick={() => handleDeleteModal(customer.customer.customerID)}
-                                                type="button"
-                                            >
-                                                Delete
+                                                type="button"> <FaTrash/>
                                             </button>
 
                                             <DeleteConfirm
