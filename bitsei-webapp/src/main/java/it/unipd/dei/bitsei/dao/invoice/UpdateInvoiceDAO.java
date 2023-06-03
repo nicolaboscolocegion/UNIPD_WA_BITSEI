@@ -25,7 +25,7 @@ public final class UpdateInvoiceDAO extends AbstractDAO<Invoice> {
     /**
      * The SQL statement to be executed.
      */
-    private static final String STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET customer_id = ?, status = ?, warning_number = ?, warning_date = ?, warning_pdf_file = ?, invoice_number = ?, invoice_date = ?, invoice_pdf_file = ?, invoice_xml_file = ?, total = ?, discount = ?, pension_fund_refund = ?, has_stamp = ? WHERE invoice_id = ?";
+    private static final String STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET customer_id = ?, discount = ?, pension_fund_refund = ?, has_stamp = ? WHERE invoice_id = ?";
 
     /**
      * The invoice to be updated.
@@ -94,19 +94,10 @@ public final class UpdateInvoiceDAO extends AbstractDAO<Invoice> {
 
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, invoice.getCustomer_id());
-            pstmt.setInt(2, invoice.getStatus());
-            pstmt.setInt(3, invoice.getWarning_number());
-            pstmt.setDate(4, invoice.getWarning_date());
-            pstmt.setString(5, invoice.getWarning_pdf_file());
-            pstmt.setString(6, invoice.getInvoice_number());
-            pstmt.setDate(7, invoice.getInvoice_date());
-            pstmt.setString(8, invoice.getInvoice_pdf_file());
-            pstmt.setString(9, invoice.getInvoice_xml_file());
-            pstmt.setDouble(10, invoice.getTotal());
-            pstmt.setDouble(11, invoice.getDiscount());
-            pstmt.setDouble(12, invoice.getPension_fund_refund());
-            pstmt.setBoolean(13, invoice.hasStamp());
-            pstmt.setInt(14, invoice.getInvoice_id());
+            pstmt.setDouble(2, invoice.getDiscount());
+            pstmt.setDouble(3, invoice.getPension_fund_refund());
+            pstmt.setBoolean(4, invoice.hasStamp());
+            pstmt.setInt(5, invoice.getInvoice_id());
 
             pstmt.execute();
 
