@@ -100,6 +100,7 @@ function AddCompany({clearCompanies}) {
                 <div className="form-group flex-column d-flex">
                     <label className="form-control-label px-3" htmlFor="logo">Logo</label>
                     <input
+                        className="cinput"
                         id="logo"
                         onChange={onSelectFile}
                         onClick={(e) => {
@@ -113,7 +114,6 @@ function AddCompany({clearCompanies}) {
                 </div>
             </div>
             <div className="row justify-content-between text-left">
-
                 <div className="form-group col-sm-6 flex-column d-flex">
                     <label
                         className="form-control-label px-3"
@@ -121,6 +121,7 @@ function AddCompany({clearCompanies}) {
                         Mail Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_mail_notifications"
@@ -137,6 +138,7 @@ function AddCompany({clearCompanies}) {
                         Telegram Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_telegram_notifications"

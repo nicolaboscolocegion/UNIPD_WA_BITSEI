@@ -145,6 +145,7 @@ function EditCompany({clearCompanies}) {
                 <div className="form-group col-sm-6 flex-column d-flex ">
                     <label className="form-control-label px-3" htmlFor="logo">Logo</label>
                     <input
+                        className="cinput"
                         id="logo"
                         onChange={onSelectFile}
                         onClick={(e) => {
@@ -165,6 +166,7 @@ function EditCompany({clearCompanies}) {
                         Mail Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_mail_notifications"
@@ -181,6 +183,7 @@ function EditCompany({clearCompanies}) {
                         Telegram Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_telegram_notifications"
