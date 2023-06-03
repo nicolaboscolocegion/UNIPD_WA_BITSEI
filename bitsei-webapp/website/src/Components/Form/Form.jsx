@@ -10,7 +10,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
         <div className="container-fluid px-1 py-5 mx-auto">
             <div className="row d-flex justify-content-center">
                 <div className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
-                    <h3>Add {title}</h3>
+                    <h3>{title}</h3>
                     <div className="card formcard">
                         <h5 className="text-center mb-4"/>
                         <form
@@ -25,9 +25,10 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
                                                     className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}
                                                 >
                                                     <label className="form-control-label px-3">
-                                                        {item.name}<span className="text-danger"> *</span>
+                                                        {item.value}<span className="text-danger"> *</span>
                                                     </label>
                                                     <input
+                                                        className='cinput'
                                                         type={item.type}
                                                         id={item.name}
                                                         name={item.name}
@@ -54,7 +55,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
                                         ? <FontAwesomeIcon icon={faSpinner} color="blue" spin/>
                                         : <input
                                             type="submit"
-                                            className={`btn btn-primary ${pending && "disabled"}}`}
+                                            className={`cinput btn btn-primary ${pending && "disabled"}}`}
                                             value="Submit"
                                         />
                                     }

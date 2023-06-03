@@ -34,15 +34,15 @@ function AddCustomer() {
     };
 
     const fields = [
-        [{name: "businessName", type: "string"}, {name: "vatNumber", type: "string"}],
-        [{name: "taxCode", type: "string"}, {name: "address", type: "string"}],
-        [{name: "city", type: "string"}, {name: "province", type: "string"}],
-        [{name: "postalCode", type: "string"}, {name: "emailAddress", type: "email"}],
-        [{name: "pec", type: "email"}, {name: "uniqueCode", type: "string"}],
+        [{ name: "businessName", value: "Business Name", type: "string" }, { name: "vatNumber", value: "Vat Number", type: "string" },],
+        [{ name: "taxCode", value: "Tax Code", type: "string" }, { name: "address", value: "Address", type: "string" },],
+        [{ name: "city", value: "City", type: "string" }, { name: "province", value: "Province", type: "string" },],
+        [{ name: "postalCode", value: "Postal Code", type: "string" }, { name: "emailAddress", value: "Email Address", type: "email" },],
+        [{ name: "pec", value: "PEC", type: "email" }, { name: "uniqueCode", value: "Unique Code", type: "string" },]
     ]
 
     return (
-        <Form title={"Customer"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
+        <Form title={"Add Customer"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
     )
 }
 

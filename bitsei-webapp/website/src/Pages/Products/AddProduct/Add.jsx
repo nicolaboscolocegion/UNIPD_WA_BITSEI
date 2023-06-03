@@ -30,12 +30,12 @@ function AddProduct() {
     };
 
     const fields = [
-        [{name: "title", type: "string"}, {name: "default_price", type: "int"}],
-        [{name: "measurement_unit", type: "string"}, {name: "description", type: "string"} ],
+        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "int"}],
+        [{value: "Measurement Unit", name: "measurement_unit", type: "string"}, {value: "Description", name: "description", type: "string"} ],
     ]
 
     return (
-        <Form title={"Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
+        <Form title={"Add Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
     )
 }
 

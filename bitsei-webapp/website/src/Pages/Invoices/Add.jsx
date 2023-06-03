@@ -54,13 +54,13 @@ function AddInvoice() {
 
     //customer
     const fields = [
-        [{name: "Pension fund refund", type: "double", options:{required: true}}],
+        [{value: "Pension fund refund", name: "Pension fund refund", type: "double", options:{required: true}}],
     ]
 
     return (
         <>
             <Form
-                title={"Invoice"}
+                title={"Add Invoice"}
                 onSubmit={handleSubmit(submitHandler)}
                 fields={fields}
                 register={register}
@@ -75,6 +75,7 @@ function AddInvoice() {
                             Has Stamp
                         </label>
                         <input
+                            className="cinput"
                             type="checkbox"
                             value=""
                             id="has_stamp"

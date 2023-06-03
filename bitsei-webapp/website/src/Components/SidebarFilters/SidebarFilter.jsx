@@ -43,15 +43,18 @@ function SidebarFilter({handleShow, handleClose, shows, filterByTotal, filterByD
         filterByCustomerId.isEnabled = false;
         filterByCustomerId.fromCustomerId = null;
 
+        filterByStatus.isEnabled = false;
+        filterByStatus.fromStatus = null;
+
         handleSubmit();
     }
 
     return (
-        <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px', width: 500+'px'}}>
+        <Offcanvas show={shows} onHide={handleClose} placement="end" scroll="true" style={{ top: 56+'px', bottom: 69+'px', width: 580+'px'}}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>FILTERS</Offcanvas.Title>
                 <Button variant="outline-success" onClick={handleSubmit}>Submit filters</Button>
-                <Button variant="outline-success" onClick={handleReset}>Reset filters</Button>
+                <Button variant="outline-danger" onClick={handleReset}>Reset filters</Button>
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Status filter={filterByStatus}></Status>

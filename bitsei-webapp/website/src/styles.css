@@ -10908,7 +10908,7 @@ body {
     transition: opacity 0.3s ease-in-out;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 250px) {
     #layoutSidenav #layoutSidenav_nav {
         transform: translateX(0);
     }
@@ -11328,4 +11328,14 @@ body {
 }
 .fs-icon {
     font-size: calc(1.375rem + 3.5vw) !important;
+}
+
+.cinput, .ctextarea, .cbutton {
+    padding: 8px 15px;
+    border-radius: 5px !important;
+    margin: 5px 0px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    font-size: 18px !important;
+    font-weight: 300
 }

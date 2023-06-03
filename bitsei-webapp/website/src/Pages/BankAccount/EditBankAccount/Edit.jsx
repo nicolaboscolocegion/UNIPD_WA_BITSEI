@@ -55,31 +55,37 @@ function EditBankAccount() {
 
         };
 
-        const fields = [
-            [{name: "IBAN", type: "string", options: {
+    const fields = [
+        [{
+            value: "IBAN", name: "IBAN", type: "string", options: {
                 required: "Required",
-                minlength: 27,
+                minlength: 3,
                 message: "Please enter a IBAN",
-            }}],
-    
-            [{name: "bank_name", type: "string", options: {
+            }
+        }],
+
+        [{
+            value: "Bank Name", name: "bank_name", type: "string", options: {
                 minlength: 3,
                 message: "Please enter a bank name",
-            }}],
-    
-            [{name: "bankaccount_friendly_name", type: "string",options: {
+            }
+        }],
+
+        [{
+            value: "Bank Account Friendly Name", name: "bankaccount_friendly_name", type: "string", options: {
                 required: "Required",
                 minlength: 3,
                 message: "Please enter a frendly name",
-            }}],
-            
-        ]
+            }
+        }],
+
+    ]
     
 
 
     return (
         
-        <Form title={"BankAccount"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
+        <Form title={"Edit Bank Account"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
         
         
     )
