@@ -423,19 +423,6 @@ function ListInvoices() {
                                             onChange={handleSortedOptionChange}
                                             value={sortedOptionSelected}
                                         />
-                                        <Button
-                                            onClick={() => {
-                                                console.log("filterByTotal: " + filterByTotal.isEnabled + ", " + filterByTotal.fromValue + ", " + filterByTotal.toValue +
-                                                    "\nfilterByDiscount: " + filterByDiscount.isEnabled + ", " + filterByDiscount.fromValue + ", " + filterByDiscount.toValue +
-                                                    "\nfilterByInvoiceDate: " + filterByInvoiceDate.isEnabled + ", " + filterByInvoiceDate.fromValue + ", " + filterByInvoiceDate.toValue +
-                                                    "\nfilterByWarningDate: " + filterByWarningDate.isEnabled + ", " + filterByWarningDate.fromValue + ", " + filterByWarningDate.toValue +
-                                                    "\nfilterByDiscount: " + filterByPfr.isEnabled + ", " + filterByPfr.fromValue + ", " + filterByPfr.toValue +
-                                                    "\nfilterByCustomerId: " + filterByCustomerId.isEnabled + ", " + filterByCustomerId.fromCustomerId);
-                                            }}
-                                        >
-                                            Console Log filters
-                                        </Button>
-
                                     </div>
                                     <div className="table-responsive">
                                         {invoices.length === 0 ? (
