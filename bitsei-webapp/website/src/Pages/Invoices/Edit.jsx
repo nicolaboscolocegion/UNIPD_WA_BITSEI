@@ -71,15 +71,15 @@ function EditInvoice(props) {
 
     const fields = [
         [
-            {name: "Pension fund refund", type: "double", options:{required: true}},
-            {name: "Discount", type: "double"}
+            {value: "Pension fund refund", name: "Pension fund refund", type: "double", options:{required: true}},
+            {value: "Discount", name: "Discount", type: "double"}
         ],
     ]
 
     return (
         <>
             <Form
-                title={"Invoice"}
+                title={"Edit Invoice"}
                 onSubmit={handleSubmit(submitHandler)}
                 fields={fields}
                 register={register}

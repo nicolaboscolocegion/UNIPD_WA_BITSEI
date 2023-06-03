@@ -60,7 +60,7 @@ function AddInvoice() {
     return (
         <>
             <Form
-                title={"Invoice"}
+                title={"Add Invoice"}
                 onSubmit={handleSubmit(submitHandler)}
                 fields={fields}
                 register={register}

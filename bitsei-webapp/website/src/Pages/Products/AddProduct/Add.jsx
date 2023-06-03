@@ -35,7 +35,7 @@ function AddProduct() {
     ]
 
     return (
-        <Form title={"Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
+        <Form title={"Add Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors}/>
     )
 }
 
