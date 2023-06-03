@@ -57,22 +57,7 @@ public class CreateInvoiceRR extends AbstractRR {
         try {
 
             i = Invoice.fromJSON(requestStream);
-
-
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
-
-            fieldRegexValidation("[^\\s]+(\\.(?i)(pdf))$", i.getWarning_pdf_file(), "WARNING_PDF_FILE");
-            fieldRegexValidation("[^\\s]+(\\.(?i)(pdf))$", i.getInvoice_pdf_file(), "INVOICE_PDF_FILE");
-            fieldRegexValidation("[^\\s]+(\\.(?i)(xml))$", i.getInvoice_xml_file(), "INVOICE_XML_FILE");
-            long millis = System.currentTimeMillis();
-            Date curr_date = new java.sql.Date(millis);
-            if (i.getWarning_date().compareTo(curr_date) > 0)
-                throw new DateTimeException("ERROR, INVALID DATE. Warning date after current date.");
-            if (i.getInvoice_date().compareTo(curr_date) > 0)
-                throw new DateTimeException("ERROR, INVALID DATE. Invoice date after current date.");
-            if (i.getWarning_date().compareTo(i.getInvoice_date()) > 0)
-                throw new DateTimeException("ERROR, INVALID DATE. Warning date after invoice date.");
-
 
             // creates a new object for accessing the database and store the invoice
             new CreateInvoiceDAO(con, i, owner_id, r.getCompanyID()).access();

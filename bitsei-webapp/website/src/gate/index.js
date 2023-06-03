@@ -41,6 +41,7 @@ const companies = {
 }
 
 const invoices = {
+    addInvoice: (data, company_id) => api.post(`rest/invoice/company/${company_id}`, data),
     getInvoicesByFilters: (id, data) => api.post("rest/filter-invoices/company/" + id, data),
     listCustomers: (id) => api.get("rest/list-customer/company/" + id),
     listProducts: (id) => api.get("rest/list-product/company/" + id),

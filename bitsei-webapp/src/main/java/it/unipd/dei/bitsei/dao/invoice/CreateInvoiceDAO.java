@@ -85,7 +85,7 @@ public final class CreateInvoiceDAO extends AbstractDAO<Invoice> {
 
             pstmt = con.prepareStatement(STATEMENT);
             pstmt.setInt(1, invoice.getCustomer_id());
-            pstmt.setInt(2, invoice.getStatus());
+            pstmt.setInt(2, 0);
             pstmt.setInt(3, invoice.getWarning_number());
             pstmt.setDate(4, invoice.getWarning_date());
             pstmt.setString(5, invoice.getWarning_pdf_file());
@@ -93,8 +93,8 @@ public final class CreateInvoiceDAO extends AbstractDAO<Invoice> {
             pstmt.setDate(7, invoice.getInvoice_date());
             pstmt.setString(8, invoice.getInvoice_pdf_file());
             pstmt.setString(9, invoice.getInvoice_xml_file());
-            pstmt.setDouble(10, invoice.getTotal());
-            pstmt.setDouble(11, invoice.getDiscount());
+            pstmt.setDouble(10, 0);
+            pstmt.setDouble(11, 0);
             pstmt.setDouble(12, invoice.getPension_fund_refund());
             pstmt.setBoolean(13, invoice.hasStamp());
             pstmt.execute();
