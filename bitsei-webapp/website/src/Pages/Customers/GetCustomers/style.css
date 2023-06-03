@@ -52,8 +52,6 @@ ol.custom-numbers li::before {
 */
 body {
     min-height: 100vh;
-    background-color: #6190e8;
-    background-image: linear-gradient(to right, #5784d7 0%, #a7bfe8 100%);
 }
 
 li {
