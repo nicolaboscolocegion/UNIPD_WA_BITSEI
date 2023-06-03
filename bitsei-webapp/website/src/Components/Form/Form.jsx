@@ -25,7 +25,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
                                                     className={`form-group flex-column d-flex ${field.length > 1 && "col-sm-6"}`}
                                                 >
                                                     <label className="form-control-label px-3">
-                                                        {item.name}<span className="text-danger"> *</span>
+                                                        {item.value}<span className="text-danger"> *</span>
                                                     </label>
                                                     <input
                                                         type={item.type}

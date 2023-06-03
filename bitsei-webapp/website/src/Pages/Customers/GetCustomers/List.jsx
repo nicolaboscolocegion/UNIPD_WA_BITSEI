@@ -101,7 +101,7 @@ function List() {
                                             <DeleteConfirm
                                                 show={show}
                                                 handleClose={handleClose}
-                                                handleSumbit={handleDelete}
+                                                handleSubmit={handleDelete}
                                                 heading="ATTENTION"
                                                 body="Are you sure to delete this customer?"
                                                 item_id={customerToDelete}

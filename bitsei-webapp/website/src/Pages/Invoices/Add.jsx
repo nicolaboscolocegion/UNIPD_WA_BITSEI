@@ -54,7 +54,7 @@ function AddInvoice() {
 
     //customer
     const fields = [
-        [{name: "Pension fund refund", type: "double", options:{required: true}}],
+        [{value: "Pension fund refund", name: "Pension fund refund", type: "double", options:{required: true}}],
     ]
 
     return (
