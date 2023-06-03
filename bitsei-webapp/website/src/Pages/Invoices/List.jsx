@@ -2,39 +2,24 @@ import React, {useEffect, useRef, useState} from "react";
 import Select from 'react-select';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import {useForm} from "react-hook-form";
-import {connect} from "react-redux";
-import { ToastContainer, toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {clearCompanies} from "../../Store/companies/listsThunk";
 import gate from "../../gate";
-import {history} from "../../index";
-import Input from "./Input/Input";
 import SidebarFilter from "../../Components/SidebarFilters/SidebarFilter";
 import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import Sidebar from "../../Components/SideBar/SideBar";
-import {components, default as ReactSelect} from "react-select";
-import {parse} from "@fortawesome/fontawesome-svg-core";
+import {components} from "react-select";
 import {
     FaCheck,
-    FaDog,
     FaDollarSign,
-    FaDolly,
     FaEye,
     FaFilePdf,
-    FaLock,
-    FaLockOpen,
     FaPencilAlt,
     FaTrash
 } from "react-icons/fa";
 import {AiFillLock} from "react-icons/ai";
 import {BiError} from "react-icons/bi";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {BsFiletypeXml} from "react-icons/bs";
-import {ProgressBar} from "react-bootstrap";
-import {faBarsProgress} from "@fortawesome/free-solid-svg-icons";
-
 
 // TODO: Add validation for all fields
 // TODO: Add error handling for all fields
@@ -544,13 +529,16 @@ function ListInvoices() {
                                                             <td className="text-center">{invoice.discount}</td>
                                                             <td className="text-center">{invoice.total}</td>
                                                             <td className="text-center" style={{ verticalAlign: 'top' }}>
+                                                                <Link to={`/companies/${company_id}/invoice/${invoice.invoice_id}/item`}>
                                                                     <button
-                                                                        onClick={() => toast.success("handleShowInvoiceDetails(invoice.invoice_id)")}
+                                                                        // onClick={() => toast.success("handleShowInvoiceDetails(invoice.invoice_id)")}
                                                                         title = "Click to see the invoice's details"
                                                                         disabled={isLoading}
                                                                     >
                                                                         <FaEye />
                                                                     </button>
+                                                                </Link>
+                                                                    
                                                                     <button
                                                                         onClick={() => toast.success("handleEditInvoice(invoice.invoice_id)")}
                                                                         title = "Click to edit the invoice"

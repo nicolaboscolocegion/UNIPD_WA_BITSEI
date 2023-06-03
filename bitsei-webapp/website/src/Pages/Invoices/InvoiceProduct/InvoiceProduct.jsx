@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {toast} from "react-toastify";
 import {Table} from "react-bootstrap";
 
 import Form from "./Form";
 import gate from "../../../gate";
 
+const getProductName = (products, product_id) => products.filter(product => product.product_id === product_id)[0]?.title
 
-// TODO: Refactor sending the request section
-// TODO: Error Handling section -> duplicated entry or things like that
-// TODO: Add a button to go back to the invoices Page
 function InvoiceProduct() {
     const {
         register,
@@ -46,22 +44,21 @@ function InvoiceProduct() {
             .then((response) => {
                 setInvoiceProducts(
                     response.data["resource-list"].map((item) => {
-                        console.log(item)
                         return {
                             ...item.invoiceproduct,
-                            product_name: products.filter(product => product.product_id === item.invoiceproduct.product_id)[0].title
+                            product_name: getProductName(products, item.invoiceproduct.product_id),
                         }
                     })
                 );
-            }).catch((error) => {
-            toast.error("Something went wrong");
-        });
+            })
+            .catch((error) => {
+                toast.error("Problem fetching invoice products, please try again later");
+            });
     }, [products])
 
 
     const editHandler = (id) => {
         const invoiceProduct = invoiceProducts.find((ip) => ip.invoice_id === parseInt(invoice_id) && ip.product_id === id);
-        console.log(invoiceProduct)
         if (invoiceProduct) {
             Object.keys(invoiceProduct).forEach((key) => {
                 setValue(key, invoiceProduct[key]);
@@ -73,7 +70,6 @@ function InvoiceProduct() {
     };
 
     const onEditItem = (data) => {
-        console.log(data);
         gate
             .editInvoiceItem(
                 {
@@ -96,7 +92,7 @@ function InvoiceProduct() {
                         return {
                             ...ip,
                             ...data,
-                            product_name: products.filter(product => product.product_id === data.product_id)[0].title,
+                            product_name: getProductName(products, data.product_id),
                             related_price: data.related_price ? parseFloat(data.related_price) : 0,
                             product_id: parseInt(data.product_id),
                             quantity: parseInt(data.quantity),
@@ -105,17 +101,16 @@ function InvoiceProduct() {
                     }
                     return ip;
                 }))
-                console.log(response)
+                toast.success("Invoice item edited successfully")
             }))
             .catch(error => {
-                console.log(error)
+                toast.error("Can't edit invoice item, please try again later.")
             })
         reset();
         setActionHandler(0);
     };
 
     const onAddItem = (data) => {
-        console.log(data);
         gate
             .addInvoiceItem({
                     invoiceproduct: {
@@ -132,18 +127,18 @@ function InvoiceProduct() {
                 parseInt(data.product_id)
             )
             .then((response => {
-                console.log(data.product_id)
                 setInvoiceProducts([...invoiceProducts, {
                     ...data,
-                    product_name: products.filter(product => product.product_id === data.product_id)[0].title,
+                    product_name: getProductName(products, parseInt(data.product_id)),
                     related_price: data.related_price ? parseFloat(data.related_price) : 0,
                     product_id: parseInt(data.product_id),
                     quantity: parseInt(data.quantity),
                     unit_price: parseFloat(data.unit_price),
                 }])
+                toast.success("Invoice item added successfully")
             }))
             .catch(error => {
-
+                toast.error("Can't add invoice item, please try again later.")
             })
         reset();
         setActionHandler(0);
@@ -155,11 +150,11 @@ function InvoiceProduct() {
             .deleteInvoiceItem(company_id, invoice_id, product_id)
             .then((response => {
                 setInvoiceProducts(invoiceProducts.filter((ip) => ip.product_id !== product_id))
+                toast.success("Invoice item deleted successfully")
             }))
             .catch(error => {
-                console.log(error)
+                toast.error("Can't delete invoice item, please try again later.")
             })
-        console.log(invoice_item)
     }
 
     return (
@@ -173,6 +168,14 @@ function InvoiceProduct() {
                 <div className="card-header">
                     <i className="fas fa-table me-1"/>
                     Invoice Items
+                    <Link to={`/companies/${company_id}/list-invoices`}>
+                        <button
+                            className="btn btn-success btn-sm active btn-block float-end"
+                            type="button"
+                        >
+                            Invoices List
+                        </button>
+                    </Link>
                     <button
                         className="btn btn-primary btn-sm active btn-block float-end"
                         type="button"
@@ -205,7 +208,9 @@ function InvoiceProduct() {
                                             onSubmit={handleSubmit(onEditItem)}
                                             product_id={ip.product_id}
                                             register={register}
-                                            products={products.filter((product) => { return !invoiceProducts.some((ipp) => ipp.product_id === product.product_id && ip.product_id !== product.product_id) })}
+                                            products={products.filter((product) => {
+                                                return !invoiceProducts.some((ipp) => ipp.product_id === product.product_id && ip.product_id !== product.product_id)
+                                            })}
                                             setValue={setValue}
                                         />
                                     </td>
@@ -243,7 +248,9 @@ function InvoiceProduct() {
                                     <Form
                                         onSubmit={handleSubmit(onAddItem)}
                                         register={register}
-                                        products={products.filter((product) => { return !invoiceProducts.some((ip) => ip.product_id === product.product_id) })}
+                                        products={products.filter((product) => {
+                                            return !invoiceProducts.some((ip) => ip.product_id === product.product_id)
+                                        })}
                                         setValue={setValue}
                                     />
                                 </td>

@@ -54,8 +54,12 @@ function Form({onSubmit, product_id = -1, register, products, setValue}) {
             </div>
             <div className="col-md-2">
                 <label className="form-label">Date:</label>
-                <input type="date" {...register("purchase_date")}
-                       className="form-control"/>
+                <input
+                    type="date"
+                    {...register("purchase_date")}
+                    className="form-control"
+                    max={new Date().toISOString().split('T')[0]}
+                />
             </div>
             <div className="col-md-2">
                 <label className="form-label">Action:</label>
