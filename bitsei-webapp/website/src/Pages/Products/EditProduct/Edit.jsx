@@ -68,30 +68,3 @@ function EditProduct() {
 }
 
 export default EditProduct;
-
-    /*const submitHandler = (data, e) => {
-            e.preventDefault();
-            setPending(true);
-            gate
-                .editProduct({product: {companyID: parseInt(company_id), ...data}}, product_id, company_id)
-                .then((response) => {
-                    setPending(false)
-                })
-                .catch((error) => {
-                    toast.error("Something went wrong.");
-                })
-        };
-
-
-        const fields = [
-            [{name: "title", type: "string"}, {name: "default_price", type: "int"}],
-            [{name: "measurement_unit", type: "string"}, {name: "description", type: "string"}],
-        ]
-
-        return (
-            <Form title={"Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}
-                  pending={pending}/>
-        )
-    }
-
-export default EditProduct;*/
