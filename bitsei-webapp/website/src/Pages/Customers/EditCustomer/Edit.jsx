@@ -4,6 +4,7 @@ import gate from "../../../gate";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
 import {toast} from "react-toastify";
+import {history} from "../../../index";
 
 function EditCustomer() {
     const [pending, setPending] = useState(false);
@@ -42,7 +43,10 @@ function EditCustomer() {
         gate
             .editCustomer({customer: {companyID: parseInt(company_id), ...data}}, customer_id, company_id)
             .then((response) => {
-                setPending(false)
+                console.log(response.data);
+                setPending(false);
+                toast.success("Customer edited successfully !");
+                history.push(`/companies/${company_id}/list-customer`);
             })
             .catch((error) => {
                 toast.error("Something went wrong.");

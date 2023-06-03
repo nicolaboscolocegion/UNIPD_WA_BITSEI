@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import gate from "../../../gate";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
+import {history} from "../../../index";
+import {toast} from "react-toastify";
 
 function AddProduct() {
     const {register, handleSubmit, formState: { errors }} = useForm();
@@ -19,8 +21,10 @@ function AddProduct() {
         gate
             .addProduct({product: {company_id: parseInt(company_id), ...data}}, parseInt(company_id))
             .then((response) => {
-                console.log(response.data)
-                setPending(false)
+                console.log(response.data);
+                setPending(false);
+                toast.success("Product added successfully !");
+                history.push("/companies/"+company_id+"/list-products/");
             })
             .catch((error) => {
                 console.log(error)

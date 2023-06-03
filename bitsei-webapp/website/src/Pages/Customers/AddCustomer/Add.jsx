@@ -22,6 +22,7 @@ function AddCustomer() {
             .addCustomer({customer: {companyID: company_id, ...data}}, company_id)
             .then((response) => {
                 console.log(response.data)
+                toast.success("Customer added successfully !");
                 history.push(`/companies/${company_id}/list-customer`);
                 setPending(false)
             })

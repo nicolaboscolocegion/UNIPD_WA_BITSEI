@@ -4,6 +4,7 @@ import gate from "../../../gate";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
 import {toast} from "react-toastify";
+import {history} from "../../../index";
 
 function EditProduct() {
     const [pending, setPending] = useState(false);
@@ -48,8 +49,10 @@ function EditProduct() {
         gate
             .editProduct({product: {company_id: parseInt(company_id), ...data}}, parseInt(product_id), parseInt(company_id))
             .then((response) => {
-                console.log(response.data)
-                setPending(false)
+                console.log(response.data);
+                setPending(false);
+                toast.success("Product edited successfully !");
+                history.push("/companies/"+company_id+"/list-products/");
             })
             .catch((error) => {
                 console.log(error)
