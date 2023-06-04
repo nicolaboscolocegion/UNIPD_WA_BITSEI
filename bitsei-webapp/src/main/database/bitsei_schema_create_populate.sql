@@ -487,15 +487,15 @@ INSERT INTO bitsei_schema."Customer" VALUES (5, 'SAFE ENGINEERING SRL', '0433198
 -- Data for Name: Invoice; Type: TABLE DATA; Schema: bitsei_schema; Owner: bitsei_user
 --
 
-INSERT INTO bitsei_schema."Invoice" VALUES (1, 1, 0, '1', '7/12/2021', 'Try.mp3', 1, '9/12/2023', 'Nullam.xls', 'AtLoremInteger.avi', 340, 100, 4, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (2, 2, 0, '2', '5/1/2022', 'DignissimVestibulum.mp3', 2, '1/12/2023', 'Nullam.xls', 'AtLoremInteger.avi', 168.3, 15.0, 4.1, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (3, 3, 0, '3', '8/12/2022', 'NuncNisl.gif', 3, '5/6/2022', 'VestibulumSed.tiff', 'UltricesVelAugue.jpeg', 929.7, 49.8, 3.5, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (4, 4, 0, '4', '9/12/2022', 'Ultrices.xls', 4, '12/3/2022', 'EgetCongueEget.pdf', 'CubiliaCurae.xls', 851.6, 41.5, 6.4, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (5, 5, 0, '5', '12/3/2023', 'SagittisDui.mp3', 5, '6/2/2022', 'IaculisJustoIn.avi', 'InHacHabitasse.tiff', 392.0, 51.1, 4.1, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (6, 1, 0, '6', '8/5/2022', 'NullamSitAmet.mpeg', 6, '9/1/2022', 'FuscePosuereFelis.xls', 'AeneanAuctor.avi', 909.5, 64.9, 6.3, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (7, 2, 0, '7', '6/1/2022', 'LiberoUtMassa.avi', 7, '1/4/2023', 'Primis.gif', 'HabitassePlateaDictumst.pdf', 271.2, 29.4, 1.1, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (8, 3, 0, '8', '6/9/2022', 'InterdumVenenatisTurpis.mp3', 8, '11/8/2022', 'Vel.avi', 'ElementumPellentesque.mp3', 180.7, 7.9, 8.5, false);
-INSERT INTO bitsei_schema."Invoice" VALUES (9, 4, 0, '9', '7/3/2022', 'PedePosuere.png', 9, '5/5/2022', 'SedVel.avi', 'VelNullaEget.tiff', 598.1, 52.6, 4.2, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (1, 1, 0, '1', '2021-7-12', 'Try.mp3', 1, '2021-8-23', 'Nullam.xls', 'AtLoremInteger.avi', 340, 100, 4, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (2, 2, 0, '2', '2021-10-23', 'DignissimVestibulum.mp3', 2, '2021-10-24', 'Nullam.xls', 'AtLoremInteger.avi', 168.3, 15.0, 4.1, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (3, 3, 0, '3', '2022-1-4', 'NuncNisl.gif', 3, '2022-2-5', 'VestibulumSed.tiff', 'UltricesVelAugue.jpeg', 929.7, 49.8, 3.5, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (4, 4, 0, '4', '2022-2-7', 'Ultrices.xls', 4, '2022-4-3', 'EgetCongueEget.pdf', 'CubiliaCurae.xls', 851.6, 41.5, 6.4, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (5, 5, 0, '5', '2022-4-4', 'SagittisDui.mp3', 5, '2022-4-7', 'IaculisJustoIn.avi', 'InHacHabitasse.tiff', 392.0, 51.1, 4.1, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (6, 1, 0, '6', '2022-5-6', 'NullamSitAmet.mpeg', 6, '2022-5-20', 'FuscePosuereFelis.xls', 'AeneanAuctor.avi', 909.5, 64.9, 6.3, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (7, 2, 0, '7', '2022-5-24', 'LiberoUtMassa.avi', 7, '2023-1-4', 'Primis.gif', 'HabitassePlateaDictumst.pdf', 271.2, 29.4, 1.1, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (8, 3, 0, '8', '2023-1-1', 'InterdumVenenatisTurpis.mp3', 8, '2023-2-3', 'Vel.avi', 'ElementumPellentesque.mp3', 180.7, 7.9, 8.5, false);
+INSERT INTO bitsei_schema."Invoice" VALUES (9, 4, 0, '9', '2023-3-7', 'PedePosuere.png', 9, '2023-4-3', 'SedVel.avi', 'VelNullaEget.tiff', 598.1, 52.6, 4.2, false);
 
 
 --
