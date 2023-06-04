@@ -383,8 +383,7 @@ function ListInvoices() {
     return (
         <>
 
-            <body>
-            <section>
+            
                 <br/>
                 <div className="container">
                     <div className="row">
@@ -582,10 +581,10 @@ function ListInvoices() {
                     </div>
                 </div>
 
-            </section>
+            
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/js/mdb.min.js"></script>
-            </body>
+            
         </>
     )
 }
