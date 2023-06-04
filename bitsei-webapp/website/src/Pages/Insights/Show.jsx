@@ -249,7 +249,7 @@ function ShowChart() {
         
         const link = document.createElement("a");
         link.href = dataURL;//canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");;
-        link.download = "chart.png";
+        link.download = "Chart.png";
         link.click();
     }
 
@@ -369,9 +369,6 @@ function ShowChart() {
                                     <div className="d-flex justify-content-between mt-3 mx-5">
                                         <Button variant="outline-primary" id="downButton" onClick={handleClick}>
                                             Download
-                                        </Button>
-                                        <Button variant="outline-primary">
-                                            Export
                                         </Button>
                                         <Button variant="outline-primary" onClick={handleShow}>
                                             Manage filters

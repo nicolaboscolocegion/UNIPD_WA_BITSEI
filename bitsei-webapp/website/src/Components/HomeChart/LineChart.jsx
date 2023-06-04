@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 
 function LineChart({ chartData }) {
     return (
-        <div className="chart-container">
+        <div className="chart-container mt-1">
             <h3 style={{ textAlign: "center" }}>Total profit per month</h3>
             <Line
                 data={chartData}
