@@ -6,15 +6,22 @@ import Form from "../../Components/Form/Form";
 import {toast} from "react-toastify";
 import {history} from "../../index";
 
-function AddInvoice() {
+function EditInvoice(props) {
+    const {register, handleSubmit, formState: {errors}} = useForm(
+        {
+            defaultValues: {
+                "Pension fund refund": props.location.state.invoice.pension_fund_refund || 0,
+                "Discount": props.location.state.invoice.discount || 0
+            }
+        }
+    );
 
-    const {register, handleSubmit, formState: {errors}} = useForm();
     const [pending, setPending] = useState(false);
-    const {company_id} = useParams();
+    const {company_id, invoice_id} = useParams();
 
-    const [hasStamp, setHasStamp] = useState(false);
+    const [hasStamp, setHasStamp] = useState(props.location.state.invoice.has_stamp || false);
     const [customerList, setCustomerList] = useState([]);
-    const [customerOptionSelected, setCustomerOptionSelected] = useState(null);
+    const [customerOptionSelected, setCustomerOptionSelected] = useState(props.location.state.invoice.customer_id || null);
 
     useEffect(() => {
         gate.listCustomers(company_id)
@@ -23,45 +30,56 @@ function AddInvoice() {
                 setCustomerList(customers);
             })
             .catch((error) => {
-                toast.error("Something went wrong in listing customers. " + error);
+                toast.error("Something went wrong in listCustomers. " + error);
             });
-
     }, []);
 
 
     const submitHandler = (data, e) => {
+        console.log({
+            invoice: {
+                invoice_id: parseInt(invoice_id),
+                customer_id: customerOptionSelected,
+                pension_fund_refund: parseFloat(data["Pension fund refund"]),
+                has_stamp: hasStamp,
+                discount: parseFloat(data["Discount"]) || 0
+            }
+        })
         e.preventDefault();
         setPending(true);
-
         gate
-            .addInvoice(
+            .editInvoice(
                 {
                     invoice: {
+                        invoice_id: parseInt(invoice_id),
                         customer_id: customerOptionSelected,
                         pension_fund_refund: parseFloat(data["Pension fund refund"]),
-                        has_stamp: hasStamp
+                        has_stamp: hasStamp,
+                        discount: parseFloat(data["Discount"]) || 0
                     }
-                }, company_id)
+                }, company_id, invoice_id)
             .then((response) => {
-                toast.success("Invoice added successfully");
+                toast.success("Invoice edited successfully");
                 history.push(`/companies/${company_id}/list-invoices`);
                 setPending(false)
             })
             .catch((error) => {
-                toast.error("Something went wrong in adding the invoice. ")
+                toast.error("Something went wrong in edit Invoice. ")
                 setPending(false)
             })
     };
 
-    //customer
     const fields = [
-        [{value: "Pension fund refund", name: "Pension fund refund", type: "double", options:{required: true}}],
+        [
+            {value: "Pension fund refund", name: "Pension fund refund", type: "double", options:{required: true}},
+            {value: "Discount", name: "Discount", type: "double"}
+        ],
     ]
 
     return (
         <>
             <Form
-                title={"Add Invoice"}
+                title={"Edit Invoice"}
                 onSubmit={handleSubmit(submitHandler)}
                 fields={fields}
                 register={register}
@@ -76,7 +94,6 @@ function AddInvoice() {
                             Has Stamp
                         </label>
                         <input
-                            className="cinput"
                             type="checkbox"
                             value=""
                             id="has_stamp"
@@ -95,11 +112,11 @@ function AddInvoice() {
                         <select {...register("customerID", {required: true})} onChange={(e) => {
                             setCustomerOptionSelected(parseInt(e.target.value))
                         }} className="form-select">
-                            <option value="default" selected disabled hidden>Select a customer</option>
+                            <option value="default" disabled selected>Select a customer</option>
                             {customerList.map(customer => {
                                     return (
                                         <option
-                                            // selected={customer.customer_id === product_id}
+                                            selected={parseInt(customer.customerID) === customerOptionSelected}
                                             value={customer.customerID}
 
                                         >
@@ -117,4 +134,4 @@ function AddInvoice() {
     )
 }
 
-export default AddInvoice;
+export default EditInvoice;

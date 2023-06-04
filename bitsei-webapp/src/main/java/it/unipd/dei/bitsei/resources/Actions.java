@@ -238,6 +238,7 @@ public final class Actions {
      * Lists all bank accounts
      */
     public static final String LIST_BANK_ACCOUNTS = "LIST_BANK_ACCOUNTS";
+    public static final String GET_HOME_DATA = "GET_HOME_DATA";
 
     /**
      * This class can be neither instantiated nor sub-classed.

@@ -107,11 +107,24 @@ function EditCompany({clearCompanies}) {
     const fields = [
         [{name: "title", type: "string", options: {required: true, maxLength: 30}}, {
             name: "business_name",
-            type: "string"
+            type: "string",
+            options: {required: true, maxLength: 30}
         }],
-        [{name: "vat_number", type: "string"}, {name: "tax_code", type: "string"}],
-        [{name: "unique_code", type: "string"}, {name: "city", type: "string"}],
-        [{name: "province", type: "string"}, {name: "address", type: "string"}],
+        [{name: "vat_number", type: "string", options: {required: true, minLength:11, maxLength: 11}}, {
+            name: "tax_code",
+            type: "string",
+            options: {required: true, minLength:16, maxLength: 16}
+        }],
+        [{name: "unique_code", type: "string", options: {required: true, maxLength: 30}}, {
+            name: "city",
+            type: "string",
+            options: {required: true, maxLength: 30}
+        }],
+        [{name: "province", type: "string", options: {required: true, minLength: 2, maxLength:2}}, {
+            name: "address",
+            type: "string",
+            options: {required: true, maxLength: 30}
+        }],
     ]
 
     return (
@@ -132,6 +145,7 @@ function EditCompany({clearCompanies}) {
                 <div className="form-group col-sm-6 flex-column d-flex ">
                     <label className="form-control-label px-3" htmlFor="logo">Logo</label>
                     <input
+                        className="cinput"
                         id="logo"
                         onChange={onSelectFile}
                         onClick={(e) => {
@@ -152,6 +166,7 @@ function EditCompany({clearCompanies}) {
                         Mail Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_mail_notifications"
@@ -168,6 +183,7 @@ function EditCompany({clearCompanies}) {
                         Telegram Notification
                     </label>
                     <input
+                        className="cinput"
                         type="checkbox"
                         value=""
                         id="has_telegram_notifications"

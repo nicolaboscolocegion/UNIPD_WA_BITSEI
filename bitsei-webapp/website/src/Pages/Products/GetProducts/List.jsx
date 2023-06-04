@@ -1,19 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {useSelector, connect} from "react-redux";
+import {connect} from "react-redux";
 import {Link, useParams} from "react-router-dom";
 import gate from "../../../gate"
 import {toast} from "react-toastify";
 import "./style.css"
-import Header from "../../../Components/Header/Header";
-import Item from "../../../Components/CompanyItem/Item";
 import {Table} from "react-bootstrap";
 import DeleteConfirm from "../../../Components/DeleteConfirm/DeleteConfirm";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
-import ImageTest from "../../../Components/Image/ImageTest";
-import Image from "../../../Components/Image/Image";
-
-
-
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 
 
 function List() {
@@ -33,12 +27,10 @@ function List() {
     }
 
     const handleDelete = (product_id) => {
-
-
-        gate.deleteProduct(product_id, company_id);
-        setProducts([...products].filter(item => item.product.productID !== product_id))
-        setShow(false)
-    }
+            gate.deleteProduct(product_id, company_id);
+            setProducts([...products].filter(item => item.product.product_id !== product_id))
+            setShow(false)
+        }
 
 
     useEffect(() => {
@@ -46,7 +38,6 @@ function List() {
         gate
             .getProducts(company_id)
             .then(response => {
-                console.log(response.data['resource-list']);
                 setProducts(response.data['resource-list']);
                 setPending(false);
             }).catch(() => {
@@ -57,72 +48,58 @@ function List() {
 
     return pending ? ("Loading") : (
         <div className="container-fluid px-4">
-            <h1 className="mt-4">Products</h1>
-            <br />
-
-
+            <h1 className="mt-4">Products Dashboard</h1>
             <div className="card mb-4">
                 <div className="card-header">
                     <i className="fas fa-table me-1"/>
-                    List Products
+                    Products
                 </div>
                 <div className="card-body">
                     <Table id="datatablesSimple">
                         <thead>
                         <tr>
-                            <th>LOGO</th>
                             <th>TITLE</th>
-                            <th>DEFAULT PRICE</th>
-                            <th>MEASUREMENT UNIT</th>
-                            <th>DESCRIPTION</th>
-                            <th>ACTIONS</th>
+                            <th className="text-center">DEFAULT PRICE</th>
+                            <th className="text-center">MEASUREMENT UNIT</th>
+                            <th className="text-center">DESCRIPTION</th>
+                            <th className="text-center">ACTIONS</th>
                         </tr>
                         </thead>
                         <tbody>
                         {products.map((item) => {
-                                console.log(item.product.title)
                                 let product = item
-
                                 return (
-
-                                    <tr>
-                                            <td><ImageTest
-                                                src={product.product.logo}
-                                                alt={product.product.logo}
-                                                fallback=<Image id={company_id}/>
-                                            /></td>
-                                            <td>{product.product.title} </td>
-                                            <td>{product.product.defaultPrice} </td>
-                                            <td>
-                                                {product.product.measurementUnit}
-                                            </td>
-                                            <td>
-                                                {product.product.description}
-                                            </td>
-                                            <td>
-                                                <Link className="w-full" to={`/companies/${company_id}/product/edit/${product.product.productID}`} onClick={() => handleCompanySubmit(company_id)}>
-                                                    <button className="btn btn-primary btn-sm active btn-block mx-2 "
-                                                            type="button">Edit
-                                                    </button>
-                                                </Link>
-
-                                                <button
-                                                    className="btn btn-danger btn-sm active btn-block mx-2"
-                                                    onClick={() => handleDeleteModal(product.product.productID)}
-                                                    type="button"
-                                                >
-                                                    Delete
+                                    <tr key={product.product.title}>
+                                        <td>{product.product.title} </td>
+                                        <td className="text-center">{product.product.default_price} </td>
+                                        <td className="text-center">{product.product.measurement_unit}</td>
+                                        <td className="text-center">
+                                            {product.product.description}
+                                        </td>
+                                        <td className="text-center">
+                                            <Link className="w-full"
+                                                  to={`/companies/${company_id}/product/edit/${product.product.product_id}`}
+                                                  onClick={() => handleCompanySubmit(company_id)}>
+                                                <button className="btn btn-primary btn-sm active btn-block mx-2 "
+                                                        type="button">Edit
                                                 </button>
+                                            </Link>
 
-                                                <DeleteConfirm
-                                                    show={show}
-                                                    handleClose={handleClose}
-                                                    handleSumbit={handleDelete}
-                                                    heading="ATTENTION"
-                                                    body="Are you sure to delete this product?"
-                                                    item_id={productToDelete}
-                                                />
-                                            </td>
+                                            <button
+                                                className="btn btn-danger btn-sm active btn-block mx-2"
+                                                onClick={() => handleDeleteModal(product.product.product_id)}
+                                                type="button"> <FaTrash/>
+                                            </button>
+
+                                            <DeleteConfirm
+                                                show={show}
+                                                handleClose={handleClose}
+                                                handleSubmit={handleDelete}
+                                                heading="ATTENTION"
+                                                body="Are you sure to delete this product?"
+                                                item_id={productToDelete}
+                                            />
+                                        </td>
                                     </tr>
 
                                 )

@@ -1,4 +1,4 @@
-package it.unipd.dei.bitsei.rest.customer;
+package it.unipd.dei.bitsei.rest.listing;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,11 +7,9 @@ import java.sql.SQLException;
 
 
 import it.unipd.dei.bitsei.dao.customer.GetCustomerDAO;
-import it.unipd.dei.bitsei.resources.Actions;
+import it.unipd.dei.bitsei.dao.listing.GetHomeDataDAO;
+import it.unipd.dei.bitsei.resources.*;
 
-import it.unipd.dei.bitsei.resources.Customer;
-import it.unipd.dei.bitsei.resources.LogContext;
-import it.unipd.dei.bitsei.resources.Message;
 import it.unipd.dei.bitsei.rest.AbstractRR;
 import it.unipd.dei.bitsei.utils.RestURIParser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * @version 1.00
  * @since 1.00
  */
-public class GetCustomerRR extends AbstractRR {
+public class GetHomeDataRR extends AbstractRR {
 
     private RestURIParser r = null;
 
@@ -36,9 +34,11 @@ public class GetCustomerRR extends AbstractRR {
      * @param con the connection to the database.
      * @param r   the URI parser.
      */
-    public GetCustomerRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
-        super(Actions.GET_CUSTOMER, req, res, con);
+    public GetHomeDataRR(HttpServletRequest req, HttpServletResponse res, Connection con, RestURIParser r) {
+        super(Actions.GET_HOME_DATA, req, res, con);
         this.r = r;
+
+        LOGGER.info("Costruttore");
     }
 
 
@@ -51,43 +51,38 @@ public class GetCustomerRR extends AbstractRR {
         InputStream requestStream = req.getInputStream();
 
         LogContext.setIPAddress(req.getRemoteAddr());
+        Message m = null;
+        HomeData hd = null;
 
         // model
-        Customer c = null;
-        Message m = null;
 
 
         try {
-
-            int customerID = r.getResourceID();
+            LOGGER.info("Try");
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
-
-            LOGGER.info("company id = " + r.getCompanyID());
-
-            // creates a new object for accessing the database and stores the customer
-            c = new GetCustomerDAO(con, customerID, owner_id, r.getCompanyID()).access().getOutputParam();
-
-            m = new Message(String.format("Customer %s successfully fetched.", c.getBusinessName()));
-            LOGGER.info("Customer succesfully fetched.");
+            LOGGER.info("Owner preso");
+            hd = new GetHomeDataDAO(con, owner_id, r.getCompanyID()).access().getOutputParam();
+            //hd = new HomeData(1,1, "aaaa", 1,1);
+            LOGGER.info("Dao eseguito");
             res.setStatus(HttpServletResponse.SC_OK);
-            c.toJSON(res.getOutputStream());
+            hd.toJSON(res.getOutputStream());
 
 
-        } catch (SQLException ex) {
-            LOGGER.error("Cannot fetch customer: unexpected error while accessing the database.", ex.getMessage());
-            m = new Message("Cannot fetch customer: unexpected error while accessing the database.", "E5A1", "");
-            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", "");
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (RuntimeException e) {
             LOGGER.info("Runtime exception: " + e.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (SQLException e) {
+            LOGGER.error("Cannot fetch home data: unexpected error while accessing the database.", e.getMessage());
+            m = new Message("Cannot fetch home data: unexpected error while accessing the database.", "E5A1", "");
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         }
     }
 }

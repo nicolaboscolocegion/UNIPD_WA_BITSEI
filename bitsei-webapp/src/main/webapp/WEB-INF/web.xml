@@ -12,7 +12,6 @@
         <servlet-name>RestManagerServlet</servlet-name>
         <servlet-class>it.unipd.dei.bitsei.servlet.RestDispatcherServlet</servlet-class>
         <multipart-config>
-            <location>/Users/farzad/Projects</location>
             <max-file-size>2097152</max-file-size>
             <max-request-size>4194304</max-request-size>
             <file-size-threshold>0</file-size-threshold>
@@ -110,6 +109,7 @@
         <url-pattern>/rest/filter-invoices/*</url-pattern>
         <url-pattern>/rest/charts/*</url-pattern>
         <url-pattern>/rest/getdocument/*</url-pattern>
+        <url-pattern>/rest/home-data/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>

@@ -41,13 +41,17 @@ const companies = {
 }
 
 const invoices = {
+    addInvoice: (data, company_id) => api.post(`rest/invoice/company/${company_id}`, data),
+    editInvoice: (data, company_id, invoice_id) => api.put(`rest/invoice/${invoice_id}/company/${company_id}`, data),
     getInvoicesByFilters: (id, data) => api.post("rest/filter-invoices/company/" + id, data),
     listCustomers: (id) => api.get("rest/list-customer/company/" + id),
     listProducts: (id) => api.get("rest/list-product/company/" + id),
     closeInvoice: (company_id, invoice_id) => api.put("rest/closeinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 15000,
         headers: { 'Content-Type': 'application/json' },
     }),
     generateInvoice: (company_id, invoice_id) => api.put("rest/generateinvoice/" + invoice_id + "/company/" + company_id, null, {
+        timeout: 15000,
         headers: { 'Content-Type': 'application/json' },
     }),
     deleteInvoice: (company_id, invoice_id) => api.delete("rest/invoice/" + invoice_id + "/company/" + company_id, {
@@ -63,7 +67,8 @@ const invoices = {
 }
 
 const insights = {
-    getChartInvoiceByFilters: (data) => api.post("rest/charts/company/1", data)
+    getChartInvoiceByFilters: (id, data) => api.post("rest/charts/company/" + id, data),
+    getHomeData: (company_id) => api.get("rest/home-data/company/" + company_id)
 }
 
 const bankAccount ={

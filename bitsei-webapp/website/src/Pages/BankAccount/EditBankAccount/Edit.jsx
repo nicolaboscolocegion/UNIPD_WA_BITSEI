@@ -15,6 +15,7 @@ function EditBankAccount() {
 
     useEffect(() => {
         setPending(true);
+        //retriving bank account from the database for show the values
         gate
             .getBankAccount(bankaccount_id, company_id)
             .then(response => {
@@ -42,44 +43,54 @@ function EditBankAccount() {
 
         console.log(data);
 
+        //edits the bank account 
         gate
             .editBankAccount(  {...data},bankaccount_id, company_id)
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
                 history.push(`/companies/${company_id}/bankAccount`);
+                toast.success("Edited Bank Account successfully !")
             })
             .catch((error) => {
                 console.log(error)
+                toast.error("Something went wrong.")
             })
 
         };
 
-        const fields = [
-            [{name: "IBAN", type: "string", options: {
+    //form fields
+    const fields = [
+        [{
+            value: "IBAN", name: "IBAN", type: "string", options: {
                 required: "Required",
-                minlength: 27,
+                minlength: 3,
                 message: "Please enter a IBAN",
-            }}],
-    
-            [{name: "bank_name", type: "string", options: {
+            }
+        }],
+
+        [{
+            value: "Bank Name", name: "bank_name", type: "string", options: {
                 minlength: 3,
                 message: "Please enter a bank name",
-            }}],
-    
-            [{name: "bankaccount_friendly_name", type: "string",options: {
+            }
+        }],
+
+        [{
+            value: "Bank Account Friendly Name", name: "bankaccount_friendly_name", type: "string", options: {
                 required: "Required",
                 minlength: 3,
                 message: "Please enter a frendly name",
-            }}],
-            
-        ]
+            }
+        }],
+
+    ]
     
 
-
+    //form return
     return (
         
-        <Form title={"BankAccount"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
+        <Form title={"Edit Bank Account"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
         
         
     )

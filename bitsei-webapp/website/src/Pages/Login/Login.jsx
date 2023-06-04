@@ -1,20 +1,17 @@
 import React, {useEffect} from "react";
 import {toast} from "react-toastify";
 import {useForm} from "react-hook-form";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 import Input from "./Input/Input";
 import Button from "./Button/Button";
 import {userLogin, logout} from "../../Store/auth/authThunk";
-import axios from "axios";
 import gate from "../../gate";
-import types from "../../Store/auth/authActionTypes";
 import Footer from "../../Components/Footer/Footer";
 import logo from "../../assets/bitseiLogo";
 
 function Login({userLogin, logout}) {
     const [isRestPassword, setIsRestPassword] = React.useState(false);
-    const {register, handleSubmit} = useForm();
-    const errors = useSelector((state) => state.auth.errors);
+    const {register, handleSubmit, formState: {errors}} = useForm();
 
     useEffect(() => {
         logout();
@@ -45,11 +42,10 @@ function Login({userLogin, logout}) {
                 <main>
                     <div className="container">
                         <div className="row justify-content-center">
-
                             <img
-                            className=" align-text-top my-4 w-25 mx-auto"
-                            src={`data:image/png;base64, ${logo()}`}
-                            alt={"company_logo"}
+                                className=" align-text-top my-4 w-25 mx-auto"
+                                src={`data:image/png;base64, ${logo()}`}
+                                alt={"company_logo"}
                             />
                         </div>
                     </div>
@@ -74,7 +70,7 @@ function Login({userLogin, logout}) {
                                             <div className="form-floating mb-3">
                                                 <Input name="Email Address" type="email" register={{
                                                     ...register("email", {
-                                                        required: "Required",
+                                                        required: true,
                                                         pattern: {
                                                             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                                             message: "invalid email address"

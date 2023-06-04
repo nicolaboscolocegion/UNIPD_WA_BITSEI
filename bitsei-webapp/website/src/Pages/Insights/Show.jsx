@@ -8,6 +8,9 @@ import Button from 'react-bootstrap/Button';
 import Chart from 'chart.js/auto'
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
+import {useParams} from "react-router-dom";
+import { Colors } from 'chart.js';
+import autocolors from 'chartjs-plugin-autocolors';
 
 // TODO: Refactor the logic section of code
 // TODO: Use functions to generate the chart based on that
@@ -21,17 +24,21 @@ function ShowChart() {
     const [chartPeriod, setChartPeriod] = useState(1)
     const [show, setShow] = useState(false);
     const [showTable, setShowTable] = useState(false);
-    var count = 0;
+    const {company_id} = useParams();
+    var count = -1;
     const mapPeriods = {
         1: "Months",
         2: "Years",
         3: "Days",
     };
 
+    Chart.register(autocolors);
+
     useEffect(() => {
+        console.log("Company ID: " + company_id);
         //Process request (the payload is dataToSend) to get data for drawing chart
         gate
-            .getChartInvoiceByFilters(dataToSend)
+            .getChartInvoiceByFilters(company_id, dataToSend)
             .then((response) => {
                 console.log(response.data["chart"]);
                 setChart(response.data["chart"]);
@@ -40,6 +47,18 @@ function ShowChart() {
                 toast.error("Something went wrong in invoices listing");
             });
     }, [dataToSend]);
+
+    const plugin = {
+        id: 'customCanvasBackgroundColor',
+        beforeDraw: (chart, args, options) => {
+          const {ctx} = chart;
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = options.color || '#99ffff';
+          ctx.fillRect(0, 0, chart.width, chart.height);
+          ctx.restore();
+        }
+    };
 
     useEffect(() => {
         const ctx = document.getElementById('myChart');
@@ -59,8 +78,17 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        customCanvasBackgroundColor: {
+                          color: 'white',
+                        },
+                        autocolors: {
+                            mode: 'data'
+                        }
                     }
-                }
+                },
+                plugins: [plugin]
             });
             return () => {
                 myChart.destroy();
@@ -82,6 +110,11 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data'
+                        }
                     }
                 }
             });
@@ -95,7 +128,7 @@ function ShowChart() {
                     labels: chart.labels,
                     datasets: [{
                         label: 'Average discount',
-                        data: chart.type,
+                        data: chart.data,
                         borderWidth: 1,
                         borderColor: 'rgb(75, 192, 192)'
                     }]
@@ -104,6 +137,11 @@ function ShowChart() {
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data'
                         }
                     }
                 }
@@ -129,6 +167,12 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data',
+                            enabled: false
+                        }
                     }
                 }
             });
@@ -153,6 +197,12 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data',
+                            enabled: false
+                        }
                     }
                 }
             });
@@ -163,7 +213,7 @@ function ShowChart() {
     }, [chart]);
 
     useEffect(() => {
-        count = 0;
+        count = -1;
         setShowTable(true);
     },[chart]);
 
@@ -180,17 +230,27 @@ function ShowChart() {
     }
 
     const handleTabSelect = (selectedTab) => {
-        setChartType(parseInt(selectedTab));
+        setChartType(selectedTab);
     }
     
     const handlePeriodSelect = (selectedItem) => {
-        setChartPeriod(parseInt(selectedItem));
-        console.log(parseInt(selectedItem))
+        setChartPeriod(selectedItem);
+        console.log(selectedItem);
     }
 
     function buttonTitle(){
         console.log(mapPeriods[chart.period]);
         return mapPeriods.hasOwnProperty(chart.period) ? (mapPeriods[chart.period]) : (console.log("Error"));
+    }
+
+    const handleClick = () => {
+        var canvas = document.getElementById("myChart");
+        const dataURL = canvas.toDataURL("image/png");
+        
+        const link = document.createElement("a");
+        link.href = dataURL;//canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");;
+        link.download = "chart.png";
+        link.click();
     }
 
     //Request data (stored in dataToSend)
@@ -218,6 +278,14 @@ function ShowChart() {
         isEnabled: false,
         fromValue: null,
         toValue: null
+    })
+    const [filterByCustomerId, setFilterByCustomerId] = useState({
+        isEnabled: false,
+        fromCustomerId: null
+    })
+    const [filterByStatus, setFilterByStatus] = useState({
+        isEnabled: false,
+        fromStatus: null
     })
 
 
@@ -248,6 +316,34 @@ function ShowChart() {
             tmpDataToSend["fromWarningDate"] = filterByWarningDate.fromValue;
             tmpDataToSend["toWarningDate"] = filterByWarningDate.toValue;
         }
+
+        if(filterByCustomerId.isEnabled) {
+            let customerId = ""
+            let countCustomerId = 0;
+            for(let option in filterByCustomerId.fromCustomerId){
+                console.log(filterByCustomerId.fromCustomerId[option], filterByCustomerId.fromCustomerId[option].label)
+                if(countCustomerId > 0)
+                    customerId += "-";
+                customerId += filterByCustomerId.fromCustomerId[option].value.toString();
+                countCustomerId++;
+            }
+            if(countCustomerId > 0)
+                tmpDataToSend["fromCustomerId"] = customerId;
+        }
+
+        if(filterByStatus.isEnabled) {
+            let status = ""
+            let countStatus = 0;
+            for(let option in filterByStatus.fromStatus){
+                console.log(filterByStatus.fromStatus[option], filterByStatus.fromStatus[option].label)
+                if(countStatus > 0)
+                    status += "-";
+                status += filterByStatus.fromStatus[option].value.toString();
+                countStatus++;
+            }
+            if(countStatus > 0)
+                tmpDataToSend["fromStatus"] = status;
+        }
         tmpDataToSend["chart_type"] = chartType;
         tmpDataToSend["chart_period"] = chartPeriod;
         setDataToSend(tmpDataToSend);
@@ -255,10 +351,6 @@ function ShowChart() {
 
     return (
         <>
-            <head>
-                <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.2/css/mdb.min.css"
-                      rel="stylesheet"/>
-            </head>
 
             <body>
             <section>
@@ -266,15 +358,16 @@ function ShowChart() {
                 <div className="container">
                     <div className="row">
                         <div className="col">
-                            <div className="card">
+                            <div className="card mb-4">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Insights</h5>
                                 <section className="text-center">
                                     <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show}
                                                    filterByTotal={filterByTotal} filterByDiscount={filterByDiscount}
                                                    filterByPfr={filterByPfr} filterByInvoiceDate={filterByInvoiceDate}
-                                                   filterByWarningDate={filterByWarningDate} setFilters={setFilters}/>
+                                                   filterByWarningDate={filterByWarningDate} filterByCustomerId={filterByCustomerId}
+                                                   filterByStatus={filterByStatus} setFilters={setFilters}/>
                                     <div className="d-flex justify-content-between mt-3 mx-5">
-                                        <Button variant="outline-primary">
+                                        <Button variant="outline-primary" id="downButton" onClick={handleClick}>
                                             Download
                                         </Button>
                                         <Button variant="outline-primary">
@@ -287,26 +380,26 @@ function ShowChart() {
                                 </section>
                                 <div className="card-body">
                                     <div className="container-fluid">
-                                        <Nav fill variant="tabs" activeKey={chartType} defaultActiveKey="1"
-                                             onSelect={handleTabSelect}>
+                                        <Nav fill variant="pills" activeKey={chartType} defaultActiveKey={1}
+                                             onSelect={handleTabSelect} justify>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="1">Invoices by Period</Nav.Link>
+                                                <Nav.Link eventKey={1}>Invoices by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="2">Total by Period</Nav.Link>
+                                                <Nav.Link eventKey={2}>Total by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="3">Discount by Period</Nav.Link>
+                                                <Nav.Link eventKey={3}>Discount by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="4">Invoices by Customer</Nav.Link>
+                                                <Nav.Link eventKey={4}>Invoices by Customer</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="5">Total by Customer</Nav.Link>
+                                                <Nav.Link eventKey={5}>Total by Customer</Nav.Link>
                                             </Nav.Item>
                                         </Nav>
 
-                                        <div className="chart-container w-75 h-75 mx-auto">
+                                        <div className="container d-flex justify-content-center mx-auto" style={{height: 35+'rem'}}>
                                             <canvas id="myChart" />
                                         </div>
 
@@ -327,9 +420,9 @@ function ShowChart() {
                                                             </Dropdown.Toggle>
                                                         )}
                                                         <Dropdown.Menu>
-                                                            <Dropdown.Item eventKey="1">Months</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="2">Years</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="3">Days</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={1}>Months</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={2}>Years</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={3}>Days</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown>
                                                 </div>
@@ -356,13 +449,13 @@ function ShowChart() {
                                                 {
                                                     
                                                     (chart.labels)?.map((item) => {
+                                                        count++;
                                                         return (
                                                             <tr>
                                                                 <td className="text-center">{item}</td>
                                                                 <td className="text-center">{chart.data[count]}</td>
                                                             </tr>
                                                         )
-                                                        count++;
                                                     })
                                                 }
                                                 </tbody>

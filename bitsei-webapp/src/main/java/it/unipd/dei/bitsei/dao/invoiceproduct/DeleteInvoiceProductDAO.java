@@ -30,6 +30,10 @@ public final class DeleteInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
      */
     private static final String DELETE = "DELETE FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ? AND product_id = ?;";
 
+    private static final String FETCH_INVOICE_PRODUCTS = "SELECT * FROM bitsei_schema.\"Invoice_Product\" WHERE invoice_id = ?;";
+    private static final String INVOICE_TOTAL_STATEMENT = "UPDATE bitsei_schema.\"Invoice\" SET total = ? WHERE invoice_id = ?;";
+
+
     /**
      * The invoice_id of the invoice product to be deleted from the database.
      */
@@ -122,6 +126,23 @@ public final class DeleteInvoiceProductDAO extends AbstractDAO<InvoiceProduct> {
             pstmt.setInt(1, invoice_id);
             pstmt.setInt(2, product_id);
             pstmt.executeUpdate();
+
+
+            pstmt = con.prepareStatement(FETCH_INVOICE_PRODUCTS);
+            pstmt.setInt(1, ip.getInvoice_id());
+            rs = pstmt.executeQuery();
+            double total = 0;
+
+            while (rs.next()) {
+                total = total + (rs.getInt("quantity") * rs.getDouble("unit_price")) + rs.getDouble("related_price");
+            }
+
+
+            pstmt = con.prepareStatement(INVOICE_TOTAL_STATEMENT);
+            pstmt.setDouble(1, total);
+            pstmt.setInt(2, ip.getInvoice_id());
+
+            pstmt.execute();
 
 
             LOGGER.info("Invoice product successfully deleted from the database.");

@@ -4,6 +4,7 @@ import gate from "../../../gate";
 import {useParams} from "react-router-dom";
 import Form from "../../../Components/Form/Form";
 import {toast} from "react-toastify";
+import {history} from "../../../index";
 
 function EditProduct() {
     const [pending, setPending] = useState(false);
@@ -15,15 +16,12 @@ function EditProduct() {
         gate
             .getProduct(product_id,company_id)
             .then(response => {
-                console.log(response.data.product);
                 const product = response.data.product;
-                console.log(product)
                 reset({
                     title: product.title,
-                        defaultPrice: product.defaultPrice,
-                        logo: product.logo,
-                        measurementUnit: product.measurementUnit,
-                        description: product.description,
+                    default_price: product.default_price,
+                    measurement_unit: product.measurement_unit,
+                    description: product.description,
                 })
                 setPending(false);
             }).catch( () => {
@@ -31,7 +29,7 @@ function EditProduct() {
             }
 
         );
-    }, [product_id, company_id]);
+    }, [product_id, company_id, reset]);
 
 
 
@@ -42,18 +40,19 @@ function EditProduct() {
 
         const formData = new FormData();
         formData.append("title", data.title);
-        formData.append("defaultPrice", data.defaultPrice);
-        formData.append("logo", data.logo);
-        formData.append("measurementUnit", data.measurementUnit);
+        formData.append("default_price", parseInt(data.default_price));
+        formData.append("measurement_unit", data.measurement_unit);
         formData.append("description", data.description);
 
-        console.log(data)
-
+        console.log(formData)
+        data.default_price = parseFloat(data.default_price);
         gate
-            .editProduct({product: {companyID: company_id, ...data}}, company_id, product_id)
+            .editProduct({product: {company_id: parseInt(company_id), ...data}}, parseInt(product_id), parseInt(company_id))
             .then((response) => {
-                console.log(response.data)
-                setPending(false)
+                console.log(response.data);
+                setPending(false);
+                toast.success("Product edited successfully !");
+                history.push("/companies/"+company_id+"/list-products/");
             })
             .catch((error) => {
                 console.log(error)
@@ -62,13 +61,12 @@ function EditProduct() {
 
 
     const fields = [
-        [{name: "title", type: "string"}, {name: "defaultPrice", type: "int"}],
-        [{name: "logo", type: "string"}, {name: "measurementUnit", type: "string"}],
-        [{name: "description", type: "string"}],
+        [{value: "Title", name: "title", type: "string"}, {value: "Default Price", name: "default_price", type: "double"}],
+        [{value: "Measurement Unit", name: "measurement_unit", type: "string"}, {value: "Description", name: "description", type: "string"} ],
     ]
 
     return (
-        <Form title={"Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}/>
+        <Form title={"Edit Product"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register}/>
     )
 }
 

@@ -20,7 +20,7 @@ function AddBankAccount() {
         e.preventDefault();
 
         setPending(true);
-
+        //creates the bank account
         gate
             .createBankAccount({company_id: parseInt(company_id), ...data}, company_id)
             .then((response) => {
@@ -39,9 +39,10 @@ function AddBankAccount() {
             });
     };
 
+    //form inputs
     const fields = [
         [{
-            name: "IBAN", type: "string", options: {
+            value: "IBAN", name: "IBAN", type: "string", options: {
                 required: "Required",
                 minlength: 3,
                 message: "Please enter a IBAN",
@@ -49,14 +50,14 @@ function AddBankAccount() {
         }],
 
         [{
-            name: "bank_name", type: "string", options: {
+            value: "Bank Name", name: "bank_name", type: "string", options: {
                 minlength: 3,
                 message: "Please enter a bank name",
             }
         }],
 
         [{
-            name: "bankaccount_friendly_name", type: "string", options: {
+            value: "Bank Account Friendly Name", name: "bankaccount_friendly_name", type: "string", options: {
                 required: "Required",
                 minlength: 3,
                 message: "Please enter a frendly name",
@@ -65,9 +66,10 @@ function AddBankAccount() {
 
     ]
 
+    //return forms
     return (
         <Form
-            title={"BankAccount"}
+            title={"Add Bank Account"}
             onSubmit={handleSubmit(submitHandler)}
             fields={fields}
             register={register}

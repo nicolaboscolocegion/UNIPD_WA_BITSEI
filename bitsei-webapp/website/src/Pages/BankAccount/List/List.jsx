@@ -15,6 +15,7 @@ function ListBankAccounts() {
     const [bankAccounts, setBankAccount] = useState([]);
     const [bankAccountToDelete, setBankAccountToDelete] = useState(-1)
 
+    //pop up for deliting consent 
     const handleDeleteModal = (bankAccount_id) => {
         setBankAccountToDelete(bankAccount_id)
         setShow(true)
@@ -22,11 +23,13 @@ function ListBankAccounts() {
 
     const handleClose = () => setShow(false);
 
+    //delete bank account 
     const handleDelete = (bankAccountId) => {
         gate
             .deleteBankAccount(company_id, bankAccountId)
             .then(response => {
                 toast.success("Bank account deleted successfully.");
+                //hides the delited bank account
                 setBankAccount([...bankAccounts].filter(item => item.bankaccount_id !== bankAccountId))
                 setShow(false)
             })
@@ -38,6 +41,7 @@ function ListBankAccounts() {
     }
 
     useEffect(() => {
+        //retirvies all bank account of the company
         setPending(true);
         gate
             .listBankAccount(company_id)
@@ -58,6 +62,7 @@ function ListBankAccounts() {
         setActiveCompanyId(company_id)
     }
 
+    //returns the table with all the bankaccounts
     return pending ? ("Loading") : (
         <div className="container-fluid px-4">
             <h1 className="mt-4">Bank Account Dashboard</h1>

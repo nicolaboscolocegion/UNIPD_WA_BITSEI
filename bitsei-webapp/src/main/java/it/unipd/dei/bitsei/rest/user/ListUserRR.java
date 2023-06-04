@@ -76,7 +76,7 @@ public final class ListUserRR extends AbstractRR {
         } catch (SQLException ex) {
             LOGGER.error("Cannot list user(s): unexpected database error.", ex);
 
-            m = new Message("Cannot list user(s): unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot list user(s): unexpected database error.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

@@ -5,5 +5,6 @@ const types = {
   PRODUCTS: "Products",
   INVOICES: "Invoices",
   BANKACCOUNT: "Bank Account",
+  INSIGHTS: "Insights",
 };
 export default types;

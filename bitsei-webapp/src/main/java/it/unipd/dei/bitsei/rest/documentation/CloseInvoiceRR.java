@@ -180,11 +180,11 @@ public class CloseInvoiceRR extends AbstractRR {
 
         } catch (SQLException ex) {
             LOGGER.error("Cannot close invoice: unexpected error while accessing the database." + ex.getStackTrace());
-            m = new Message("Cannot close invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            m = new Message("Cannot close invoice: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", "");
             LOGGER.info("Owner id in token not parsable.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

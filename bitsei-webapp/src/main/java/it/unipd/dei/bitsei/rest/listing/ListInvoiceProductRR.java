@@ -62,14 +62,14 @@ public final class ListInvoiceProductRR extends AbstractRR {
             } else { // it should not happen
                 LOGGER.error("## ListInvoiceProductRR: Fatal error while listing invoice row(s). ##");
 
-                m = new Message("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected error. ##", "E5A1", null);
+                m = new Message("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected error. ##", "E5A1", "");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected database error. ##", ex);
+            LOGGER.error("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected database error. ##", ex.getMessage());
 
-            m = new Message("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListInvoiceProductRR: Cannot list invoice row(s): unexpected database error. ##", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

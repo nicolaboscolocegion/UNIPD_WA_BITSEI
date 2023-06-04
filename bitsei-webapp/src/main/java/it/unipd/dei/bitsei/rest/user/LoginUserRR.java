@@ -92,13 +92,13 @@ public class LoginUserRR extends AbstractRR {
         } catch (SQLException ex) {
             LOGGER.error("Cannot search for user: unexpected error while accessing the database.", ex);
 
-            m = new Message("Cannot search for user: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            m = new Message("Cannot search for user: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (JoseException e) {
             LOGGER.error(new StringFormattedMessage("Unable to send response when Authenticate"), e);
 
-            m = new Message("Unable to send response when Authenticate", "E5A1", e.getMessage());
+            m = new Message("Unable to send response when Authenticate", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Link,} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank} from "@fortawesome/free-solid-svg-icons";
+import {faBuilding, faAngleDown, faFileInvoice, faFolder, faHippo, faBank, faLineChart} from "@fortawesome/free-solid-svg-icons";
 
 import types from "./sideBarItemsType";
 
@@ -50,6 +50,11 @@ function Sidebar() {
                     {path: `/companies/${company_id}/bankAccount/add`, name: "Add Bank Account"},
                 ]
             },
+
+            {
+                path: `/companies/${company_id}/insights`, name: types.INSIGHTS, icon: faLineChart
+            },
+
         ]
     }
 
@@ -66,10 +71,10 @@ function Sidebar() {
                 <div className="sb-sidenav-menu">
                     <div className="nav">
                         {Object.keys(sideBarItems).map((key) => (
-                            <>
+                            <div key={key}>
                                 <div className="sb-sidenav-menu-heading">{key}</div>
                                 {sideBarItems[key].map((item) => (
-                                    <>
+                                    <div key={item.name}>
                                         <div className="nav-link">
                                             <Link className="nav-link" to={item.path}>
                                                 <div className="sb-nav-link-icon">
@@ -93,16 +98,16 @@ function Sidebar() {
                                             >
                                                 <nav className="sb-sidenav-menu-nested nav">
                                                     {item.subItems.map((subItem) => (
-                                                        <Link className="nav-link" to={subItem.path}>
+                                                        <Link key={subItem.name} className="nav-link" to={subItem.path}>
                                                             {subItem.name}
                                                         </Link>
                                                     ))}
                                                 </nav>
                                             </div>
                                         )}
-                                    </>
+                                    </div>
                                 ))}
-                            </>
+                            </div>
                         ))}
                     </div>
                 </div>

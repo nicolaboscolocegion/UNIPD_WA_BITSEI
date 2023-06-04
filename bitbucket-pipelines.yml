@@ -19,7 +19,6 @@ pipelines:
             - maven
           script:
             - cd bitsei-webapp && mvn -s .ci/settings.xml tomcat7:redeploy
-    client-side:
       - step:
           name: Build React Project
           image: node:18.16.0

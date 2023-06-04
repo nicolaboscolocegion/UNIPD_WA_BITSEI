@@ -77,7 +77,7 @@ public class ChangePasswordRR extends AbstractRR {
             }
             LOGGER.error("Cannot change password: unexpected database error.", ex);
 
-            m = new Message("Cannot change password: unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot change password: unexpected database error.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }

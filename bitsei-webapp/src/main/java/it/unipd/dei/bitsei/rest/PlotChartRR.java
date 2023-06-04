@@ -348,7 +348,7 @@ public final class PlotChartRR extends AbstractRR {
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
                                         Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), 1);
-                                        tmap_discount_month_total.put(d, i.getTotal() + tmap_discount_month_total.getOrDefault(d, 0.0));
+                                        tmap_discount_month_total.put(d, i.getDiscount() + tmap_discount_month_total.getOrDefault(d, 0.0));
                                     }
                                 }
                                 TreeMap<Date, Integer> tmap_discount_month_numb = new TreeMap<>();
@@ -370,7 +370,7 @@ public final class PlotChartRR extends AbstractRR {
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
                                         Date d = new Date(i.getInvoice_date().getYear(), 0, 1);
-                                        tmap_discount_year_total.put(d, i.getTotal() + tmap_discount_year_total.getOrDefault(d, 0.0));
+                                        tmap_discount_year_total.put(d, i.getDiscount() + tmap_discount_year_total.getOrDefault(d, 0.0));
                                     }
                                 }
                                 TreeMap<Date, Integer> tmap_discount_year_numb = new TreeMap<>();
@@ -392,7 +392,7 @@ public final class PlotChartRR extends AbstractRR {
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
                                         Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDay());
-                                        tmap_discount_day_total.put(d, i.getTotal() + tmap_discount_day_total.getOrDefault(d, 0.0));
+                                        tmap_discount_day_total.put(d, i.getDiscount() + tmap_discount_day_total.getOrDefault(d, 0.0));
                                     }
                                 }
                                 TreeMap<Date, Integer> tmap_discount_day_numb = new TreeMap<>();
@@ -458,11 +458,11 @@ public final class PlotChartRR extends AbstractRR {
         } catch (SQLException ex) {
             LOGGER.error("## PlotChartRR: Cannot plot chart: unexpected database error. ##", ex);
 
-            m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("## PlotChartRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            m = new Message("## PlotChartRR: Owner not parsable. ##", "E5A1", "");
             LOGGER.info("## PlotChartRR: Owner not parsable. " + ex.getStackTrace() + " ##");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
