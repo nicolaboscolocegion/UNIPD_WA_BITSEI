@@ -15,6 +15,7 @@ function EditBankAccount() {
 
     useEffect(() => {
         setPending(true);
+        //retriving bank account from the database for show the values
         gate
             .getBankAccount(bankaccount_id, company_id)
             .then(response => {
@@ -42,19 +43,23 @@ function EditBankAccount() {
 
         console.log(data);
 
+        //edits the bank account 
         gate
             .editBankAccount(  {...data},bankaccount_id, company_id)
             .then((response) => {
                 console.log(response.data)
                 setPending(false)
                 history.push(`/companies/${company_id}/bankAccount`);
+                toast.success("Edited Bank Account successfully !")
             })
             .catch((error) => {
                 console.log(error)
+                toast.error("Something went wrong.")
             })
 
         };
 
+    //form fields
     const fields = [
         [{
             value: "IBAN", name: "IBAN", type: "string", options: {
@@ -82,7 +87,7 @@ function EditBankAccount() {
     ]
     
 
-
+    //form return
     return (
         
         <Form title={"Edit Bank Account"} onSubmit={handleSubmit(submitHandler)} fields={fields} register={register} errors={errors} pending={pending}/>
