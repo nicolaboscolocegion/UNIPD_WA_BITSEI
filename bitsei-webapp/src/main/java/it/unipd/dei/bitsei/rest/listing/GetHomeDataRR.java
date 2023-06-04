@@ -71,15 +71,18 @@ public class GetHomeDataRR extends AbstractRR {
 
 
         } catch (NumberFormatException ex) {
-            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", "");
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (RuntimeException e) {
-
+            LOGGER.info("Runtime exception: " + e.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Cannot fetch home data: unexpected error while accessing the database.", e.getMessage());
+            m = new Message("Cannot fetch home data: unexpected error while accessing the database.", "E5A1", "");
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            m.toJSON(res.getOutputStream());
         }
     }
 }

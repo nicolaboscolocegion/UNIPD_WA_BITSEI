@@ -219,7 +219,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             } else { // it should not happen
                 LOGGER.error("## ListInvoiceByFiltersRR: Fatal error while listing invoice(s). ##");
 
-                m = new Message("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected error. ##", "E5A1", null);
+                m = new Message("## ListInvoiceByFiltersRR: Cannot list invoice(s): unexpected error. ##", "E5A1", "");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
@@ -230,7 +230,7 @@ public final class ListInvoiceByFiltersRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("## ListInvoiceByFiltersRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListInvoiceByFiltersRR: Owner not parsable. ##", "E5A1", "");
             LOGGER.info("## ListInvoiceByFiltersRR: Owner not parsable. " + ex.getStackTrace() + " ##");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

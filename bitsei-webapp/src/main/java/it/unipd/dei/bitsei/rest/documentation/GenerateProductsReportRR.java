@@ -91,11 +91,11 @@ public class GenerateProductsReportRR extends AbstractRR {
 
         } catch (SQLException ex) {
             LOGGER.error("Products report: unexpected error while accessing the database.", ex);
-            m = new Message("Products report: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            m = new Message("Products report: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", "");
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

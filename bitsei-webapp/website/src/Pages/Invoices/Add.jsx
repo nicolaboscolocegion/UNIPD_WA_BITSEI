@@ -23,7 +23,7 @@ function AddInvoice() {
                 setCustomerList(customers);
             })
             .catch((error) => {
-                toast.error("Something went wrong in listCustomers. " + error);
+                toast.error("Something went wrong in listing customers. " + error);
             });
 
     }, []);
@@ -47,7 +47,7 @@ function AddInvoice() {
                 setPending(false)
             })
             .catch((error) => {
-                toast.error("Something went wrong in addInvoice. ")
+                toast.error("Something went wrong in adding the invoice. ")
                 setPending(false)
             })
     };
