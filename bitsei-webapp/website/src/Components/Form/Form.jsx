@@ -10,7 +10,7 @@ function Form({title, onSubmit, fields, register, errors = {}, pending = false, 
         <div className="container-fluid px-1 py-5 mx-auto">
             <div className="row d-flex justify-content-center">
                 <div className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
-                    <h3>{title}</h3>
+                    <h2>{title}</h2>
                     <div className="card formcard">
                         <h5 className="text-center mb-4"/>
                         <form
