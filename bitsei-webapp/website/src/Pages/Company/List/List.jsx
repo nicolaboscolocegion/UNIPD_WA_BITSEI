@@ -24,6 +24,14 @@ function List({getLists, setActiveCompanyId}) {
                 <div className="card-header">
                     <i className="fas fa-table me-1"/>
                     Select company
+                    <Link to={`/companies/add`}>
+                        <button
+                            className="btn btn-success btn-sm active btn-block float-end"
+                            type="button"
+                        >
+                            Add company
+                        </button>
+                    </Link>
                 </div>
                 <div className="card-body">
                     <Table id="datatablesSimple">
