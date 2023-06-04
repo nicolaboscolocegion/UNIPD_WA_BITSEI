@@ -215,7 +215,7 @@ function CompanyDetail() {
                     </div>
                     <PieChart chartData={chartData2}/>
                 </div>
-                <div className={"card homecard mb-1 w-24 "}>
+                <div className={"card homecard mb-1 w-24"}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
