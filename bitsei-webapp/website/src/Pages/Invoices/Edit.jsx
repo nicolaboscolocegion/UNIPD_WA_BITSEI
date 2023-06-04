@@ -109,16 +109,16 @@ function EditInvoice(props) {
                             htmlFor="has_mail_notifications">
                             Customer:
                         </label>
-                        <select {...register("customerID", {required: true})} className="form-select">
+                        <select {...register("customerID", {required: true})} onChange={(e) => {
+                            setCustomerOptionSelected(parseInt(e.target.value))
+                        }} className="form-select">
                             <option value="default" disabled selected>Select a customer</option>
                             {customerList.map(customer => {
                                     return (
                                         <option
                                             selected={parseInt(customer.customerID) === customerOptionSelected}
                                             value={customer.customerID}
-                                            onClick={(e) => {
-                                                setCustomerOptionSelected(parseInt(e.target.value))
-                                            }}
+
                                         >
                                             {customer.businessName}
                                         </option>
