@@ -69,6 +69,11 @@ public class UpdateInvoiceRR extends AbstractRR {
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
+            if (i.getPension_fund_refund() < 0 || i.getPension_fund_refund() > 4) {
+                LOGGER.error("Pension fund refund can be only beetwen 0 and 4.");
+                throw new IllegalArgumentException();
+            }
+
             // creates a new object for accessing the database and update the invoice
             new UpdateInvoiceDAO(con, i, owner_id, r.getCompanyID()).access();
 
