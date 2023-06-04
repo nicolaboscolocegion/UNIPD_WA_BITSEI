@@ -105,23 +105,32 @@ function EditCompany({clearCompanies}) {
 
 
     const fields = [
-        [{name: "title", type: "string", options: {required: true, maxLength: 30}}, {
+        [{name: "title", value: "Title", type: "string", options: {required: true, maxLength: 30}}, {
             name: "business_name",
+            value: "Business Name",
             type: "string",
             options: {required: true, maxLength: 30}
         }],
-        [{name: "vat_number", type: "string", options: {required: true, minLength:11, maxLength: 11}}, {
+        [{
+            name: "vat_number",
+            value: "Vat Number",
+            type: "string",
+            options: {required: true, minLength: 11, maxLength: 11}
+        }, {
             name: "tax_code",
+            value: "Tax Code",
             type: "string",
-            options: {required: true, minLength:16, maxLength: 16}
+            options: {required: true, minLength: 16, maxLength: 16}
         }],
-        [{name: "unique_code", type: "string", options: {required: true, maxLength: 30}}, {
+        [{name: "unique_code", value: "Unique Code", type: "string", options: {required: true, maxLength: 30}}, {
             name: "city",
+            value: "City",
             type: "string",
             options: {required: true, maxLength: 30}
         }],
-        [{name: "province", type: "string", options: {required: true, minLength: 2, maxLength:2}}, {
+        [{name: "province", value: "Province", type: "string", options: {required: true, minLength: 2, maxLength: 2}}, {
             name: "address",
+            value: "Address",
             type: "string",
             options: {required: true, maxLength: 30}
         }],

@@ -32,8 +32,13 @@ ol.custom-numbers {
     list-style: none;
 }
 
+
+
+
+
 ol.custom-numbers li {
     counter-increment: my-awesome-counter;
+    color: rgba(255, 255, 255, 0.643);
 }
 
 ol.custom-numbers li::before {
@@ -52,10 +57,10 @@ ol.custom-numbers li::before {
 */
 body {
     min-height: 100vh;
-    background-color: #6190e8;
-    background-image: linear-gradient(to right, #5784d7 0%, #a7bfe8 100%);
-}
 
+
+
+}
 li {
     font-style: italic;
 }
