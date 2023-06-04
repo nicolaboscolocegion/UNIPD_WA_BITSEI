@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "./Logo_Università_Padova.png";
 
 function Footer() {
     return (
@@ -7,8 +8,7 @@ function Footer() {
                 <div className="d-flex align-items-center justify-content-between small">
                     <div className="text-muted">Copyright © BITSEI 2023</div>
                     <div>
-                        <a href="#">Privacy Policy</a>·
-                        <a href="#">Terms &amp; Conditions</a>
+                        <img src={logo} alt="Logo" className="logo-icon" style={{ height: "40px" }} />
                     </div>
                 </div>
             </div>
