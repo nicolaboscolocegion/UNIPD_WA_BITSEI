@@ -279,7 +279,7 @@ public final class PlotChartRR extends AbstractRR {
                                 TreeMap<Date, Integer> tmap_numb_day = new TreeMap<>();
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
-                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDay());
+                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDate());
                                         tmap_numb_day.put(d, 1 + tmap_numb_day.getOrDefault(d, 0));
                                     }
                                 }
@@ -328,7 +328,7 @@ public final class PlotChartRR extends AbstractRR {
                                 TreeMap<Date, Double> tmap_total_day = new TreeMap<>();
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
-                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDay());
+                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDate());
                                         tmap_total_day.put(d, i.getTotal() + tmap_total_day.getOrDefault(d, 0.0));
                                     }
                                 }
@@ -391,14 +391,14 @@ public final class PlotChartRR extends AbstractRR {
                                 TreeMap<Date, Double> tmap_discount_day_total = new TreeMap<>();
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
-                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDay());
+                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDate());
                                         tmap_discount_day_total.put(d, i.getDiscount() + tmap_discount_day_total.getOrDefault(d, 0.0));
                                     }
                                 }
                                 TreeMap<Date, Integer> tmap_discount_day_numb = new TreeMap<>();
                                 for (InvoiceCustomer i : el) {
                                     if (i.getInvoice_date() != null) {
-                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDay());
+                                        Date d = new Date(i.getInvoice_date().getYear(), i.getInvoice_date().getMonth(), i.getInvoice_date().getDate());
                                         tmap_discount_day_numb.put(d, 1 + tmap_discount_day_numb.getOrDefault(d, 0));
                                     }
                                 }

@@ -373,15 +373,17 @@ function CompanyDetail() {
                                     <div className="card-icon card-icon-large">
                                         <FontAwesomeIcon icon={faPeopleGroup} className="fs-icon m-1 mx-2"/>
                                     </div>
-                                    <div className="mb-4">
+                                    <div className="mb-1">
                                         <h5 className="card-title mb-0">Active customers</h5>
+                                    </div>
+                                    <div>
+                                        <p className="d-flex align-items-center mb-0 d-inline align-text-bottom fs-7">(goal 50)</p>
                                     </div>
                                     <div className="row align-items-center mb-2 d-flex">
                                         <div className="col-8">
+
                                             <div className="col-8 d-flex">
                                                 <h2 className="d-flex align-items-center mb-0 d-inline">{homeData.active_cust}</h2>
-                                                <p className="d-flex align-items-center mb-0 d-inline align-text-bottom">&nbsp;(goal
-                                                    50)</p>
                                             </div>
                                         </div>
                                         <div className="col-4 text-right">
