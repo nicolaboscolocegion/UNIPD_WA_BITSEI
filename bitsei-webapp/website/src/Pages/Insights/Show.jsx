@@ -9,6 +9,8 @@ import Chart from 'chart.js/auto'
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import {useParams} from "react-router-dom";
+import { Colors } from 'chart.js';
+import autocolors from 'chartjs-plugin-autocolors';
 
 // TODO: Refactor the logic section of code
 // TODO: Use functions to generate the chart based on that
@@ -29,6 +31,8 @@ function ShowChart() {
         2: "Years",
         3: "Days",
     };
+
+    Chart.register(autocolors);
 
     useEffect(() => {
         console.log("Company ID: " + company_id);
@@ -78,6 +82,9 @@ function ShowChart() {
                     plugins: {
                         customCanvasBackgroundColor: {
                           color: 'white',
+                        },
+                        autocolors: {
+                            mode: 'data'
                         }
                     }
                 },
@@ -103,6 +110,11 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data'
+                        }
                     }
                 }
             });
@@ -125,6 +137,11 @@ function ShowChart() {
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data'
                         }
                     }
                 }
@@ -150,6 +167,12 @@ function ShowChart() {
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data',
+                            enabled: false
+                        }
                     }
                 }
             });
@@ -173,6 +196,12 @@ function ShowChart() {
                     scales: {
                         y: {
                             beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        autocolors: {
+                            mode: 'data',
+                            enabled: false
                         }
                     }
                 }
@@ -201,12 +230,12 @@ function ShowChart() {
     }
 
     const handleTabSelect = (selectedTab) => {
-        setChartType(parseInt(selectedTab));
+        setChartType(selectedTab);
     }
     
     const handlePeriodSelect = (selectedItem) => {
-        setChartPeriod(parseInt(selectedItem));
-        console.log(parseInt(selectedItem))
+        setChartPeriod(selectedItem);
+        console.log(selectedItem);
     }
 
     function buttonTitle(){
@@ -329,7 +358,7 @@ function ShowChart() {
                 <div className="container">
                     <div className="row">
                         <div className="col">
-                            <div className="card">
+                            <div className="card mb-4">
                                 <h5 className="card-header elegant-color-dark white-text text-center">Insights</h5>
                                 <section className="text-center">
                                     <SidebarFilter handleShow={handleShow} handleClose={handleClose} shows={show}
@@ -351,26 +380,26 @@ function ShowChart() {
                                 </section>
                                 <div className="card-body">
                                     <div className="container-fluid">
-                                        <Nav fill variant="tabs" activeKey={chartType} defaultActiveKey="1"
-                                             onSelect={handleTabSelect}>
+                                        <Nav fill variant="pills" activeKey={chartType} defaultActiveKey={1}
+                                             onSelect={handleTabSelect} justify>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="1">Invoices by Period</Nav.Link>
+                                                <Nav.Link eventKey={1}>Invoices by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="2">Total by Period</Nav.Link>
+                                                <Nav.Link eventKey={2}>Total by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="3">Discount by Period</Nav.Link>
+                                                <Nav.Link eventKey={3}>Discount by Period</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="4">Invoices by Customer</Nav.Link>
+                                                <Nav.Link eventKey={4}>Invoices by Customer</Nav.Link>
                                             </Nav.Item>
                                             <Nav.Item>
-                                                <Nav.Link eventKey="5">Total by Customer</Nav.Link>
+                                                <Nav.Link eventKey={5}>Total by Customer</Nav.Link>
                                             </Nav.Item>
                                         </Nav>
 
-                                        <div className="chart-container w-75 h-75 mx-auto">
+                                        <div className="container d-flex justify-content-center mx-auto" style={{height: 35+'rem'}}>
                                             <canvas id="myChart" />
                                         </div>
 
@@ -391,9 +420,9 @@ function ShowChart() {
                                                             </Dropdown.Toggle>
                                                         )}
                                                         <Dropdown.Menu>
-                                                            <Dropdown.Item eventKey="1">Months</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="2">Years</Dropdown.Item>
-                                                            <Dropdown.Item eventKey="3">Days</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={1}>Months</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={2}>Years</Dropdown.Item>
+                                                            <Dropdown.Item eventKey={3}>Days</Dropdown.Item>
                                                         </Dropdown.Menu>
                                                     </Dropdown>
                                                 </div>
