@@ -81,7 +81,7 @@ function List() {
                                                   to={`/companies/${company_id}/product/edit/${product.product.product_id}`}
                                                   onClick={() => handleCompanySubmit(company_id)}>
                                                 <button className="btn btn-primary btn-sm active btn-block mx-2 "
-                                                        type="button">Edit
+                                                        type="button"><FaPencilAlt/>
                                                 </button>
                                             </Link>
 

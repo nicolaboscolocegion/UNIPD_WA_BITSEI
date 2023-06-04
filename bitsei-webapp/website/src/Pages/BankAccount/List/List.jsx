@@ -6,6 +6,7 @@ import {toast} from "react-toastify";
 import {Table} from "react-bootstrap";
 import {setActiveCompanyId} from "../../../Store/companies/listsThunk";
 import {Link} from "react-router-dom";
+import {FaPencilAlt, FaTrash} from "react-icons/fa";
 
 function ListBankAccounts() {
     const {company_id} = useParams();
@@ -76,9 +77,9 @@ function ListBankAccounts() {
                         <thead>
                         <tr>
                             <th>IBAN</th>
-                            <th>Bank name</th>
-                            <th>Friendly name</th>
-                            <th className="text-center">Edit options</th>
+                            <th>BANK NAME</th>
+                            <th>FRIENDLY NAME</th>
+                            <th className="text-center">ACTIONS</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -92,7 +93,7 @@ function ListBankAccounts() {
                                           to={`/companies/${bankAccount.company_id}/bankAccount/${bankAccount.bankaccount_id}/edit`}
                                           onClick={() => handleCompanySubmit(bankAccount.company_id)}>
                                         <button className="btn btn-primary btn-sm active btn-block mx-2 "
-                                                type="button">Edit
+                                                type="button"><FaPencilAlt />
                                         </button>
                                     </Link>
 
@@ -101,7 +102,7 @@ function ListBankAccounts() {
                                         onClick={() => handleDeleteModal(bankAccount.bankaccount_id)}
                                         type="button"
                                     >
-                                        Delete
+                                        <FaTrash />
                                     </button>
 
                                     <DeleteConfirm
