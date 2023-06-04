@@ -32,8 +32,15 @@ ol.custom-numbers {
     list-style: none;
 }
 
+h1, h3, p{
+    color: rgb(247,247,247);
+}
+
+
+
 ol.custom-numbers li {
     counter-increment: my-awesome-counter;
+    color: rgba(255, 255, 255, 0.643);
 }
 
 ol.custom-numbers li::before {
@@ -52,10 +59,16 @@ ol.custom-numbers li::before {
 */
 body {
     min-height: 100vh;
-    background-color: #6190e8;
-    background-image: linear-gradient(to right, #5784d7 0%, #a7bfe8 100%);
-}
+    /*background: rgb(35,87,197);*/
+    /*background: linear-gradient(0deg, rgba(35,87,197,1) 0%, rgba(35,159,197,1) 27%);*/
+    /*background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(203,203,203,1) 62%);*/
 
+    background: linear-gradient(0deg, rgba(78,255,219,1) 0%, rgba(35,87,197,1) 66%);
+
+
+
+}
 li {
     font-style: italic;
 }
