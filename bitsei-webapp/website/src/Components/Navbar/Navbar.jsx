@@ -11,6 +11,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 
 function Navbar({logout}) {
+    const company_id = useSelector((state) => state.companies.activeCompany)
+        || window.location.pathname.split("/")[2];
+
     return (
         <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
             <Link className="navbar-brand ps-3" to={'/companies'}>
@@ -24,21 +27,25 @@ function Navbar({logout}) {
 
 
             <Dropdown
-                className = "m-auto me-4 menu-button-resize"
+                className="m-auto me-4 menu-button-resize"
             >
                 <Dropdown.Toggle id="dropdown-button-dark-example1" variant="secondary">
-                    <FontAwesomeIcon icon={faBars} />
+                    <FontAwesomeIcon icon={faBars}/>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu variant="dark">
-                    <Dropdown.Item href="#/action-1">Company</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item href="#/action-1">Customers</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Products</Dropdown.Item>
-                    <Dropdown.Item href="#/action-3">Invoices</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item href="#/action-4">Bank Account</Dropdown.Item>
-                    <Dropdown.Item href="#/action-5">Insights</Dropdown.Item>
+                    <Dropdown.Item href="/companies">Company</Dropdown.Item>
+                    {company_id && (
+                        <>
+                            <Dropdown.Divider/>
+                            <Dropdown.Item href={`/companies/${company_id}/list-customer`}>Customers</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/list-products`}>Products</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/list-invoices`}>Invoices</Dropdown.Item>
+                            <Dropdown.Divider/>
+                            <Dropdown.Item href={`/companies/${company_id}/bankAccount`}>Bank Account</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/insights`}>Insights</Dropdown.Item>
+                        </>
+                    )}
                 </Dropdown.Menu>
             </Dropdown>
 
