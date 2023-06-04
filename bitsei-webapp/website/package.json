@@ -13,6 +13,7 @@
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
     "chart.js": "^4.3.0",
+    "chartjs-plugin-autocolors": "^0.2.2",
     "history": "^4.7.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.4",
