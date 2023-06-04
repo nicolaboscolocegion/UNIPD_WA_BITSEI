@@ -213,14 +213,14 @@ function CompanyDetail() {
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
                     </div>
-                    <PieChart chartData={chartData2}/>
+                    <PieChart chartData={chartData2} textData="Number of invoices by customer" />
                 </div>
                 <div className={"card homecard mb-1 w-24"}>
                     <div className={"card-header"}>
                         <i className="fas fa-table me-1"></i>
                         Pie Chart
                     </div>
-                    <PieChart chartData={chartData3}/>
+                    <PieChart chartData={chartData3} textData="Total profit by customer" />
                 </div>
             </div>
 
