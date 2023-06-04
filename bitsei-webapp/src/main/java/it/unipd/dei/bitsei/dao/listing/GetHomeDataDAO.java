@@ -22,7 +22,7 @@ public final class GetHomeDataDAO extends AbstractDAO<HomeData> {
     /**
      * The SQL statement to be executed
      */
-    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\" INNER JOIN bitsei_schema.\"Customer\" ON bitsei_schema.\"Company\".company_id = bitsei_schema.\"Customer\".company_id WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ?;";
+    private static final String CHECK_OWNERSHIP_STMT = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Company\"  WHERE bitsei_schema.\"Company\".company_id = ? AND bitsei_schema.\"Company\".owner_id = ?;";
     private static final String STATEMENT_ONE = "SELECT SUM(bitsei_schema.\"Invoice\".total) AS t FROM bitsei_schema.\"Invoice\" inner join bitsei_schema.\"Customer\" on bitsei_schema.\"Invoice\".customer_id = bitsei_schema.\"Customer\".customer_id WHERE bitsei_schema.\"Customer\".company_id = ?;";
     private static final String STATEMENT_TWO = "SELECT COUNT(*) AS c FROM bitsei_schema.\"Invoice\" inner join bitsei_schema.\"Customer\" on bitsei_schema.\"Invoice\".customer_id = bitsei_schema.\"Customer\".customer_id WHERE bitsei_schema.\"Customer\".company_id = ? and bitsei_schema.\"Invoice\".warning_date is not null and bitsei_schema.\"Invoice\".warning_date <= NOW() - interval '14 day' AND bitsei_schema.\"Invoice\".status = 1;";
     private static final String STATEMENT_THREE = "SELECT SUM(total) AS t, bitsei_schema.\"Customer\".business_name  FROM bitsei_schema.\"Invoice\" inner join bitsei_schema.\"Customer\" on bitsei_schema.\"Invoice\".customer_id = bitsei_schema.\"Customer\".customer_id WHERE bitsei_schema.\"Customer\".company_id = ? GROUP BY bitsei_schema.\"Customer\".business_name order by t DESC LIMIT 1;";
@@ -78,20 +78,6 @@ public final class GetHomeDataDAO extends AbstractDAO<HomeData> {
                 throw new IllegalAccessException();
             }
 
-
-            /*pstmt = con.prepareStatement(STATEMENT);
-            pstmt.setInt(1, customerID);
-
-            rs = pstmt.executeQuery();
-
-
-            while (rs.next()) {
-
-                c = new Customer(rs.getInt("customer_id"), rs.getString("business_name"), rs.getString("vat_number"), rs.getString("tax_code"), rs.getString("address"), rs.getString("city"), rs.getString("province"), rs.getString("postal_code"), rs.getString("email"), rs.getString("pec"), rs.getString("unique_code"), rs.getInt("company_id"));
-            }
-
-            LOGGER.info("Customer with customerID above %d successfully listed.", customerID);*/
-
             pstmt = con.prepareStatement(STATEMENT_ONE);
             pstmt.setInt(1, company_id);
             rs = pstmt.executeQuery();
@@ -99,13 +85,13 @@ public final class GetHomeDataDAO extends AbstractDAO<HomeData> {
                 total = rs.getDouble("t");
             }
 
-
             pstmt = con.prepareStatement(STATEMENT_TWO);
             pstmt.setInt(1, company_id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 closed_inv = rs.getInt("c");
             }
+            LOGGER.warn("Home data successfully listed."+ total + closed_inv + most_money_cust + most_money_cust_val + active_cust);
 
             pstmt = con.prepareStatement(STATEMENT_THREE);
             pstmt.setInt(1, company_id);
@@ -114,6 +100,7 @@ public final class GetHomeDataDAO extends AbstractDAO<HomeData> {
                 most_money_cust = rs.getString("business_name");
                 most_money_cust_val = rs.getDouble("t");
             }
+            LOGGER.warn("Home data successfully listed."+ total + closed_inv + most_money_cust + most_money_cust_val + active_cust);
 
             pstmt = con.prepareStatement(STATEMENT_FOUR);
             pstmt.setInt(1, company_id);
@@ -122,6 +109,8 @@ public final class GetHomeDataDAO extends AbstractDAO<HomeData> {
                 active_cust = rs.getInt("c");
             }
 
+
+            LOGGER.warn("Home data successfully listed."+ total + closed_inv + most_money_cust + most_money_cust_val + active_cust);
             hd = new HomeData(total, closed_inv, most_money_cust, most_money_cust_val, active_cust);
 
 
