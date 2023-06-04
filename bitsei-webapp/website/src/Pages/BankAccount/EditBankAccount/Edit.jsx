@@ -50,9 +50,11 @@ function EditBankAccount() {
                 console.log(response.data)
                 setPending(false)
                 history.push(`/companies/${company_id}/bankAccount`);
+                toast.success("Edited Bank Account successfully !")
             })
             .catch((error) => {
                 console.log(error)
+                toast.error("Something went wrong.")
             })
 
         };
