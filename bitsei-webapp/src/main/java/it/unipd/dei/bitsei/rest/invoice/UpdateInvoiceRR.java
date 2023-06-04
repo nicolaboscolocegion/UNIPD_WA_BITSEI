@@ -69,6 +69,11 @@ public class UpdateInvoiceRR extends AbstractRR {
 
             int owner_id = Integer.parseInt(req.getSession().getAttribute("owner_id").toString());
 
+            if (i.getPension_fund_refund() < 0 || i.getPension_fund_refund() > 4) {
+                LOGGER.error("Pension fund refund can be only beetwen 0 and 4.");
+                throw new IllegalArgumentException();
+            }
+
             // creates a new object for accessing the database and update the invoice
             new UpdateInvoiceDAO(con, i, owner_id, r.getCompanyID()).access();
 
@@ -80,19 +85,19 @@ public class UpdateInvoiceRR extends AbstractRR {
 
 
         } catch (SQLException ex) {
-            LOGGER.error("Cannot update invoice: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot update invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot update invoice: unexpected error while accessing the database.", ex.getMessage());
+            m = new Message("Cannot update invoice: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("No company id provided, will be set to null.", "E5A1", ex.getMessage());
+            m = new Message("No company id provided, will be set to null.", "E5A1", "");
             LOGGER.info("No company id provided, will be set to null.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (DateTimeException ex) {
             m = new Message(
                     "Cannot create the invoice. Invalid input parameters: invalid date",
-                    "E100", ex.getMessage());
+                    "E100", "");
 
             LOGGER.error(
                     "Cannot create the invoice. Invalid input parameters: invalid date",
@@ -102,7 +107,7 @@ public class UpdateInvoiceRR extends AbstractRR {
         } catch (IllegalArgumentException ex) {
             m = new Message(
                     "Invalid input parameters. ",
-                    "E100", ex.getMessage());
+                    "E100", "");
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);

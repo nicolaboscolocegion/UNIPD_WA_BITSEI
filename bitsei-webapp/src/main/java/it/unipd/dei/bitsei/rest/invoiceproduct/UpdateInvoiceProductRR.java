@@ -86,23 +86,23 @@ public class UpdateInvoiceProductRR extends AbstractRR  {
 
 
         }catch(SQLException ex){
-            LOGGER.error("Cannot update invoice product: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot update invoice product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot update invoice product: unexpected error while accessing the database.", ex.getMessage());
+            m = new Message("Cannot update invoice product: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         }catch (NumberFormatException ex) {
-            m = new Message("No company id provided, will be set to null.", "E5A1", ex.getMessage());
+            m = new Message("No company id provided, will be set to null.", "E5A1", "");
             LOGGER.info("No company id provided, will be set to null.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (DateTimeException ex) {
             m = new Message(
                     "Cannot create the invoice product. Invalid input parameters: invalid date",
-                    "E100", ex.getMessage());
+                    "E100", "");
 
             LOGGER.error(
                     "Cannot create the invoice product. Invalid input parameters: invalid date",
-                    ex);
+                    ex.getMessage());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         }catch (IllegalArgumentException ex) {

@@ -233,14 +233,16 @@ function CompanyDetail() {
                                     <div className="card-icon card-icon-large">
                                         <FontAwesomeIcon icon={faEuroSign} className="fs-icon mx-3"/>
                                     </div>
-                                    <div className="mb-4">
+                                    <div className="mb-1">
                                         <h5 className="card-title mb-0">Total revenues</h5>
+                                    </div>
+                                    <div>
+                                        <p className="d-flex align-items-center mb-0 d-inline align-text-bottom fs-7">(goal 85.000&euro;)</p>
                                     </div>
                                     <div className="row align-items-center mb-2 d-flex">
                                         <div className="col-8 d-flex">
                                             <h2 className="d-flex align-items-center mb-0 d-inline">{(homeData.total * 1).toFixed(2)}&euro;</h2>
-                                            <p className="d-flex align-items-center mb-0 d-inline align-text-bottom">&nbsp;&nbsp;(goal
-                                                85.000&euro;)</p>
+
                                         </div>
                                         <div className="col-4 text-right">
               <span>

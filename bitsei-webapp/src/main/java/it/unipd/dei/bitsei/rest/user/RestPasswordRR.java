@@ -80,7 +80,7 @@ public class RestPasswordRR extends AbstractRR {
         } catch (SQLException ex) {
             LOGGER.error("Cannot create the reset token: unexpected database error.", ex);
 
-            m = new Message("Cannot create the reset token: unexpected database error.", "E5A1", ex.getMessage());
+            m = new Message("Cannot create the reset token: unexpected database error.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (MessagingException e) {

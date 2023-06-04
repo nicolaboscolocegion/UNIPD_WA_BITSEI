@@ -458,11 +458,11 @@ public final class PlotChartRR extends AbstractRR {
         } catch (SQLException ex) {
             LOGGER.error("## PlotChartRR: Cannot plot chart: unexpected database error. ##", ex);
 
-            m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## PlotChartRR: Cannot plot chart: unexpected database error. ##", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("## PlotChartRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            m = new Message("## PlotChartRR: Owner not parsable. ##", "E5A1", "");
             LOGGER.info("## PlotChartRR: Owner not parsable. " + ex.getStackTrace() + " ##");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

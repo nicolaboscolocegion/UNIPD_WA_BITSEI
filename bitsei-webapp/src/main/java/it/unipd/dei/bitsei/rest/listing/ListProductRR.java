@@ -50,18 +50,18 @@ public final class ListProductRR extends AbstractRR {
             } else { // it should not happen
                 LOGGER.error("## ListProductRR: Fatal error while listing product(s). ##");
 
-                m = new Message("## ListProductRR: Cannot list product(s): unexpected error. ##", "E5A1", null);
+                m = new Message("## ListProductRR: Cannot list product(s): unexpected error. ##", "E5A1", "");
                 res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("## ListProductRR: Cannot list product(s): unexpected database error. ##", ex);
+            LOGGER.error("## ListProductRR: Cannot list product(s): unexpected database error. ##", ex.getMessage());
 
-            m = new Message("## ListProductRR: Cannot list product(s): unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListProductRR: Cannot list product(s): unexpected database error. ##", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("## ListProductRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListProductRR: Owner not parsable. ##", "E5A1", "");
             LOGGER.info("## ListInvoiceRR: Owner not parsable. " + ex.getStackTrace() + " ##");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

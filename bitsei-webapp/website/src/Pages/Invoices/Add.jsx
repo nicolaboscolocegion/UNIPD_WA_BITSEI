@@ -23,7 +23,7 @@ function AddInvoice() {
                 setCustomerList(customers);
             })
             .catch((error) => {
-                toast.error("Something went wrong in listCustomers. " + error);
+                toast.error("Something went wrong in listing customers. " + error);
             });
 
     }, []);
@@ -32,6 +32,7 @@ function AddInvoice() {
     const submitHandler = (data, e) => {
         e.preventDefault();
         setPending(true);
+
         gate
             .addInvoice(
                 {
@@ -47,7 +48,7 @@ function AddInvoice() {
                 setPending(false)
             })
             .catch((error) => {
-                toast.error("Something went wrong in addInvoice. ")
+                toast.error("Something went wrong in adding the invoice. ")
                 setPending(false)
             })
     };
@@ -91,16 +92,16 @@ function AddInvoice() {
                             htmlFor="has_mail_notifications">
                             Customer:
                         </label>
-                        <select {...register("customerID", {required: true})} className="form-select">
-                            <option value="default" disabled selected>Select a customer</option>
+                        <select {...register("customerID", {required: true})} onChange={(e) => {
+                            setCustomerOptionSelected(parseInt(e.target.value))
+                        }} className="form-select">
+                            <option value="default" selected disabled hidden>Select a customer</option>
                             {customerList.map(customer => {
                                     return (
                                         <option
                                             // selected={customer.customer_id === product_id}
                                             value={customer.customerID}
-                                            onClick={(e) => {
-                                                setCustomerOptionSelected(parseInt(e.target.value))
-                                            }}
+
                                         >
                                             {customer.businessName}
                                         </option>

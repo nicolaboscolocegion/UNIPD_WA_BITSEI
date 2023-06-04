@@ -76,8 +76,8 @@ public class GetCustomerRR extends AbstractRR {
 
 
         } catch (SQLException ex) {
-            LOGGER.error("Cannot fetch customer: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot fetch customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot fetch customer: unexpected error while accessing the database.", ex.getMessage());
+            m = new Message("Cannot fetch customer: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {

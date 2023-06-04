@@ -86,7 +86,7 @@ public class CreateCustomerRR extends AbstractRR {
 
         } catch (SQLException ex) {
             LOGGER.error("Cannot create customer: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            m = new Message("Cannot create customer: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {

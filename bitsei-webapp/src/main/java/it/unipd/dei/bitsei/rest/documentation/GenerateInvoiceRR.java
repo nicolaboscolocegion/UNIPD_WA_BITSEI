@@ -344,12 +344,12 @@ public class GenerateInvoiceRR extends AbstractRR {
             res.setStatus(HttpServletResponse.SC_OK);
 
         } catch (SQLException ex) {
-            LOGGER.error("Cannot generate invoice: unexpected error while accessing the database." + ex.getStackTrace());
-            m = new Message("Cannot generate invoice: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot generate invoice: unexpected error while accessing the database." + ex.getMessage());
+            m = new Message("Cannot generate invoice: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("Owner not parsable.", "E5A1", ex.getMessage());
+            m = new Message("Owner not parsable.", "E5A1", "");
             LOGGER.info("Owner not parsable." + ex.getStackTrace());
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

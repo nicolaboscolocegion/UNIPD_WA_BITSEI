@@ -55,13 +55,13 @@ public final class ListInvoiceRR extends AbstractRR {
                 m.toJSON(res.getOutputStream());
             }
         } catch (SQLException ex) {
-            LOGGER.error("## ListInvoiceRR: Cannot list invoice(s): unexpected database error. ##", ex);
+            LOGGER.error("## ListInvoiceRR: Cannot list invoice(s): unexpected database error. ##", ex.getMessage());
 
-            m = new Message("## ListInvoiceRR: Cannot list invoice(s): unexpected database error. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListInvoiceRR: Cannot list invoice(s): unexpected database error. ##", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("## ListInvoiceRR: Owner not parsable. ##", "E5A1", ex.getMessage());
+            m = new Message("## ListInvoiceRR: Owner not parsable. ##", "E5A1", "");
             LOGGER.info("## ListInvoiceRR: Owner not parsable. " + ex.getStackTrace() + " ##");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());

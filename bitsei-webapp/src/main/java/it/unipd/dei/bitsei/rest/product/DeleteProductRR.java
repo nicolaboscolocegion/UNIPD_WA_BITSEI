@@ -73,19 +73,19 @@ public class DeleteProductRR extends AbstractRR {
 
 
         } catch (SQLException ex) {
-            LOGGER.error("Cannot delete product: unexpected error while accessing the database.", ex);
-            m = new Message("Cannot delete product: unexpected error while accessing the database.", "E5A1", ex.getMessage());
+            LOGGER.error("Cannot delete product: unexpected error while accessing the database.", ex.getMessage());
+            m = new Message("Cannot delete product: unexpected error while accessing the database.", "E5A1", "");
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             m.toJSON(res.getOutputStream());
         } catch (NumberFormatException ex) {
-            m = new Message("No company id provided.", "E5A1", ex.getMessage());
+            m = new Message("No company id provided.", "E5A1", "");
             LOGGER.info("No company id provided.");
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             m.toJSON(res.getOutputStream());
         } catch (IllegalArgumentException ex) {
             m = new Message(
                     "Invalid input parameters. ",
-                    "E100", ex.getMessage());
+                    "E100", "");
 
             LOGGER.error(
                     "Invalid input parameters. " + ex.getMessage(), ex);
