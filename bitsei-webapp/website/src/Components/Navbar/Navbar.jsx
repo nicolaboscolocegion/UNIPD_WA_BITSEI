@@ -2,8 +2,15 @@ import React, {useState} from "react";
 import {useSelector, connect} from "react-redux";
 import logo from "../../assets/bitseiLogo";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPersonFalling} from "@fortawesome/free-solid-svg-icons";
-import {faBars} from "@fortawesome/free-solid-svg-icons";
+import {
+    faBars,
+    faBank,
+    faBuilding,
+    faFileInvoice,
+    faFolder,
+    faPersonFalling,
+    faHippo, faLineChart
+} from "@fortawesome/free-solid-svg-icons";
 import {Button} from "react-bootstrap";
 import {logout} from "../../Store/auth/authThunk";
 import {Link} from "react-router-dom";
@@ -34,16 +41,30 @@ function Navbar({logout}) {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu variant="dark">
-                    <Dropdown.Item href="/companies">Company</Dropdown.Item>
+                    <Dropdown.Item href="/companies">
+                            <FontAwesomeIcon icon={faHippo} color="white" className="me-2"/>
+                        Company
+                        </Dropdown.Item>
                     {company_id && (
                         <>
                             <Dropdown.Divider/>
-                            <Dropdown.Item href={`/companies/${company_id}/list-customer`}>Customers</Dropdown.Item>
-                            <Dropdown.Item href={`/companies/${company_id}/list-products`}>Products</Dropdown.Item>
-                            <Dropdown.Item href={`/companies/${company_id}/list-invoices`}>Invoices</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/list-customer`}>
+                                <FontAwesomeIcon icon={faBuilding} color="white" className="me-2"/>
+                                Customers</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/list-products`}>
+                                <FontAwesomeIcon icon={faFolder} color="white" className="me-2"/>
+                                Products</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/list-invoices`}>
+                                <FontAwesomeIcon icon={faFileInvoice} color="white" className="me-2"/>
+                                Invoices</Dropdown.Item>
                             <Dropdown.Divider/>
-                            <Dropdown.Item href={`/companies/${company_id}/bankAccount`}>Bank Account</Dropdown.Item>
-                            <Dropdown.Item href={`/companies/${company_id}/insights`}>Insights</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/bankAccount`}>
+                                <FontAwesomeIcon icon={faBank} color="white" className="me-2"/>
+                                Bank Account</Dropdown.Item>
+                            <Dropdown.Item href={`/companies/${company_id}/insights`}>
+                                <FontAwesomeIcon icon={faLineChart} color="white" className="me-2"/>
+                                Insights
+                            </Dropdown.Item>
                         </>
                     )}
                 </Dropdown.Menu>
