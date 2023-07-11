@@ -11,7 +11,7 @@ Features:
 - Keep track of customer activities and manage their data
 - Improve financial decision-making with informed insights
 
-### Getting Started
+### Getting Started 
 
 ----
 
